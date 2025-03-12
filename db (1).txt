@@ -1,0 +1,99 @@
+1. Bảng roles
+    - role_id: khóa chính tự tăng
+    - name
+2. Bảng users
+    - user_id: khóa chính tự tăng
+    - username
+    - password
+    - email
+    - phone
+    - address
+    - role_id (khóa ngoại)
+    - status
+
+3. Bảng permissions(quyền)
+    - permission_id: khóa chính tự tăng
+    - name
+4. Bảng role_permissions
+    - role_id
+    - permission_id
+5. Bảng categories  (danh mục sản phẩm)
+    - category_id: khóa chính tự tăng
+    - name
+6. Bảng products
+    - product_id: khóa chính tự tăng
+    - name
+    - description
+    - category_id   (khóa ngoại)
+    - image
+    - rating_avg    (đánh giá trung bình 5*)
+    - rating_count  (số lượng đánh giá)
+    - sold_count    (số lượng đã bán)
+
+16. Bảng product_variants
+    - variant_id
+    - product_id
+    - size
+    - price
+    - stock
+    - color
+
+15. bảng payment_method
+    - payment_method_id
+    - name
+
+7. Bảng orders
+    - order_id : khóa chính tự tăng
+    - user_id
+    - status
+    - total_price
+    - shipping_address
+    - note
+    - created_at
+    - payment_method_id
+
+8. Bảng order_details   
+    - order_detail_id: khóa chính tự tăng
+    - order_id
+    - product_id
+    - quantity
+    - price
+    - total_price
+
+9. Bảng reviews
+    -review_id
+    - user_id
+    - product_id
+    - rating
+    - comment
+    - created_at
+10. Bảng supplier
+    - supplier_id
+    - name
+    - email
+    - address
+11. Bảng ImportReceipt
+    - ImportReceipt_id
+    - supplier_id
+    - user_id(nhân viên nhập)
+    - total_price
+    - created_at
+12. Bảng ImportReceipt_details
+    - ImportReceipt_details_id
+    - ImportReceipt_id
+    - product_id
+    - quantity
+    - price
+    - total_price
+
+    
+13. Bảng cart
+    - cart_id
+    - user_id
+    - created_at
+
+14. Bảng cart_detatils
+    - cart_id
+    - product_id
+    - quantity
+
