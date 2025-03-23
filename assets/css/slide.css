@@ -1,0 +1,80 @@
+.slide {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner-slider {
+    display: flex;
+    width: 300%; 
+    animation: slideAnimation 18s ease-in-out infinite;
+}
+
+.slide-img {
+    width: 100%;
+    flex-shrink: 0;
+    transition: transform 1s ease-in-out;
+}
+
+@keyframes slideAnimation {
+    0%   { transform: translateX(0%); }
+    11.11% { transform: translateX(0%); }
+
+    22.22% { transform: translateX(-100%); }
+    33.33% { transform: translateX(-100%); }
+
+    44.44% { transform: translateX(-200%); }
+    55.55% { transform: translateX(-200%); }
+
+    66.66% { transform: translateX(0%); }
+    77.77% { transform: translateX(0%); }
+
+    88.88% { transform: translateX(-100%); }
+    100%   { transform: translateX(-100%); }
+}
+
+.effect-theloai
+{
+    transition: color 0.3s, transform 0.2s;
+}
+
+.effect-theloai:hover
+{
+    transform: scale(1.1);
+}
+
+.shadow-box
+{
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+}
+.dth_resp
+{
+    padding-right: 83px;
+}
+.text_resp
+{
+    text-align: right;
+}
+.img-resp
+{
+    padding-right: 83px;
+}
+@media only screen and (max-width: 800px) 
+{
+    .dth_resp
+    {
+        padding-right: 0;
+    }
+    .text_resp
+    {
+        text-align: center;
+    }
+    .text-rsp-left
+    {
+        text-align: center;
+    }
+    .img-resp
+    {
+        padding-right: 0;
+    }
+}

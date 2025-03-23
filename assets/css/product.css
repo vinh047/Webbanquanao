@@ -1,0 +1,87 @@
+.filter_loc {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    visibility: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    width:400px;
+    height:360px;
+}
+
+.filter_loc.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.boloc_icon:hover
+{
+    cursor: pointer;
+}
+
+.selectable {
+    transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.selectable.selected {
+    outline: 3px solid #0d6efd;
+    outline-offset: 3px;
+    opacity: 1;
+    transform: scale(1.05); 
+}
+
+.sort-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    visibility: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+
+}
+
+.sort-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+#sort-icon {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#sort-icon:active {
+    transform: scale(0.9); /* hiệu ứng click */
+}
+
+
+@media (max-width: 768px) {
+    .filter_loc {
+        left: 5% !important;
+        right: auto !important;
+        transform: translate(-50%, -10px); /* căn giữa ngang */
+        width: 90vw !important;
+        max-width: 400px;
+        z-index: 999;
+        height: 470px;
+        position: fixed !important;
+        top: 100px;
+    }
+}
+
+
+.effect_hover
+{
+    
+    transition: transform 0.3s ease;
+}
+
+.effect_hover:hover
+{
+    transform: translateY(-7px);
+}
