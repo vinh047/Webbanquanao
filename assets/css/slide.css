@@ -78,3 +78,9 @@
         padding-right: 0;
     }
 }
+
+.centerbutton
+{
+    top:50% !important;
+    left: 45% !important;
+}
