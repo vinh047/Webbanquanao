@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="/Webbanquanao/assets/fonts/font.css">
         <link rel="stylesheet" href="/Webbanquanao/assets/css/product.css">
         <link rel="stylesheet" href="/Webbanquanao/assets/css/footer.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 
     </head>';
     ?>
@@ -40,8 +41,6 @@
                     </span>
                 </p>
             </div>
-
-
             <div class="timkiemnangcao">
                     <div class="boloc">
                         <div class="position-relative">
@@ -177,6 +176,13 @@
                 </div>
             </div>
             
+            <div class="ms-3" style="margin-top: 10px;">
+                <a href="/Webbanquanao/layout/cart.html" title="Giỏ hàng" class="text-dark">
+                        <span class="material-symbols-outlined" style="font-size: 34px;">
+                             shopping_cart
+                        </span>
+                    </a>
+            </div>
 
         </div>
 
