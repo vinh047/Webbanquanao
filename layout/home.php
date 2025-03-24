@@ -26,19 +26,19 @@ echo '<section class="d-md-block d-none">
                 <img src="./assets/img/theloai/newarrival.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="#"><img src="./assets/img/theloai/ao.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <a href="index.php?page=ao"><img src="./assets/img/theloai/ao.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="#"><img src="./assets/img/theloai/quan.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <a href="index.php?page=quan"><img src="./assets/img/theloai/quan.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="#"><img src="./assets/img/theloai/aopolo.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <a href="index.php?page=aopolo"><img src="./assets/img/theloai/aopolo.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="#"><img src="./assets/img/theloai/aosomi.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <a href="index.php?page=aosomi"><img src="./assets/img/theloai/aosomi.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="#"><img src="./assets/img/theloai/aokhoac.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <a href="index.php?page=aokhoac"><img src="./assets/img/theloai/aokhoac.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
             </div>
         </div>
     </div>

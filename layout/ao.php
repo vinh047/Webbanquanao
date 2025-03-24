@@ -36,7 +36,15 @@
                         <i class="fa-solid fa-angle-right"></i>
                     </span>
                     <span class="text-dark">
+                    <a href="?page=sanpham" class="text-decoration-none link-primary aHover">
                         Sản phẩm
+                    </a>
+                    </span>
+                    <span class="mx-2">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </span>
+                    <span class="text-dark">
+                        Áo
                     </span>
                 </p>
             </div>
@@ -48,7 +56,7 @@
                             <span class="fs-3"><i class="fa-solid fa-filter boloc_icon" id="filter-icon"></i></span>
                             <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1">
                                 <form action="/webbanquanao/index.php" method="GET">
-                                <input type="hidden" name="page" value="sanpham">
+                                <input type="hidden" name="page" value="ao">
                                     <div class="p-3">
                                         <p class="mb-2">Bộ lọc</p>
                                         <p class="mb-2">Màu : </p>
@@ -161,13 +169,13 @@
                     <div class="xacdinhZ_max sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
                         <div class="p-3">
                             <p class="mb-0 fw-bold">Sắp xếp theo</p>
-                            <a href="?page=sanpham&sapxep=giamdan">
+                            <a href="?page=ao&sapxep=giamdan">
                              <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-down"></i></span> Giá giảm dần
                             </button>
                             </a>
                             <br>
-                            <a href="?page=sanpham&sapxep=tangdan">
+                            <a href="?page=ao&sapxep=tangdan">
                             <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-up"></i></span> Giá tăng dần
                             </button>
@@ -224,7 +232,7 @@
 
     // Tìm kiếm nâng cao
     // Lọc dữ liệu từ GET
-$where = [];
+$where = ["products.category_id = 1"];
 
 if (!empty($_GET['selectTheloai'])) {
     $theloai = mysqli_real_escape_string($connection, $_GET['selectTheloai']);
