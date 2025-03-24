@@ -9,10 +9,10 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <title>sagkuto</title>
-        <link rel="icon" type="./Images/png" href="../assets/img/logo_favicon/favicon.png">
-        <link rel="stylesheet" href="../assets/fonts/font.css">
-        <link rel="stylesheet" href="../assets/css/product.css">
-        <link rel="stylesheet" href="../assets/css/footer.css">
+        <link rel="icon" type="./Images/png" href="/Webbanquanao/assets/img/logo_favicon/favicon.png">
+        <link rel="stylesheet" href="/Webbanquanao/assets/fonts/font.css">
+        <link rel="stylesheet" href="/Webbanquanao/assets/css/product.css">
+        <link rel="stylesheet" href="/Webbanquanao/assets/css/footer.css">
 
     </head>';
     ?>
@@ -29,7 +29,7 @@
         <div class="border py-2 px-4 d-flex align-items-center">
             <div class="me-auto">
                 <p class="mb-0">
-                    <a href="../index.html" class="text-decoration-none link-primary aHover">
+                    <a href="/Webbanquanao/" class="text-decoration-none link-primary aHover">
                         Trang chủ
                     </a>
                     <span class="mx-2">
@@ -47,19 +47,27 @@
                         <div class="position-relative">
                             <span class="fs-3"><i class="fa-solid fa-filter boloc_icon" id="filter-icon"></i></span>
                             <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1">
-                                <form action="product.php" method="GET">
+                                <form action="/webbanquanao/index.php" method="GET">
+                                <input type="hidden" name="page" value="sanpham">
                                     <div class="p-3">
                                         <p class="mb-2">Bộ lọc</p>
                                         <p class="mb-2">Màu : </p>
-                                        <div class="">
+                                        <div class="px-2">
                                             <div class="row gap-3 justify-content-center">
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="1" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="2" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="3" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="4" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="5" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="6" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="7" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="1" style="height: 35px;width: 35px;background-color:#282A2B ;" title="Đen"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="2" style="height: 35px;width: 35px;background-color:#DBD1BC ;" title="Be"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="3" style="height: 35px;width: 35px;background-color:#90713B ;" title="Nâu"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="4" style="height: 35px;width: 35px;background-color:#9FA9A9 ;" title="Xám nhạt"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="5" style="height: 35px;width: 35px;background-color:#D07771 ;" title="Hồng nhạt"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="6" style="height: 35px;width: 35px;background-color:#95987B ;" title="Xanh rêu"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="7" style="height: 35px;width: 35px;background-color:#4F5C7C ;" title="Xanh biển đậm"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="8" style="height: 35px;width: 35px;background-color:#F5F1E6 ;" title="Trắng"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="9" style="height: 35px;width: 35px;background-color:#A5051D ;" title="Đỏ"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="10" style="height: 35px;width: 35px;background-color:#59564F ;" title="Olive"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="11" style="height: 35px;width: 35px;background-color:#387EA0 ;" title="Xanh biển nhạt"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="12" style="height: 35px;width: 35px;background-color:#3C4252 ;" title="Navy"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="13" style="height: 35px;width: 35px;background-color:#391D2B ;" title="Rượu vang"></div>
+                                                <div class="col-2 border selectable color-option" data-color-id="14" style="height: 35px;width: 35px;background-color:#B58F6C ;" title="Be đậm"></div>
                                             </div>
                                         </div>
                                         <p class="my-2">
@@ -67,22 +75,22 @@
                                         </p>
                                         <div class=" ps-4">
                                             <div class="row text-center gap-3">
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" title="XS" style="height:35px; width: 45px;">
                                                     <p class="mb-0">XS</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" title="S" style="height:35px; width: 45px;">
                                                     <p class="mb-0">S</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" title="M" style="height:35px; width: 45px;">
                                                     <p class="mb-0">M</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" title="L" style="height:35px; width: 45px;">
                                                     <p class="mb-0">L</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" title="XL" style="height:35px; width: 45px;">
                                                     <p class="mb-0">XL</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" title="2XL" style="height:35px; width: 45px;">
                                                     <p class="mb-0">2XL</p>
                                                 </div>
                                             </div>
@@ -153,13 +161,13 @@
                     <div class="xacdinhZ_max sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
                         <div class="p-3">
                             <p class="mb-0 fw-bold">Sắp xếp theo</p>
-                            <a href="?sapxep=giamdan">
+                            <a href="?page=sanpham&sapxep=giamdan">
                              <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-down"></i></span> Giá giảm dần
                             </button>
                             </a>
                             <br>
-                            <a href="?sapxep=tangdan">
+                            <a href="?page=sanpham&sapxep=tangdan">
                             <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-up"></i></span> Giá tăng dần
                             </button>
@@ -296,7 +304,7 @@ $totalPage = ceil($totalSach / $limit);
                 <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                         <div class="border rounded-1">
                             <a href="#" class="text-decoration-none text-dark ">
-                                <img src="../assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
+                                <img src="/Webbanquanao/assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
                                 <div class="mt-2 p-2 pt-1">
                                     <div class="">
                                         <p class="mb-0 fw-lighter">Nam</p>
@@ -313,7 +321,7 @@ $totalPage = ceil($totalSach / $limit);
 
     echo '
 
-    <section class="phantrang py-5">
+    <section class="phantrang py-4">
 
         <div class="container">
             <div class="row justify-content-center">
@@ -358,7 +366,7 @@ $totalPage = ceil($totalSach / $limit);
     <!-- footer -->
 
     <?php
-    echo '    <script src="../assets/js/xulyFIlter.js"></script>
+    echo '    <script src="/Webbanquanao/assets/js/xulyFIlter.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
     </html>';
