@@ -95,7 +95,12 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <select name="selectTheloai" id="selectTheloai" class="form-select">
-                                                        <option value="">Quần jean</option>
+                                                        <option value="">Chọn thể loại</option>
+                                                        <option value="ao">Áo</option>
+                                                        <option value="quan">Quần</option>
+                                                        <option value="aosomi">Áo Sơmi</option>
+                                                        <option value="aopolo">Áo Polo</option>
+                                                        <option value="aokhoac">Áo khoác</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -112,7 +117,7 @@
                                                 <div class="col-12 mt-2">
                                                     <div class="input-group">
                                                         <span class="input-group-text rounded-start-1" style="width: 80px;">Giá max : </span>
-                                                        <input type="text" name="giamin" class="form-control rounded-end-1 form-control-sm">
+                                                        <input type="text" name="giamax" class="form-control rounded-end-1 form-control-sm">
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,12 +153,17 @@
                     <div class="sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
                         <div class="p-3">
                             <p class="mb-0 fw-bold">Sắp xếp theo</p>
-                            <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
+                            <a href="?sapxep=giamdan">
+                             <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-down"></i></span> Giá giảm dần
-                            </button> <br>
+                            </button>
+                            </a>
+                            <br>
+                            <a href="?sapxep=tangdan">
                             <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-up"></i></span> Giá tăng dần
                             </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -178,6 +188,18 @@
         echo 'Không kết nối được với database';
         exit();
     }
+
+    //Sắp xếp tăng,giảm
+    $sort = isset($_GET['sapxep']) ? $_GET['sapxep'] : '';
+    $qrySort = '';
+    if($sort == 'tangdan')
+    {
+        $qrySort = 'ORDER BY price ASC';
+    }else
+    {
+        $qrySort = 'ORDER BY price DESC';
+    }
+
     // Phân trang
     mysqli_set_charset($connection, 'utf8');
 
@@ -195,7 +217,7 @@
     $totalPage = ceil($totalSach / $limit);
 
     // Truy vấn danh sách sách với LIMIT
-    $strSQL = "SELECT * FROM products LIMIT $limit OFFSET $offset";
+    $strSQL = "SELECT * FROM products $qrySort LIMIT $limit OFFSET $offset";
     $result = mysqli_query($connection, $strSQL);
 
 
@@ -215,7 +237,7 @@
         $rating_count = $row['rating_count'];
         $sold_count = $row['sold_count'];
         echo '
-                <div class="col-md-3 col-6 mt-3 effect_hover">
+                <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                         <div class="border rounded-1">
                             <a href="#" class="text-decoration-none text-dark ">
                                 <img src="../assets/img/sanpham/10f24kni008-beige-1-ao-len-nam-1-jpg-x42h.jpg" alt="" class="img-fluid">
