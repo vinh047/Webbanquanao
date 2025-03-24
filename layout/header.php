@@ -15,7 +15,7 @@
 
     <div class="icons_header">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <div>Đăng nhập</div>
+      <i class="fa-solid fa-user"></i>
     </div>
     </header>';
 ?>
