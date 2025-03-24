@@ -1,16 +1,4 @@
-@font-face {
-    font-family: 'Oswald';
-    src: url('../fonts/Oswald-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'Oswald';
-    src: url('../fonts/Oswald-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
   
   body {
