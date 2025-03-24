@@ -88,6 +88,10 @@
     transform: translateY(-7px);
 }
 
+.xacdinhZ_max
+{
+    z-index: 1000;
+}
 .xacdinhZ
 {
     z-index: 1;

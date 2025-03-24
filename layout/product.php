@@ -150,7 +150,7 @@
                         <i class="fa-solid fa-bars-staggered" id="sort-icon"></i>
                     </span>
             
-                    <div class="sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
+                    <div class="xacdinhZ_max sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
                         <div class="p-3">
                             <p class="mb-0 fw-bold">Sắp xếp theo</p>
                             <a href="?sapxep=giamdan">
@@ -217,7 +217,7 @@
     $totalPage = ceil($totalSach / $limit);
 
     // Truy vấn danh sách sách với LIMIT
-    $strSQL = "SELECT * FROM products $qrySort LIMIT $limit OFFSET $offset";
+    $strSQL = "SELECT * FROM products JOIN product_variants ON products.product_id = product_variants.product_id $qrySort LIMIT $limit OFFSET $offset";
     $result = mysqli_query($connection, $strSQL);
 
 
@@ -236,6 +236,7 @@
         $rating_avg = $row['rating_avg'];
         $rating_count = $row['rating_count'];
         $sold_count = $row['sold_count'];
+        $img = $row['image'];
         echo '
                 <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                         <div class="border rounded-1">
