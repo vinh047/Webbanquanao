@@ -96,11 +96,11 @@
                                                 <div class="col-md-12">
                                                     <select name="selectTheloai" id="selectTheloai" class="form-select">
                                                         <option value="">Chọn thể loại</option>
-                                                        <option value="ao">Áo</option>
-                                                        <option value="quan">Quần</option>
-                                                        <option value="aosomi">Áo Sơmi</option>
-                                                        <option value="aopolo">Áo Polo</option>
-                                                        <option value="aokhoac">Áo khoác</option>
+                                                        <option value="Áo">Áo</option>
+                                                        <option value="Quần">Quần</option>
+                                                        <option value="Áo Sơmi">Áo Sơmi</option>
+                                                        <option value="Áo Polo">Áo Polo</option>
+                                                        <option value="Áo khoác">Áo khoác</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -182,7 +182,7 @@
     <!-- phần product -->
     <?php
 
-    $connection = mysqli_connect("localhost","root","","doan_web_quanao");
+    $connection = mysqli_connect("localhost","root","","db_web_quanao");
     if(!$connection)
     {
         echo 'Không kết nối được với database';
@@ -203,7 +203,7 @@
     // Phân trang
     mysqli_set_charset($connection, 'utf8');
 
-    $limit = 12;
+    $limit = 8;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     if ($page < 1) $page = 1;
 
@@ -241,7 +241,7 @@
                 <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                         <div class="border rounded-1">
                             <a href="#" class="text-decoration-none text-dark ">
-                                <img src="../assets/img/sanpham/10f24kni008-beige-1-ao-len-nam-1-jpg-x42h.jpg" alt="" class="img-fluid">
+                                <img src="../assets/img/sanpham/' . $img .  '" alt="" class="img-fluid">
                                 <div class="mt-2 p-2 pt-1">
                                     <div class="">
                                         <p class="mb-0 fw-lighter">Nam</p>
