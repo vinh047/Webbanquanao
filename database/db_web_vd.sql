@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2025 at 12:40 PM
+-- Generation Time: Mar 24, 2025 at 02:48 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `dbquanao`
+-- Database: `db_web_quanao`
 --
 
 -- --------------------------------------------------------
@@ -32,6 +32,13 @@ CREATE TABLE `cart` (
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
+(1, 2, '2025-03-24 14:55:14');
 
 -- --------------------------------------------------------
 
@@ -47,6 +54,14 @@ CREATE TABLE `cart_details` (
   `quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `cart_details`
+--
+
+INSERT INTO `cart_details` (`cart_detail_id`, `cart_id`, `product_id`, `variant_id`, `quantity`) VALUES
+(1, 1, 1, 1, 2),
+(2, 1, 2, 3, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -57,6 +72,17 @@ CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`category_id`, `name`) VALUES
+(1, 'Áo'),
+(2, 'Quần'),
+(3, 'Áo Sơ Mi'),
+(4, 'Áo Polo'),
+(5, 'Áo Khoác');
 
 -- --------------------------------------------------------
 
@@ -75,27 +101,20 @@ CREATE TABLE `colors` (
 --
 
 INSERT INTO `colors` (`color_id`, `name`, `hex_code`) VALUES
-(1, 'Đen', '#000000'),
-(2, 'Trắng', '#FFFFFF'),
-(3, 'Xám', '#808080'),
-(4, 'Xám nhạt', '#D3D3D3'),
-(5, 'Xanh navy', '#001F3F'),
-(6, 'Xanh dương', '#0000FF'),
-(7, 'Xanh dương nhạt', '#ADD8E6'),
-(8, 'Xanh lá', '#008000'),
-(9, 'Xanh rêu', '#556B2F'),
-(10, 'Be', '#F5F5DC'),
-(11, 'Nâu', '#8B4513'),
-(12, 'Nâu đất', '#A0522D'),
-(13, 'Đỏ', '#FF0000'),
-(14, 'Đỏ đô', '#800000'),
-(15, 'Cam', '#FFA500'),
-(16, 'Vàng', '#FFFF00'),
-(17, 'Vàng nhạt', '#FFFACD'),
-(18, 'Hồng', '#FFC0CB'),
-(19, 'Hồng pastel', '#FFD1DC'),
-(20, 'Tím', '#800080'),
-(21, 'Tím pastel', '#E6E6FA');
+(1, 'Đen', '#282A2B'),
+(2, 'Be', '#DBD1BC'),
+(3, 'Nâu', '#90713B'),
+(4, 'Xám nhạt', '#9FA9A9'),
+(5, 'Hồng nhạt', '#D07771'),
+(6, 'Xanh rêu', '#95987B'),
+(7, 'Xanh biển đậm', '#4F5C7C'),
+(8, 'Trắng', '#F5F1E6'),
+(9, 'Đỏ', '#A5051D'),
+(10, 'Olive', '#59564F'),
+(11, 'Xanh biển nhạt', '#387EA0'),
+(12, 'Navy', '#3C4252'),
+(13, 'Rượu vang', '#391D2B'),
+(14, 'Be đậm', '#B58F6C');
 
 -- --------------------------------------------------------
 
@@ -221,6 +240,21 @@ CREATE TABLE `products` (
   `sold_count` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`product_id`, `name`, `description`, `category_id`, `price`, `rating_avg`, `rating_count`, `sold_count`) VALUES
+(1, 'Áo thun nam basic', 'Chất liệu cotton mềm mại', 1, 199000.00, 0, 0, 0),
+(2, 'Quần jean skinny', 'Thiết kế trẻ trung', 2, 299000.00, 0, 0, 0),
+(3, 'Áo sơ mi caro nam', 'Kiểu dáng trẻ trung, thoáng mát', 3, 259000.00, 0, 0, 0),
+(4, 'Áo polo thể thao', 'Chất liệu co giãn, thích hợp vận động', 4, 219000.00, 0, 0, 0),
+(5, 'Áo khoác jean', 'Phong cách Hàn Quốc', 5, 399000.00, 0, 0, 0),
+(6, 'Quần kaki nam', 'Form đứng, dễ phối đồ', 2, 289000.00, 0, 0, 0),
+(7, 'Áo thun nữ form rộng', 'Phù hợp dạo phố hoặc mặc nhà', 1, 189000.00, 0, 0, 0),
+(8, 'Quần short nữ', 'Chất liệu thoáng mát', 2, 179000.00, 0, 0, 0),
+(9, 'Áo sơ mi trắng công sở', 'Phù hợp môi trường làm việc, học tập', 3, 249000.00, 0, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -235,6 +269,27 @@ CREATE TABLE `product_variants` (
   `stock` int(11) DEFAULT 0,
   `color_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `product_variants`
+--
+
+INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `size`, `stock`, `color_id`) VALUES
+(1, 1, 'sp1.jpg', 'M', 50, 1),
+(2, 1, 'aothun2.jpg', 'L', 30, 2),
+(3, 2, 'jean1.jpg', '32', 40, 3),
+(4, 3, 'somi_caro.jpg', 'M', 40, 3),
+(5, 3, 'somi_caro.jpg', 'L', 25, 1),
+(6, 4, 'polo_sport.jpg', 'M', 50, 4),
+(7, 4, 'polo_sport.jpg', 'L', 40, 5),
+(8, 5, 'jacket_jean.jpg', 'L', 30, 1),
+(9, 6, 'kaki_nam.jpg', '32', 45, 2),
+(10, 6, 'kaki_nam.jpg', '34', 25, 3),
+(11, 7, 'aothun_nu.jpg', 'Free size', 60, 5),
+(12, 8, 'short_nu.jpg', 'S', 50, 2),
+(13, 8, 'short_nu.jpg', 'M', 30, 4),
+(14, 9, 'somi_trang.jpg', 'M', 40, 2),
+(15, 9, 'somi_trang.jpg', 'L', 35, 2);
 
 -- --------------------------------------------------------
 
@@ -396,64 +451,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `phone`, `address`, `role_id`, `status`) VALUES
-(1, 'admin', '$2b$12$ThfEhiblJgeQd614ORjnd.GAot9.o7oCywkvfS/mbwn3JXvYIRO0u', 'admin@shop.vn', '0909000000', 'Trụ sở chính', 2, 1),
-(2, 'khach1', '$2b$12$f3kbUTglXNsNesC0.l45zuNIQo/4a4mjAtDk71VjF7K3PvSz4FnwG', 'khach1@gmail.com', '0942621045', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(3, 'khach2', '$2b$12$rbrlA84KFqPqQX1TQ/J7YOoPGcy002KhMgjedMYTg28P.gU0nCyGm', 'khach2@gmail.com', '0944623751', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(4, 'khach3', '$2b$12$IDjtDeTwzCx6U1bSXjA/TunHKOfllgggntL0CtKM8vI8B2J3kB476', 'khach3@gmail.com', '0982312485', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(5, 'khach4', '$2b$12$Vw0CgkpT6FCIvTA74bdEJumJUuvxPqfZZt0fGEhyE07GX0CYJhUP6', 'khach4@gmail.com', '0917953107', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(6, 'khach5', '$2b$12$QW8lXltoejdT/Aa3sPZMvO7y5I6KssyIfU/2tGVSZy4Hp8wI6IWJ.', 'khach5@gmail.com', '0976872107', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(7, 'khach6', '$2b$12$7glrzLPggQWEjVm0mEvkUufQPqYm10oWQc.OUL.pfNFo12PfX4twG', 'khach6@gmail.com', '0917709849', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(8, 'khach7', '$2b$12$i80EkuB7cek/IluladRzaebCXtQCzNDLyTBScirT0q7zA/FzxqBry', 'khach7@gmail.com', '0953694093', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(9, 'khach8', '$2b$12$jDvLNnDgxofA3CGjq0lZa.FaGyMDc0MthmRJL0kndqaR3ABziMoTq', 'khach8@gmail.com', '0942430465', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(10, 'khach9', '$2b$12$oX2A.kXkEMqWska5Q.AkR.YnuBDq7VB3h7Pb3HV0gcZq4ENFeQb1a', 'khach9@gmail.com', '0934115454', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(11, 'khach10', '$2b$12$KhoWUNYUN94wKlraDyXeSOVh/Glw01.Oo84l/cRZO0ffnv1I7KwiC', 'khach10@gmail.com', '0966748532', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(12, 'khach11', '$2b$12$LpTsnAOQMWpZd4QPZJraRuGjW8hJfgjifK5pMsvYdzUJIjAyeCQVu', 'khach11@gmail.com', '0961827225', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(13, 'khach12', '$2b$12$6k3FABZfuaDaGrl975tmQ.VE0VQh4sYp5LeT8AGkS9XJ3oP4w3q0q', 'khach12@gmail.com', '0976580428', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(14, 'khach13', '$2b$12$VBkvM1izwKPWzK/Y6B7AOuQ3NWdoP/epOA9DdXQv2mQATAgWAwpkq', 'khach13@gmail.com', '0932543130', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(15, 'khach14', '$2b$12$ictOn6Jpyh.mksQHjTkQAuMQ/yTycxC9y.NxowojlzrsP11FqJ.4C', 'khach14@gmail.com', '0950046185', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(16, 'khach15', '$2b$12$Ar09ZtGSymrwQjNGQNuDF./YQ88IDTD5uRJRdgkPkU7RRrhZu74ri', 'khach15@gmail.com', '0973301187', '1 Lê Lợi, Q1, TP.HCM', 1, 1),
-(17, 'khach16', '$2b$12$twN7W09qMUmyYYmQ/aT6I.Pt/oi.5EQrGh6fJeDII4FN/LWjr5.sq', 'khach16@gmail.com', '0989737539', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(18, 'khach17', '$2b$12$9b4qANFQCk0hujCXKfWb0.85ZMQc5x5taSSjtxKmWqdHRYfWjWwzG', 'khach17@gmail.com', '0917618081', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(19, 'khach18', '$2b$12$jgkupVTGukFnDm9fhOy4Pevxfl4IDz7GV2OFUX.AujgjPkuxap8NO', 'khach18@gmail.com', '0992498011', '3 Lý Thường Kiệt, Q10, TP.HCM', 1, 1),
-(20, 'khach19', '$2b$12$380MZEHcnfBuSZTsutTrh.4qDTuN4rcKVe90hynbflWgrFWfsDP1q', 'khach19@gmail.com', '0945060040', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(21, 'khach20', '$2b$12$i7VcwcG/zzAR1.xRZSrbXuB5cAH7SlkwZyqNr3Mnt8x8CWHHuJhAq', 'khach20@gmail.com', '0979292556', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(22, 'khach21', '$2b$12$NWpNt5Ye3Xb1.8V6kH9wxOOVtVyCwIWg5p4/dspHru8nCFL6fQXvW', 'khach21@gmail.com', '0979223791', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(23, 'khach22', '$2b$12$4/6g66hUvJP7EUr6CRWxBOnAGIbZcLTGkiQ3VNpmMEwJT3cUnsO4G', 'khach22@gmail.com', '0913708252', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(24, 'khach23', '$2b$12$A0FkDc1t3TvU6R93sBVmF.kTkh0sy1J/cpbW60rH26rTrs2OhHc2m', 'khach23@gmail.com', '0952048540', '5 Điện Biên Phủ, Q3, TP.HCM', 1, 1),
-(25, 'khach24', '$2b$12$NwW.3cGTiNEAM3NmIyeXeevhq6S0/b7UfxImP47WG9I46CEfQloKO', 'khach24@gmail.com', '0960574477', '1 Lê Lợi, Q1, TP.HCM', 1, 1),
-(26, 'khach25', '$2b$12$vRGJcUQ4puGamXwRzv81MuYKoGUqh/TrTuPwyVGHgsbX2RIq961e.', 'khach25@gmail.com', '0992689911', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(27, 'khach26', '$2b$12$P3GRREYdE3UX2dOKGzryeO1fxOcm7FZ/0E8CCFQPd1KI481u1QJty', 'khach26@gmail.com', '0990398010', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(28, 'khach27', '$2b$12$pokbRgAjjc/5FvST8IApsOoAi1JYbyLG6Z6mb3Awcmi4vCO2xm2Mm', 'khach27@gmail.com', '0933960752', '1 Lê Lợi, Q1, TP.HCM', 1, 1),
-(29, 'khach28', '$2b$12$r7eeiWkC6m83So7xvNAdr.MLFELSAfTQF.tICLhnWoxCcKOW724N2', 'khach28@gmail.com', '0997361400', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(30, 'khach29', '$2b$12$sJ8FL0fbdL0hP7mJlvF1seb5gPythodPKFIh18uPPI8vjsO3HoMNq', 'khach29@gmail.com', '0921586114', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(31, 'khach30', '$2b$12$WVnq5DUBeEHhgJMZohMRO.zZddnt.eJXBvo/9MVzZZ/lSjpo8iI0e', 'khach30@gmail.com', '0959712888', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(32, 'khach31', '$2b$12$i2mqmd1cgPPNyJnc1uzmOeKeicEB72iYbzVbN8b.ePdfrpukJynNa', 'khach31@gmail.com', '0960364148', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(33, 'khach32', '$2b$12$xZz/.FIPOBZ6vDT.RatG2OQzyDxifTMO90R9tV0xdofXGj00O10ky', 'khach32@gmail.com', '0924796831', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(34, 'khach33', '$2b$12$zzaecOscqOOUh8/GUs6/7.lg8YYyehZA7c2zyzTZaAl8ENINDxUDC', 'khach33@gmail.com', '0934911077', '1 Lê Lợi, Q1, TP.HCM', 1, 1),
-(35, 'khach34', '$2b$12$3/gjbkKKD5A3VtKU104CU.xUX.ZTxrSx2aaGxBLSNmyR51v/dLHSy', 'khach34@gmail.com', '0936579122', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(36, 'khach35', '$2b$12$gsvbX54P4ZtxRsnXnNJ6nOQbVkn/TKORtYwUWk0ah487O2205IdlG', 'khach35@gmail.com', '0963498627', '6 Nguyễn Thị Minh Khai, Q1, TP.HCM', 1, 1),
-(37, 'khach36', '$2b$12$zllMu62P/ZdF1.rw2BJCiOXmcI8zFwXyGP7seQS2c54FaI0xwqLK.', 'khach36@gmail.com', '0981498476', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(38, 'khach37', '$2b$12$A68NgUz3601RoYR9VsOY/OcTmC67lzEorwbnWj1/H6X6qiT6hR6cW', 'khach37@gmail.com', '0982795079', '5 Điện Biên Phủ, Q3, TP.HCM', 1, 1),
-(39, 'khach38', '$2b$12$PVLkeYZuq7AEVsLSWGrRnuPQe0Le1CXxu6oMutk23nDPufy9EcUSS', 'khach38@gmail.com', '0927204630', '4 Trần Hưng Đạo, Q5, TP.HCM', 1, 1),
-(40, 'khach39', '$2b$12$erXEkFcgCI7dJxA/1zxTCOTQ3LLUiT9nZnybCAVp86wRH5r7CmUxy', 'khach39@gmail.com', '0943205787', '5 Điện Biên Phủ, Q3, TP.HCM', 1, 1),
-(41, 'khach40', '$2b$12$6x4ogHdcRukhbCrbC7sa6.T.CfOmvQipTBA6aYMZ/jrVtSzTN8G1u', 'khach40@gmail.com', '0976935807', '2 Nguyễn Trãi, Q5, TP.HCM', 1, 1),
-(42, 'manager1', '$2b$12$oMymjZwdbmIfpqFWIcdZ/e9OmwMOXq5k./CQeEtVRYCZS4ZtkqLTa', 'manager1@shop.vn', '0917456942', '10 Nguyễn Huệ, Q1, TP.HCM', 3, 1),
-(43, 'manager2', '$2b$12$kLokKohl.dKJJYOmR9yWgO03FX87teNhq1XATiohDQDzm1axNymUK', 'manager2@shop.vn', '0913642183', '10 Nguyễn Huệ, Q1, TP.HCM', 3, 1),
-(44, 'manager3', '$2b$12$GnH1Kmsa/eLFpBFiP3a57.arpaFVcABAOlAudat8lO.KAQGCrYMZm', 'manager3@shop.vn', '0919575310', '10 Nguyễn Huệ, Q1, TP.HCM', 3, 1),
-(45, 'manager4', '$2b$12$e8mN2eFVb5gUvi8cGQWMc.aMuA7C5KhPj7Y4.cH6smk7s.APoTHxu', 'manager4@shop.vn', '0914907092', '10 Nguyễn Huệ, Q1, TP.HCM', 3, 1),
-(46, 'manager5', '$2b$12$JQcg4MM6B7YdrkJfGZC22uOiV3scxaBvERY0PNJ/ovGG06mjL50ge', 'manager5@shop.vn', '0914411559', '20 Lý Thường Kiệt, Q10, TP.HCM', 3, 1),
-(47, 'staff1', '$2b$12$8Ng/4YfhLo3.CgdH692tKuzVBzRb5gel4xsdx8P8jyS/z2cBd/7H2', 'staff1@shop.vn', '0924828108', '10 Nguyễn Huệ, Q1, TP.HCM', 4, 1),
-(48, 'staff2', '$2b$12$8eYguzNcVc6xl48zRvOIe.zkwqjhkjP7DpG4x/nUTThZpTPni8ZTW', 'staff2@shop.vn', '0929139872', '20 Lý Thường Kiệt, Q10, TP.HCM', 4, 1),
-(49, 'staff3', '$2b$12$Hj/6Ou/DCM9qBLI/9RJ9luRDPzt8cRn2vNxfTcAFYyI4wyW9qr/CG', 'staff3@shop.vn', '0921094254', '20 Lý Thường Kiệt, Q10, TP.HCM', 4, 1),
-(50, 'staff4', '$2b$12$YiiNnyHdxcy7w5wOjCZ59.uKLzQAfeH1phCieEie4AoNB8ZR2AUtS', 'staff4@shop.vn', '0926653504', '30 Cách Mạng Tháng 8, Q3, TP.HCM', 4, 1),
-(51, 'staff5', '$2b$12$9M8YAEx9vFP7acIuNG3.pu3VUX5NtFHUrDDA7Ifx5t88Tx3GCE22.', 'staff5@shop.vn', '0924230965', '30 Cách Mạng Tháng 8, Q3, TP.HCM', 4, 1),
-(52, 'staff6', '$2b$12$RnQo2P7bzVoXqEvBf4VPCuJBcPpfE7KxEPH533jSFRcyTL9qvATG2', 'staff6@shop.vn', '0923421304', '20 Lý Thường Kiệt, Q10, TP.HCM', 4, 1),
-(53, 'staff7', '$2b$12$pqXcwmcYbasDRBqVCwJaOu9CuG2JBAj7wESLZgGe8sXbQ/0xpk0rq', 'staff7@shop.vn', '0926357369', '30 Cách Mạng Tháng 8, Q3, TP.HCM', 4, 1),
-(54, 'staff8', '$2b$12$x838rX7BRRE8FGNy6Wp1PeVpR.cDovdXXZQjh4hERmydRx9h7b1nC', 'staff8@shop.vn', '0928194675', '30 Cách Mạng Tháng 8, Q3, TP.HCM', 4, 1),
-(55, 'staff9', '$2b$12$9fCHo7Curau5sTVM1pLOSemKXvCOYh60mbEW3jOnH9LnYvbC1LnuS', 'staff9@shop.vn', '0929323035', '20 Lý Thường Kiệt, Q10, TP.HCM', 4, 1),
-(56, 'staff10', '$2b$12$.H/rpfT5ZRB.L2IIvFnog.9qnxAqp9kZ8tjg.VtX4IqYOQ4eJMDhK', 'staff10@shop.vn', '0929275807', '30 Cách Mạng Tháng 8, Q3, TP.HCM', 4, 1),
-(57, 'staff11', '$2b$12$Grr4KriTbddIvoRCkO/vzOsCIFCIaYh1g86vQai1PxxohhUszRbpK', 'staff11@shop.vn', '0926475084', '10 Nguyễn Huệ, Q1, TP.HCM', 4, 1),
-(58, 'staff12', '$2b$12$R6msl5/lMnQu4TLaEwRMhOFJEpdH/NT.hW2j16sxZgQPPXZbW9ASi', 'staff12@shop.vn', '0926871569', '20 Lý Thường Kiệt, Q10, TP.HCM', 4, 1);
+(1, 'admin', 'adminpass', 'admin@example.com', '0900000000', 'TP.HCM', 2, 1),
+(2, 'khach1', 'khachpass', 'khach1@example.com', '0900000001', 'Q1, TP.HCM', 1, 1),
+(3, 'staff1', 'staffpass', 'staff1@example.com', '0900000002', 'Q3, TP.HCM', 4, 1);
 
 --
 -- Indexes for dumped tables
@@ -598,25 +598,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cart_details`
 --
 ALTER TABLE `cart_details`
-  MODIFY `cart_detail_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cart_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `colors`
 --
 ALTER TABLE `colors`
-  MODIFY `color_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `color_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `importreceipt`
@@ -640,7 +640,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment_method`
@@ -658,13 +658,13 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  MODIFY `variant_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `variant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `rates`
