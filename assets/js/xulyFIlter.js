@@ -13,13 +13,13 @@ document.addEventListener('click', function (e) {
 });
 
 
-const selectItem = document.querySelectorAll('.selectable');
-selectItem.forEach(item =>{
-    item.addEventListener('click', () =>
-    {
-        item.classList.toggle('selected');
-    })
-})
+// const selectItem = document.querySelectorAll('.selectable');
+// selectItem.forEach(item =>{
+//     item.addEventListener('click', () =>
+//     {
+//         item.classList.toggle('selected');
+//     })
+// })
 
 const sortIcon = document.getElementById('sort-icon');
 const sortMenu = document.getElementById('sort-menu');
@@ -33,3 +33,41 @@ document.addEventListener('click', function (e) {
         sortMenu.classList.remove('show');
     }
 });
+
+
+
+const selectedColors = [];
+const selectedSizes = [];
+
+document.querySelectorAll('.selectable').forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.toggle('selected');
+
+        // Nếu là màu (dựa vào style.backgroundColor hoặc data-color-id)
+        if (item.classList.contains('color-option')) {
+            const colorId = item.getAttribute('data-color-id');
+            updateHiddenInput('colors[]', colorId, item.classList.contains('selected'));
+        }
+
+        // Nếu là size
+        if (item.classList.contains('size-option')) {
+            const sizeVal = item.innerText.trim();
+            updateHiddenInput('sizes[]', sizeVal, item.classList.contains('selected'));
+        }
+    });
+});
+
+function updateHiddenInput(name, value, add) {
+    const form = document.querySelector('form');
+    if (add) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        input.setAttribute('data-dynamic', `${name}-${value}`);
+        form.appendChild(input);
+    } else {
+        const input = form.querySelector(`input[data-dynamic="${name}-${value}"]`);
+        if (input) input.remove();
+    }
+}

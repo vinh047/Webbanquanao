@@ -47,19 +47,19 @@
                         <div class="position-relative">
                             <span class="fs-3"><i class="fa-solid fa-filter boloc_icon" id="filter-icon"></i></span>
                             <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1">
-                                <form action="">
+                                <form action="product.php" method="GET">
                                     <div class="p-3">
                                         <p class="mb-2">Bộ lọc</p>
                                         <p class="mb-2">Màu : </p>
                                         <div class="">
                                             <div class="row gap-3 justify-content-center">
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
-                                                <div class="col-2 bg-dark border selectable" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="1" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="2" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="3" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="4" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="5" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="6" style="height: 35px;width: 35px;"></div>
+                                                <div class="col-2 bg-dark border selectable color-option" data-color-id="7" style="height: 35px;width: 35px;"></div>
                                             </div>
                                         </div>
                                         <p class="my-2">
@@ -67,22 +67,22 @@
                                         </p>
                                         <div class=" ps-4">
                                             <div class="row text-center gap-3">
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
                                                     <p class="mb-0">XS</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
                                                     <p class="mb-0">S</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
                                                     <p class="mb-0">M</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
                                                     <p class="mb-0">L</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
                                                     <p class="mb-0">XL</p>
                                                 </div>
-                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable" style="height:35px; width: 45px;">
+                                                <div class="col-2 border d-flex align-items-center justify-content-center selectable size-option" style="height:35px; width: 45px;">
                                                     <p class="mb-0">2XL</p>
                                                 </div>
                                             </div>
@@ -126,7 +126,7 @@
                                         <div class="mt-3">
                                             <div class="row justify-content-center">
                                                 <div class="col-3">
-                                                    <button class="btn btn-light btn-sm d-flex justify-content-center align-items-center border border-3" type="button" style="width:80px; height: 38px;">
+                                                    <button class="btn btn-light btn-sm d-flex justify-content-center align-items-center border border-3" type="submit" style="width:80px; height: 38px;">
                                                         <span>Lọc</span>
                                                     </button>
                                                 </div>
@@ -210,14 +210,69 @@
     $offset = ($page - 1) * $limit;
 
 
-    // Đếm tổng số sách
-    $demRs = mysqli_query($connection, "SELECT COUNT(*) AS total FROM products");
-    $totalRow = mysqli_fetch_assoc($demRs);
-    $totalSach = $totalRow['total'];
-    $totalPage = ceil($totalSach / $limit);
+
+
+
+
+    // Tìm kiếm nâng cao
+    // Lọc dữ liệu từ GET
+$where = [];
+
+if (!empty($_GET['selectTheloai'])) {
+    $theloai = mysqli_real_escape_string($connection, $_GET['selectTheloai']);
+    // Giả sử bạn có thể lấy ID từ tên loại
+    $categoryQuery = mysqli_query($connection, "SELECT category_id FROM categories WHERE name LIKE '%$theloai%'");
+    if ($row = mysqli_fetch_assoc($categoryQuery)) {
+        $catId = $row['category_id'];
+        $where[] = "products.category_id = $catId";
+    }
+}
+
+if (!empty($_GET['giamin'])) {
+    $giamin = (int)$_GET['giamin'];
+    $where[] = "products.price >= $giamin";
+}
+if (!empty($_GET['giamax'])) {
+    $giamax = (int)$_GET['giamax'];
+    $where[] = "products.price <= $giamax";
+}
+
+// Xử lý lọc màu (danh sách id)
+if (!empty($_GET['colors'])) {
+    $color_ids = array_map('intval', $_GET['colors']);
+    $color_str = implode(",", $color_ids);
+    $where[] = "product_variants.color_id IN ($color_str)";
+}
+
+// Xử lý lọc size
+if (!empty($_GET['sizes'])) {
+    $sizes = array_map(function ($s) use ($connection) {
+        return "'" . mysqli_real_escape_string($connection, $s) . "'";
+    }, $_GET['sizes']);
+    $size_str = implode(",", $sizes);
+    $where[] = "product_variants.size IN ($size_str)";
+}
+
+$filterQuery = "";
+if (count($where) > 0) {
+    $filterQuery = "WHERE " . implode(" AND ", $where);
+}
+
+    // Đếm tổng số sản phẩm sau khi lọc
+$quryDemSL = "SELECT COUNT(DISTINCT products.product_id) AS total 
+FROM products 
+JOIN product_variants ON products.product_id = product_variants.product_id 
+$filterQuery";
+$demRs = mysqli_query($connection, $quryDemSL);
+$totalRow = mysqli_fetch_assoc($demRs);
+$totalSach = $totalRow['total'];
+$totalPage = ceil($totalSach / $limit);
 
     // Truy vấn danh sách sách với LIMIT
-    $strSQL = "SELECT * FROM products JOIN product_variants ON products.product_id = product_variants.product_id $qrySort LIMIT $limit OFFSET $offset";
+    $strSQL = "SELECT * FROM products 
+    JOIN product_variants ON products.product_id = product_variants.product_id 
+    $filterQuery $qrySort 
+    LIMIT $limit OFFSET $offset";
     $result = mysqli_query($connection, $strSQL);
 
 
@@ -241,7 +296,7 @@
                 <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                         <div class="border rounded-1">
                             <a href="#" class="text-decoration-none text-dark ">
-                                <img src="../assets/img/sanpham/' . $img .  '" alt="" class="img-fluid">
+                                <img src="../assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
                                 <div class="mt-2 p-2 pt-1">
                                     <div class="">
                                         <p class="mb-0 fw-lighter">Nam</p>
