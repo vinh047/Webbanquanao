@@ -327,28 +327,43 @@ $totalPage = ceil($totalSach / $limit);
 
     }
 
-    echo '
+    if($totalPage == 1)
+    {
+        $paddingTest = 'py-3';
+    }else
+    {
+        $paddingTest = 'py-0';
+    }
+    echo '<div class = "' . $paddingTest . '">
+    
+        </div>
+    ';
 
-    <section class="phantrang py-4">
+    if($totalPage > 1)
+    {
+        echo '
 
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-3 text-center d-flex flex-wrap justify-content-center gap-2"">';
-
-                for ($i = 1; $i <= $totalPage; $i++) {
-                    $active = ($i == $page) ? 'style="font-weight:bold;"' : '';
-                    echo '<a href="?page=' . $i . '" class = "border p-2 px-3 text-decoration-none text-dark effect_hover" ' . $active . '> ' . $i . '</a> ';
-
-                }
-
-    echo '
+        <section class="phantrang py-4">
+    
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-3 text-center d-flex flex-wrap justify-content-center gap-2"">';
+    
+                    for ($i = 1; $i <= $totalPage; $i++) {
+                        $active = ($i == $page) ? 'style="font-weight:bold;"' : '';
+                        echo '<a href="?page=' . $i . '" class = "border p-2 px-3 text-decoration-none text-dark effect_hover" ' . $active . '> ' . $i . '</a> ';
+    
+                    }
+    
+        echo '
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </section>
-
-    ';
+    
+        </section>
+    
+        ';
+    }
 
 
 

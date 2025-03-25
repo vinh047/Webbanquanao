@@ -5,7 +5,7 @@
     </div>
 
     <nav class="menu_header">
-      <ul>
+      <ul class="mb-0">
         <li><a href="#">ÁO <i class="fa-solid fa-chevron-down"></i></a></li>
         <li><a href="#">QUẦN <i class="fa-solid fa-chevron-down"></i></a></li>
         <li><a href="#">PHỤ KIỆN <i class="fa-solid fa-chevron-down"></i></a></li>
