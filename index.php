@@ -38,41 +38,24 @@
             switch($page)
             {
                 case 'ao':
-                    {
-                        include('./layout/ao.php');
-                        break;
-                    }
                 case 'quan':
-                    {
-                        include('./layout/quan.php');
-                        break;
-                    }
                 case 'aopolo':
-                    {
-                        include('./layout/aopolo.php');
-                        break;
-                    }
                 case 'aosomi':
-                    {
-                        include('./layout/aosomi.php');
-                        break;
-                    }
                 case 'aokhoac':
-                    {
-                        include('./layout/aokhoac.php');
-                        break;
-                    }
+                    include('./layout/phanloai.php');
+                    break;
                 case 'sanpham':
-                    {
+                    if (isset($_GET['phanloai'])) {
+                        include('./layout/phanloai.php');
+                    } else {
                         include('./layout/product.php');
-                        break;
                     }
+                    break;
                 default:
-                {
-                        include('./layout/notfound.php');
-                        break;
-                }
+                    include('./layout/notfound.php');
+                    break;
             }
+            
         }
     }else
     {

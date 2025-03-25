@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="/Webbanquanao/assets/fonts/font.css">
         <link rel="stylesheet" href="/Webbanquanao/assets/css/product.css">
         <link rel="stylesheet" href="/Webbanquanao/assets/css/footer.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 
     </head>';
     ?>
@@ -43,9 +44,28 @@
                     <span class="mx-2">
                         <i class="fa-solid fa-angle-right"></i>
                     </span>
-                    <span class="text-dark">
-                        Áo Sơmi
-                    </span>
+                    <span class="text-dark">';
+                        
+                    $phanloai = $_GET['phanloai'];
+                    if($phanloai == 'ao')
+                    {
+                        echo 'Áo';
+                    }else if($phanloai == 'quan')
+                    {
+                        echo 'Quần';
+                    }else if($phanloai == 'aopolo')
+                    {
+                        echo 'Áo Polo';
+                    }else if($phanloai == 'aosomi')
+                    {
+                        echo 'Áo Sơmi';
+                    }else
+                    {
+                        echo 'Áo khoác';
+                    }
+
+                    
+                    echo '    </span>
                 </p>
             </div>
 
@@ -55,8 +75,28 @@
                         <div class="position-relative">
                             <span class="fs-3"><i class="fa-solid fa-filter boloc_icon" id="filter-icon"></i></span>
                             <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1">
-                                <form action="/webbanquanao/index.php" method="GET">
-                                <input type="hidden" name="page" value="aosomi">
+                            
+                                            <form action="/webbanquanao/index.php" method="GET">
+                    <input type="hidden" name="page" value="sanpham">';
+
+if (isset($_GET['phanloai'])) {
+    echo '<input type="hidden" name="phanloai" value="' . $_GET['phanloai'] . '">';
+}
+if (isset($_GET['selectTheloai'])) {
+    echo '<input type="hidden" name="selectTheloai" value="' . $_GET['selectTheloai'] . '">';
+}
+if (isset($_GET['giamin'])) {
+    echo '<input type="hidden" name="giamin" value="' . $_GET['giamin'] . '">';
+}
+if (isset($_GET['giamax'])) {
+    echo '<input type="hidden" name="giamax" value="' . $_GET['giamax'] . '">';
+}
+if (isset($_GET['colors'])) {
+    foreach ($_GET['colors'] as $color) {
+        echo '<input type="hidden" name="colors[]" value="' . $color . '">';
+    }
+}
+                        echo '
                                     <div class="p-3">
                                         <p class="mb-2">Bộ lọc</p>
                                         <p class="mb-2">Màu : </p>
@@ -164,18 +204,40 @@
                 <div class="position-relative">
                     <span class="fs-3">
                         <i class="fa-solid fa-bars-staggered" id="sort-icon"></i>
-                    </span>
-            
+                    </span>';
+
+                    $baseURL = "?page=sanpham&";
+                    if (isset($_GET['phanloai'])) {
+                        $baseURL .= "phanloai=" . $_GET['phanloai'] . "&";
+                    }
+                    if (isset($_GET['selectTheloai'])) {
+                        $baseURL .= "selectTheloai=" . $_GET['selectTheloai'] . "&";
+                    }
+                    if (isset($_GET['giamin'])) {
+                        $baseURL .= "giamin=" . $_GET['giamin'] . "&";
+                    }
+                    if (isset($_GET['giamax'])) {
+                        $baseURL .= "giamax=" . $_GET['giamax'] . "&";
+                    }
+                    if (isset($_GET['colors'])) {
+                        $baseURL .= "colors[]=" . implode("&colors[]=", $_GET['colors']) . "&";
+                    }
+                    if (isset($_GET['sizes'])) {
+                        $baseURL .= "sizes[]=" . implode("&sizes[]=", $_GET['sizes']) . "&";
+                    }
+
+
+            echo'
                     <div class="xacdinhZ_max sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
                         <div class="p-3">
                             <p class="mb-0 fw-bold">Sắp xếp theo</p>
-                            <a href="?page=aosomi&sapxep=giamdan">
+                            <a href="' . $baseURL . 'sapxep=giamdan">
                              <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-down"></i></span> Giá giảm dần
                             </button>
                             </a>
                             <br>
-                            <a href="?page=aosomi&sapxep=tangdan">
+                            <a href="' . $baseURL . 'sapxep=tangdan">
                             <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-up"></i></span> Giá tăng dần
                             </button>
@@ -185,6 +247,15 @@
                 </div>
             </div>
             
+
+                                <div class="ms-3" style="margin-top: 10px;">
+                <a href="/Webbanquanao/layout/cart.html" title="Giỏ hàng" class="text-dark">
+                        <span class="material-symbols-outlined" style="font-size: 34px;">
+                             shopping_cart
+                        </span>
+                    </a>
+            </div>
+
 
         </div>
 
@@ -226,13 +297,24 @@
     $offset = ($page - 1) * $limit;
 
 
-
-
-
+    // phân loại sp
+    $phanloaiA = ['ao' => 1,
+                  'quan' => 2,
+                  'aopolo' => 3,
+                  'aosomi' => 4,
+                  'aokhoac' => 5];
+    
+    $selectPhanloai =  $_GET['phanloai'] ?? null;
+    if($selectPhanloai && isset($phanloaiA[$selectPhanloai]))
+    {
+        $where[] = "products.category_id = ". $phanloaiA[$selectPhanloai];
+    }else
+    {
+        $where[] = "products.category_id = -1";
+    }
 
     // Tìm kiếm nâng cao
     // Lọc dữ liệu từ GET
-$where = ["products.category_id = 3"];
 
 if (!empty($_GET['selectTheloai'])) {
     $theloai = mysqli_real_escape_string($connection, $_GET['selectTheloai']);
@@ -316,8 +398,8 @@ $totalPage = ceil($totalSach / $limit);
                                 <div class="mt-2 p-2 pt-1">
                                     <div class="">
                                         <p class="mb-0 fw-lighter">Nam</p>
-                                        <p class="mb-0">' . $gia . '</p>   
-                                        <p class="mb-0">' . $name . ' VNĐ</p>
+                                        <p class="mb-0">' . $gia . ' VNĐ</p>   
+                                        <p class="mb-0">' . $name . '</p>
                                     </div>
                                 </div>
                             </a>
@@ -327,28 +409,43 @@ $totalPage = ceil($totalSach / $limit);
 
     }
 
-    echo '
+    if($totalPage == 1)
+    {
+        $paddingTest = 'py-3';
+    }else
+    {
+        $paddingTest = 'py-0';
+    }
+    echo '<div class = "' . $paddingTest . '">
+    
+        </div>
+    ';
 
-    <section class="phantrang py-4">
+    if($totalPage > 1)
+    {
+        echo '
 
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-3 text-center d-flex flex-wrap justify-content-center gap-2"">';
-
-                for ($i = 1; $i <= $totalPage; $i++) {
-                    $active = ($i == $page) ? 'style="font-weight:bold;"' : '';
-                    echo '<a href="?page=' . $i . '" class = "border p-2 px-3 text-decoration-none text-dark effect_hover" ' . $active . '> ' . $i . '</a> ';
-
-                }
-
-    echo '
+        <section class="phantrang py-4">
+    
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-3 text-center d-flex flex-wrap justify-content-center gap-2"">';
+    
+                    for ($i = 1; $i <= $totalPage; $i++) {
+                        $active = ($i == $page) ? 'style="font-weight:bold;"' : '';
+                        echo '<a href="?page=' . $i . '" class = "border p-2 px-3 text-decoration-none text-dark effect_hover" ' . $active . '> ' . $i . '</a> ';
+    
+                    }
+    
+        echo '
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </section>
-
-    ';
+    
+        </section>
+    
+        ';
+    }
 
 
 
