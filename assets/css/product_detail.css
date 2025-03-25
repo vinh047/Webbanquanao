@@ -1,0 +1,245 @@
+.color-option,
+.size-option {
+    cursor: pointer;
+    position: relative;
+}
+
+.color-option.active,
+.size-option.active {
+    border-color: #242121 !important;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
+}
+
+.lb{
+    width: 80px;
+    margin-right: 20px !important;
+}
+
+.input-qty {
+    width: 60px; /* hoặc nhỏ hơn tuỳ ý, ví dụ 50px */
+    text-align: center;
+}
+
+.up,
+.down{
+    cursor: pointer;
+    user-select: none;
+}
+
+.container {
+    background-color: #f5f5f5;
+}
+
+.buynow:hover {
+    background-color: #000000;
+    color: white;
+}
+
+.add-to-cart {
+    color: white;
+    transition: 0.3s ease;
+}
+
+.add-to-cart:hover {
+    border: 1px solid black;
+    background-color: #fff !important;
+    color: black;
+}
+
+.add-to-cart:active {
+    background-color: #000000 !important;
+    color: white;
+}
+
+.notice-add-to-cart {
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.notice-add-to-cart.show {
+    transform: translate(-50%, -50%) scale(1); /* Hiện với scale 1 */
+    opacity: 1 !important;
+}
+
+.underline-animate {
+    position: relative;
+}
+
+.underline-animate::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: black;
+    width: 0;
+    transition: width 0.2s ease;
+}
+
+.underline-animate:hover::after {
+    width: 100%;
+}
+
+.ellipsis-1-line {
+    white-space: nowrap;       /* Không xuống dòng */
+    overflow: hidden;          /* Ẩn phần vượt quá */
+    text-overflow: ellipsis;   /* Hiện dấu "..." */
+}
+
+.view-all {
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.view-all::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background-color: currentColor;
+    transition: width 0.2s ease;
+}
+
+.view-all:hover::after {
+    width: 75%;
+}
+
+.view-all:hover {
+    color:  #0056b3 !important;
+}
+
+.product-item {
+    cursor: pointer;
+    margin-right: 1rem;
+    box-shadow: var(--bs-box-shadow-lg);
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-item img {
+    width: 100%;
+    object-fit: contain;
+    margin: auto;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+}
+
+.suggest-products-scroll {
+    overflow-x: hidden;
+    /* scroll-behavior: smooth; */
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.scroll-btn:hover {
+    background: #f0f0f0;
+}
+
+.scroll-left{
+    left: -12px;
+}
+
+.scroll-right {
+    right: -12px;
+}
+
+.star-rating {
+    position: relative;
+    display: inline-block;
+    font-size: 24px;
+    color: #ccc;
+}
+
+.star-rating .stars-back,
+.star-rating .stars-front {
+    display: flex;
+    gap: 2px;
+}
+
+.star-rating .stars-front {
+    color: #FFD700;
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0%;
+    pointer-events: none;
+}
+
+.star-rating i {
+    font-size: 1.25rem;
+}
+
+.btn-star.active {
+    border-color: #FFD700 !important;
+    box-shadow: 0 0 8px 2px rgba(197, 195, 73, 0.4);
+}
+
+.pag {
+    border: none;
+    background: transparent;
+    width: auto;
+    text-align: center;
+    outline: none; /* bỏ viền khi focus */
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+    width: 25px;
+}
+
+.btn-prev,
+.btn-next {
+    height: 80%;
+}
+
+/* <1200 */
+@media (max-width: 1200px) {
+    .fs-md-3 {
+        font-size: 1.45rem !important;
+        font-weight: 500;
+    }
+}
+
+/* <768 */
+@media (max-width: 768px) {
+    .add-to-cart {
+        height: 38px !important;
+    }
+    .product-img-wrapper {
+        height: 230px;
+    }
+}
+@media (max-width: 768px) {
+    
+}
+/* <576 */
+@media (max-width: 576px) {
+    
+    .product-img-wrapper {
+        height: 160px;
+    }
+}
