@@ -9,6 +9,17 @@
     height:490px;
     z-index:1000;
 }
+.btn-cart-black {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.btn-cart-black:hover {
+    background-color: #333;
+}
+
 
 .filter_loc.show {
     opacity: 1;

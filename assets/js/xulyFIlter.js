@@ -1,3 +1,5 @@
+console.log("✅ File xulyFilter.js đã load!");
+
 document.getElementById('filter-icon').addEventListener('click', function () {
     const filterBox = document.querySelector('.filter_loc');
     filterBox.classList.toggle('show');
@@ -70,4 +72,17 @@ function updateHiddenInput(name, value, add) {
         const input = form.querySelector(`input[data-dynamic="${name}-${value}"]`);
         if (input) input.remove();
     }
+}
+function addToCart(id, productName, price) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let existing = cart.find(item => item.id == id);
+    if (existing) {
+        existing.quantity += 1;
+    } else {
+        cart.push({ id, name: productName, price, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Đã thêm " + productName + " vào giỏ hàng!");
 }
