@@ -23,8 +23,14 @@ echo '
         <div class="border rounded py-2 px-4 d-flex align-items-center">
             <div class="me-auto">
                 <p class="mb-0">
-                    <a href="../index.php" class="text-decoration-none link-primary aHover">
+                    <a href="/Webbanquanao/" class="text-decoration-none link-primary aHover">
                         Trang chủ
+                    </a>
+                    <span class="mx-2">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </span>
+                     <a href="/Webbanquanao/layout/product.php" class="text-decoration-none link-primary aHover">
+                        Sản phẩm
                     </a>
                     <span class="mx-2"><i class="fa-solid fa-angle-right"></i></span>
                     <span class="text-dark">Giỏ hàng</span>
