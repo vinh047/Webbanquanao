@@ -4,12 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const totalPriceEl = document.getElementById("total-price");
   if (cart.length === 0) {
       cartItems.innerHTML = `
-        <div class="p-4 border rounded text-center">
+        <div class="p-5 border rounded text-center">
           <p class="mb-3 fs-5">🛒 Giỏ hàng của bạn đang trống.</p>
-          <a href="/Webbanquanao/index.php" class="btn btn-dark px-4 fw-bold">Tiếp tục mua sắm</a>
+          <a href="/Webbanquanao/layout/product.php" class="btn btn-dark px-4 fw-bold">Tiếp tục mua sắm</a>
         </div>
       `;
-  
+      const orderSummary = document.getElementById("order-summary");
+      if (orderSummary) orderSummary.style.display = "none";
+      
       // Ẩn phần tổng giá nếu cần
       if (totalPriceEl) totalPriceEl.textContent = "0₫";
       return;

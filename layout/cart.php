@@ -37,7 +37,7 @@ echo '
                 </p>
             </div>
             <div>
-                <a href="../login.html" title="Đăng nhập" class="text-dark">
+                <a href="../login.html" title="Tài khoản của bạn" class="text-dark">
                     <span class="material-symbols-outlined fs-3">person</span>
                 </a>
             </div>
@@ -51,14 +51,14 @@ echo '
 
              <!-- Giỏ hàng bên trái -->
              
-             <div class="col-lg-8">
+             <div class="col-lg-8" id="cart-left">
                <h4 class="mb-4">GIỎ HÀNG CỦA BẠN</h4>
                <div id="cart-items"></div>
              </div>
 
              <!-- Tóm tắt đơn hàng bên phải -->
 
-             <div class="col-lg-4">
+             <div class="col-lg-4"  id="order-summary">
                <div class="border p-4 rounded shadow-sm">
                  <h6 class="mb-3">Tóm tắt đơn hàng</h6>
                  <div class="d-flex justify-content-between mb-2">
@@ -68,6 +68,9 @@ echo '
                  <p class="small mb-2"><i class="fa fa-clock me-1"></i> Giao hàng từ 3-5 ngày</p>
                  <p class="small mb-4"><i class="fa fa-truck me-1"></i> Free ship đơn trên 1.000.000₫</p>
                  <button class="btn btn-dark w-100 fw-bold">TIẾN HÀNH ĐẶT HÀNG</button>
+                 <a href="/Webbanquanao/layout/product.php" class="btn btn-outline-secondary w-100 mt-2 fw-bold">
+                       TIẾP TỤC MUA SẮM
+                 </a>
                </div>
              </div>
            </div>
