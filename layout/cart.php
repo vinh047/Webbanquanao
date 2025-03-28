@@ -39,17 +39,34 @@ echo '
     </div>
 
     <!-- Nội dung giỏ hàng -->
-    <div class="container-md mt-4">
-        <div class="p-4">
-            <h5 class="mb-3">Giỏ hàng của bạn</h5>
-            <div id="cart-items">
-            <p class="text-muted">Hiện tại giỏ hàng đang trống.</p>
-            <a href="../index.php" class="btn btn-dark px-4 py-2 text-uppercase fw-bold">
-                Continue Shopping
-            </a>
-            </div>
-        </div>
-    </div>
+
+         <div class="container my-5">
+           <div class="row">
+
+             <!-- Giỏ hàng bên trái -->
+             
+             <div class="col-lg-8">
+               <h4 class="mb-4">GIỎ HÀNG CỦA BẠN</h4>
+               <div id="cart-items"></div>
+             </div>
+
+             <!-- Tóm tắt đơn hàng bên phải -->
+
+             <div class="col-lg-4">
+               <div class="border p-4 rounded shadow-sm">
+                 <h6 class="mb-3">Tóm tắt đơn hàng</h6>
+                 <div class="d-flex justify-content-between mb-2">
+                   <span>Tạm tính:</span>
+                   <strong class="text-danger" id="total-price">0₫</strong>
+                 </div>
+                 <p class="small mb-2"><i class="fa fa-clock me-1"></i> Giao hàng từ 3-5 ngày</p>
+                 <p class="small mb-4"><i class="fa fa-truck me-1"></i> Free ship đơn trên 1.000.000₫</p>
+                 <button class="btn btn-dark w-100 fw-bold">TIẾN HÀNH ĐẶT HÀNG</button>
+               </div>
+             </div>
+           </div>
+         </div>
+
 </body>
 ';
 ?>
