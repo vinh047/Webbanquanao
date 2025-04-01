@@ -160,17 +160,13 @@
                     <div class="xacdinhZ_max sort-menu position-absolute text-bg-light end-100 rounded-1" id="sort-menu" style="width: 200px;">
                         <div class="p-3">
                             <p class="mb-0 fw-bold">Sắp xếp theo</p>
-                            <a href="?page=sanpham&sapxep=giamdan">
-                             <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
+                             <button  class="sort-btn btn btn-outline-secondary btn-sm mt-2 fs-6 w-100" data-sort="giamdan">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-down"></i></span> Giá giảm dần
                             </button>
-                            </a>
                             <br>
-                            <a href="?page=sanpham&sapxep=tangdan">
-                            <button class="btn btn-outline-secondary btn-sm mt-2 fs-6 w-100">
+                            <button  class="sort-btn btn btn-outline-secondary btn-sm mt-2 fs-6 w-100" data-sort="tangdan">
                                 <span class="me-2"><i class="fa-solid fa-arrow-trend-up"></i></span> Giá tăng dần
                             </button>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -192,194 +188,17 @@
     ?>
 
 
-
-    <!-- phần product -->
     <?php
-
-    $connection = mysqli_connect("localhost","root","","db_web_quanao");
-    if(!$connection)
-    {
-        echo 'Không kết nối được với database';
-        exit();
-    }
-
-    //Sắp xếp tăng,giảm
-    $sort = isset($_GET['sapxep']) ? $_GET['sapxep'] : '';
-    $qrySort = '';
-    if($sort == 'tangdan')
-    {
-        $qrySort = 'ORDER BY price ASC';
-    }else
-    {
-        $qrySort = 'ORDER BY price DESC';
-    }
-
-    // Phân trang
-    mysqli_set_charset($connection, 'utf8');
-
-    $limit = 8;
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    if ($page < 1) $page = 1;
-
-    $offset = ($page - 1) * $limit;
-
-
-
-
-
-
-    // Tìm kiếm nâng cao
-    // Lọc dữ liệu từ GET
-$where = [];
-
-if (!empty($_GET['selectTheloai'])) {
-    $theloai = mysqli_real_escape_string($connection, $_GET['selectTheloai']);
-    // Giả sử bạn có thể lấy ID từ tên loại
-    $categoryQuery = mysqli_query($connection, "SELECT category_id FROM categories WHERE name LIKE '%$theloai%'");
-    if ($row = mysqli_fetch_assoc($categoryQuery)) {
-        $catId = $row['category_id'];
-        $where[] = "products.category_id = $catId";
-    }
-}
-
-if (!empty($_GET['giamin'])) {
-    $giamin = (int)$_GET['giamin'];
-    $where[] = "products.price >= $giamin";
-}
-if (!empty($_GET['giamax'])) {
-    $giamax = (int)$_GET['giamax'];
-    $where[] = "products.price <= $giamax";
-}
-
-// Xử lý lọc màu (danh sách id)
-if (!empty($_GET['colors'])) {
-    $color_ids = array_map('intval', $_GET['colors']);
-    $color_str = implode(",", $color_ids);
-    $where[] = "product_variants.color_id IN ($color_str)";
-}
-
-// Xử lý lọc size
-if (!empty($_GET['sizes'])) {
-    $sizes = array_map(function ($s) use ($connection) {
-        return "'" . mysqli_real_escape_string($connection, $s) . "'";
-    }, $_GET['sizes']);
-    $size_str = implode(",", $sizes);
-    $where[] = "product_variants.size IN ($size_str)";
-}
-
-$filterQuery = "";
-if (count($where) > 0) {
-    $filterQuery = "WHERE " . implode(" AND ", $where);
-}
-
-    // Đếm tổng số sản phẩm sau khi lọc
-$quryDemSL = "SELECT COUNT(DISTINCT products.product_id) AS total 
-FROM products 
-JOIN product_variants ON products.product_id = product_variants.product_id 
-$filterQuery";
-$demRs = mysqli_query($connection, $quryDemSL);
-$totalRow = mysqli_fetch_assoc($demRs);
-$totalSach = $totalRow['total'];
-$totalPage = ceil($totalSach / $limit);
-
-    // Truy vấn danh sách sách với LIMIT
-    $strSQL = "SELECT * FROM products 
-    JOIN product_variants ON products.product_id = product_variants.product_id 
-    $filterQuery $qrySort 
-    LIMIT $limit OFFSET $offset";
-    $result = mysqli_query($connection, $strSQL);
-
-
-
     echo ' 
     <section>
     <div class="container-md">
-    <div class="row">';
-    while($row = mysqli_fetch_assoc($result))
-    {
-        $id = $row['product_id'];
-        $name = $row['name'];
-        $description = $row['description'];
-        $category_id  = $row['category_id'];
-        $gia = number_format($row['price'], 0, ',', '.');        
-        $rating_avg = $row['rating_avg'];
-        $rating_count = $row['rating_count'];
-        $sold_count = $row['sold_count'];
-        $img = $row['image'];
-        echo '
-                <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
-                        <div class="border rounded-1">
-                            <a href="#" class="text-decoration-none text-dark ">
-                                <img src="/Webbanquanao/assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
-                            </a>
-                                <div class="mt-2 p-2 pt-1">
-                                    <div class="">
-                                        <p class="mb-0 fw-lighter">Nam</p>
-                                        <p class="mb-0">' . $gia . ' VNĐ</p>   
-                                        <p class="mb-0">' . $name . '</p>
-                                        <button class="btn btn-dark btn-sm mt-2 w-100"
-                                           onclick="addToCart(' . $id . ', \'' . $name . '\', ' . $row['price'] . ')">
-                                           <i class="fa fa-cart-plus me-1"></i> Thêm vào giỏ
-                                        </button> 
-                                    </div>
-                                </div>
-                        </div>
-                </div>
-    ';
-
-    }
-
-    // Nếu chỉ có 1 trang thì cho nó cái padding trên dưới 3 để kh bị xấu :v
-    if($totalPage == 1)
-    {
-        $paddingTest = 'py-3';
-    }else
-    {
-        $paddingTest = 'py-0';
-    }
-    echo '<div class = "' . $paddingTest . '">
-    
+        <div class="row" id="product-list">
+            <!-- Sản phẩm sẽ được load ở đây qua AJAX -->
         </div>
-    ';
-
-    if($totalPage > 1)
-    {
-        echo '
-
-        <section class="phantrang py-4">
-    
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-3 text-center d-flex flex-wrap justify-content-center gap-2"">';
-    
-                    for ($i = 1; $i <= $totalPage; $i++) {
-                        $active = ($i == $page) ? 'style="font-weight:bold;"' : '';
-                        echo '<a href="?page=' . $i . '" class = "border p-2 px-3 text-decoration-none text-dark effect_hover" ' . $active . '> ' . $i . '</a> ';
-    
-                    }
-    
-        echo '
-                    </div>
-                </div>
-            </div>
-    
-        </section>
-    
-        ';
-    }
-
-
-
-
-    mysqli_close($connection);
-    ?>
-
-    <?php
-    echo '
     </div>
-    </div>
-    </section>';
-    ?>
+    </section>'
+    ?>;
+
 
 
 
@@ -392,7 +211,9 @@ $totalPage = ceil($totalSach / $limit);
     <!-- footer -->
 
     <?php
-    echo '    <script src="/Webbanquanao/assets/js/xulyFIlter.js"></script>
+    echo '
+        <script src="/Webbanquanao/assets/js/ajaxLoc_phantrang.js"></script>        
+        <script src="/Webbanquanao/assets/js/xulyFIlter.js"></script>
         <script src="/Webbanquanao/assets/js/addToCart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>

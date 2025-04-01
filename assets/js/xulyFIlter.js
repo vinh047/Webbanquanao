@@ -73,3 +73,17 @@ function updateHiddenInput(name, value, add) {
         if (input) input.remove();
     }
 }
+
+const resetButton = document.querySelector('button[type="reset"]');
+resetButton.addEventListener('click', function () {
+    // Bỏ chọn UI
+    document.querySelectorAll('.selectable').forEach(item => {
+        item.classList.remove('selected');
+    });
+
+    // Xóa input hidden đã thêm
+    document.querySelectorAll('input[data-dynamic]').forEach(input => {
+        input.remove();
+    });
+});
+
