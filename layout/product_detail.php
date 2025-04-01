@@ -11,17 +11,53 @@
 </head>
 <body>
     
+
+<?php 
+    require_once '../database/DBConnection.php';
+    $db = DBConnect::getInstance();
+
+    $product = $db->selectOne("SELECT * FROM products WHERE product_id = ?", [6]);
+
+    $category = $db->selectOne("SELECT * FROM categories WHERE category_id = ?", [$product['category_id']]);
+
+    $product_variants = $db->select("SELECT * FROM product_variants WHERE product_id = ?", [$product['product_id']]);
+
+    $suggest_products = $db->select("SELECT * FROM products WHERE category_id = ? LIMIT 10", [$product['category_id']]);
+
+
+    function formatToK($number) {
+        if ($number < 1000) {
+            return $number;
+        }
+    
+        // Chia cho 1000 và làm tròn đến 1 chữ số thập phân
+        $short = $number / 1000;
+    
+        // Nếu có phần thập phân, giữ 1 số sau dấu chấm
+        $formatted = number_format($short, ($short - floor($short) > 0 ? 1 : 0));
+    
+        return $formatted . 'k';
+    }
+
+    function getColorById($color_id) {
+        global $db;
+        return $db->selectOne("SELECT * FROM colors WHERE color_id = ?", [$color_id]);
+    }
+
+    
+
+?>
     <div class="container">
         <!-- Đường dẫn tới chi tiết sản phẩm -->
         <div class="my-3 d-flex align-items-center justify-content-center">
 
-            <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="#">eva</a>
+            <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="#">sagkuto</a>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
             
-            <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="#">Áo</a>
+            <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="#"><?= $category['name']; ?></a>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
             
-            <p class="m-0">Áo blabala</p>
+            <p class="m-0"><?= $product['name']; ?></p>
         
         </div>
 
@@ -36,13 +72,13 @@
                 <div class="col-md-7">
                     <div class="p-xl-4 p-md-2 ps-sm-4 mt-2 mt-md-0">
                         <!-- Tên của sản phẩm -->
-                        <div class="fs-3 fs-md-3">Tên của sản phẩm sẽ xuất hiện ở đây</div>
+                        <div class="fs-3 fs-md-3"><?= $product['name']; ?></div>
         
                         <!-- Đánh giá sao + số lượt đánh giá + số lượt bán-->
                         <div class="d-inline-flex justify-content-center align-items-stretch ms-1">
                             <!-- Đánh giá -->
                             <div class="d-inline-flex justify-content-center align-items-center gap-1 border-end pe-3">
-                                <p class="m-0 fs-5">4.8</p>
+                                <p class="m-0 fs-5"><?= $product['rating_avg'] ?></p>
         
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" style="width: 12px;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                     <path fill="#FFD43B" 
@@ -63,14 +99,14 @@
                             </div>
         
                             <!-- Số lượt đánh giá -->
-                            <p class="m-0 px-3 border-end">12.6k Đánh Giá</p>
+                            <p class="m-0 px-3 border-end"><?= formatToK($product['rating_count']); ?> Đánh Giá</p>
     
-                            <p class="m-0 px-3">7 Lượt Bán</p>
+                            <p class="m-0 px-3"><?= formatToK($product['sold_count']); ?> Lượt Bán</p>
         
                         </div>
     
                         <!-- Giá -->         
-                        <div class="fs-4 fw-medium mt-2" style="font-size: 16px;">120.000đ</div>
+                        <div class="fs-4 fw-medium mt-2" style="font-size: 16px;"><?= number_format($product['price']); ?>đ</div>
     
                         <div class="row gap-1">
                             <!-- Màu -->
@@ -79,38 +115,24 @@
         
                                 <!--  -->
                                 <div class="d-flex flex-wrap gap-3">
-                                    <div class="color-option border px-2 py-1">
+                                    <?php 
+                                    foreach($product_variants as $variant):
+                                        $color = getColorById($variant['color_id']);
+                                    ?>
+                                        <div class="color-option border px-2 py-1">
+                                            <img class="object-fit-contain" src="<?= '../assets/img/sampham/' . $variant['image'] ?>" alt="<?= 'Ảnh '. $product['name'] . ' màu ' . $color['name'] ?>" 
+                                            width="25" height="25">
+                                            <span><?= $color['name'] ?></span>
+                                        </div>
+                                        
+                                    <?php endforeach; ?>
+                                    <!-- <div class="color-option border px-2 py-1">
                                         <img class="object-fit-contain" src="https://evashopping.vn/public/storage/editor/thumbs/3973/non-nua-dau-vanh-rong-chong-nang-n38-h1.webp" alt="" 
                                         width="25" height="25">
                                         <span>Đen</span>
     
                                         
-                                    </div>
-        
-                                    <div class="color-option border px-2 py-1">
-                                        <img class="object-fit-contain" src="https://evashopping.vn/public/storage/editor/thumbs/1305/non-vanh-rong-di-bien-N05.webp" alt="" 
-                                         width="25" height="25">
-                                        <span>Đen</span>
-    
-                                        
-                                    </div>
-        
-                                    <div class="color-option border px-2 py-1">
-                                        <img class="object-fit-contain" src="https://evashopping.vn/public/storage/editor/thumbs/4172/do-di-bien-mau-den-dinh-hoa-bkn1053.webp" alt="" 
-                                         width="25" height="25">
-                                        <span>Đen</span>
-    
-                                        
-                                    </div>
-        
-        
-                                    <div class="color-option border px-2 py-1">
-                                        <img class="object-fit-contain" src="https://down-vn.img.susercontent.com/file/00c1630f92826e4dc3ae19572cba08ac" alt="" 
-                                        width="25" height="25">
-                                        <span>Đen</span>
-    
-                                        
-                                    </div>
+                                    </div> -->
         
                                 </div>
         
@@ -122,21 +144,11 @@
         
                                 <!--  -->
                                 <div class="d-flex gap-3 flex-wrap">
-                                    <div class="size-option border py-2 px-3">S</div>
-        
-                                    <div class="size-option border py-2 px-3">M</div>
-        
-                                    <div class="size-option border py-2 px-3">L</div>
-        
-                                    <div class="size-option border py-2 px-3">XL</div>
-
-                                    <div class="size-option border py-2 px-3">XL</div>
-
-                                    <div class="size-option border py-2 px-3">XL</div>  
-
-                                    <div class="size-option border py-2 px-3">XL</div>
-
-                                    <div class="size-option border py-2 px-3">XL</div>
+                                    <?php foreach($product_variants as $variant): ?>
+                                        <div class="size-option border py-2 px-3"><?= $variant['size'] ?></div>
+                                    <?php endforeach; ?>
+                                        
+                                    <!-- <div class="size-option border py-2 px-3">M</div> -->
                                 </div>
                             </div>
         
@@ -211,72 +223,24 @@
                   
                         <!-- Slider sản phẩm -->
                         <div class="suggest-products-scroll d-flex px-2 py-3">
-                            <div class="product-item border">
-                                <img src="https://down-vn.img.susercontent.com/file/f8c32b5b019a4c6b9d56a9950d481830@resize_w450_nl.webp" draggable="false">
-                                <div class="product-info">
-                                    <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
-                                    <p>120.000đ</p>
-
+                            <?php foreach($suggest_products as $p): ?>
+                                <div class="product-item border">
+                                    <img src="<?= '../assets/img/sanpham/'. $p['image'] ?>" draggable="false" alt="<?= $p['name'] ?>">
+                                    <div>
+                                        <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;"><?= $p['name'] ?></p>
+                                        <p><?= number_format($p['price']); ?>đ</p>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endforeach; ?>
 
-                            <div class="product-item border">
-                                <img src="https://evashopping.vn/public/storage/editor/thumbs/3973/non-nua-dau-vanh-rong-chong-nang-n38-h1.webp" draggable="false">
-                                <div class="product-info">
-                                    <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
-                                    <p>120.000đ</p>
-
-                                </div>
-                            </div>
-
-                            <div class="product-item border">
-                                <img src="https://evashopping.vn/public/storage/editor/thumbs/4172/do-di-bien-mau-den-dinh-hoa-bkn1053.webp" draggable="false">
-                                <div class="product-info">
-                                    <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
-                                    <p>120.000đ</p>
-
-                                </div>
-                            </div>
-
-
-                            <div class="product-item border">
-                                <img src="https://evashopping.vn/public/storage/editor/thumbs/4330/bikini-3-manh-di-bien-han-hang-bkn1067.webp" draggable="false">
-                                <div class="product-info">
-                                    <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
-                                    <p>120.000đ</p>
-
-                                </div>
-                            </div>
-
-
-                            <div class="product-item border">
+                            <!-- <div class="product-item border">
                                 <img src="https://evashopping.vn/public/storage/editor/thumbs/4353/bikini-3-manh-dang-vay-di-bien-bkn1086.webp" draggable="false">
-                                <div class="product-info">
+                                <div>
                                     <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
                                     <p>120.000đ</p>
 
                                 </div>
-                            </div>
-
-
-                            <div class="product-item border">
-                                <img src="https://evashopping.vn/public/storage/editor/thumbs/1305/non-vanh-rong-di-bien-N05.webp" draggable="false">
-                                <div class="product-info">
-                                    <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
-                                    <p>120.000đ</p>
-
-                                </div>
-                            </div>
-
-
-                            <div class="product-item border">
-                                <img src="https://tse4.mm.bing.net/th?id=OIP.Xn7vlgvT8Y2eBUhzQlgSCQHaEK&pid=Api&P=0&h=180" draggable="false">
-                                <div class="product-info">
-                                    <p class="ellipsis-1-line mt-3 mb-1 px-4 text-decoration-none text-secondary" style="font-size: 15px;">Nón đi biển rộng vành</p>
-                                    <p>120.000đ</p>
-
-                                </div>
-                            </div>
+                            </div> -->
 
                             
                             <!-- Thêm các sản phẩm khác tương tự -->
@@ -300,41 +264,7 @@
             <div class="border bg-white py-3 px-4">
                 <h3 class="text-decoration-underline mb-4">Mô tả sản phẩm</h3>
 
-                <p style="white-space: pre-line; ">Áo chống nắng cho nam chất thông hơi, thoáng mát
-                    ----------------------
-                    1- Cam Kết lỗi 1 đổi 1 tại nhà nhanh nhất cho bạn
-                    2- Miễn phí vận chuyển tận tay bạn (tối đa 30k)
-                    3- Bạn được kiểm tra hàng trước khi nhận (Liên hệ shop nếu ship ko cho xem)
-                    4- Giao đúng mẫu mã, size số như hình shop đăng
-                    5- Giảm 10% mọi sản phẩm khi bạn mua lần 2
-                    --------------------------
-                    
-                    ► THÔNG TIN SẢN PHẨM: 
-                    - Màu sắc: Đen, Xanh Than, Ghi Xám, Ghi Trắng
-                    - Chất liệu vải mè, thông hơi, với độ co giãn, thoáng mát cực tốt
-                    - Thiết kế form ôm, giúp cho người mặc cảm thấy tự tin hơn 
-                    - Chống nắng tốt để không bị đen da và các tia UV gây hại cho khác
-                    - Xuất xứ: Việt Nam 
-                    
-                    ► Chọn size chuẩn
-                    L:      45-64kg, duói m65
-                    XL:    65-80kg, dưới m75
-                    
-                    ► Tính Năng Nổi Bật
-                    - Có mũ, khóa kéo cao che làm khâu trang, có xỏ ngón., Túi có khoá kéo an toàn
-                    - Khả năng chống nắng cực tốt.
-                    - Ngăn tia cực tím từ ánh nắng mặt trời với mức độ ngăn chặn 97% tia có hại tác động lên da
-                    - Bảo vệ da bạn khỏi bị cháy nắng.
-                    - Form áo chuẩn, kích thước da dạng, phù hợp với mọi vóc dáng của người châu Á.
-                    - Khả năng co giãn đàn hồi tốt, tạo cảm giảm thoải mái khi sử dụng.
-                    - Tạo cảm giác tiếp xúc mát mẻ và thoải mái.
-                    - Chức năng làm khô nhanh, thoáng khí.
-                    - Mùa phù hợp: Mùa xuân, mùa hè Phong cách: Hiện đại, trẻ trung.
-                    -----------------------
-                    ---------------
-                    
-                    #aochongnang #aodinang #aochongnangnam #aonangnam #chongnang #aonang
-                    #aochongnangthonghoi #aochongnang2lop #aochongnangtoanthan # # #aochongnangcaocap #aochongnangdoi # #aochongnanghanoi </p>
+                <p style="white-space: pre-line; "><?= $product['description'] ?></p>
             
             </div>
         </div>
@@ -349,7 +279,7 @@
 
                     <div class="d-flex flex-column align-items-center me-sm-5 mb-3 mb-sm-1">
                         <div style="color: #FFD700;" class="fw-medium">
-                            <span class="fs-3">4.7</span>
+                            <span class="fs-3"><?= $product['rating_avg'] ?></span>
                             <span style="font-size: 1.125rem;"> trên 5</span>
                         </div>
 
@@ -363,7 +293,7 @@
                                 <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
                             </div>
                             <!-- Sao vàng phía trước được cắt theo phần trăm -->
-                            <div class="stars-front" style="width: 72%;"> <!-- 3.6 sao = 72% -->
+                            <div class="stars-front" style="width: <?= $product['rating_avg'] / 5 * 100 ?>%;"> <!-- 3.6 sao = 72% -->
                                 <i class="fa-solid fa-star"></i>
                                 <i class="fa-solid fa-star"></i>
                                 <i class="fa-solid fa-star"></i>
@@ -375,82 +305,37 @@
 
                     <div class="flex-grow-1 d-flex flex-wrap justify-content-sm-start justify-content-center">
                         <div class="btn-star active border d-inline-block me-2 p-2 mb-2" style="cursor: pointer;">Tất cả</div>
-                        <div class="btn-star border d-inline-block me-2 p-2 mb-2" style="cursor: pointer;">5 sao (333)</div>
-                        <div class="btn-star border d-inline-block me-2 p-2 mb-2" style="cursor: pointer;">4 sao (89)</div>
-                        <div class="btn-star border d-inline-block me-2 p-2 mb-2" style="cursor: pointer;">3 sao (34)</div>
-                        <div class="btn-star border d-inline-block me-2 p-2 mb-2" style="cursor: pointer;">2 sao (15)</div>
-                        <div class="btn-star border d-inline-block me-2 p-2 mb-2" style="cursor: pointer;">1 sao (39)</div>
+                        <?php
+                            $rating_counts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+                            $results = $db->select("SELECT rating, COUNT(*) AS total FROM reviews WHERE product_id = ? GROUP BY rating", [$product['product_id']]);
+                            foreach ($results as $row) {
+                                $rating_counts[$row['rating']] = $row['total'];
+                            }
+                            for ($i = 5; $i >= 1; $i--) {
+                                echo "<div class=\"btn-star border d-inline-block me-2 p-2 mb-2\" style=\"cursor: pointer;\">$i sao ($rating_counts[$i])</div>";
+                            }
+                        ?>
+                        
                     </div>
                 </div>
 
                 <!--  -->
                 <div class="row row-cols-12 g-0">
-                    <div class="mt-3 px-4 border-bottom">
-                        <div class="fw-semibold fs-6">Tên sẽ nằm ở đây</div>
-                        <div class="ms-1 mt-1" style="font-size: 12px;">
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                        </div>
-                        <p class="mt-2" style="white-space: pre-line; font-size: 15px;">Áo chất lượng tốt hàng đặt có nhanh, vải mềm mịn . Khoá áo chất lượng phục vụ tốt.Tôi hài lòng vói tất cả mặt hàng đã mua trên shop</p>
+
+                    <div class="review-list" data-product-id="<?= $product['product_id'] ?>">
+
                     </div>
 
-                    <div class="mt-3 px-4 border-bottom">
-                        <div class="fw-semibold fs-6">Tên sẽ nằm ở đây</div>
-                        <div class="ms-1 mt-1" style="font-size: 12px;">
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                        </div>
-                        <p class="mt-2" style="white-space: pre-line; font-size: 15px;">Áo chất lượng tốt hàng đặt có nhanh, vải mềm mịn . Khoá áo chất lượng phục vụ tốt.Tôi hài lòng vói tất cả mặt hàng đã mua trên shop</p>
-                    </div>
-
-                    <div class="mt-3 px-4 border-bottom">
-                        <div class="fw-semibold fs-6">Tên sẽ nằm ở đây</div>
-                        <div class="ms-1 mt-1" style="font-size: 12px;">
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                        </div>
-                        <p class="mt-2" style="white-space: pre-line; font-size: 15px;">Áo chất lượng tốt hàng đặt có nhanh, vải mềm mịn . Khoá áo chất lượng phục vụ tốt.Tôi hài lòng vói tất cả mặt hàng đã mua trên shop</p>
-                    </div>
-
-                    <div class="mt-3 px-4 border-bottom">
-                        <div class="fw-semibold fs-6">Tên sẽ nằm ở đây</div>
-                        <div class="ms-1 mt-1" style="font-size: 12px;">
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                            <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-                        </div>
-                        <p class="mt-2" style="white-space: pre-line; font-size: 15px;">Áo chất lượng tốt hàng đặt có nhanh, vải mềm mịn . Khoá áo chất lượng phục vụ tốt.Tôi hài lòng vói tất cả mặt hàng đã mua trên shop</p>
-                    </div>
+                    
 
 
                     <!-- Phân trang -->
-                    <div class="pagination d-flex justify-content-center m-4 pe-5 gap-4 align-items-center">
-                        <button class="btn-prev">
-                            <i class="fa-solid fa-chevron-left"></i>     
-                        </button>
-                        
-                        <div class="border p-2">
-                            <input type="text" class="pag" value="1" size="1">
-                            <span>/</span>
-                            <span class="max-pag mx-2">12</span>
+                    <div class="pagination_wrap">
 
-                        </div>
-
-                        <button class="btn-next">
-                            <i class="fa-solid fa-angle-right"></i>
-                        </button>
                     </div>
+                    
+                        
+                    
 
                 </div>
 
