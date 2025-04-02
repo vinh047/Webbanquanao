@@ -1,7 +1,7 @@
 <?php
     echo '<header class="header">
     <div class="logo_header">
-      <img src="./assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+      <img src="../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
     </div>
 
     <nav class="menu_header">

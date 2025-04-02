@@ -86,26 +86,6 @@ function scrollSuggestProducts(direction) {
 
 
 
-document.querySelectorAll('.btn-star').forEach(item => {
-    item.addEventListener('click', function() {
-        // Xóa active của các lựa chọn khác
-        document.querySelectorAll('.btn-star').forEach(option => option.classList.remove('active'));
-
-        // Thêm active vào item vừa click
-        this.classList.add('active');
-    });
-});
-
-
-
-
-// document.addEventListener("DOMContentLoaded", function() {
-//     let total_pages = document.querySelector('.max-pag').textContent;
-//     if(total_pages === '0' || total_pages === '1') {
-//         document.querySelector('.pagination').style.setProperty('display', 'none', 'important');
-//     }
-// });
-
 
 document.querySelector(".add-to-cart").addEventListener("click", function() {
     let popup = document.querySelector(".notice-add-to-cart");
@@ -117,58 +97,79 @@ document.querySelector(".add-to-cart").addEventListener("click", function() {
     }, 2000);
 });
 
+let isLoading = false; // Biến kiểm tra trạng thái tải
+
 // Ajax phân trang
-function loadReviews(page = 1) {
+function loadReviews(page = 1, rating = 'all') {
+    if(isLoading) return;
+    isLoading = true;
+
     const productId = document.querySelector('.review-list').dataset.productId;
-    fetch('../ajax/load_reviews.php?product_id=' + productId + '&page=' + page)
+    fetch('../ajax/load_reviews.php?product_id=' + productId + '&page=' + page + '&rating=' + rating)
         .then(responsive => responsive.text())
         .then(data => {
             const [html, pagination] = data.split('SPLIT');
             document.querySelector('.review-list').innerHTML = html;
-            console.log(html);
             document.querySelector('.pagination_wrap').innerHTML = pagination;
-
-            // document.querySelector('.pag').addEventListener('keydow', function(e) {
-            //     if(e.key === 'Enter') {
-            //         e.preventDefault();
-            //         loadReviews(document.querySelector('.pag').textContent);
-            //     }
-            // });
-        });
+        })
+        .finally(() => {
+            isLoading = false;
+        })
 
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    loadReviews();
-    
-    document.addEventListener('keydown', function(e) {
-        if(e.key === 'Enter' && e.target.classList.contains('pag')) {
-            e.preventDefault();
-            let page = parseInt(e.target.value) || 1;
-            loadReviews(page);
-        }
-    });
-    
-    document.addEventListener("click", function(e) {
-        if (e.target.classList.contains("btn-prev")) {
-            let page = document.querySelector('.pag');
-            let i = parseInt(page.value);
-            if (i > 1) {
-                page.value = i - 1;
-                loadReviews(i - 1);
+    document.addEventListener("DOMContentLoaded", function() {
+        loadReviews();
+        
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'Enter' && e.target.classList.contains('pag')) {
+                e.preventDefault();
+                let page = parseInt(e.target.value) || 1;
+                loadReviews(page);
             }
-        }
-    
-        if (e.target.classList.contains("btn-next")) {
-            let page = document.querySelector('.pag');
-            let max_pag = parseInt(document.querySelector('.max-pag').textContent);
-            let i = parseInt(page.value);
-            if (i < max_pag) {
-                page.value = i + 1;
-                loadReviews(i + 1);
+        });
+        
+        
+        document.addEventListener("click", function(e) {
+            e.stopImmediatePropagation();
+
+            let rating = 'all';
+            
+            
+            // Sự kiện của nút tăng giảm phân trang
+            if (e.target.classList.contains("btn-prev")) {
+                let page = document.querySelector('.pag');
+                let i = parseInt(page.value);
+                if (i > 1) {
+                    page.value = i - 1;
+                    loadReviews(i - 1, rating);
+                }
             }
-        }
-    });
+        
+            if (e.target.classList.contains("btn-next")) {
+                let page = document.querySelector('.pag');
+                let i = parseInt(page.value);
+                let max_pag = parseInt(document.querySelector('.max-pag').textContent);
+                if (i < max_pag) {
+                    page.value = i + 1;
+                    loadReviews(i + 1, rating);
+                }
+            }
+
+            // Sự kiện của nút đánh giá theo sao
+            if(e.target.classList.contains('btn-star')) {
+                // Xóa active của các lựa chọn khác
+                document.querySelectorAll('.btn-star').forEach(option => option.classList.remove('active'));
+
+                // Thêm active vào item vừa click
+                e.target.classList.add('active');
+
+                let selectRating = e.target.getAttribute('data-rating');
+                loadReviews(1, selectRating);
+            }
+        });
+
+    
 });
 
 

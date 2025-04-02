@@ -5,22 +5,42 @@
 
     $product_id = isset($_GET['product_id']) ? (int)$_GET['product_id'] : 0;
 
-    $limit = 3;
+    $limit = 2;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $page = max($page, 1);
     
-    
-    $total_reviews = $db->selectOne('SELECT COUNT(*) AS total FROM reviews WHERE product_id = ?', [$product_id]);
+    $rating = isset($_GET['rating']) && $_GET['rating'] !== 'all' ? (int) $_GET['rating'] : 'all';
+
+    if($rating !== 'all') {
+        $total_reviews = $db->selectOne("SELECT COUNT(*) AS total FROM reviews WHERE product_id = ? AND rating = ?", [$product_id, $rating]);
+    }
+    else {
+        $total_reviews = $db->selectOne('SELECT COUNT(*) AS total FROM reviews WHERE product_id = ?', [$product_id]);
+    }
+
     $total_pages = ceil($total_reviews['total'] / $limit);
-    if($page > $total_pages) {
+    if($page > $total_pages && $total_pages != 0) {
         $page = $total_pages;
     }
     $offset = ($page - 1) * $limit;
-    $reviews = $db->select("SELECT r.*, u.username FROM reviews r
-                            JOIN users u ON u.user_id = r.user_id
-                            WHERE product_id = ? 
-                            ORDER BY r.created_at DESC 
-                            LIMIT $limit OFFSET $offset", [$product_id]);
+
+
+    if($rating !== 'all') {
+        $reviews = $db->select("SELECT r.*, u.username FROM reviews r
+                                JOIN users u ON u.user_id = r.user_id
+                                WHERE product_id = ? AND r.rating = ?
+                                ORDER BY r.created_at DESC 
+                                LIMIT $limit OFFSET $offset", [$product_id, $rating]);
+    }
+    else {
+        $reviews = $db->select("SELECT r.*, u.username FROM reviews r
+                                JOIN users u ON u.user_id = r.user_id
+                                WHERE product_id = ? 
+                                ORDER BY r.created_at DESC 
+                                LIMIT $limit OFFSET $offset", [$product_id]);
+    }
+
+    
 
     ob_start();
     foreach($reviews as $r): ?>
@@ -42,7 +62,7 @@
 
     ob_start();
     if($total_pages > 1): ?>
-        <div class="pagination d-flex justify-content-center m-4 pe-5 gap-4 align-items-center">
+        <div class="pagination d-flex justify-content-center m-2 pe-5 gap-4 align-items-center">
             <button class="btn-prev">
                 <i class="fa-solid fa-chevron-left"></i>     
             </button>

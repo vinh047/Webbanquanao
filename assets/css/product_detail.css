@@ -38,8 +38,8 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-.container {
-    background-color: #f5f5f5;
+.container, .wrap {
+    background-color: #e2e2e2;
 }
 
 .buynow:hover {
@@ -225,7 +225,7 @@ input[type=number] {
 
 .btn-prev,
 .btn-next {
-    height: 80%;
+    height: 80% !important;
 }
 
 /* <1200 */
