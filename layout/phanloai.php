@@ -300,8 +300,8 @@ if (isset($_GET['colors'])) {
     // phân loại sp
     $phanloaiA = ['ao' => 1,
                   'quan' => 2,
-                  'aopolo' => 3,
-                  'aosomi' => 4,
+                  'aosomi' => 3,
+                  'aopolo' => 4,
                   'aokhoac' => 5];
     
     $selectPhanloai =  $_GET['phanloai'] ?? null;
