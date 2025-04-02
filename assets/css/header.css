@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
   body {
     font-family: Arial, sans-serif;
@@ -77,3 +78,107 @@
     font-size: 16px; /* cân chỉnh với menu */
     line-height: 1;
   }
+=======
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  border-bottom: 1px solid #ccc;
+}
+
+.logo_header {
+  display: flex;
+  align-items: center;
+}
+
+.logo_header img {
+  height: 50px;
+  display: block;
+}
+
+.menu_header ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu_header ul li {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.menu_header ul li a {
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  color: black;
+  transition: color 0.3s;
+}
+
+.menu_header ul li a:hover {
+  color: rgb(52, 164, 212);
+}
+
+/* Ẩn submenu mặc định */
+.menu_header .submenu {
+  display: none;
+  position: absolute;
+  top: 100%; /* ngay dưới menu chính */
+  left: 0;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+/* Hiện submenu khi hover vào li */
+.menu_header ul li:hover .submenu {
+  display: block;
+}
+
+.menu_header .submenu li {
+  display: block;
+}
+
+.menu_header .submenu li a {
+  padding: 10px 15px;
+  white-space: nowrap;
+}
+
+
+.icons_header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 18px;
+}
+
+.icons_header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 18px;
+}
+
+.icons_header i {
+  line-height: 1;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+}
+
+.login-link {
+  text-decoration: none;
+  color: #111;
+  font-weight: 500;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  /* cân chỉnh với menu */
+  line-height: 1;
+}
+
+
+>>>>>>> b1856e3 (navbar phan loai san pham)

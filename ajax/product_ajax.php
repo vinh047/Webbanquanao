@@ -1,6 +1,6 @@
 <?php
 
-$connection = mysqli_connect("localhost","root","","db_web_quanao");
+$connection = mysqli_connect("localhost","root","","db_web_quanao",3307);
 if(!$connection)
 {
     echo 'Không thể kết nối đến database';

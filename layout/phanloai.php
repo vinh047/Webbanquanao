@@ -269,7 +269,7 @@ if (isset($_GET['colors'])) {
     <!-- phần product -->
     <?php
 
-    $connection = mysqli_connect("localhost","root","","db_web_quanao");
+    $connection = mysqli_connect("localhost","root","","db_web_quanao",3307);
     if(!$connection)
     {
         echo 'Không kết nối được với database';
