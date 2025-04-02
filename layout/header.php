@@ -3,7 +3,6 @@ echo '<header class="header">
   <div class="logo_header">
     <img src="./assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
   </div>
->>>>>>> b1856e3 (navbar phan loai san pham)
 
   <nav class="menu_header">
     <ul class="mb-0">
