@@ -87,12 +87,13 @@
 }
 
 
-.effect_hover
-{
-    
-    transition: transform 0.3s ease;
-
+.xacdinhZ,
+.effect_hover {
+  position: static !important;
+  z-index: auto !important;
+  transform: none !important;
 }
+
 
 .effect_hover:hover
 {
@@ -102,8 +103,4 @@
 .xacdinhZ_max
 {
     z-index: 1000;
-}
-.xacdinhZ
-{
-    z-index: 1;
 }

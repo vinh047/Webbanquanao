@@ -6,3 +6,38 @@
 .input-group input {
   width: 40px;
 }
+.notice-add-to-cart {
+  position: fixed; 
+  bottom: 20px; 
+  left: 50%; 
+  transform: translateX(-50%) scale(0.95);
+  transition: opacity 0.5s ease, transform 0.3s ease;
+  border-radius: 12px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+  background-color: #333;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  z-index: 10000; 
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 150px; 
+  white-space: nowrap;
+
+}
+.notice-add-to-cart .checkmark {
+  margin-right: 10px;
+  font-size: 20px;
+}
+.opacity-100 {
+  opacity: 1 !important;
+  transform: translateX(-50%) scale(1);
+}
+.opacity-0 {
+  opacity: 0 !important;
+  z-index: -1;
+  pointer-events: none;
+}

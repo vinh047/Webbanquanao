@@ -6,15 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
       cartItems.innerHTML = `
         <div class="p-5 border rounded text-center">
           <p class="mb-3 fs-5">🛒 Giỏ hàng của bạn đang trống.</p>
-          <a href="/Webbanquanao/layout/product.php" class="btn btn-dark px-4 fw-bold">Tiếp tục mua sắm</a>
         </div>
       `;
-      const orderSummary = document.getElementById("order-summary");
-      if (orderSummary) orderSummary.style.display = "none";
-      
-      // Ẩn phần tổng giá nếu cần
-      if (totalPriceEl) totalPriceEl.textContent = "0₫";
-      return;
     }
   let total = 0;
 
@@ -54,7 +47,7 @@ function updateQty(index, delta) {
   cart[index].quantity += delta;
   if (cart[index].quantity <= 0) cart.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
-  location.reload(); // Tải lại trang để cập nhật
+  location.reload();
 }
 
 // Xoá sản phẩm
