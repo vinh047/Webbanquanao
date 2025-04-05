@@ -269,7 +269,7 @@ if (isset($_GET['colors'])) {
     <!-- phần product -->
     <?php
 
-    $connection = mysqli_connect("localhost","root","","db_web_quanao");
+    $connection = mysqli_connect("localhost","root","","db_web_quanao",3306);
     if(!$connection)
     {
         echo 'Không kết nối được với database';
@@ -300,8 +300,8 @@ if (isset($_GET['colors'])) {
     // phân loại sp
     $phanloaiA = ['ao' => 1,
                   'quan' => 2,
-                  'aosomi' => 3,
-                  'aopolo' => 4,
+                  'aopolo' => 3,
+                  'aosomi' => 4,
                   'aokhoac' => 5];
     
     $selectPhanloai =  $_GET['phanloai'] ?? null;

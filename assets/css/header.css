@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
   body {
     font-family: Arial, sans-serif;
@@ -78,7 +78,7 @@
     font-size: 16px; /* cân chỉnh với menu */
     line-height: 1;
   }
-=======
+  
 .header {
   display: flex;
   justify-content: space-between;
@@ -180,5 +180,3 @@
   line-height: 1;
 }
 
-
->>>>>>> b1856e3 (navbar phan loai san pham)

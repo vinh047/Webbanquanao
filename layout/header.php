@@ -1,34 +1,52 @@
 <?php
-echo '<header class="header">
+echo '
+<header class="header">
   <div class="logo_header">
-    <img src="./assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+    <a href="index.php">
+      <img src="./assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+    </a>
   </div>
 
   <nav class="menu_header">
-    <ul class="mb-0">
-      <li>
-        <a href="index.php?page=sanpham&phanloai=ao">ÁO <i class="fa-solid fa-chevron-down"></i></a>
+    <ul class="main-menu mb-0">
+
+      <li class="menu-item">
+        <input type="checkbox" id="menu-ao" hidden>
+        <label for="menu-ao" class="menu-label">
+          ÁO <i class="fa-solid fa-chevron-down"></i>
+        </label>
         <ul class="submenu">
           <li><a href="index.php?page=sanpham&phanloai=aopolo">Áo Polo</a></li>
           <li><a href="index.php?page=sanpham&phanloai=aosomi">Áo sơ mi</a></li>
           <li><a href="index.php?page=sanpham&phanloai=aokhoac">Áo khoác</a></li>
         </ul>
       </li>
-      <li>
-        <a href="index.php?page=sanpham&phanloai=quan">QUẦN <i class="fa-solid fa-chevron-down"></i></a>
+
+      <li class="menu-item">
+        <input type="checkbox" id="menu-quan" hidden>
+        <label for="menu-quan" class="menu-label">
+          QUẦN <i class="fa-solid fa-chevron-down"></i>
+        </label>
         <ul class="submenu">
           <li><a href="index.php?page=sanpham&phanloai=quanjean">Quần jean</a></li>
           <li><a href="index.php?page=sanpham&phanloai=quanshort">Quần short</a></li>
         </ul>
       </li>
-      <li>
-        <a href="index.php?page=sanpham&phanloai=phukien">PHỤ KIỆN <i class="fa-solid fa-chevron-down"></i></a>
+
+      <li class="menu-item">
+        <input type="checkbox" id="menu-phukien" hidden>
+        <label for="menu-phukien" class="menu-label">
+          PHỤ KIỆN <i class="fa-solid fa-chevron-down"></i>
+        </label>
         <ul class="submenu">
           <li><a href="index.php?page=sanpham&phanloai=non">Nón</a></li>
           <li><a href="index.php?page=sanpham&phanloai=tui">Túi</a></li>
         </ul>
       </li>
-      <li><a href="index.php?page=sanpham&phanloai=uudai">SP ƯU ĐÃI</a></li>
+
+      <li>
+        <a href="index.php?page=sanpham&phanloai=uudai">SP ƯU ĐÃI</a>
+      </li>
     </ul>
   </nav>
 
@@ -36,5 +54,6 @@ echo '<header class="header">
     <i class="fa-solid fa-magnifying-glass"></i>
     <i class="fa-solid fa-user"></i>
   </div>
-</header>';
+</header>
+';
 ?>
