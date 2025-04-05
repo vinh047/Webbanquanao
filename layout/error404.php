@@ -6,7 +6,7 @@
   .lottie-animation {
     width: 700px;
     height: 400px;
-    margin: 0 auto;
+    margin: 0 auto; 
   }
 
 </style>
