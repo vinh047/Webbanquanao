@@ -38,6 +38,11 @@ input[type=number] {
 }
 
 
+#noticeAddToCart {
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Không cản sự kiện click bên dưới */
+}
+
         </style>
     </head>
 
