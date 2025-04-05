@@ -57,6 +57,11 @@
                         include('./layout/error404.php');
                     }
                     break;
+                case 'giohang':
+                    {
+                        include('./layout/cart.php');
+                    }
+                    break;
                 default:
                     include('./layout/notfound.php');
                     break;
