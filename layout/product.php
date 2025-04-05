@@ -1,7 +1,5 @@
 
-    <!-- header -->
-    <?php
-    echo '<!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -14,16 +12,42 @@
         <link rel="stylesheet" href="/Webbanquanao/assets/css/product.css">
         <link rel="stylesheet" href="/Webbanquanao/assets/css/footer.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
+        <?php
+            require_once './database/DBConnection.php';
+            $db = DBConnect::getInstance();
+            $product_color  = $db->select("SELECT * FROM colors",[]);
+            $product_theloai = $db->select("SELECT * FROM categories",[]);
 
-    </head>';
-    ?>
+        ?>
+        <style>
+            /* Ẩn mũi tên trên Chrome, Safari, Edge */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Ẩn mũi tên trên Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+.product-img {
+    width: 100%;
+    height: 390px;        /* 👈 chỉnh chiều cao tùy ý */
+    object-fit: cover;    /* Cắt ảnh nhưng giữ tỷ lệ */
+}
+
+
+        </style>
+    </head>
+
 
 
 
 
     <!-- bộ lọc -->
-    <?php
-    echo '<section class="pt-4 pb-3">
+
+    <section class="pt-4 pb-3">
 
     <div class="container-md">
             
@@ -52,21 +76,14 @@
                                         <p class="mb-2">Bộ lọc</p>
                                         <p class="mb-2">Màu : </p>
                                         <div class="px-2">
-                                            <div class="row gap-3 justify-content-center">
-                                                <div class="col-2 border selectable color-option" data-color-id="1" style="height: 35px;width: 35px;background-color:#282A2B ;" title="Đen"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="2" style="height: 35px;width: 35px;background-color:#DBD1BC ;" title="Be"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="3" style="height: 35px;width: 35px;background-color:#90713B ;" title="Nâu"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="4" style="height: 35px;width: 35px;background-color:#9FA9A9 ;" title="Xám nhạt"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="5" style="height: 35px;width: 35px;background-color:#D07771 ;" title="Hồng nhạt"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="6" style="height: 35px;width: 35px;background-color:#95987B ;" title="Xanh rêu"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="7" style="height: 35px;width: 35px;background-color:#4F5C7C ;" title="Xanh biển đậm"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="8" style="height: 35px;width: 35px;background-color:#F5F1E6 ;" title="Trắng"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="9" style="height: 35px;width: 35px;background-color:#A5051D ;" title="Đỏ"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="10" style="height: 35px;width: 35px;background-color:#59564F ;" title="Olive"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="11" style="height: 35px;width: 35px;background-color:#387EA0 ;" title="Xanh biển nhạt"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="12" style="height: 35px;width: 35px;background-color:#3C4252 ;" title="Navy"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="13" style="height: 35px;width: 35px;background-color:#391D2B ;" title="Rượu vang"></div>
-                                                <div class="col-2 border selectable color-option" data-color-id="14" style="height: 35px;width: 35px;background-color:#B58F6C ;" title="Be đậm"></div>
+                                            <div class="row gap-3 justify-content-center">                                           
+                                            <?php foreach($product_color as $dl):  ?>
+                                           
+                                           
+                                                <div class="col-2 border selectable color-option" data-color-id="<?=$dl['color_id']?>" style="height: 35px;width: 35px;background-color:<?=$dl['hex_code']?> ;" title="<?=$dl['name']?>"></div>
+
+
+                                            <?php endforeach ?>
                                             </div>
                                         </div>
                                         <p class="my-2">
@@ -103,11 +120,12 @@
                                                 <div class="col-md-12">
                                                     <select name="selectTheloai" id="selectTheloai" class="form-select">
                                                         <option value="">Chọn thể loại</option>
-                                                        <option value="Áo">Áo</option>
-                                                        <option value="Quần">Quần</option>
-                                                        <option value="Áo Sơmi">Áo Sơmi</option>
-                                                        <option value="Áo Polo">Áo Polo</option>
-                                                        <option value="Áo khoác">Áo khoác</option>
+
+                                                    <?php foreach($product_theloai as $dl): ?>
+                                                        <option value="<?=$dl['category_id']?>"><?=$dl['name']?></option>
+
+                                                    <?php endforeach?>
+
                                                     </select>
                                                 </div>
                                             </div>
@@ -184,20 +202,21 @@
 
     </div>
 
-</section>';
-    ?>
+</section>
 
 
-    <?php
-    echo ' 
     <section>
-    <div class="container-md">
+    <div class="container-md h-100">
         <div class="row" id="product-list">
             <!-- Sản phẩm sẽ được load ở đây qua AJAX -->
+
         </div>
+
+
+        
     </div>
-    </section>'
-    ?>;
+    </section>
+
 
 
 
@@ -210,12 +229,10 @@
 
     <!-- footer -->
 
-    <?php
-    echo '
+
         <script src="/Webbanquanao/assets/js/ajaxLoc_phantrang.js"></script>        
         <script src="/Webbanquanao/assets/js/xulyFIlter.js"></script>
         <script src="/Webbanquanao/assets/js/addToCart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
-    </html>';
-    ?>
+    </html>

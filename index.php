@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./assets/css/slide.css">
     <link rel="stylesheet" href="./assets/css/footer.css">
     <link rel="stylesheet" href="./assets/fonts/font.css">
+    <link rel="stylesheet" href="./assets/fonts/error.css">
 </head>
 <body>';
 ?>
@@ -49,6 +50,11 @@
                         include('./layout/phanloai.php');
                     } else {
                         include('./layout/product.php');
+                    }
+                    break;
+                case 'error':
+                    {
+                        include('./layout/error404.php');
                     }
                     break;
                 default:

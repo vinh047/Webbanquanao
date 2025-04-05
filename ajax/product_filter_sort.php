@@ -17,16 +17,11 @@ function locSanPham($connection)
 {
     $where = [];
 
-    if(!empty($_GET['selectTheloai']))
-    {
-        $theloai = mysqli_real_escape_string($connection, $_GET['selectTheloai']);
-        $categoryQuery = mysqli_query($connection,"SELECT category_id FROM categories WHERE name LIKE '%$theloai%'");
-        if($row = mysqli_fetch_assoc($categoryQuery))
-        {
-            $catID = $row['category_id'];
-            $where[] = "products.category_id = $catID";
-        }
+    if (!empty($_GET['selectTheloai'])) {
+        $catID = (int)$_GET['selectTheloai'];
+        $where[] = "products.category_id = $catID";
     }
+    
 
     if(!empty($_GET['giamin']))
     {
