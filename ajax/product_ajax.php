@@ -1,6 +1,6 @@
 <?php
 
-$connection = mysqli_connect("localhost","root","","db_web_quanao",3307);
+$connection = mysqli_connect("localhost","root","","db_web_quanao");
 if(!$connection)
 {
     echo 'Không thể kết nối đến database';
@@ -10,15 +10,11 @@ if(!$connection)
 mysqli_set_charset($connection, 'utf8');
 
 require_once('product_filter_sort.php');
-
+require_once('../layout/phantrang.php');
 $limit = 8;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-if($page < 1) $page = 1;
-$offset = ($page - 1) * $limit;
-
+$page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
 $loc = locSanPham($connection);
 $sapxep = sapXepSanPham();
-
 $countSQL = "SELECT COUNT(DISTINCT products.product_id) AS total
              FROM products
              JOIN product_variants ON products.product_id = product_variants.product_id
@@ -28,10 +24,24 @@ $totalRow = mysqli_fetch_assoc($countResult);
 $totalItems = $totalRow['total'];
 $totalPage = ceil($totalItems / $limit);
 
-$productSQL = "SELECT * FROM products 
-               JOIN product_variants ON products.product_id = product_variants.product_id 
-               $loc $sapxep
+if ($totalItems == 0) {
+    echo 'REDIRECT_TO_HOME';
+    exit;
+}
+
+
+$pagination = new Pagination($totalItems, $limit, $page);
+$offset = $pagination->offset();
+
+
+$productSQL = "SELECT products.*, MIN(product_variants.image) as image
+               FROM products 
+               JOIN product_variants ON products.product_id = product_variants.product_id
+               $loc
+               GROUP BY products.product_id
+               $sapxep
                LIMIT $limit OFFSET $offset";
+
 $result = mysqli_query($connection, $productSQL);
 
 
@@ -50,7 +60,7 @@ while($row = mysqli_fetch_assoc($result))
             <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                     <div class="border rounded-1">
                         <a href="#" class="text-decoration-none text-dark ">
-                            <img src="/Webbanquanao/assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
+                            <img src="/Webbanquanao/assets/img/sanpham/' . $img . '" alt="" class="img-fluid product-img">
                         </a>
                             <div class="mt-2 p-2 pt-1">
                                 <div class="">
@@ -82,34 +92,10 @@ echo '<div class = "' . $paddingTest . '">
     </div>
 ';
 
-if($totalPage > 1)
-{
-    echo '
 
-    <section class="phantrang py-4">
-
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-3 text-center d-flex flex-wrap justify-content-center gap-2"">';
-
-                for ($i = 1; $i <= $totalPage; $i++) {
-                    $active = ($i == $page) ? 'style="font-weight:bold;"' : '';
-                    echo '<a href="?page=' . $i . '" class = "border p-2 px-3 text-decoration-none text-dark effect_hover" ' . $active . '> ' . $i . '</a> ';
-
-                }
-
-    echo '
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-    ';
+if ($pagination->totalPages > 1) {
+    $pagination->render(['page' => 'sanpham']);
 }
-
-
-
 
 mysqli_close($connection);
 ?>

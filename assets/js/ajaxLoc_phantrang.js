@@ -75,7 +75,7 @@ if (input) {
         fetchProducts(queryString);
     
         // ✅ Cập nhật URL đẹp
-        const newURL = window.location.pathname + "?page=sanpham&" + queryString;
+        const newURL = window.location.pathname + "?module=sanpham&" + queryString;
         history.pushState(null, "", newURL);
     });
     
@@ -93,7 +93,7 @@ if (input) {
     // ✅ Khi load trang (F5), lấy lại filter từ URL
     const currentSearch = window.location.search;
     const params = currentSearch.startsWith("?") ? currentSearch.substring(1) : "";
-    // fetchProducts(params, false);
+    fetchProducts(params, false);
      // bỏ phần đầu giữ phần sau
     if (params) {
         // Nếu có filter trên URL → fetch theo
@@ -131,8 +131,3 @@ function formDataToQueryString(formData) {
 
     return query;
 }
-
-
-
-
-
