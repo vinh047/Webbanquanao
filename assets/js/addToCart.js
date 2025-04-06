@@ -17,7 +17,8 @@ function showAddToCartNotice(productName) {
     notice.classList.remove('opacity-0');
     notice.classList.add('opacity-100');
     setTimeout(() => {
-        notice.classList.remove('opacity-0');
-        notice.classList.add('opacity-100');
+        notice.classList.remove('opacity-100');
+        notice.classList.add('opacity-0');
     }, 2500);
+    
 }

@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="./assets/css/slide.css">
     <link rel="stylesheet" href="./assets/css/footer.css">
     <link rel="stylesheet" href="./assets/fonts/font.css">
-    <link rel="stylesheet" href="./assets/fonts/error.css">
 </head>
 <body>';
 ?>
@@ -55,6 +54,11 @@
                 case 'error':
                     {
                         include('./layout/error404.php');
+                    }
+                    break;
+                case 'giohang':
+                    {
+                        include('./layout/cart.php');
                     }
                     break;
                 default:

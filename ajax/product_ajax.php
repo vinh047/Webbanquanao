@@ -60,7 +60,7 @@ while($row = mysqli_fetch_assoc($result))
             <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                     <div class="border rounded-1">
                         <a href="#" class="text-decoration-none text-dark ">
-                            <img src="/Webbanquanao/assets/img/sanpham/' . $img . '" alt="" class="img-fluid product-img">
+                            <img src="/Webbanquanao/assets/img/sanpham/sp1.jpg" alt="" class="img-fluid product-img">
                         </a>
                             <div class="mt-2 p-2 pt-1">
                                 <div class="">

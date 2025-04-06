@@ -131,8 +131,3 @@ function formDataToQueryString(formData) {
 
     return query;
 }
-
-
-
-
-
