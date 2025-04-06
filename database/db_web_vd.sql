@@ -126,7 +126,7 @@ CREATE TABLE `importreceipt` (
   `ImportReceipt_id` int(11) NOT NULL,
   `supplier_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `total_price` decimal(10,2) DEFAULT NULL,
+  `total_price` decimal(12,2) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -141,8 +141,8 @@ CREATE TABLE `importreceipt_details` (
   `ImportReceipt_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `total_price` decimal(10,2) DEFAULT NULL,
+  `price` decimal(12,2) DEFAULT NULL,
+  `total_price` decimal(12,2) DEFAULT NULL,
   `rate_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -156,7 +156,7 @@ CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
-  `total_price` decimal(10,2) DEFAULT NULL,
+  `total_price` decimal(12,2) DEFAULT NULL,
   `shipping_address` varchar(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
@@ -175,8 +175,8 @@ CREATE TABLE `order_details` (
   `order_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `total_price` decimal(10,2) DEFAULT NULL,
+  `price` decimal(12,2) DEFAULT NULL,
+  `total_price` decimal(12,2) DEFAULT NULL,
   `variant_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -234,7 +234,7 @@ CREATE TABLE `products` (
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
+  `price` decimal(12,2) DEFAULT NULL,
   `rating_avg` float DEFAULT 0,
   `rating_count` int(11) DEFAULT 0,
   `sold_count` int(11) DEFAULT 0
@@ -299,8 +299,8 @@ INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `size`, `st
 
 CREATE TABLE `rates` (
   `rate_id` int(11) NOT NULL,
-  `price_min` decimal(10,2) DEFAULT NULL,
-  `price_max` decimal(10,2) DEFAULT NULL,
+  `price_min` decimal(12,2) DEFAULT NULL,
+  `price_max` decimal(12,2) DEFAULT NULL,
   `rate` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
