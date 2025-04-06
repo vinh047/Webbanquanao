@@ -66,35 +66,30 @@
 }
 
 
-.icons_header {
+.icon-group {
   display: flex;
   align-items: center;
   gap: 20px;
   font-size: 18px;
+  color: black;
 }
 
-.icons_header {
+.icon {
+  color: #333;
+  font-size: 20px;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 20px;
-  font-size: 18px;
+  gap: 8px; /* Khoảng cách giữa icon và chữ */
+  transition: color 0.2s;
 }
 
-.icons_header i {
+.icon:hover {
+  color: rgb(52, 164, 212);/* Màu xanh khi hover */
+}
+
+.icon i {
   line-height: 1;
   vertical-align: middle;
-  display: flex;
-  align-items: center;
 }
 
-.login-link {
-  text-decoration: none;
-  color: #111;
-  font-weight: 500;
-  transition: 0.3s;
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  /* cân chỉnh với menu */
-  line-height: 1;
-}

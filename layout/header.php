@@ -31,8 +31,12 @@
     </ul>
   </nav>
 
-  <div class="icons_header">
-    <i class="fa-solid fa-magnifying-glass"></i>
+  <div class="icon-group">
+  <a href="search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
+  <a href="User-form\Login_Form\Login_Form.php" class="icon account-link">
     <i class="fa-solid fa-user"></i>
-  </div>
+    <span>Tài khoản</span>
+  </a>
+</div>
+
 </header>;
