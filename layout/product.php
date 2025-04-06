@@ -234,7 +234,8 @@ input[type=number] {
 
         <script src="/Webbanquanao/assets/js/ajaxLoc_phantrang.js"></script>        
 =======
-    <?php
+    <!-- <?php
+    
     echo '  
         <div id="noticeAddToCart" class="notice-add-to-cart position-fixed top-50 start-50 translate-middle d-flex flex-column justify-content-center align-items-center p-4 rounded w-auto opacity-0" style="background-color: rgba(0, 0, 0, 0.8); transition: opacity 0.5s ease;">
              <i class="fa-solid fa-circle-check fa-2x mb-2" style="color: #ffffff;"></i>
@@ -245,4 +246,4 @@ input[type=number] {
         <script src="/Webbanquanao/assets/js/addToCart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
-    </html>
+    </html> -->
