@@ -1,5 +1,4 @@
-<?php
-echo '<header class="header">
+<header class="header">
   <div class="logo_header">
     <img src="./assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
   </div>
@@ -36,5 +35,4 @@ echo '<header class="header">
     <i class="fa-solid fa-magnifying-glass"></i>
     <i class="fa-solid fa-user"></i>
   </div>
-</header>';
-?>
+</header>;
