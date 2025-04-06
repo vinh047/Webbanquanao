@@ -9,10 +9,10 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <title>sagkuto</title>
-        <link rel="icon" type="./Images/png" href="/Webbanquanao/assets/img/logo_favicon/favicon.png">
-        <link rel="stylesheet" href="/Webbanquanao/assets/fonts/font.css">
-        <link rel="stylesheet" href="/Webbanquanao/assets/css/product.css">
-        <link rel="stylesheet" href="/Webbanquanao/assets/css/footer.css">
+        <link rel="icon" type="./Images/png" href="../assets/img/logo_favicon/favicon.png">
+        <link rel="stylesheet" href="../assets/fonts/font.css">
+        <link rel="stylesheet" href="../assets/css/product.css">
+        <link rel="stylesheet" href="../assets/css/footer.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 
     </head>';
@@ -30,7 +30,7 @@
         <div class="border py-2 px-4 d-flex align-items-center">
             <div class="me-auto">
                 <p class="mb-0">
-                    <a href="/Webbanquanao/" class="text-decoration-none link-primary aHover">
+                    <a href="index.php" class="text-decoration-none link-primary aHover">
                         Trang chủ
                     </a>
                     <span class="mx-2">
@@ -76,7 +76,7 @@
                             <span class="fs-3"><i class="fa-solid fa-filter boloc_icon" id="filter-icon"></i></span>
                             <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1">
                             
-                                            <form action="/webbanquanao/index.php" method="GET">
+                                            <form action="index.php" method="GET">
                     <input type="hidden" name="page" value="sanpham">';
 
 if (isset($_GET['phanloai'])) {
@@ -249,7 +249,7 @@ if (isset($_GET['colors'])) {
             
 
                                 <div class="ms-3" style="margin-top: 10px;">
-                <a href="/Webbanquanao/layout/cart.html" title="Giỏ hàng" class="text-dark">
+                <a href="/layout/cart.html" title="Giỏ hàng" class="text-dark">
                         <span class="material-symbols-outlined" style="font-size: 34px;">
                              shopping_cart
                         </span>
@@ -394,7 +394,7 @@ $totalPage = ceil($totalSach / $limit);
                 <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover">
                         <div class="border rounded-1">
                             <a href="#" class="text-decoration-none text-dark ">
-                                <img src="/Webbanquanao/assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
+                                <img src="../assets/img/sanpham/sp1.jpg" alt="" class="img-fluid">
                                 <div class="mt-2 p-2 pt-1">
                                     <div class="">
                                         <p class="mb-0 fw-lighter">Nam</p>
@@ -471,7 +471,7 @@ $totalPage = ceil($totalSach / $limit);
     <!-- footer -->
 
     <?php
-    echo '    <script src="/Webbanquanao/assets/js/xulyFIlter.js"></script>
+    echo '    <script src="../assets/js/xulyFIlter.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
     </html>';

@@ -2,7 +2,7 @@
 
 echo '<footer class="section-p1">
     <div class="col">
-        <img src="./assets/img/logo_favicon/logo.png" alt="logo-SAGKUTO">
+        <img src="../assets/img/logo_favicon/logo.png" alt="logo-SAGKUTO">
     </div>
 
     <div class="col">
