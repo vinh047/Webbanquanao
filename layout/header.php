@@ -39,4 +39,4 @@
   </a>
 </div>
 
-</header>;
+</header>

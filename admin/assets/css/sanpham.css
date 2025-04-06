@@ -1,0 +1,65 @@
+.nav-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 205px; 
+    height: 100vh; 
+    background-color: #f8f9fa; 
+    z-index: 1000; 
+    overflow-y: auto;
+    border-right: 1px solid #dee2e6;
+}
+
+.quanlysp {
+    margin-left: 205px;
+}
+
+.hienthi table {
+table-layout: auto; /* Để bảng tự động điều chỉnh chiều rộng các cột */
+width: 100%; /* Bảng chiếm toàn bộ chiều rộng */
+}
+
+.hienthi td {
+padding: 8px; /* Thêm khoảng đệm để cải thiện hiển thị */
+text-align: center; /* Căn giữa văn bản */
+overflow: hidden; /* Ẩn phần vượt ngoài */
+text-overflow: ellipsis; /* Dùng dấu ba chấm khi văn bản bị tràn */
+white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
+}
+
+.hienthi td.tensp, .hienthi td.mota {
+width: 25%; /* Chiều rộng của cột tên sản phẩm và mô tả */
+max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
+min-width: 150px; /* Đảm bảo cột không quá nhỏ */
+}
+
+
+.hienthiid {
+width: 5%; /* Cố định chiều rộng cho cột ID */
+max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
+min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+}
+
+.hienthibtn,.hienthiloai
+{
+width: 12%; /* Cố định chiều rộng cho cột ID */
+max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
+min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+}
+
+.hienthigia
+{
+width:10%;
+max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
+min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+}
+.thongbaoLoi,.thongbaoThanhCong {
+    display: none;  /* Mặc định ẩn thông báo lỗi */
+    opacity: 0;     /* Ẩn thông báo bằng cách thiết lập opacity là 0 */
+    transition: opacity 0.6s ease;  /* Thêm hiệu ứng mờ dần */
+}
+
+.thongbaoLoi.show,.thongbaoThanhCong.show {
+    display: block;  /* Hiển thị thông báo lỗi khi thêm class 'show' */
+    opacity: 1;      /* Khi hiển thị, opacity là 1 */
+}
