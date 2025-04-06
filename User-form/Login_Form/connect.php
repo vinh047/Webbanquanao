@@ -2,7 +2,7 @@
 $servername = "localhost";   // hoặc 127.0.0.1
 $username = "root";          // tài khoản MySQL (thường là root)
 $password = "";              // mật khẩu (mặc định là rỗng với XAMPP)
-$database = "db_web_vd";     // tên CSDL của bạn
+$database = "db_web_quanao";     // tên CSDL của bạn
 
 $conn = new mysqli($servername, $username, $password, $database);
 
