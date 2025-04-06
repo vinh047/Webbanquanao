@@ -8,9 +8,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <title>sagkuto</title>
         <link rel="icon" type="./Images/png" href="../assets/img/logo_favicon/favicon.png">
-        <link rel="stylesheet" href="../assets/fonts/font.css">
-        <link rel="stylesheet" href="../assets/css/product.css">
-        <link rel="stylesheet" href="../assets/css/footer.css">
+        <link rel="stylesheet" href="./assets/fonts/font.css">
+        <link rel="stylesheet" href="./assets/css/product.css">
+        <link rel="stylesheet" href="./assets/css/footer.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
         <?php
             require_once './database/DBConnection.php';
@@ -238,9 +238,9 @@ input[type=number] {
              <i class="fa-solid fa-circle-check fa-2x mb-2" style="color: #ffffff;"></i>
              <span class="text-white text-center" id="noticeText">Đã thêm vào giỏ hàng</span>
         </div>                                                
-        <script src="../assets/js/ajaxLoc_phantrang.js"></script>        
-        <script src="../assets/js/xulyFIlter.js"></script>
-        <script src="../assets/js/addToCart.js"></script>
+        <script src="./assets/js/ajaxLoc_phantrang.js"></script>        
+        <script src="./assets/js/xulyFIlter.js"></script>
+        <script src="./assets/js/addToCart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
     </html>

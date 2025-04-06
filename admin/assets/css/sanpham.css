@@ -28,7 +28,7 @@ white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
 }
 
 .hienthi td.tensp, .hienthi td.mota {
-width: 25%; /* Chiều rộng của cột tên sản phẩm và mô tả */
+width: 20%; /* Chiều rộng của cột tên sản phẩm và mô tả */
 max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
 min-width: 150px; /* Đảm bảo cột không quá nhỏ */
 }
@@ -53,13 +53,94 @@ width:10%;
 max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
 min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
 }
-.thongbaoLoi,.thongbaoThanhCong {
-    display: none;  /* Mặc định ẩn thông báo lỗi */
-    opacity: 0;     /* Ẩn thông báo bằng cách thiết lập opacity là 0 */
-    transition: opacity 0.6s ease;  /* Thêm hiệu ứng mờ dần */
+.thongbaoLoi,
+.thongbaoThanhCong,
+.thongbaoUpdateThanhCong,
+.thongbaoXoaThanhCong,.thongBaoLoiGia  {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    
+    /* Vị trí góc phải trên màn hình */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+
+    /* Kiểu dáng */
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: #fff;
+    min-width: 250px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.thongbaoLoi.show,.thongbaoThanhCong.show {
-    display: block;  /* Hiển thị thông báo lỗi khi thêm class 'show' */
-    opacity: 1;      /* Khi hiển thị, opacity là 1 */
+/* Hiện khi có class show */
+.thongbaoLoi.show,
+.thongbaoThanhCong.show,
+.thongbaoUpdateThanhCong.show,
+.thongbaoXoaThanhCong.show,.thongBaoLoiGia.show {
+    display: block;
+    opacity: 1;
+}
+
+
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Ẩn mũi tên trên Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+.product-img {
+    width: 100%;
+    height: 390px;        /* 👈 chỉnh chiều cao tùy ý */
+    object-fit: cover;    /* Cắt ảnh nhưng giữ tỷ lệ */
+}
+
+.thongBaoXoa {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background-color: #28a745;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+    transition: all 0.2s ease-in-out;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.formSua {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    max-width: 500px;
+    width: 90%;
+    border-radius: 12px;
+}
+
+
+.d-none {
+    display: none !important;
 }
