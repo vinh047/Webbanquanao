@@ -3,13 +3,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const productContainer = document.getElementById("product-list");
 
     function fetchProducts(params = "", updateURL = true) {
-        fetch("/Webbanquanao/ajax/product_ajax.php?" + params)
+        fetch("../ajax/product_ajax.php?" + params)
             .then(response => response.text())
             .then(data => {
 
                 if(data === 'REDIRECT_TO_HOME')
                 {
-                    window.location.href = "/Webbanquanao/index.php?page=error";
+                    window.location.href = "index.php?page=error";
                     return;                    
                 }
 
