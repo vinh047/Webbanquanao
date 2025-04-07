@@ -74,15 +74,17 @@ document.addEventListener('DOMContentLoaded', function () {
                                         tbXoa.style.display = "block";
                                         tbXoa.classList.add("show");
                                     
-                                        setTimeout(() => {
-                                            tbXoa.classList.remove("show");
-                                            tbXoa.style.display = "none";
-                                        }, 2000);
+                                        setTimeout(() => tbXoa.classList.remove('show'), 2000);
+
                                     
                                         fetchSanPham();
                                     }
                                      else {
-                                        alert(data.message || "Xóa không thành công");
+                                        const tbXoaTB = document.querySelector(".thongbaoXoaKhongThanhCong");
+                                        tbXoaTB.style.display = "block";
+                                        tbXoaTB.classList.add("show");      
+                                        setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                              
                                     }
                                 });
                         };
@@ -157,10 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 tbGia.classList.add("show");
                 tbGia.style.display = "block";
                 
-                setTimeout(() => {
-                    tbGia.classList.remove("show");
-                    tbGia.style.display = "none";
-                }, 2000);
+                setTimeout(() => tbGia.classList.remove('show'), 2000);
+
                 return;
             }
             
@@ -184,10 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     tbUpdate.style.display = "block";
                     tbUpdate.classList.add("show");
                 
-                    setTimeout(() => {
-                        tbUpdate.classList.remove("show");
-                        tbUpdate.style.display = "none";
-                    }, 2000);
+                    setTimeout(() => tbUpdate.classList.remove('show'), 2000);
+
                 
                     fetchSanPham();
                 }

@@ -155,15 +155,10 @@
 
         <div class="thongbaoXoaThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
-                Xóa sản phẩm thành công
+                Xóa biến thể thành công
             </p>
         </div>
 
-        <div class="thongBaoLoiGia   bg-success me-3 mt-3 p-3 rounded-2">
-            <p class="mb-0 text-white">       
-                Giá sản phẩm không hợp lệ
-            </p>
-        </div>
         <div class="overlay"></div>
 
         <div class="thongBaoXoa rounded-2">

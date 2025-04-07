@@ -135,6 +135,11 @@
                 Xóa sản phẩm thành công
             </p>
         </div>
+        <div class="thongbaoXoaKhongThanhCong  bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Xóa sản phẩm thất bại
+            </p>
+        </div>
 
         <div class="thongBaoLoiGia   bg-success me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
