@@ -184,7 +184,72 @@
         </div>       
         
             </div>
+        <div class="formSua border container-md p-4">
+            <div class="" style="font-size: 16px;">
+                <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
+                <form action="../ajax/updateBienthe.php" method="POST" id="formSuaSPbienThe" enctype="multipart/form-data">
+                    <div class="">
+                        <label for="txtMaBt">Mã biến thể : </label>
+                        <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control" readonly>
+                    </div>
+                    <div class="pt-3">
+                        <label for="txtMa">Mã sản phẩm : </label>
+                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control ">
+                    </div>
+    
+                    <div class="pt-3 pb-2">
+                        <label for="fileAnh">Hình ảnh : </label>
+                        <input type="file" name="fileAnhSua" id="fileAnhSua" class="form-control">
+                        <div class="pt-2" style="max-width:170px;max-height: 200px;" id="hienthianhSua">
+                            <img src="" alt="" class="img-fluid" style="width: 170px; height: 200px; object-fit: contain; display: none;">
+                        </div>
+                    </div>
+    
+                    <div class="">
+                        <label for="cbSize">Size : </label>
+                        <select name="cbSizeSua" id="cbSizeSua" class="form-select ">
+                            <option value="">Chọn size sản phẩm</option>
+                            <option value="SM">SM</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="X">X</option>
+                            <option value="XL">XL</option>
+                            <option value="2XL">2XL</option>
 
+                        </select>
+                    </div>
+    
+                    <div class="pt-3">
+                        <label for="txtSl">Số lượng sản phẩm : </label>
+                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control " placeholder="Số lượng của sản phẩm">
+                    </div>
+
+                    <div class="pt-3">
+                        <label for="cbMau">Màu : </label>
+                        <select name="cbMauSua" id="cbMauSua" class="form-select">
+                            <option value="">Chọn màu sản phẩm</option>
+                            <?php foreach($color as $cl): ?>
+
+                                <option value="<?=$cl['color_id']?>"><?=$cl['name']?></option>
+
+
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+    
+                    <div class="pt-3 d-flex justify-content-center gap-3">
+                        <div class="">
+                            <button class="btn btn-success" style="width:80px;">Xác nhận</button>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-danger" style="width:80px;">Hủy</button>
+                        </div>
+                    </div>
+                </form>
+
+                
+            </div>
+            </div>
     </section>
 
 

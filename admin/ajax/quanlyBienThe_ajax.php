@@ -31,6 +31,7 @@ foreach ($data as $row) {
     $size = $row['size'];
     $soluong = $row['stock'];
     $mau = $row['tenMau'];
+    $id_mau = $row['color_id'];
 
     echo "
         <tr class='text-center'>
@@ -42,8 +43,15 @@ foreach ($data as $row) {
             <td class='hienthimau'>$mau</td>
             <td class='hienthibtn'>
                     <div class='d-flex justify-content-center gap-3'>
-                    <div><button class='btn btn-success btn-sm' style='width:60px;height:40px;font-size:17px;'>Sửa</button></div>
-                    <div><button class='btn btn-danger btn-sm' style='width:60px;height:40px;font-size:17px;'>Xóa</button></div>
+                    <div><button class='btn btn-success btn-sm btn-sua' 
+                    data-idvr='$idvr'
+                    data-idsp='$idsp'
+                    data-anh='$anh'
+                    data-size='$size'
+                    data-soluong='$soluong'
+                    data-mau='$id_mau'
+                    style='width:60px;height:40px;font-size:17px;'>Sửa</button></div>
+                    <div><button class='btn btn-danger btn-sm btn-xoa' data-id='$idvr' style='width:60px;height:40px;font-size:17px;'>Xóa</button></div>
                     </div>
             </td>
         </tr>
