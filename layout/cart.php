@@ -18,7 +18,7 @@
         <div class="border rounded py-2 px-4 d-flex align-items-center">
             <div class="me-auto">
                 <p class="mb-0">
-                    <a href="/Webbanquanao/" class="text-decoration-none link-primary aHover">
+                    <a href="index.php" class="text-decoration-none link-primary aHover">
                         Trang chủ
                     </a>
                     <span class="mx-2">
