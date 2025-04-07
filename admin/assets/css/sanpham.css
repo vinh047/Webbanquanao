@@ -34,10 +34,31 @@ min-width: 150px; /* Đảm bảo cột không quá nhỏ */
 }
 
 
+.hienthianh
+{
+    width: 20%; /* Chiều rộng của cột tên sản phẩm và mô tả */
+    max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
+    min-width: 150px; 
+}
+
+.hienthiidbt,.hienthiidsp
+{
+    width: 10%; /* Cố định chiều rộng cho cột ID */
+    max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+}
+
 .hienthiid {
 width: 5%; /* Cố định chiều rộng cho cột ID */
 max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
 min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+}
+
+.hienthisize,.hienthimau
+{
+    width: 10%; /* Cố định chiều rộng cho cột ID */
+    max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;  
 }
 
 .hienthibtn,.hienthiloai
@@ -143,4 +164,12 @@ input[type=number] {
 
 .d-none {
     display: none !important;
+}
+
+.preview-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
