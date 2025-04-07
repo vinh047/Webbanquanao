@@ -1,0 +1,8 @@
+.form-control:focus {
+    box-shadow: none;
+  }
+  .order-summary img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+  }

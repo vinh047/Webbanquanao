@@ -21,20 +21,9 @@
                     <a href="index.php" class="text-decoration-none link-primary aHover">
                         Trang chủ
                     </a>
-                    <span class="mx-2">
-                        <i class="fa-solid fa-angle-right"></i>
-                    </span>
-                     <a href="index.php?page=sanpham" class="text-decoration-none link-primary aHover">
-                        Sản phẩm
-                    </a>
                     <span class="mx-2"><i class="fa-solid fa-angle-right"></i></span>
                     <span class="text-dark">Giỏ hàng</span>
                 </p>
-            </div>
-            <div>
-                <a href="../login.html" title="Tài khoản của bạn" class="text-dark">
-                    <span class="material-symbols-outlined fs-3">person</span>
-                </a>
             </div>
         </div>
     </div>
@@ -65,7 +54,8 @@
                  </div>
                  <p class="small mb-2"><i class="fa fa-clock me-1"></i> Giao hàng từ 3-5 ngày</p>
                  <p class="small mb-4"><i class="fa fa-truck me-1"></i> Free ship đơn trên 1.000.000₫</p>
-                 <button class="btn btn-dark w-100 fw-bold">TIẾN HÀNH ĐẶT HÀNG</button>
+                 <a href="index.php?page=pay" class="btn btn-dark w-100 fw-bold">THANH TOÁN</a>
+
                  <a href="index.php?page=sanpham" class="btn btn-outline-secondary w-100 mt-2 fw-bold">
                        TIẾP TỤC MUA SẮM
                  </a>

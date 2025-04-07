@@ -61,9 +61,14 @@
                         include('./layout/cart.php');
                     }
                     break;
-                default:
-                    include('./layout/notfound.php');
+                case 'pay':
+                    {
+                        include('./layout/pay.php');
+                    }
                     break;
+                // default:
+                //     include('./layout/notfound.php');
+                //     break;
             }
             
         }
