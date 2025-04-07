@@ -11,8 +11,11 @@
         <link rel="stylesheet" href="./assets/fonts/font.css">
         <link rel="stylesheet" href="./assets/css/product.css">
         <link rel="stylesheet" href="./assets/css/footer.css">
+        <link rel="stylesheet" href="./assets/css/mini_cart.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
-        <?php
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+       <?php
             require_once './database/DBConnection.php';
             $db = DBConnect::getInstance();
             $product_color  = $db->select("SELECT * FROM colors",[]);
@@ -195,13 +198,37 @@ input[type=number] {
                 </div>
             </div>
             
-            <div class="ms-3" style="margin-top: 10px;">
-                <a href="index.php?page=giohang" title="Giỏ hàng" class="text-dark">
-                        <span class="material-symbols-outlined" style="font-size: 34px;">
-                             shopping_cart
-                        </span>
-                    </a>
+            <div class="ms-3 position-relative" style="margin-top: 10px;">
+              <a href="javascript:void(0);" id="toggle-cart" title="Giỏ hàng" class="text-dark">
+                <span class="material-symbols-outlined" style="font-size: 34px;">
+                  shopping_cart
+                </span>
+                <!-- Badge hiển thị số lượng -->
+                <span id="cart-count-badge" 
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      style="font-size: 12px;">
+                  0
+                </span>
+              </a>
             </div>
+                                                                
+            <!-- Giỏ hàng ảo -->
+           <!-- Giỏ hàng ảo -->
+<div id="mini-cart" class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column" style="width: 300px; height: 100vh; display: none; z-index: 9999;">
+  <h6 class="mb-3">Sản phẩm trong giỏ (<span id="cart-item-count">0</span>)</h6>
+  
+  <!-- Danh sách sản phẩm -->
+  <div id="mini-cart-items" class="flex-grow-1 overflow-auto"></div>
+  
+  <!-- Footer cố định -->
+  <div id="mini-cart-footer" class="mt-3">
+    <a href="index.php?page=giohang" class="btn btn-dark w-100 mb-2">Xem giỏ hàng</a>
+    <button id="close-mini-cart" class="btn btn-outline-secondary w-100">Đóng</button>
+  </div>
+</div>
+
+
+
 
         </div>
 
@@ -238,9 +265,10 @@ input[type=number] {
              <i class="fa-solid fa-circle-check fa-2x mb-2" style="color: #ffffff;"></i>
              <span class="text-white text-center" id="noticeText">Đã thêm vào giỏ hàng</span>
         </div>                                                
-        <script src="./assets/js/ajaxLoc_phantrang.js"></script>        
-        <script src="./assets/js/xulyFIlter.js"></script>
+        <script src="./assets/js/ajaxLoc_phantrang.js"></script>   
         <script src="./assets/js/addToCart.js"></script>
+        <script src="./assets/js/mini_cart.js"></script>     
+        <script src="./assets/js/xulyFIlter.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
     </html>

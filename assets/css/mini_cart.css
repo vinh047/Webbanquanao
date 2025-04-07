@@ -1,0 +1,27 @@
+#mini-cart {
+    width: 30%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    padding-bottom: 10px;
+}
+
+#mini-cart-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+    padding-right: 5px;
+}
+
+/* Footer cố định ở đáy */
+#mini-cart-footer {
+    padding: 10px 0 0;
+    background-color: white;
+    box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+}

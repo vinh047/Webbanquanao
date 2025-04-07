@@ -1,14 +1,21 @@
-document.addEventListener("DOMContentLoaded", function () {
+// Hàm hiển thị giỏ hàng
+function renderCart() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartItems = document.getElementById("cart-items");
   const totalPriceEl = document.getElementById("total-price");
+
+  cartItems.innerHTML = ""; // Xóa nội dung cũ
+
   if (cart.length === 0) {
-      cartItems.innerHTML = `
-        <div class="p-5 border rounded text-center">
-          <p class="mb-3 fs-5">🛒 Giỏ hàng của bạn đang trống.</p>
-        </div>
-      `;
-    }
+    cartItems.innerHTML = `
+      <div class="p-5 border rounded text-center">
+        <p class="mb-3 fs-5">🛒 Giỏ hàng của bạn đang trống.</p>
+      </div>
+    `;
+    totalPriceEl.textContent = "0₫";
+    return;
+  }
+
   let total = 0;
 
   cart.forEach((item, index) => {
@@ -19,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     div.className = "d-flex border-bottom py-3 align-items-center";
 
     div.innerHTML = `
-      <img src="${item.image || '/Webbanquanao/assets/img/sanpham/sp1.jpg'}" class="me-3 rounded" style="width: 100px; height: 100px; object-fit: cover;">
+      <img src="${item.image || './assets/img/sanpham/sp1.jpg'}" class="me-3 rounded" style="width: 100px; height: 100px; object-fit: cover;">
       <div class="flex-grow-1">
         <h6>${item.name}</h6>
         <p class="mb-1">Color: ${item.color || 'đen'} &nbsp;&nbsp;&nbsp; Size: ${item.size || 'L'}</p>
@@ -39,24 +46,33 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   totalPriceEl.textContent = total.toLocaleString() + "₫";
-});
+}
 
 // Cập nhật số lượng
 function updateQty(index, delta) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  if (!cart[index]) return;
+
   cart[index].quantity += delta;
-  if (cart[index].quantity <= 0) cart.splice(index, 1);
+
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
+
   localStorage.setItem("cart", JSON.stringify(cart));
-  location.reload();
+  renderCart();
 }
 
 // Xoá sản phẩm
 function removeItem(index) {
   const confirmDelete = confirm("Bạn có chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng?");
   if (!confirmDelete) return;
+
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
-  location.reload();
+  renderCart();
 }
 
+// Gọi hàm khi trang load
+document.addEventListener("DOMContentLoaded", renderCart);
