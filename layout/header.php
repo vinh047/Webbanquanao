@@ -1,9 +1,20 @@
 <header class="header">
+
+  <button class="menu-toggle">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
   <div class="logo_header">
     <img src="../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
   </div>
   
   <nav class="menu_header">
+    <!-- Nút đóng menu -->
+    <button class="menu-close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+
     <ul class="mb-0">
       <li>
         <a href="index.php?page=sanpham&phanloai=ao">ÁO <i class="fa-solid fa-chevron-down"></i></a>
@@ -32,11 +43,25 @@
   </nav>
 
   <div class="icon-group">
-  <a href="search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
-  <a href="User-form\Login_Form\Login_Form.php" class="icon account-link">
-    <i class="fa-solid fa-user"></i>
+    <a href="search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
+    <a href="User-form\Login_Form\Login_Form.php" class="icon account-link">
+      <i class="fa-solid fa-user"></i>
     <span>Tài khoản</span>
-  </a>
-</div>
+    </a>
+  </div>
 
 </header>
+
+<script>
+  // Nút hamburger (mở menu)
+  document.querySelector('.menu-toggle').addEventListener('click', function() {
+    document.querySelector('.menu_header').classList.toggle('active');
+  });
+
+  // Nút x (đóng menu)
+  document.querySelector('.menu-close').addEventListener('click', function() {
+    document.querySelector('.menu_header').classList.remove('active');
+  });
+
+
+</script>

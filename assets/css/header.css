@@ -1,18 +1,29 @@
+/* ----- PHẦN CSS DÙNG CHO MÀN HÌNH RỘNG (>= 751px) ----- */
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* logo bên trái, menu ở giữa, icon bên phải */
   align-items: center;
   padding: 10px 40px;
   border-bottom: 1px solid #ccc;
 }
 
-.logo_header {
-  display: flex;
-  align-items: center;
+/* Ẩn nút bars trên màn hình lớn */
+.menu-toggle {
+  display: none;
+}
+
+.menu-close {
+  display: none;
 }
 
 .logo_header img {
   height: 50px;
+  display: block;
+}
+
+.menu_header {
+  /* Trên màn hình lớn thì menu hiển thị như cũ */
+  position: static;
   display: block;
 }
 
@@ -65,7 +76,6 @@
   white-space: nowrap;
 }
 
-
 .icon-group {
   display: flex;
   align-items: center;
@@ -93,3 +103,79 @@
   vertical-align: middle;
 }
 
+/* ----- PHẦN CSS CHO MÀN HÌNH NHỎ (<= 750px) ----- */
+@media (max-width: 750px) {
+  /* Nút bars (menu-toggle) xuất hiện */
+  .menu-toggle {
+    display: block;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .menu-close {
+    display: block;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Menu dạng off-canvas: ban đầu ẩn ở bên trái */
+  .menu_header {
+    position: fixed;
+    top: 0;
+    left: -500px;       /* Ẩn khỏi màn hình bên trái */
+    width: 500px;       /* Chiều rộng bar */
+    max-width: 80%;     /* (Tuỳ chọn) để tránh tràn trên màn hình nhỏ hơn 500px */
+    height: 100vh;
+    background: #fff;
+    overflow-y: auto;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
+    z-index: 9999;
+    padding-top: 20px;  /* chừa khoảng trống trên cho nút đóng */
+  }
+
+  /* Menu hiển thị khi có class .active -> trượt vào */
+  .menu_header.active {
+    left: 0;
+  }
+
+  /* Nút đóng (x) ở góc trên bên phải bar */
+  .menu-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Menu xổ dọc */
+  .menu_header ul {
+    padding: 0;
+    margin: 40px 0 0; /* đẩy danh sách xuống dưới một chút 
+                         để tránh đè lên nút x */
+  }
+  .menu_header ul li {
+    display: block;
+    border-bottom: 1px solid #ccc;
+  }
+  .menu_header ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: black;
+  }
+
+  /* Submenu (nếu có) */
+  .menu_header .submenu {
+    position: static; 
+    box-shadow: none;
+    display: none;
+  }
+  .menu_header ul li:hover .submenu {
+    display: block;
+  }
+}
