@@ -159,10 +159,16 @@
             </p>
         </div>
 
+        <div class="thongbaoXoaThatBai  bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Xóa biến thể thất bại
+            </p>
+        </div>
+
         <div class="overlay"></div>
 
         <div class="thongBaoXoa rounded-2">
-            <p class="mb-0 text-white fs-5 text-center">
+            <p class="mb-0 fs-5 text-center">
                 Bạn có chắc chắn muốn xóa hay không?       
             </p>
         
@@ -195,8 +201,11 @@
                     <div class="pt-3 pb-2">
                         <label for="fileAnh">Hình ảnh : </label>
                         <input type="file" name="fileAnhSua" id="fileAnhSua" class="form-control">
+                        <div class="d-flex">
                         <div class="pt-2" style="max-width:170px;max-height: 200px;" id="hienthianhSua">
                             <img src="" alt="" class="img-fluid" style="width: 170px; height: 200px; object-fit: contain; display: none;">
+                        </div>
+                        <div id="tenFileAnhSua" class="text-muted small fst-italic mt-1 ms-2"></div>
                         </div>
                     </div>
     

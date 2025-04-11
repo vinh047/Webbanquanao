@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         fetchSanPham();
                                     }
                                      else {
-                                        const tbXoaTB = document.querySelector(".thongbaoXoaKhongThanhCong");
+                                        const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
                                         tbXoaTB.style.display = "block";
                                         tbXoaTB.classList.add("show");      
                                         setTimeout(() => tbXoaTB.classList.remove('show'), 2000);

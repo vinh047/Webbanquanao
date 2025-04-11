@@ -55,7 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         document.getElementById("cbSizeSua").value = size;
                         document.getElementById("txtSlSua").value = soluong;
                         document.getElementById("cbMauSua").value = mau;
-                        
+                        document.getElementById("tenFileAnhSua").textContent = anh;
+
                         // Gán ảnh hiển thị
                         const imgPreview = formSua.querySelector("#hienthianhSua img");
                         imgPreview.src = "../../assets/img/sanpham/" + anh;
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             })
                             .then(res => res.json())
                             .then(data => {
+                                console.log("Xoá biến thể trả về:", data); // ✅ debug
                                 if (data.success) {
                                     // Hiển thị thông báo xóa thành công
                                     const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
@@ -99,7 +101,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     // Tải lại danh sách sản phẩm sau khi xóa
                                     fetchBienThe();
                                 } else {
-                                    alert(data.message || "Xóa không thành công");
+                                    const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
+                                    tbXoaTB.style.display = "block";
+                                    tbXoaTB.classList.add("show");      
+                                    setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
                                 }
 
                                 // Ẩn popup và overlay sau khi xử lý xong
@@ -455,6 +460,69 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".formSua").style.display = "none";
         document.querySelector(".overlay").style.display = "none";
         formSua.reset();
+    });
+    document.getElementById("fileAnhSua").addEventListener("change", function () {
+        const file = this.files[0];
+        const tenFile = document.getElementById("tenFileAnhSua");
+        const imgPreview = document.querySelector("#hienthianhSua img");
+        const thongbao = document.querySelector(".thongbaoLoi");
+        const loi = thongbao.querySelector("p");
+    
+        if (file) {
+            const validTypes = ["image/jpeg", "image/png", "image/gif"];
+            if (!validTypes.includes(file.type)) {
+                // ❌ Không hợp lệ → báo lỗi
+                loi.textContent = "Sai định dạng ảnh!";
+                thongbao.style.display = "block";
+                thongbao.classList.add("show");
+                setTimeout(() => thongbao.classList.remove("show"), 2000);
+    
+                this.value = ""; // reset input
+                tenFile.textContent = ""; // xoá tên file
+                imgPreview.src = "";
+                imgPreview.style.display = "none";
+                return;
+            }
+    
+            // ✅ Hợp lệ → hiển thị ảnh và tên
+            imgPreview.src = URL.createObjectURL(file);
+            imgPreview.style.display = "block";
+            tenFile.textContent = file.name;
+        } else {
+            imgPreview.src = "";
+            imgPreview.style.display = "none";
+            tenFile.textContent = "";
+        }
+    });
+    
+    document.getElementById("fileAnh").addEventListener("change", function () {
+        const file = this.files[0];
+        const imgPreview = document.querySelector("#hienthianh img");
+        const thongbao = document.querySelector(".thongbaoLoi");
+        const loi = thongbao.querySelector("p");
+    
+        if (file) {
+            const validTypes = ["image/jpeg", "image/png", "image/gif"];
+            if (!validTypes.includes(file.type)) {
+                // ❌ Báo lỗi
+                loi.textContent = "Sai định dạng ảnh!";
+                thongbao.style.display = "block";
+                thongbao.classList.add("show");
+                setTimeout(() => thongbao.classList.remove("show"), 2000);
+    
+                this.value = ""; // reset input
+                imgPreview.src = "";
+                imgPreview.style.display = "none";
+                return;
+            }
+    
+            // ✅ Hiển thị ảnh
+            imgPreview.src = URL.createObjectURL(file);
+            imgPreview.style.display = "block";
+        } else {
+            imgPreview.src = "";
+            imgPreview.style.display = "none";
+        }
     });
     
 });
