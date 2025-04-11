@@ -17,6 +17,12 @@ function locSanPham($connection)
 {
     $where = [];
 
+    if (!empty($_GET['tensp'])) {
+        $tensp = mysqli_real_escape_string($connection, $_GET['tensp']);
+        $where[] = "products.name LIKE '%$tensp%'";
+    }
+    
+
     if (!empty($_GET['selectTheloai'])) {
         $catID = (int)$_GET['selectTheloai'];
         $where[] = "products.category_id = $catID";

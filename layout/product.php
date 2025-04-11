@@ -82,6 +82,16 @@ input[type=number] {
                                 <input type="hidden" name="page" value="sanpham">
                                     <div class="p-3">
                                         <p class="mb-2">Bộ lọc</p>
+                                        <div class="px-2">
+                                            <div class="row">                                           
+                                                <div class="col-md px-1">
+                                                <div class="input-group">
+                                                        <span class="input-group-text rounded-start-1" style="width: 80px;">Tên SP : </span>
+                                                        <input type="text" name="tensp" class="form-control rounded-end-1 form-control-sm">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <p class="mb-2">Màu : </p>
                                         <div class="px-2">
                                             <div class="row gap-3 justify-content-center">                                           
