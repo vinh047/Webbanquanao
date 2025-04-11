@@ -20,7 +20,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         fetchSanPham(this.dataset.page);
                     });
                 });
-
+                const input = document.getElementById("pageInput");
+                if (input) {
+                    input.addEventListener("keypress", function (e) {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            let page = parseInt(this.value);
+                            const max = parseInt(this.max);
+                
+                            if (page < 1) page = 1;
+                            if (page > max) page = max;
+                
+                            if (page >= 1 && page <= max) {
+                                fetchSanPham(page); // ✅ đúng
+                            }
+                        }
+                    });
+                }
+                
                 // Xử lý nút Sửa
                 document.querySelectorAll(".btn-sua").forEach(btn => {
                     btn.addEventListener("click", function () {
