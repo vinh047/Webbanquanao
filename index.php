@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="./assets/css/footer.css">
     <link rel="stylesheet" href="./assets/fonts/font.css">
 </head>
-<body>';
+<body>'
+;
 ?>
 
 <?php

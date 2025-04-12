@@ -43,9 +43,9 @@
             </div>
           </div>
           <input type="tel" class="form-control mt-2" id="sdt" placeholder="Số điện thoại" required>
-          <div class="invalid-feedback">Số điện thoại là bắt buộc</div>
+          <div class="invalid-feedback" id="phone-feedback"></div>
           <input type="email" class="form-control mt-2" id="email" placeholder="Email" required>
-          <div class="invalid-feedback">Email là bắt buộc</div>
+          <div class="invalid-feedback" id="email-feedback"></div>
 
           <div class="row g-2 mt-2">
             <div class="col-md-4">
