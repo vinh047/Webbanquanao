@@ -5,7 +5,9 @@
   </button>
 
   <div class="logo_header">
+  <a href="index.php">
     <img src="../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+  </a>
   </div>
   
   <nav class="menu_header">
