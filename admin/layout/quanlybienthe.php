@@ -75,9 +75,9 @@
                         <label for="cbSize">Size : </label>
                         <select name="cbSize" id="cbSize" class="form-select ">
                             <option value="">Chọn size sản phẩm</option>
-                            <option value="SM">SM</option>
                             <option value="S">S</option>
                             <option value="M">M</option>
+                            <option value="L">L</option>
                             <option value="X">X</option>
                             <option value="XL">XL</option>
                             <option value="2XL">2XL</option>
@@ -213,9 +213,9 @@
                         <label for="cbSize">Size : </label>
                         <select name="cbSizeSua" id="cbSizeSua" class="form-select ">
                             <option value="">Chọn size sản phẩm</option>
-                            <option value="SM">SM</option>
                             <option value="S">S</option>
                             <option value="M">M</option>
+                            <option value="L">L</option>
                             <option value="X">X</option>
                             <option value="XL">XL</option>
                             <option value="2XL">2XL</option>

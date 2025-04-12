@@ -34,11 +34,6 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
-.product-img {
-    width: 100%;
-    height: 390px;        /* 👈 chỉnh chiều cao tùy ý */
-    object-fit: cover;    /* Cắt ảnh nhưng giữ tỷ lệ */
-}
 
 
 #noticeAddToCart {
