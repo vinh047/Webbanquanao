@@ -76,7 +76,7 @@ fetch("https://provinces.open-api.vn/api/p/")
     data.forEach(p => {
       const option = document.createElement("option");
       option.value = p.code;
-      option.textContent = p.name;
+      option.textContent = p.name.replace(/^Tỉnh |^Thành phố /, '');
       provinceSelect.appendChild(option);
     });
   });
@@ -111,37 +111,79 @@ districtSelect.addEventListener("change", () => {
       });
     });
 });
+// Tự động ẩn cảnh báo khi người dùng bắt đầu nhập/chọn lại
+document.querySelectorAll(".form-control").forEach(input => {
+  input.addEventListener("input", () => {
+    if (input.value.trim() !== "") {
+      input.classList.remove("is-invalid");
+    }
+  });
+});
 
-// Đặt hàng
+document.querySelectorAll(".form-select").forEach(select => {
+  select.addEventListener("change", () => {
+    if (select.value !== "Tỉnh/TP" && select.value !== "Quận/Huyện" && select.value !== "Phường/Xã") {
+      select.classList.remove("is-invalid");
+    }
+  });
+});
+const phoneInput = document.getElementById("sdt");
+const emailInput = document.getElementById("email");
+
 function submitOrder() {
   const hoInput = document.getElementById("ho");
   const tenInput = document.getElementById("ten");
-  const phoneInput = document.getElementById("sdt");
-  const emailInput = document.getElementById("email");
+  const phoneVal = phoneInput.value.trim();
+  const emailVal = emailInput.value.trim();
+
   const province = provinceSelect.value;
   const district = districtSelect.value;
   const ward = wardSelect.value;
 
-  document.querySelectorAll(".form-control").forEach(input => input.classList.remove("is-invalid"));
-  document.querySelectorAll(".form-select").forEach(select => select.classList.remove("is-invalid"));
+  const phoneFeedback = document.getElementById("phone-feedback");
+  const emailFeedback = document.getElementById("email-feedback");
 
   let isValid = true;
+
+  // Reset lỗi text
+  phoneFeedback.textContent = "";
+  emailFeedback.textContent = "";
+
+  // Họ
   if (hoInput.value.trim() === "") {
     hoInput.classList.add("is-invalid");
     isValid = false;
   }
+
+  // Tên
   if (tenInput.value.trim() === "") {
     tenInput.classList.add("is-invalid");
     isValid = false;
   }
-  if (phoneInput.value.trim() === "") {
+
+  // SĐT
+  if (phoneVal === "") {
     phoneInput.classList.add("is-invalid");
+    phoneFeedback.textContent = "Số điện thoại là bắt buộc";
+    isValid = false;
+  } else if (!/^0\d{9}$/.test(phoneVal)) {
+    phoneInput.classList.add("is-invalid");
+    phoneFeedback.textContent = "Số điện thoại không hợp lệ";
     isValid = false;
   }
-  if (emailInput.value.trim() === "") {
+
+  // Email
+  if (emailVal === "") {
     emailInput.classList.add("is-invalid");
+    emailFeedback.textContent = "Email là bắt buộc";
+    isValid = false;
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+    emailInput.classList.add("is-invalid");
+    emailFeedback.textContent = "Email không đúng định dạng";
     isValid = false;
   }
+
+  // Tỉnh/Huyện/Xã
   if (province === "Tỉnh/TP") {
     provinceSelect.classList.add("is-invalid");
     isValid = false;
@@ -156,7 +198,43 @@ function submitOrder() {
   }
 
   if (!isValid) return;
+
   alert("Đơn hàng đã được đặt thành công!");
   localStorage.removeItem("cart");
   window.location.href = "index.php";
 }
+// Realtime kiểm tra SĐT
+phoneInput.addEventListener("input", () => {
+  const phonePattern = /^0\d{9}$/;
+  const phoneVal = phoneInput.value.trim();
+  const feedback = document.getElementById("phone-feedback");
+
+  if (phoneVal === "") {
+    phoneInput.classList.add("is-invalid");
+    feedback.textContent = "Số điện thoại là bắt buộc";
+  } else if (!phonePattern.test(phoneVal)) {
+    phoneInput.classList.add("is-invalid");
+    feedback.textContent = "Số điện thoại không hợp lệ";
+  } else {
+    phoneInput.classList.remove("is-invalid");
+    feedback.textContent = "";
+  }
+});
+
+// Realtime kiểm tra Email
+emailInput.addEventListener("input", () => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailVal = emailInput.value.trim();
+  const feedback = document.getElementById("email-feedback");
+
+  if (emailVal === "") {
+    emailInput.classList.add("is-invalid");
+    feedback.textContent = "Email là bắt buộc";
+  } else if (!emailPattern.test(emailVal)) {
+    emailInput.classList.add("is-invalid");
+    feedback.textContent = "Email không đúng định dạng";
+  } else {
+    emailInput.classList.remove("is-invalid");
+    feedback.textContent = "";
+  }
+});

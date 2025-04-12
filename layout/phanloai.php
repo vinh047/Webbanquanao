@@ -249,7 +249,7 @@ if (isset($_GET['colors'])) {
             
 
                                 <div class="ms-3" style="margin-top: 10px;">
-                <a href="/layout/cart.html" title="Giỏ hàng" class="text-dark">
+                <a href="/layout/cart.php" title="Giỏ hàng" class="text-dark">
                         <span class="material-symbols-outlined" style="font-size: 34px;">
                              shopping_cart
                         </span>
