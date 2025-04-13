@@ -56,25 +56,26 @@ while($row = mysqli_fetch_assoc($result))
     $rating_count = $row['rating_count'];
     $sold_count = $row['sold_count'];
     $img = $row['image'];
-    echo '
-            <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover p-md-2 p-1">
-                    <div class="border rounded-1">
-                        <a href="#" class="text-decoration-none text-dark ">
-                            <img src="../assets/img/sanpham/' . $img .'" alt="" class="img-fluid product-img">
-                        </a>
-                            <div class="mt-2 p-2 pt-1">
-                                <div class="">
-                                    <p class="mb-0 fw-lighter">Nam</p>
-                                    <p class="mb-0">' . $gia . ' VNĐ</p>   
-                                    <p class="mb-0 limit-text">' . $name . '</p>
-                                    <button class="btn btn-dark btn-sm mt-2 w-100"
-                                       onclick="addToCart(' . $id . ', \'' . $name . '\', ' . $row['price'] . ')">
-                                       <i class="fa fa-cart-plus me-1"></i> Thêm vào giỏ
-                                    </button> 
-                                </div>
-                            </div>
-                    </div>
+    $imgPath = './assets/img/sanpham/' . $img;
+echo '
+    <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover p-md-2 p-1">
+        <div class="border rounded-1">
+            <a href="#" class="text-decoration-none text-dark ">
+                <img src="' . $imgPath . '" alt="" class="img-fluid product-img">
+            </a>
+            <div class="mt-2 p-2 pt-1">
+                <div class="">
+                    <p class="mb-0 fw-lighter">Nam</p>
+                    <p class="mb-0">' . $gia . ' VNĐ</p>   
+                    <p class="mb-0 limit-text">' . $name . '</p>
+                    <button class="btn btn-dark btn-sm mt-2 w-100"
+                        onclick="addToCart(' . $id . ', \'' . addslashes($name) . '\', ' . $row['price'] . ', \'' . $imgPath . '\')">
+                        <i class="fa fa-cart-plus me-1"></i> Thêm vào giỏ
+                    </button> 
+                </div>
             </div>
+        </div>
+    </div>
 ';
 
 }
