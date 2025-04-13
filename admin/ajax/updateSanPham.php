@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         $conn = $db->getConnection();
 
         $sql = "UPDATE products 
-                SET name = ?, category_id = ?, description = ?, price = ? 
+                SET name = ?, category_id = ?, description = ?, price = ? , price_sale = price * 1.2
                 WHERE product_id = ?";
 
         $stmt = $conn->prepare($sql);

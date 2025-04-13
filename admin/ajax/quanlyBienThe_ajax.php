@@ -8,7 +8,7 @@ $db = DBConnect::getInstance();
 $total = $db->select("SELECT COUNT(*) AS total FROM product_variants", []);
 $totalItems = $total[0]['total'];
 $page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
-$limit = 5;
+$limit = 10;
 
 $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();

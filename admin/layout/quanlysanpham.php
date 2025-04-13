@@ -53,7 +53,7 @@
             </div>
 
 
-            <div class="sanpham py-3" style="font-size: 19px;">
+            <div class="sanpham py-3" style="font-size: 19px;display:none;">
 
 
                 <form action="../ajax/insertSanPham.php" method="POST" id="formNhapSP">
@@ -149,7 +149,7 @@
         <div class="overlay"></div>
 
         <div class="thongBaoXoa rounded-2">
-            <p class="mb-0 text-white fs-5 text-center">
+            <p class="mb-0 fs-5 text-center">
                 Bạn có chắc chắn muốn xóa hay không?       
             </p>
         
@@ -162,7 +162,6 @@
 
                 </div>
             </div>
-
         </div>       
         
         <div class="formSua border container-md p-3">
