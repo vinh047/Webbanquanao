@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     $idvr = (int)$_POST['txtMaBt'];
     $idsp = (int)$_POST['txtMaSua'];
     $sl = (int)$_POST['txtSlSua'];
-    $size = $_POST['cbSizeSua'];
+    $size = (int)$_POST['cbSizeSua'];
     $mau = (int)$_POST['cbMauSua'];
 
     $db = DBConnect::getInstance();
@@ -30,7 +30,7 @@ if (isset($_FILES['fileAnhSua']) && $_FILES['fileAnhSua']['size'] > 0) {
 
 
     $sql = "UPDATE product_variants 
-            SET product_id = ?, image = ?, size = ?, stock = ?, color_id = ?
+            SET product_id = ?, image = ?, size_id = ?, stock = ?, color_id = ?
             WHERE variant_id = ?";
 
     $stmt = $conn->prepare($sql);

@@ -20,8 +20,8 @@
             $db = DBConnect::getInstance();
             $product_color  = $db->select("SELECT * FROM colors",[]);
             $product_theloai = $db->select("SELECT * FROM categories",[]);
-
-        ?>
+            $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC", []);
+?>
         <style>
             /* Ẩn mũi tên trên Chrome, Safari, Edge */
 input[type=number]::-webkit-inner-spin-button,
@@ -93,8 +93,13 @@ input[type=number] {
                                             <?php foreach($product_color as $dl):  ?>
                                            
                                            
-                                                <div class="col-2 border selectable color-option" data-color-id="<?=$dl['color_id']?>" style="height: 35px;width: 35px;background-color:<?=$dl['hex_code']?> ;" title="<?=$dl['name']?>"></div>
-
+                                                <!-- <div class="col-2 border selectable color-option" data-color-id="<?=$dl['color_id']?>" style="height: 35px;width: 35px;background-color:<?=$dl['hex_code']?> ;" title="<?=$dl['name']?>"></div> -->
+                                                <div class="col-2 border selectable color-option" 
+         data-color-id="<?=$dl['color_id']?>" 
+         style="height: 35px;width: 35px;background-color:<?=$dl['hex_code']?> ;"
+         title="<?=$dl['name']?>">
+    </div>
+    <input type="checkbox" name="colors[]" value="<?=$dl['color_id']?>" class="d-none color-checkbox">
 
                                             <?php endforeach ?>
                                             </div>
@@ -104,24 +109,16 @@ input[type=number] {
                                         </p>
                                         <div class=" ps-4">
                                             <div class="row text-center gap-3">
-                                                <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option" title="XS" style="height:35px; width: 45px;">
-                                                    <p class="mb-0">XS</p>
-                                                </div>
-                                                <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option" title="S" style="height:35px; width: 45px;">
-                                                    <p class="mb-0">S</p>
-                                                </div>
-                                                <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option" title="M" style="height:35px; width: 45px;">
-                                                    <p class="mb-0">M</p>
-                                                </div>
-                                                <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option" title="L" style="height:35px; width: 45px;">
-                                                    <p class="mb-0">L</p>
-                                                </div>
-                                                <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option" title="XL" style="height:35px; width: 45px;">
-                                                    <p class="mb-0">XL</p>
-                                                </div>
-                                                <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option" title="2XL" style="height:35px; width: 45px;">
-                                                    <p class="mb-0">2XL</p>
-                                                </div>
+<?php foreach ($size as $s): ?>
+    <div class="bg-white col-2 border d-flex align-items-center justify-content-center selectable size-option"
+         data-size-id="<?= $s['size_id'] ?>" title="<?= $s['name'] ?>" style="height:35px; width: 45px;">
+        <p class="mb-0"><?= $s['name'] ?></p>
+    </div>
+    <input type="checkbox" name="sizes[]" value="<?= $s['size_id'] ?>" class="d-none size-checkbox">
+<?php endforeach; ?>
+
+
+                                                
                                             </div>
                                         </div>
 

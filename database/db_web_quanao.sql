@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2025 at 02:17 PM
+-- Generation Time: Apr 13, 2025 at 04:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -137,8 +137,6 @@ CREATE TABLE `importreceipt_details` (
   `ImportReceipt_details_id` int(11) NOT NULL,
   `ImportReceipt_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `price` decimal(12,2) DEFAULT NULL,
   `total_price` decimal(12,2) DEFAULT NULL,
   `rate_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -276,130 +274,132 @@ CREATE TABLE `product_variants` (
   `variant_id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `size` varchar(50) DEFAULT NULL,
   `stock` int(11) DEFAULT 0,
-  `color_id` int(11) DEFAULT NULL
+  `color_id` int(11) DEFAULT NULL,
+  `size_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `product_variants`
 --
 
-INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `size`, `stock`, `color_id`) VALUES
-(1, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 'X', 50, 8),
-(2, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 'M', 40, 8),
-(3, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 'S', 35, 8),
-(4, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 'XL', 50, 12),
-(5, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 'M', 50, 12),
-(6, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', 'S', 20, 7),
-(7, 2, '10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg', 'X', 60, 2),
-(8, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', '2XL', 50, 7),
-(9, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', 'X', 50, 1),
-(10, 3, '10s25shl015-white-ao-so-mi-nam-1-jpg-4e7k.jpg', 'M', 50, 8),
-(11, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', '2XL', 50, 1),
-(12, 3, '10s25shl015-white-ao-so-mi-nam-1-jpg-4e7k.jpg', 'XL', 50, 8),
-(13, 4, '10f24jac005-dried-sage-ao-khoac-nam-1-jpg-7q20.jpg', 'L', 50, 6),
-(14, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 'X', 50, 8),
-(15, 4, '10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg', 'M', 50, 1),
-(16, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 'XL', 50, 8),
-(17, 4, '10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg', '2XL', 50, 1),
-(18, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 'M', 50, 13),
-(19, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 'L', 50, 13),
-(20, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 'M', 50, 1),
-(21, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 'L', 50, 1),
-(22, 5, '10F24PKS001_COVERT-GREEN_1_quan-short-nam-1-rgiw.jpg', 'M', 50, 2),
-(23, 5, '10F24PKS001_COVERT-GREEN_1_quan-short-nam-1-rgiw.jpg', 'S', 50, 2),
-(24, 5, '10F24PKS001_PUMICE-STONE_quan-short-nam-1-jkaw.jpg', 'X', 50, 8),
-(25, 5, '10F24PKS001_PUMICE-STONE_quan-short-nam-1-jkaw.jpg', 'L', 50, 8),
-(26, 6, '10s25tss048-matcha-latte-1-jpg-6tuh.jpg', 'L', 50, 6),
-(27, 6, '10s25tss048-matcha-latte-1-jpg-6tuh.jpg', 'XL', 50, 6),
-(28, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 'S', 50, 9),
-(29, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 'M', 50, 9),
-(30, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 'L', 60, 9),
-(31, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 'L', 50, 3),
-(32, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 'X', 50, 3),
-(33, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 'XL', 70, 3),
-(34, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', 'S', 70, 2),
-(35, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', 'XL', 50, 2),
-(36, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', '2XL', 70, 2),
-(37, 8, '10S24SHL002C_WHITE_ao-so-mi-nam-dai-tay-1-szlg.jpg', 'L', 50, 8),
-(38, 8, '10S24SHL002C_WHITE_ao-so-mi-nam-dai-tay-1-szlg.jpg', 'XL', 50, 8),
-(39, 8, '10S24SHL002C_WHITE_ao-so-mi-nam-dai-tay-1-szlg.jpg', 'M', 50, 8),
-(40, 8, '10s24shl002c-blue-ao-so-mi-nam-1-jpg-6bdu.jpg', 'X', 80, 11),
-(41, 8, '10s24shl002c-blue-ao-so-mi-nam-1-jpg-6bdu.jpg', 'L', 50, 7),
-(42, 9, '10f24dps002-l-indigo-quan-short-nam-1-jpg-88kg.jpg', 'M', 50, 7),
-(43, 9, '10f24dps002-l-indigo-quan-short-nam-1-jpg-88kg.jpg', 'S', 50, 7),
-(44, 10, '10s25pol015-black-1-jpg-soav.jpg', 'L', 50, 1),
-(45, 10, '10s25pol015-black-1-jpg-soav.jpg', 'XL', 50, 1),
-(46, 10, '10s25pol015-black-1-jpg-soav.jpg', 'M', 50, 1),
-(47, 10, '10s25pol015-white-alyssum-1-jpg-3yjd.jpg', 'L', 50, 8),
-(48, 10, '10s25pol015-white-alyssum-1-jpg-3yjd.jpg', 'X', 50, 8),
-(49, 10, '10s25pol015-white-alyssum-1-jpg-3yjd.jpg', 'XL', 50, 8),
-(50, 11, '10s25shs016-l-blue-ao-so-mi-nam-1-jpg-9zxg.jpg', 'L', 50, 11),
-(51, 11, '10s25shs016-m-blue-ao-so-mi-nam-1-jpg-8og0.jpg', 'L', 50, 11),
-(52, 11, '10s25shs016-l-blue-ao-so-mi-nam-1-jpg-9zxg.jpg', 'XL', 50, 7),
-(53, 11, '10s25shs016-m-blue-ao-so-mi-nam-1-jpg-8og0.jpg', 'XL', 50, 11),
-(54, 12, '10s24shl006c-covert-green-1-ao-so-mi-nam-1-jpg.jpg', 'L', 50, 10),
-(55, 12, '10s24shl006c-covert-green-1-ao-so-mi-nam-1-jpg.jpg', 'X', 50, 10),
-(56, 12, '10s24shl006c-covert-green-1-ao-so-mi-nam-1-jpg.jpg', 'XL', 50, 10),
-(57, 12, '10s24shl006-blue-1-jpg-3n6n.jpg', 'S', 50, 11),
-(58, 12, '10s24shl006-blue-1-jpg-3n6n.jpg', 'M', 50, 11),
-(59, 12, '10s24shl006-blue-1-jpg-3n6n.jpg', 'XL', 50, 11),
-(60, 13, '10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg', 'S', 50, 1),
-(61, 13, '10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg', 'M', 50, 1),
-(62, 13, '10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg', 'XL', 50, 1),
-(63, 13, '10f24jac004-silver-birch-ao-khoac-nam-5-jpg-3uy2.jpg', 'M', 40, 8),
-(64, 13, '10f24jac004-silver-birch-ao-khoac-nam-5-jpg-3uy2.jpg', 'S', 40, 8),
-(65, 13, '10f24jac004-silver-birch-ao-khoac-nam-5-jpg-3uy2.jpg', 'XL', 50, 8),
-(66, 14, '10F23SWE001_BLUE-QUARTZ_ao-sweater-nam-3-hfyp.jpg', 'L', 50, 7),
-(67, 14, '10F23SWE001_BLUE-QUARTZ_ao-sweater-nam-3-hfyp.jpg', 'X', 50, 7),
-(68, 14, '10F23SWE001_BLUE-QUARTZ_ao-sweater-nam-3-hfyp.jpg', 'XL', 43, 7),
-(69, 14, '10F23SWE001_BLACK_ao-sweater-nam-3-nmkb.jpg', 'L', 50, 1),
-(70, 14, '10F23SWE001_BLACK_ao-sweater-nam-3-nmkb.jpg', 'XL', 50, 1),
-(71, 15, '10s25tss003-bark-1-jpg-kg4r.jpg', 'M', 50, 5),
-(72, 15, '10s25tss003-bark-1-jpg-kg4r.jpg', 'L', 54, 5),
-(73, 15, '10s25tss003-white-1-jpg-hp1y.jpg', 'L', 50, 8),
-(74, 15, '10s25tss003-white-1-jpg-hp1y.jpg', 'X', 65, 8),
-(78, 16, '10s25tss006-cool-brew-1-jpg-7zno.jpg', 'M', 50, 3),
-(79, 16, '10s25tss006-cool-brew-1-jpg-7zno.jpg', 'L', 50, 3),
-(80, 16, '10s25tss006-cool-brew-1-jpg-7zno.jpg', 'XL', 50, 3),
-(81, 17, '10s24pol004p-bright-white-ao-polo-nam-6-jpg-2233.jpg', 'L', 50, 8),
-(82, 17, '10s24pol004p-bright-white-ao-polo-nam-6-jpg-2233.jpg', 'X', 50, 8),
-(83, 17, '10s24pol004p-bright-white-ao-polo-nam-6-jpg-2233.jpg', 'XL', 50, 8),
-(84, 17, '10s24pol004p-dark-sapphire-ao-polo-nam-6-jpg-y684.jpg', 'L', 50, 1),
-(85, 17, '10s24pol004p-dark-sapphire-ao-polo-nam-6-jpg-y684.jpg', 'X', 50, 1),
-(86, 17, '10s24pol004p-dark-sapphire-ao-polo-nam-6-jpg-y684.jpg', 'XL', 50, 1),
-(87, 18, '10f24pol012-navy-blazer-ao-polo-nam-1-jpg-o7bd.jpg', 'L', 50, 7),
-(88, 18, '10f24pol012-navy-blazer-ao-polo-nam-1-jpg-o7bd.jpg', 'X', 50, 7),
-(89, 18, '10f24pol012-white-ao-polo-nam-1-jpg-7idj.jpg', 'L', 50, 8),
-(90, 18, '10f24pol012-white-ao-polo-nam-1-jpg-7idj.jpg', 'X', 50, 8),
-(91, 19, '10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg', 'L', 50, 1),
-(92, 19, '10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg', 'X', 50, 1),
-(93, 19, '10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg', 'XL', 50, 1),
-(94, 20, '10s25und001-white-jpg-um7a.jpg', 'M', 50, 8),
-(95, 20, '10s25und001-white-jpg-um7a.jpg', 'L', 50, 8),
-(96, 20, '10s25und001-white-jpg-um7a.jpg', 'X', 50, 8),
-(97, 20, '10s25und001-navy-jpg-jf6p.jpg', 'M', 50, 12),
-(98, 20, '10s25und001-navy-jpg-jf6p.jpg', 'L', 50, 12),
-(99, 20, '10s25und001-navy-jpg-jf6p.jpg', 'X', 50, 12),
-(100, 21, '10s25und002-grey-jpg-imo1.jpg', 'L', 50, 4),
-(101, 21, '10s25und002-grey-jpg-imo1.jpg', 'M', 50, 4),
-(102, 21, '10s25und002-grey-jpg-imo1.jpg', 'S', 50, 4),
-(103, 21, '10s25und002-navy-jpg-8v44.jpg', 'S', 50, 12),
-(104, 21, '10s25und002-navy-jpg-8v44.jpg', 'M', 50, 12),
-(105, 21, '10s25und002-navy-jpg-8v44.jpg', 'L', 50, 12),
-(106, 21, '10s25und002-black-jpg-tlol.jpg', 'S', 50, 1),
-(107, 21, '10s25und002-black-jpg-tlol.jpg', 'M', 50, 1),
-(108, 21, '10s25und002-black-jpg-tlol.jpg', 'L', 50, 1),
-(109, 22, '10f24und005-grey-boxer-nam-1-jpg-9h5j.jpg', 'S', 50, 4),
-(110, 22, '10f24und005-grey-boxer-nam-1-jpg-9h5j.jpg', 'M', 50, 4),
-(111, 22, '10f24und005-grey-boxer-nam-1-jpg-9h5j.jpg', 'L', 50, 4),
-(112, 22, '10f24und005-navy-boxer-nam-1-jpg-7eq3.jpg', 'S', 50, 12),
-(113, 22, '10f24und005-navy-boxer-nam-1-jpg-7eq3.jpg', 'M', 50, 12),
-(114, 22, '10f24und005-navy-boxer-nam-1-jpg-7eq3.jpg', 'L', 50, 12),
-(115, 22, '10f24und005-black-boxer-nam-1-jpg-2ibv.jpg', 'S', 50, 1),
-(116, 22, '10f24und005-black-boxer-nam-1-jpg-2ibv.jpg', 'M', 50, 1),
-(117, 22, '10f24und005-black-boxer-nam-1-jpg-2ibv.jpg', 'L', 60, 1);
+INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `stock`, `color_id`, `size_id`) VALUES
+(1, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 50, 8, 4),
+(2, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 40, 8, 3),
+(3, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 35, 8, 5),
+(4, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 50, 12, 5),
+(5, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 50, 12, 4),
+(6, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', 50, 7, 2),
+(7, 2, '10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg', 60, 2, 3),
+(8, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', 50, 7, 3),
+(9, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', 50, 1, 4),
+(10, 3, '10s25shl015-white-ao-so-mi-nam-1-jpg-4e7k.jpg', 50, 8, 4),
+(11, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', 50, 1, 5),
+(12, 3, '10s25shl015-white-ao-so-mi-nam-1-jpg-4e7k.jpg', 50, 8, 5),
+(13, 4, '10f24jac005-dried-sage-ao-khoac-nam-1-jpg-7q20.jpg', 50, 6, 5),
+(14, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 50, 8, 4),
+(15, 4, '10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg', 50, 1, 4),
+(16, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 50, 8, 3),
+(17, 4, '10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg', 50, 1, 5),
+(18, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 50, 13, 2),
+(19, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 50, 13, 1),
+(20, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 50, 1, 3),
+(21, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 50, 1, 1),
+(22, 5, '10F24PKS001_COVERT-GREEN_1_quan-short-nam-1-rgiw.jpg', 50, 2, 2),
+(23, 5, '10F24PKS001_COVERT-GREEN_1_quan-short-nam-1-rgiw.jpg', 50, 2, 3),
+(24, 5, '10F24PKS001_PUMICE-STONE_quan-short-nam-1-jkaw.jpg', 50, 8, 1),
+(25, 5, '10F24PKS001_PUMICE-STONE_quan-short-nam-1-jkaw.jpg', 50, 8, 2),
+(26, 6, '10s25tss048-matcha-latte-1-jpg-6tuh.jpg', 50, 6, 3),
+(27, 6, '10s25tss048-matcha-latte-1-jpg-6tuh.jpg', 50, 6, 4),
+(28, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 50, 9, 3),
+(29, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 50, 9, 4),
+(30, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 60, 9, 5),
+(31, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 50, 3, 2),
+(32, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 50, 3, 3),
+(33, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 70, 3, 4),
+(34, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', 70, 2, 3),
+(35, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', 50, 2, 4),
+(36, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', 70, 2, 5),
+(37, 8, '10S24SHL002C_WHITE_ao-so-mi-nam-dai-tay-1-szlg.jpg', 50, 8, 6),
+(38, 8, '10S24SHL002C_WHITE_ao-so-mi-nam-dai-tay-1-szlg.jpg', 50, 8, 5),
+(39, 8, '10S24SHL002C_WHITE_ao-so-mi-nam-dai-tay-1-szlg.jpg', 50, 8, 2),
+(40, 8, '10s24shl002c-blue-ao-so-mi-nam-1-jpg-6bdu.jpg', 80, 11, 5),
+(41, 8, '10s24shl002c-blue-ao-so-mi-nam-1-jpg-6bdu.jpg', 50, 7, 3),
+(42, 9, '10f24dps002-l-indigo-quan-short-nam-1-jpg-88kg.jpg', 50, 7, 3),
+(43, 9, '10f24dps002-l-indigo-quan-short-nam-1-jpg-88kg.jpg', 50, 7, 2),
+(44, 10, '10s25pol015-black-1-jpg-soav.jpg', 50, 1, 1),
+(45, 10, '10s25pol015-black-1-jpg-soav.jpg', 50, 1, 2),
+(46, 10, '10s25pol015-black-1-jpg-soav.jpg', 50, 1, 3),
+(47, 10, '10s25pol015-white-alyssum-1-jpg-3yjd.jpg', 50, 8, 3),
+(48, 10, '10s25pol015-white-alyssum-1-jpg-3yjd.jpg', 50, 8, 4),
+(49, 10, '10s25pol015-white-alyssum-1-jpg-3yjd.jpg', 50, 8, 6),
+(50, 11, '10s25shs016-l-blue-ao-so-mi-nam-1-jpg-9zxg.jpg', 50, 11, 5),
+(51, 11, '10s25shs016-m-blue-ao-so-mi-nam-1-jpg-8og0.jpg', 50, 11, 6),
+(52, 11, '10s25shs016-l-blue-ao-so-mi-nam-1-jpg-9zxg.jpg', 50, 7, 1),
+(53, 11, '10s25shs016-m-blue-ao-so-mi-nam-1-jpg-8og0.jpg', 50, 11, 1),
+(54, 12, '10s24shl006c-covert-green-1-ao-so-mi-nam-1-jpg.jpg', 50, 10, 2),
+(55, 12, '10s24shl006c-covert-green-1-ao-so-mi-nam-1-jpg.jpg', 50, 10, 3),
+(56, 12, '10s24shl006c-covert-green-1-ao-so-mi-nam-1-jpg.jpg', 50, 10, 4),
+(57, 12, '10s24shl006-blue-1-jpg-3n6n.jpg', 50, 11, 5),
+(58, 12, '10s24shl006-blue-1-jpg-3n6n.jpg', 50, 11, 6),
+(59, 12, '10s24shl006-blue-1-jpg-3n6n.jpg', 50, 11, 3),
+(60, 13, '10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg', 50, 1, 3),
+(61, 13, '10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg', 50, 1, 4),
+(62, 13, '10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg', 50, 1, 5),
+(63, 13, '10f24jac004-silver-birch-ao-khoac-nam-5-jpg-3uy2.jpg', 40, 8, 4),
+(64, 13, '10f24jac004-silver-birch-ao-khoac-nam-5-jpg-3uy2.jpg', 40, 8, 5),
+(65, 13, '10f24jac004-silver-birch-ao-khoac-nam-5-jpg-3uy2.jpg', 50, 8, 6),
+(66, 14, '10F23SWE001_BLUE-QUARTZ_ao-sweater-nam-3-hfyp.jpg', 50, 7, 2),
+(67, 14, '10F23SWE001_BLUE-QUARTZ_ao-sweater-nam-3-hfyp.jpg', 50, 7, 3),
+(68, 14, '10F23SWE001_BLUE-QUARTZ_ao-sweater-nam-3-hfyp.jpg', 43, 7, 4),
+(69, 14, '10F23SWE001_BLACK_ao-sweater-nam-3-nmkb.jpg', 50, 1, 1),
+(70, 14, '10F23SWE001_BLACK_ao-sweater-nam-3-nmkb.jpg', 50, 1, 6),
+(71, 15, '10s25tss003-bark-1-jpg-kg4r.jpg', 50, 5, 5),
+(72, 15, '10s25tss003-bark-1-jpg-kg4r.jpg', 54, 5, 6),
+(73, 15, '10s25tss003-white-1-jpg-hp1y.jpg', 50, 8, 2),
+(74, 15, '10s25tss003-white-1-jpg-hp1y.jpg', 65, 8, 3),
+(78, 16, '10s25tss006-cool-brew-1-jpg-7zno.jpg', 50, 3, 4),
+(79, 16, '10s25tss006-cool-brew-1-jpg-7zno.jpg', 50, 3, 5),
+(80, 16, '10s25tss006-cool-brew-1-jpg-7zno.jpg', 50, 3, 6),
+(81, 17, '10s24pol004p-bright-white-ao-polo-nam-6-jpg-2233.jpg', 50, 8, 1),
+(82, 17, '10s24pol004p-bright-white-ao-polo-nam-6-jpg-2233.jpg', 50, 8, 2),
+(83, 17, '10s24pol004p-bright-white-ao-polo-nam-6-jpg-2233.jpg', 50, 8, 3),
+(84, 17, '10s24pol004p-dark-sapphire-ao-polo-nam-6-jpg-y684.jpg', 50, 1, 3),
+(85, 17, '10s24pol004p-dark-sapphire-ao-polo-nam-6-jpg-y684.jpg', 50, 1, 4),
+(86, 17, '10s24pol004p-dark-sapphire-ao-polo-nam-6-jpg-y684.jpg', 50, 1, 5),
+(87, 18, '10f24pol012-navy-blazer-ao-polo-nam-1-jpg-o7bd.jpg', 50, 7, 3),
+(88, 18, '10f24pol012-navy-blazer-ao-polo-nam-1-jpg-o7bd.jpg', 50, 7, 4),
+(89, 18, '10f24pol012-white-ao-polo-nam-1-jpg-7idj.jpg', 50, 8, 4),
+(90, 18, '10f24pol012-white-ao-polo-nam-1-jpg-7idj.jpg', 50, 8, 5),
+(91, 19, '10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg', 50, 1, 4),
+(92, 19, '10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg', 50, 1, 5),
+(93, 19, '10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg', 50, 1, 6),
+(94, 20, '10s25und001-white-jpg-um7a.jpg', 50, 8, 1),
+(95, 20, '10s25und001-white-jpg-um7a.jpg', 50, 8, 2),
+(96, 20, '10s25und001-white-jpg-um7a.jpg', 50, 8, 4),
+(97, 20, '10s25und001-navy-jpg-jf6p.jpg', 50, 12, 3),
+(98, 20, '10s25und001-navy-jpg-jf6p.jpg', 50, 12, 4),
+(99, 20, '10s25und001-navy-jpg-jf6p.jpg', 50, 12, 5),
+(100, 21, '10s25und002-grey-jpg-imo1.jpg', 50, 4, 1),
+(101, 21, '10s25und002-grey-jpg-imo1.jpg', 50, 4, 2),
+(102, 21, '10s25und002-grey-jpg-imo1.jpg', 50, 4, 3),
+(103, 21, '10s25und002-navy-jpg-8v44.jpg', 50, 12, 2),
+(104, 21, '10s25und002-navy-jpg-8v44.jpg', 50, 12, 3),
+(105, 21, '10s25und002-navy-jpg-8v44.jpg', 50, 12, 4),
+(106, 21, '10s25und002-black-jpg-tlol.jpg', 50, 1, 1),
+(107, 21, '10s25und002-black-jpg-tlol.jpg', 50, 1, 2),
+(108, 21, '10s25und002-black-jpg-tlol.jpg', 50, 1, 3),
+(109, 22, '10f24und005-grey-boxer-nam-1-jpg-9h5j.jpg', 50, 4, 2),
+(110, 22, '10f24und005-grey-boxer-nam-1-jpg-9h5j.jpg', 50, 4, 3),
+(111, 22, '10f24und005-grey-boxer-nam-1-jpg-9h5j.jpg', 50, 4, 4),
+(112, 22, '10f24und005-navy-boxer-nam-1-jpg-7eq3.jpg', 50, 12, 2),
+(113, 22, '10f24und005-navy-boxer-nam-1-jpg-7eq3.jpg', 50, 12, 3),
+(114, 22, '10f24und005-navy-boxer-nam-1-jpg-7eq3.jpg', 50, 12, 4),
+(115, 22, '10f24und005-black-boxer-nam-1-jpg-2ibv.jpg', 50, 1, 2),
+(116, 22, '10f24und005-black-boxer-nam-1-jpg-2ibv.jpg', 50, 1, 3),
+(117, 22, '10f24und005-black-boxer-nam-1-jpg-2ibv.jpg', 60, 1, 4),
+(118, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 50, 1, 2),
+(119, 21, '10s25und002-black-jpg-tlol.jpg', 50, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -499,6 +499,29 @@ INSERT INTO `role_permission_details` (`role_permission_detail_id`, `role_id`, `
 (29, 4, 2, 'read'),
 (30, 4, 2, 'write'),
 (31, 4, 4, 'read');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sizes`
+--
+
+CREATE TABLE `sizes` (
+  `size_id` int(11) NOT NULL,
+  `name` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+
+--
+-- Dumping data for table `sizes`
+--
+
+INSERT INTO `sizes` (`size_id`, `name`) VALUES
+(6, '2XL'),
+(3, 'L'),
+(2, 'M'),
+(1, 'S'),
+(4, 'X'),
+(5, 'XL');
 
 -- --------------------------------------------------------
 
@@ -657,7 +680,8 @@ ALTER TABLE `products`
 ALTER TABLE `product_variants`
   ADD PRIMARY KEY (`variant_id`),
   ADD KEY `product_id` (`product_id`),
-  ADD KEY `color_id` (`color_id`);
+  ADD KEY `color_id` (`color_id`),
+  ADD KEY `fk_size_id` (`size_id`);
 
 --
 -- Indexes for table `rates`
@@ -686,6 +710,13 @@ ALTER TABLE `role_permission_details`
   ADD PRIMARY KEY (`role_permission_detail_id`),
   ADD KEY `role_id` (`role_id`),
   ADD KEY `permission_id` (`permission_id`);
+
+--
+-- Indexes for table `sizes`
+--
+ALTER TABLE `sizes`
+  ADD PRIMARY KEY (`size_id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `supplier`
@@ -774,7 +805,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  MODIFY `variant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `variant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT for table `rates`
@@ -799,6 +830,12 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `role_permission_details`
   MODIFY `role_permission_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `sizes`
+--
+ALTER TABLE `sizes`
+  MODIFY `size_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `supplier`
@@ -871,6 +908,7 @@ ALTER TABLE `products`
 -- Constraints for table `product_variants`
 --
 ALTER TABLE `product_variants`
+  ADD CONSTRAINT `fk_size_id` FOREIGN KEY (`size_id`) REFERENCES `sizes` (`size_id`),
   ADD CONSTRAINT `product_variants_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
   ADD CONSTRAINT `product_variants_ibfk_2` FOREIGN KEY (`color_id`) REFERENCES `colors` (`color_id`);
 

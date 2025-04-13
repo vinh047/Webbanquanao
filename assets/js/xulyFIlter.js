@@ -45,19 +45,20 @@ document.querySelectorAll('.selectable').forEach(item => {
     item.addEventListener('click', () => {
         item.classList.toggle('selected');
 
-        // Nếu là màu (dựa vào style.backgroundColor hoặc data-color-id)
         if (item.classList.contains('color-option')) {
             const colorId = item.getAttribute('data-color-id');
-            updateHiddenInput('colors[]', colorId, item.classList.contains('selected'));
+            const checkbox = document.querySelector(`input.color-checkbox[value="${colorId}"]`);
+            if (checkbox) checkbox.checked = item.classList.contains('selected');
         }
 
-        // Nếu là size
         if (item.classList.contains('size-option')) {
-            const sizeVal = item.innerText.trim();
-            updateHiddenInput('sizes[]', sizeVal, item.classList.contains('selected'));
+            const sizeId = item.getAttribute('data-size-id');
+            const checkbox = document.querySelector(`input.size-checkbox[value="${sizeId}"]`);
+            if (checkbox) checkbox.checked = item.classList.contains('selected');
         }
     });
 });
+
 
 function updateHiddenInput(name, value, add) {
     const form = document.querySelector('form');
@@ -76,14 +77,13 @@ function updateHiddenInput(name, value, add) {
 
 const resetButton = document.querySelector('button[type="reset"]');
 resetButton.addEventListener('click', function () {
-    // Bỏ chọn UI
     document.querySelectorAll('.selectable').forEach(item => {
         item.classList.remove('selected');
     });
 
-    // Xóa input hidden đã thêm
-    document.querySelectorAll('input[data-dynamic]').forEach(input => {
-        input.remove();
+    document.querySelectorAll('input.color-checkbox, input.size-checkbox').forEach(input => {
+        input.checked = false;
     });
 });
+
 
