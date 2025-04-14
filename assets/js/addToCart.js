@@ -1,16 +1,19 @@
-function addToCart(id, name, price, image) {
+function addToCart(id, name, price, image, variant_id, color = '', size = '') {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let existingItem = cart.find(item => item.id === id);
+    let existingItem = cart.find(item => item.id === id && item.variant_id === variant_id);
+
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        cart.push({ id, name, price, quantity: 1, image });
+        cart.push({ id, name, price, quantity: 1, image, variant_id, color, size });
     }
+
     localStorage.setItem("cart", JSON.stringify(cart));
     renderMiniCart();
     updateCartCount();
     showAddToCartNotice(name);
 }
+
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const countBadge = document.getElementById("cart-count-badge");

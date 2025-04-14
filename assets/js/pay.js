@@ -199,9 +199,42 @@ function submitOrder() {
 
   if (!isValid) return;
 
-  alert("Đơn hàng đã được đặt thành công!");
-  localStorage.removeItem("cart");
-  window.location.href = "index.php";
+ if (!isValid) return;
+
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const diaChi = document.getElementById("specific-address").value.trim();
+const orderData = {
+  ho: hoInput.value.trim(),
+  ten: tenInput.value.trim(),
+  sdt: phoneVal,
+  email: emailVal,
+  province,
+  district,
+  ward,
+  address: diaChi,
+  cart,
+  discount,
+  shippingFee,
+  total: subtotal + shippingFee - discount,
+  payment_method: document.querySelector("input[name='payment_method']:checked")?.value || 1
+};
+
+fetch("../ajax/save_order.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(orderData)
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) {
+    alert("Đặt hàng thành công!");
+    localStorage.removeItem("cart");
+    window.location.href = "index.php";
+  } else {
+    alert("Lỗi khi đặt hàng: " + data.message);
+  }
+});
+
 }
 // Realtime kiểm tra SĐT
 phoneInput.addEventListener("input", () => {
