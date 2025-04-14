@@ -97,7 +97,8 @@
                             <th class="tensp">Tên sản phẩm</th>
                             <th class="hienthiloai">Loại</th>
                             <th class="mota">Mô tả Sản phẩm</th>
-                            <th class="hienthigia">Giá</th>
+                            <th class="hienthigia">Giá nhập</th>
+                            <th class="hienthigia">Giá bán</th>
                             <th class="hienthibtn">Xử lý</th>
                         </tr>
                     </thead>
@@ -147,12 +148,15 @@
             </p>
         </div>
         <div class="overlay"></div>
-
+        <div class="thongbaoXoaThatBai  bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Xóa biến thể thất bại
+            </p>
+            </div>
         <div class="thongBaoXoa rounded-2">
             <p class="mb-0 fs-5 text-center">
                 Bạn có chắc chắn muốn xóa hay không?       
             </p>
-        
             <div class="d-flex justify-content-center gap-3 mt-2">
                 <div class="">
                 <button class="btn btn-danger" style="width:80px;">Có</button>
@@ -162,7 +166,25 @@
 
                 </div>
             </div>
-        </div>       
+        </div>    
+        
+        <div class="thongBaoGia rounded-2">
+            <p class="mb-0 fs-5 text-center">
+                Giá bán đang nhỏ hơn giá nhập!     
+            </p>
+            <p class="mb-0 fs-5 text-center">
+                Bạn có chắc chắn không? 
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-2">
+                <div class="">
+                <button class="btn btn-danger btn-xacnhan-gia" style="width:80px;">Có</button>
+                </div>
+                <div class="">
+                <button class="btn btn-primary btn-khong-gia" style="width:80px;">Không</button>
+
+                </div>
+            </div>
+        </div>   
         
         <div class="formSua border container-md p-3">
             <div class="" style="font-size: 17px;">
@@ -197,6 +219,16 @@
     <div class="pt-3">
         <label for="txtGia">Giá sản phẩm : </label>
         <input type="text" name="gia" id="txtGiaSua" class="form-control">
+    </div>
+
+    <div class="pt-3">
+        <label for="txtPttg">Phần trăm tăng giá : </label>
+        <input type="text" name="pttg" id="txtPttg" class="form-control">
+    </div>
+
+    <div class="pt-3">
+        <label for="txtGiaBanSua">Giá sản phẩm : </label>
+        <input type="text" name="giaban" id="txtGiaBanSua" class="form-control">
     </div>
 
                     

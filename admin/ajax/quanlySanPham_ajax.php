@@ -29,7 +29,8 @@ foreach ($data as $row) {
     $loai = $row['tenloai'];
     $mota = $row['description'];
     $gia = number_format($row['price'], 0, ',', '.');
-
+    $giaban = number_format($row['price_sale'],0,',','.');
+    $pttg = $row['pttg'];
     echo "
         <tr class='text-center'>
             <td class='hienthiid'>$id</td>
@@ -37,6 +38,7 @@ foreach ($data as $row) {
             <td class='hienthiloai'>$loai</td>
             <td class='mota'>$mota</td>
             <td class='hienthigia'>$gia VNĐ</td>
+            <td class='hienthigia'>$giaban VNĐ</td>
             <td>
                 <div class='d-flex justify-content-center gap-3'>
                 <div>
@@ -45,6 +47,8 @@ foreach ($data as $row) {
                 data-ten=\"$ten\"
                 data-mota=\"$mota\"
                 data-gia='{$row['price']}'
+                data-giaban='{$row['price_sale']}'
+                data-pttg = \"$pttg\"
                 data-loaiid='{$row['category_id']}' style='width:60px;' >Sửa</button></div>
                 <div>
                 <button class='btn btn-danger btn-xoa' data-id='$id' style='width:60px;'>Xóa</button>

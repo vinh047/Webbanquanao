@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     let productList = [];
     let productCount = 0;
+    let currentPage = 1;
 
     // Hàm format giá
     function formatPrice(price) {
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td class="hienthiloai">${product.category}</td>
                 <td class="mota">${product.description}</td>
                 <td class="hienthigia">${formatPrice(product.price)}</td>
+                <td class="hienthigia">${product.ptgg}</td>
                 <td class="hienthibtn-ne">
                     <div class="d-flex justify-content-center gap-2">
                         <div>
@@ -64,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('txtMotaSua').value = product.description;
             document.getElementById('cbLoaiSua').value = product.category_id;
             document.getElementById('txtGiaSua').value = product.price;
+            document.getElementById('txtPTSua').value = product.ptgg;
         }
     }
 
@@ -78,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const supplierId = document.getElementById('supplier_idSua').value;
         const supplierName = document.getElementById('supplier_idSua').options[document.getElementById('supplier_idSua').selectedIndex].text;
         const userId = document.getElementById('user_idSua').value;
+        const ptggdasua = document.getElementById('txtPTSua').value;
 
         // Cập nhật sản phẩm trong danh sách
         const productIndex = productList.findIndex(p => p.id === parseInt(productId));
@@ -91,7 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 description: productDescription,
                 category_id: categoryId,
                 category: categoryName,
-                price: productPrice
+                price: productPrice,
+                ptgg: ptggdasua
             };
         }
 
@@ -135,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const loiNe = thongbaoLoi.querySelector('p');
         const priceValue = parseFloat(productPrice);
         let loi = "";
+        const ptgg = document.getElementById('txtPT').value;
+
 
 if (!supplierId) {
     loi = "Không được để trống nhà cung cấp";
@@ -150,6 +157,18 @@ if (!supplierId) {
     loi = "Giá sản phẩm phải là dạng số";
 } else if (priceValue < 0) {
     loi = "Giá sản phẩm phải là số dương";
+}else if(!ptgg)
+{
+    loi = "Phần trăm không được để trống"
+}else if(isNaN(ptgg))
+{
+    loi = "Phần trăm phải là dạng số";
+}else if(ptgg<0)
+{
+    loi = "Phần trăm phải là số dương";
+}else if(ptgg > 1000)
+{
+    loi = "Phần trăm không được vượt quá 1000";
 }
 
         if(loi === "")
@@ -163,10 +182,14 @@ if (!supplierId) {
                 description: productDescription,
                 category_id: categoryId,
                 category: categoryName,
-                price: productPrice
+                price: productPrice,
+                ptgg: ptgg
             });
             updateProductList();
-            document.getElementById('formNhapPhieuNhap').reset();
+            document.getElementById('txtTen').value = '';
+            document.getElementById('txtMota').value = '';
+            document.getElementById('cbLoai').value = '';
+            document.getElementById('txtGia').value = '';
 
 
         } else {
@@ -203,13 +226,19 @@ if (!supplierId) {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                alert('Phiếu nhập và sản phẩm đã được lưu thành công!');
+                const tbTC = document.querySelector(".thongbaoLuuThanhCong");
+                tbTC.style.display = "block";
+                tbTC.classList.add("show");
+                setTimeout(() => tbTC.classList.remove('show'), 2000);
                 productList = [];
                 updateProductList();
                 document.getElementById('formNhapPhieuNhap').reset();
                 loadPhieuNhap();
             } else {
-                alert('Lỗi khi lưu phiếu nhập: ' + response.message);
+                const tbTB = document.querySelector(".thongbaoLuuKhongThanhCong");
+                tbTB.style.display = "block";
+                tbTB.classList.add("show");
+                setTimeout(() => tbTB.classList.remove('show'), 2000);
             }
         })
         .catch(error => {
@@ -226,10 +255,9 @@ if (!supplierId) {
             document.querySelectorAll(".page-link-custom").forEach(btn => {
                 btn.addEventListener("click", function (e) {
                     e.preventDefault();
-                    const pageNum = parseInt(this.dataset.page);
-                    if (!isNaN(pageNum)) {
-                        loadPhieuNhap(pageNum);
-                    }
+                    currentPage = parseInt(this.dataset.page); // lưu lại trang hiện tại
+                     loadPhieuNhap(this.dataset.page);
+    
                 });
             });
                  document.querySelectorAll(".btn-xoa").forEach(btn => {
@@ -265,7 +293,7 @@ if (!supplierId) {
 
 
                                     // Tải lại danh sách sản phẩm sau khi xóa
-                                    loadPhieuNhap();
+                                    loadPhieuNhap(currentPage);
                                 } else {
                                     const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
                                     tbXoaTB.style.display = "block";
@@ -347,7 +375,7 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
             tbThanhCong.classList.add("show");
             setTimeout(() => tbThanhCong.classList.remove('show'), 2000);
             document.querySelector('.formSuaPN').style.display = 'none';
-            loadPhieuNhap();
+            loadPhieuNhap(currentPage);
         } else {
             tbThatBai.style.display = "block";
             tbThatBai.classList.add("show");
