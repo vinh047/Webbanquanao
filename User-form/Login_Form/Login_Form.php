@@ -19,7 +19,7 @@ $trangthai = $_GET['trangthai'] ?? 'dangnhap';
 
       <!-- Login/Register Form -->
       <div class="col-md-5 bg-white rounded-4 p-4 retro-shadow login">
-        <form action="put-user-ondb.php" method="POST" id="mainformmainform"></form>
+        <form action="userdb_func.php" method="POST" id="mainformmainform"></form>
       </div>
 
       <!-- Carousel -->

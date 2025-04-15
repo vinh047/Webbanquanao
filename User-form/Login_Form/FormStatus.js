@@ -70,18 +70,52 @@ function loadForm() {
     `;
   }
 
-  // ✅ THÊM input hidden để gửi trạng thái về PHP
   const hiddenInput = document.createElement("input");
   hiddenInput.type = "hidden";
   hiddenInput.name = "trangthai";
   hiddenInput.value = trangthai;
   form.appendChild(hiddenInput);
 
-  // ✅ Gắn sự kiện submit sau khi form được render
-  form.addEventListener("submit", function (e) {
-    const checkvar = validateForm();
-    if (!checkvar) {
-      e.preventDefault();
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const isValid = validateForm();
+    if (!isValid) return;
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/User-form/Login_Form/userdb_func.php", {
+        method: "POST",
+        body: formData
+      });
+
+      const text = await response.text();
+
+      form.querySelectorAll(".form-control").forEach(input => {
+        input.classList.remove("is-invalid", "border-danger");
+        input.classList.add("border-dark");
+        const next = input.nextElementSibling;
+        if (next && next.classList.contains("invalid-feedback")) {
+          next.remove();
+        }
+      });
+
+      if (text === "REGISTER_SUCCESS" || text === "LOGIN_SUCCESS") {
+        window.location.href = "../../index.php";
+      } else if (text === "EMAIL_EXISTS") {
+        addError(form.querySelector('[name="email"]'), "Email đã tồn tại.");
+      } else if (text === "INVALID_PASSWORD") {
+        addError(form.querySelector('[name="pswd"]'), "Mật khẩu không hợp lệ.");
+      } else if (text === "NO_ACCOUNT") {
+        addError(form.querySelector('[name="email"]'), "Tài khoản không tồn tại.");
+      } else if (text === "MISSING_FIELDS") {
+        addError(form.querySelector('[name="username"]'), "Vui lòng điền đầy đủ thông tin.");
+      } else {
+        addError(form.querySelector('[name="username"]'), "Đã xảy ra lỗi không xác định.");
+      }
+    } catch (err) {
+      addError(form.querySelector('[name="username"]'), "Lỗi máy chủ hoặc kết nối.");
     }
   });
 }
