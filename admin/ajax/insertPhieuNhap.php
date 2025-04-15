@@ -9,7 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $supplier_id = $_POST['supplier_id'];
         $user_id = $_POST['user_id'];
         $total_price = 0;
-
+        if (empty($supplier_id)) {
+            echo json_encode(['success' => false, 'message' => 'supplier_id đang bị rỗng']);
+            exit;
+        }
+        
         // Xử lý các sản phẩm
         $products = $_POST['products'];
         $productList = json_decode($products, true);
@@ -18,13 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = $product['name'];
             $description = $product['description'];
             $category_id = $product['category_id'];
-            $price = $product['price'];
-            $price_sale = $price * 1.2;  // Tính giá bán
+            $price = floatval($product['price']);
+            $ptgg = floatval($product['pttg']);
+            $price_sale = $price * (1 + $ptgg / 100);
 
             // Lưu sản phẩm vào bảng 'products'
-            $sql = "INSERT INTO products (name, description, category_id, price, price_sale) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO products (name, description, category_id, price, price_sale, pttg) 
+            VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $db->getConnection()->prepare($sql);
-            $stmt->execute([$name, $description, $category_id, $price, $price_sale]);  // Thêm price_sale vào đây
+            $stmt->execute([$name, $description, $category_id, $price, $price_sale, $ptgg]);
+    
 
             $total_price += $price; // Tính tổng giá trị
         }

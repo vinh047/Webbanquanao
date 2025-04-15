@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loi = tbLoai.querySelector("p");
     const tbLoaiThanhCong = document.querySelector(".thongbaoThanhCong");
     const tc = tbLoaiThanhCong.querySelector("p");
+    let currentPage = 1;
 
     function fetchSanPham(page = 1) {
         fetch(`../ajax/quanlySanPham_ajax.php?pageproduct=${page}`)
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll(".page-link-custom").forEach(btn => {
                     btn.addEventListener("click", function (e) {
                         e.preventDefault();
+                        currentPage = parseInt(this.dataset.page); // lưu lại trang hiện tại
                         fetchSanPham(this.dataset.page);
                     });
                 });
@@ -45,7 +47,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         const ten = this.dataset.ten;
                         const mota = this.dataset.mota;
                         const gia = this.dataset.gia;
+                        const giaban = this.dataset.giaban;
                         const loai = this.dataset.loaiid;
+                        const pttg = this.dataset.pttg;
 
                         document.querySelector(".formSua").style.display = "block";
                         document.querySelector(".overlay").style.display = "block";
@@ -55,6 +59,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         formSua.querySelector("textarea[name='mota']").value = mota;
                         formSua.querySelector("select[name='loai']").value = loai;
                         formSua.querySelector("input[name='gia']").value = parseFloat(gia).toLocaleString('vi-VN');
+                        formSua.querySelector("input[name='giaban']").value = parseFloat(giaban).toLocaleString('vi-VN');
+                        formSua.querySelector("input[name='pttg']").value = parseFloat(pttg);
+                        formSua.dataset.giaNhapCu = parseFloat(gia.replace(/\./g, "").replace(",", "."));
+                        formSua.dataset.giaBanCu = parseFloat(giaban.replace(/\./g, "").replace(",", "."));
+
                     });
                 });
 
@@ -81,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     "Content-Type": "application/x-www-form-urlencoded"
                                 },
                                 body: `id=${id}`
+
                             })
                                 .then(res => res.json())
                                 .then(data => {
@@ -94,14 +104,16 @@ document.addEventListener('DOMContentLoaded', function () {
                                         setTimeout(() => tbXoa.classList.remove('show'), 2000);
 
                                     
-                                        fetchSanPham();
-                                    }
-                                     else {
+                                        if (document.querySelectorAll(".btn-sua").length === 1 && currentPage > 1) {
+                                            currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
+                                        }
+                                        fetchSanPham(currentPage);                                    }
+                                    else {
                                         const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
                                         tbXoaTB.style.display = "block";
                                         tbXoaTB.classList.add("show");      
                                         setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
-                              
+                            
                                     }
                                 });
                         };
@@ -148,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    fetchSanPham();
+                    fetchSanPham(currentPage);
                     form.reset();
                     tc.textContent = "Sản phẩm đã được thêm thành công!";
                     tbLoaiThanhCong.style.display = 'block';
@@ -163,54 +175,85 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
-    // Cập nhật sản phẩm
+    function validatePrice(value, selector) {
+        const cleaned = value.replace(/\./g, "").replace(",", ".");
+        const number = parseFloat(cleaned);
+        if (isNaN(number) || number <= 0) {
+            const tbGia = document.querySelector(selector);
+            tbGia.classList.add("show");
+            tbGia.style.display = "block";
+            setTimeout(() => tbGia.classList.remove('show'), 2000);
+            return null;
+        }
+        return number;
+    }
+    
+    
     formSua.addEventListener("submit", function (e) {
         e.preventDefault();
-
-        let giaFormatted = formSua.querySelector("input[name='gia']").value;
-        let gia = giaFormatted.replace(/\./g, "").replace(",", ".");
-
-        if (isNaN(gia) || gia <= 0) {
-            if (isNaN(gia) || gia <= 0) {
-                const tbGia = document.querySelector(".thongBaoLoiGia");
-                tbGia.classList.add("show");
-                tbGia.style.display = "block";
-                
-                setTimeout(() => tbGia.classList.remove('show'), 2000);
-
-                return;
-            }
-            
+    
+        const gia = validatePrice(formSua.querySelector("input[name='gia']").value, ".thongBaoLoiGia");
+        const giaban = validatePrice(formSua.querySelector("input[name='giaban']").value, ".thongBaoLoiGia");
+    
+        if (gia === null || giaban === null) return;
+    
+        const giaNhap = parseFloat(gia);
+        const giaBan = parseFloat(giaban);
+    
+        const giaBanCu = parseFloat(formSua.dataset.giaBanCu);
+    
+        // ✅ Nếu người dùng đã sửa giá bán & giá bán mới < giá nhập → cảnh báo
+        if (giaBan !== giaBanCu && giaBan < giaNhap) {
+            document.querySelector(".thongBaoGia").style.display = "block";
+            document.querySelector(".overlay").style.display = "block";
+    
+            document.querySelector(".btn-xacnhan-gia").onclick = function () {
+                document.querySelector(".thongBaoGia").style.display = "none";
+                document.querySelector(".overlay").style.display = "none";
+                sendCapNhatSanPham(giaNhap, giaBan);
+            };
+    
+            document.querySelector(".btn-khong-gia").onclick = function () {
+                document.querySelector(".thongBaoGia").style.display = "none";
+            };
+    
             return;
         }
-
-        const formData = new FormData(this);
+    
+        sendCapNhatSanPham(giaNhap, giaBan);
+    });
+    
+    
+    
+    
+    
+    function sendCapNhatSanPham(gia, giaban) {
+        const formData = new FormData(formSua);
         formData.set("gia", gia);
-
+        formData.set("giaban", giaban);
+    
         fetch("../ajax/updateSanPham.php", {
             method: "POST",
             body: formData
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.querySelector(".formSua").style.display = "none";
-                    document.querySelector(".overlay").style.display = "none";
-                
-                    const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
-                    tbUpdate.style.display = "block";
-                    tbUpdate.classList.add("show");
-                
-                    setTimeout(() => tbUpdate.classList.remove('show'), 2000);
-
-                
-                    fetchSanPham();
-                }
-                 else {
-                    alert(data.message || "Lỗi cập nhật");
-                }
-            });
-    });
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.querySelector(".formSua").style.display = "none";
+                document.querySelector(".overlay").style.display = "none";
+    
+                const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
+                tbUpdate.style.display = "block";
+                tbUpdate.classList.add("show");
+                setTimeout(() => tbUpdate.classList.remove('show'), 2000);
+    
+                fetchSanPham(currentPage);
+            } else {
+                alert(data.message || "Lỗi cập nhật");
+            }
+        });
+    }
+    
 
     // Hủy form sửa
     document.querySelector(".formSua .btn-danger").addEventListener("click", function (e) {

@@ -46,11 +46,11 @@
 
             <div class="sanpham py-3" style="font-size: 19px;">
 
-                <form action="javascript:void(0);" id="formNhapPhieuNhap"> 
+                <form action="../ajax/insertPhieuNhap.php" id="formNhapPhieuNhap"> 
                     <!-- Chọn nhà cung cấp -->
                     <div class="pt-3">
                         <label for="supplier_id">Chọn nhà cung cấp: </label>
-                        <select name="supplier_id" id="supplier_id" class="form-select" required>
+                        <select name="supplier_id" id="supplier_id" class="form-select">
                             <option value="">Chọn nhà cung cấp</option>
                             <?php foreach($suppliers as $supplier): ?>
                                 <option value="<?=$supplier['supplier_id']?>"><?=$supplier['name']?></option>
@@ -87,6 +87,11 @@
                         <input type="text" name="txtGia" id="txtGia" class="form-control " placeholder="Giá của sản phẩm">
                     </div>
 
+                    <div class="pt-3">
+                        <label for="txtPT">Phần trăm giá sản phẩm : </label>
+                        <input type="text" name="txtPT" id="txtPT" class="form-control " placeholder="Phần trăm giá sản phẩm" value="30%">
+                    </div>
+
                     <div class="d-flex pt-3 gap-3">
                         <button type="button" id="add_product" class="btn btn-outline-secondary">Thêm phiếu nhập</button>
                         <button class="btn btn-outline-primary" type="submit">Lưu phiếu nhập</button>
@@ -110,6 +115,7 @@
                                 <th class="hienthiloai">Loại</th>
                                 <th class="mota">Mô tả</th>
                                 <th class="hienthigia">Giá</th>
+                                <th class="hienthigia">PT sản phẩm</th>
                                 <th class="hienthibtn-ne">Xử lý</th>
                             </tr>
                         </thead>
@@ -194,6 +200,11 @@
                     <div class="pt-3">
                         <label for="txtGiaSua">Giá sản phẩm : </label>
                         <input type="text" name="txtGiaSua" id="txtGiaSua" class="form-control " placeholder="Giá của sản phẩm">
+                    </div>
+
+                    <div class="pt-3">
+                        <label for="txtPTSua">Phần trăm giá sản phẩm : </label>
+                        <input type="text" name="txtPTSua" id="txtPTSua" class="form-control " placeholder="Phần trăm giá sản phẩm" value="30%">
                     </div>
 
                     <div class="d-flex pt-3 gap-3">
@@ -282,6 +293,16 @@
             </p>
         </div>
 
+        <div class="thongbaoLuuKhongThanhCong  bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Lưu sản phẩm thất bại
+            </p>
+        </div>
+        <div class="thongbaoLuuThanhCong bg-success me-3 mt-3 p-3 rounded-2">
+    <p class="mb-0 text-white">       
+        Lưu sản phẩm thành công
+    </p>
+</div>
 <div class="overlay"></div>
 <div class="thongbaoLoi  bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       

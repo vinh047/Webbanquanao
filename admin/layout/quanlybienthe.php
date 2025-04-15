@@ -13,7 +13,8 @@
     <?php
     require_once('../../database/DBConnection.php');
     $db = DBConnect::getInstance();
-    $color = $db->select("SELECT * FROM colors");
+    $color = $db->select("SELECT * FROM colors",[]);
+    $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
     ?>
 
 </head>
@@ -75,13 +76,9 @@
                         <label for="cbSize">Size : </label>
                         <select name="cbSize" id="cbSize" class="form-select ">
                             <option value="">Chọn size sản phẩm</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="X">X</option>
-                            <option value="XL">XL</option>
-                            <option value="2XL">2XL</option>
-
+                            <?php foreach($size as $s): ?>
+                            <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
+                            <?php endforeach ?>
                         </select>
                     </div>
     
@@ -213,12 +210,9 @@
                         <label for="cbSize">Size : </label>
                         <select name="cbSizeSua" id="cbSizeSua" class="form-select ">
                             <option value="">Chọn size sản phẩm</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="X">X</option>
-                            <option value="XL">XL</option>
-                            <option value="2XL">2XL</option>
+                            <?php foreach($size as $s): ?>
+                            <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
+                            <?php endforeach ?>
 
                         </select>
                     </div>

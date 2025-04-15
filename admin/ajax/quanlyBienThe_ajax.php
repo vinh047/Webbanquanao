@@ -15,10 +15,11 @@ $offset = $pagination->offset();
 
 // Truy vấn danh sách biến thể sản phẩm
 $data = $db->select("
-    SELECT p.*, c.name AS tenMau
+    SELECT p.*, c.name AS tenMau, s.name AS tenSize
     FROM product_variants p
     JOIN colors c ON p.color_id = c.color_id
     JOIN products pr ON p.product_id = pr.product_id
+    JOIN sizes s ON s.size_id = p.size_id
     ORDER BY p.variant_id ASC
     LIMIT $limit OFFSET $offset
 ", []);
@@ -28,11 +29,11 @@ foreach ($data as $row) {
     $idvr = $row['variant_id'];
     $idsp = $row['product_id'];
     $anh = $row['image'];
-    $size = $row['size'];
+    $size = $row['tenSize'];
     $soluong = $row['stock'];
     $mau = $row['tenMau'];
     $id_mau = $row['color_id'];
-
+    $id_size = $row['size_id'];
     echo "
         <tr class='text-center'>
             <td class='hienthiidbt'>$idvr</td>
@@ -47,7 +48,7 @@ foreach ($data as $row) {
                     data-idvr='$idvr'
                     data-idsp='$idsp'
                     data-anh='$anh'
-                    data-size='$size'
+                    data-size='$id_size'
                     data-soluong='$soluong'
                     data-mau='$id_mau'
                     style='width:60px;height:40px;font-size:17px;'>Sửa</button></div>
