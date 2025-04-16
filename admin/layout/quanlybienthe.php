@@ -192,6 +192,7 @@
             <div class="" style="font-size: 16px;">
                 <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
                 <form action="../ajax/updateBienthe.php" method="POST" id="formSuaSPbienThe" enctype="multipart/form-data">
+                <input type="hidden" name="txtMaCTPN" id="txtMaCTPN">
                     <div class="">
                         <label for="txtMaBt">Mã biến thể : </label>
                         <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control" readonly>
@@ -246,10 +247,10 @@
     
                     <div class="pt-3 d-flex justify-content-center gap-3">
                         <div class="">
-                            <button class="btn btn-success" style="width:80px;">Xác nhận</button>
+                            <button class="btn btn-success" type="submit" style="width:80px;">Xác nhận</button>
                         </div>
                         <div class="">
-                            <button class="btn btn-danger" style="width:80px;">Hủy</button>
+                            <button class="btn btn-danger" type="button" style="width:80px;">Hủy</button>
                         </div>
                     </div>
                 </form>

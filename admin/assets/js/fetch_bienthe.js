@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         const size = this.dataset.size;
                         const soluong = this.dataset.soluong;
                         const mau = this.dataset.mau;
-
+                        const idctpn = this.dataset.idct;
                         document.querySelector(".formSua").style.display = "block";
                         document.querySelector(".overlay").style.display = "block";
 
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         document.getElementById("txtSlSua").value = soluong;
                         document.getElementById("cbMauSua").value = mau;
                         document.getElementById("tenFileAnhSua").textContent = anh;
-
+                        document.getElementById("txtMaCTPN").value = idctpn;
                         // Gán ảnh hiển thị
                         const imgPreview = formSua.querySelector("#hienthianhSua img");
                         imgPreview.src = "../../assets/img/sanpham/" + anh;
@@ -304,15 +304,19 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => thongbao.classList.remove('show'), 2000);
         }
     });
-
+    if (!formSua) {
+        console.error("Không tìm thấy formSuaSPbienThe");
+        return;
+    }
     formSua.addEventListener("submit", function (e) {
         e.preventDefault();
+        console.log("Đã submit form!");
+
         const idsp = document.getElementById("txtMaSua").value.trim();
         const img = document.getElementById("fileAnhSua").value;
         const size = document.getElementById("cbSizeSua").value.trim();
         const mau = document.getElementById("cbMauSua").value;
         const sl = document.getElementById("txtSlSua").value.trim();
-        e.preventDefault();
 
     
         if (!idsp) {
@@ -344,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;  
         }
     
-        const file = document.getElementById("fileAnh").files[0]; 
+        const file = document.getElementById("fileAnhSua").files[0]; 
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif']; 
         if (file && !validImageTypes.includes(file.type)) {
             loi.textContent = "Tệp được chọn không phải là ảnh (chỉ chấp nhận .jpg, .png, .gif)";
