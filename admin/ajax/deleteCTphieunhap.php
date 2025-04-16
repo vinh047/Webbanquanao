@@ -4,7 +4,6 @@ header('Content-Type: application/json');
 
 $pdo = DBConnect::getInstance()->getConnection();
 
-// Nhận ID chi tiết phiếu nhập từ client
 $id_ct = $_POST['id'] ?? null;
 
 if (!$id_ct) {
@@ -12,12 +11,13 @@ if (!$id_ct) {
     exit;
 }
 
-// 1. Lấy lại chi tiết dòng sẽ xoá
-$stmt = $pdo->prepare("SELECT variant_id, quantity FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
+// 1. Lấy lại chi tiết dòng sẽ xoá (cần thêm ImportReceipt_id để cập nhật lại tổng tiền)
+$stmt = $pdo->prepare("SELECT importreceipt_id, variant_id, quantity FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
 $stmt->execute([$id_ct]);
 $ct = $stmt->fetch();
 
 if ($ct) {
+    $receipt_id = $ct['importreceipt_id'];
     $variant_id = $ct['variant_id'];
     $quantity = $ct['quantity'];
 
@@ -29,7 +29,7 @@ if ($ct) {
     $stmt3 = $pdo->prepare("DELETE FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
     $stmt3->execute([$id_ct]);
 
-    // 4. Kiểm tra tồn kho → nếu về 0 thì xoá mềm (is_deleted = 1)
+    // 4. Kiểm tra tồn kho → nếu về 0 thì xoá mềm
     $stmt4 = $pdo->prepare("SELECT stock FROM product_variants WHERE variant_id = ?");
     $stmt4->execute([$variant_id]);
     $stock = $stmt4->fetchColumn();
@@ -39,7 +39,20 @@ if ($ct) {
         $stmt5->execute([$variant_id]);
     }
 
+    // ✅ 5. Cập nhật lại tổng tiền phiếu nhập
+    $stmt6 = $pdo->prepare("
+        UPDATE importreceipt 
+        SET total_price = (
+            SELECT IFNULL(SUM(total_price), 0)
+            FROM importreceipt_details
+            WHERE importreceipt_id = ?
+        )
+        WHERE importreceipt_id = ?
+    ");
+    $stmt6->execute([$receipt_id, $receipt_id]);
+
     echo json_encode(['success' => true]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Không tìm thấy chi tiết phiếu nhập']);
 }
+?>

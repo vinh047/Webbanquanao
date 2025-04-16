@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $db->getConnection()->prepare($sql);
             $stmt->execute([$name, $description, $category_id, $price, $price_sale, $ptgg]);
 
-            $total_price += $price; // Tính tổng giá trị
+            // $total_price += $price; // Tính tổng giá trị
         }
 
         // Lưu phiếu nhập vào bảng 'importreceipt'
