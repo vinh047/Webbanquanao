@@ -191,11 +191,129 @@ document.addEventListener('DOMContentLoaded', function () {
     
     formSua.addEventListener("submit", function (e) {
         e.preventDefault();
-    
-        const gia = validatePrice(formSua.querySelector("input[name='gia']").value, ".thongBaoLoiGia");
-        const giaban = validatePrice(formSua.querySelector("input[name='giaban']").value, ".thongBaoLoiGia");
-    
-        if (gia === null || giaban === null) return;
+        const ten = document.getElementById("txtTenSua").value.trim();
+        const mota = document.getElementById("txtMotaSua").value.trim();
+        const cbLoai = document.getElementById("cbLoaiSua").value.trim();
+        const pttg = parseFloat(document.getElementById("txtPttg").value.trim());
+        const giaBanDau = parseFloat(document.getElementById("txtGiaSua").value.replace(/\./g, "").replace(",", "."));
+        const giaBanNe = parseFloat(document.getElementById("txtGiaBanSua").value.replace(/\./g, "").replace(",", "."));
+        const gia = parseFloat(document.getElementById("txtGiaSua").value.trim());
+        const giaban = parseFloat(document.getElementById("txtGiaBanSua").value.trim());
+        const tbLoi = document.querySelector(".thongbaoLoi");
+        const loiTB = tbLoi.querySelector("p");
+        let loi = "";
+
+        if(!ten)
+        {
+            loi = "Không được để trống tên sản phẩm";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtTenSua").focus();
+
+            return;
+        }
+
+        if(!mota)
+        {
+            loi = "Không được để trống mô tả phẩm";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtMotaSua").focus();
+            return;
+        }
+
+        if(!cbLoai)
+        {
+            loi = "Không được để trống loại sản phẩm";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("cbLoaiSua").focus();
+            return;
+        }
+
+        if(!giaBanDau)
+        {
+            loi = "Không được để trống giá nhập";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtGiaSua").focus();
+            return;
+        }
+
+        if(!pttg)
+        {
+            loi = "Không được để trống phần trăm tăng giá";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtPttg").focus();
+            return;
+        }
+
+        if(isNaN(pttg))
+        {
+            loi = "Phần trăm tăng giá phải là số dương";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtPttg").focus();
+
+            return;
+        }
+
+        if(pttg < 0)
+        {
+            loi = "Phần trăm tăng giá phải là số dương";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtPttg").focus();
+
+            return;
+        }
+
+        if(!giaBanNe)
+        {
+            loi = "Không được để trống giá bán";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            document.getElementById("txtGiaBanSua").focus();
+            return; 
+        }
+
+        if(isNaN(giaBanDau)  || isNaN(giaBanNe))
+        {
+            loi = "Sai định dạng giá";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            return;  
+        }
+
+        if(giaBanDau <= 0 || giaBanNe <= 0)
+        {
+            loi = "GIá phải lớn hơn 0";
+            loiTB.textContent = loi;
+            tbLoi.style.display = 'block';
+            tbLoi.classList.add('show');
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            return; 
+        }
+        // if (gia === null || giaban === null) return;
     
         const giaNhap = parseFloat(gia);
         const giaBan = parseFloat(giaban);
@@ -254,7 +372,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     
-
+    function tinhGiaBanTuDong() {
+        const giaNhapVal = document.getElementById("txtGiaSua").value.replace(/\./g, "").replace(",", ".");
+        const pttgVal = document.getElementById("txtPttg").value.replace(",", ".");
+    
+        const giaNhap = parseFloat(giaNhapVal);
+        const pttg = parseFloat(pttgVal);
+    
+        if (!isNaN(giaNhap) && !isNaN(pttg)) {
+            const giaBan = giaNhap * (1 + pttg / 100);
+            document.getElementById("txtGiaBanSua").value = Math.round(giaBan); // hoặc toFixed(0)
+        }
+    }
+    
+    // Gắn sự kiện tự động tính khi nhập giá nhập hoặc phần trăm
+    document.getElementById("txtGiaSua").addEventListener("input", tinhGiaBanTuDong);
+    document.getElementById("txtPttg").addEventListener("input", tinhGiaBanTuDong);
+    
     // Hủy form sửa
     document.querySelector(".formSua .btn-danger").addEventListener("click", function (e) {
         e.preventDefault();

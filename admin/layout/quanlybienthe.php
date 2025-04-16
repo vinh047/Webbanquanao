@@ -55,7 +55,7 @@
             </div>
 
 
-            <div class="sanpham py-3" style="font-size: 19px;">
+            <div class="sanpham py-3" style="font-size: 19px;display:none;">
 
 
                 <form action="../ajax/insertBienThe.php" method="POST" id="formNhapSPbienThe" enctype="multipart/form-data">
@@ -206,7 +206,8 @@
                         </div>
                     </div>
     
-                    <div class="">
+                    <div class="d-flex">
+                    <div class="me-auto">
                         <label for="cbSize">Size : </label>
                         <select name="cbSizeSua" id="cbSizeSua" class="form-select ">
                             <option value="">Chọn size sản phẩm</option>
@@ -216,13 +217,8 @@
 
                         </select>
                     </div>
-    
-                    <div class="pt-3">
-                        <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control " placeholder="Số lượng của sản phẩm">
-                    </div>
 
-                    <div class="pt-3">
+                    <div class="">
                         <label for="cbMau">Màu : </label>
                         <select name="cbMauSua" id="cbMauSua" class="form-select">
                             <option value="">Chọn màu sản phẩm</option>
@@ -234,6 +230,13 @@
                             <?php endforeach ?>
                         </select>
                     </div>
+                    </div>
+    
+                    <div class="pt-3">
+                        <label for="txtSl">Số lượng sản phẩm : </label>
+                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control " placeholder="Số lượng của sản phẩm">
+                    </div>
+
     
                     <div class="pt-3 d-flex justify-content-center gap-3">
                         <div class="">

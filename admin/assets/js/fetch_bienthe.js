@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const tbThanhCong = document.querySelector(".thongbaoThanhCong");
     const tc = tbThanhCong.querySelector("p");
     const formSua = document.getElementById("formSuaSPbienThe");
+    let currentPage = 1;
 
     function fetchBienThe(page = 1) {
         fetch(`../ajax/quanlyBienThe_ajax.php?pageproduct=${page}`)
@@ -16,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.querySelectorAll(".page-link-custom").forEach(btn => {
                     btn.addEventListener("click", function (e) {
                         e.preventDefault();
-                        fetchBienThe(this.dataset.page);
+                        currentPage = parseInt(this.dataset.page); // ✅ lưu lại
+                        fetchBienThe(currentPage);
                     });
                 });
                 const input = document.getElementById("pageInput");
@@ -99,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                                     // Tải lại danh sách sản phẩm sau khi xóa
-                                    fetchBienThe();
+                                    fetchBienThe(currentPage);
                                 } else {
                                     const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
                                     tbXoaTB.style.display = "block";
@@ -128,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    fetchBienThe(); // load ban đầu
+    fetchBienThe(currentPage); // load ban đầu
 
     form.addEventListener("submit", function (e) {
 
@@ -257,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        fetchBienThe();
+                        fetchBienThe(currentPage);
                         form.reset();
                         document.querySelector("#hienthianh img").style.display = "none";
                         thongbao.classList.remove('show');
@@ -413,7 +415,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             setTimeout(() => tbUpdate.classList.remove('show'), 2000);
 
     
-                            fetchBienThe(); // reload danh sách
+                            fetchBienThe(currentPage); // reload danh sách
                         } else {
                             alert(data.message || "Lỗi cập nhật");
                         }

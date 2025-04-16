@@ -115,10 +115,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Xóa sản phẩm khỏi hàng đợi
     function removeProduct(id) {
-        // Lọc sản phẩm theo ID và loại bỏ sản phẩm khỏi productList
+        // Xóa sản phẩm khỏi danh sách
         productList = productList.filter(product => product.id !== id);
+    
+        // Nếu danh sách rỗng sau khi xóa thì mở lại dropdown
+        if (productList.length === 0) {
+            document.getElementById('supplier_id').disabled = false;
+            document.getElementById('supplier_id').value = '';
+        }
+        
         updateProductList(); // Cập nhật lại bảng
     }
+    
 
     document.querySelector('.formSua button[type="button"]').addEventListener('click', function() {
     // Ẩn form khi nhấn Đóng, không xóa dữ liệu
@@ -171,33 +179,37 @@ if (!supplierId) {
     loi = "Phần trăm không được vượt quá 1000";
 }
 
-        if(loi === "")
-        {
-            productList.push({
-                id: ++productCount,
-                supplier_id: supplierId,
-                supplier: supplierName,
-                user_id: userId,
-                name: productName,
-                description: productDescription,
-                category_id: categoryId,
-                category: categoryName,
-                price: productPrice,
-                ptgg: ptgg
-            });
-            updateProductList();
-            document.getElementById('txtTen').value = '';
-            document.getElementById('txtMota').value = '';
-            document.getElementById('cbLoai').value = '';
-            document.getElementById('txtGia').value = '';
+if (loi === "") {
+    productList.push({
+        id: ++productCount,
+        supplier_id: parseInt(supplierId),
+        supplier: supplierName,
+        user_id: parseInt(userId),
+        name: productName,
+        description: productDescription,
+        category_id: parseInt(categoryId),
+        category: categoryName,
+        price: parseFloat(productPrice),
+        ptgg: parseFloat(ptgg)
+    });
 
+    // 👉 Khoá dropdown nhà cung cấp nếu đã có sản phẩm
+    if (productList.length === 1) {
+        document.getElementById('supplier_id').disabled = true;
+    }
 
-        } else {
-            loiNe.textContent = loi;
-            thongbaoLoi.style.display = "block";
-            thongbaoLoi.classList.add("show");      
-            setTimeout(() => thongbaoLoi.classList.remove('show'), 2000);            
-        }
+    updateProductList();
+    document.getElementById('txtTen').value = '';
+    document.getElementById('txtMota').value = '';
+    document.getElementById('cbLoai').value = '';
+    document.getElementById('txtGia').value = '';
+} else {
+    loiNe.textContent = loi;
+    thongbaoLoi.style.display = "block";
+    thongbaoLoi.classList.add("show");
+    setTimeout(() => thongbaoLoi.classList.remove('show'), 2000);
+}
+
     });
 
     // Khi nhấn "Lưu phiếu nhập"
@@ -223,8 +235,10 @@ if (!supplierId) {
             method: 'POST',
             body: data
         })
-        .then(res => res.json())
-        .then(response => {
+        .then(res => res.text()) // để xem raw response
+        .then(text => {
+            console.log("Server trả về:", text); // debug
+            const response = JSON.parse(text); // nếu parse được thì OK        
             if (response.success) {
                 const tbTC = document.querySelector(".thongbaoLuuThanhCong");
                 tbTC.style.display = "block";
@@ -233,6 +247,7 @@ if (!supplierId) {
                 productList = [];
                 updateProductList();
                 document.getElementById('formNhapPhieuNhap').reset();
+                document.getElementById('supplier_id').disabled = false;
                 loadPhieuNhap();
             } else {
                 const tbTB = document.querySelector(".thongbaoLuuKhongThanhCong");
