@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $successCount = 0;
 
     foreach ($products as $jsonProduct) {
-        $product = json_decode($jsonProduct, true);
+        $product = json_decode($jsonProduct, associative: true);
         if (!$product) continue;
 
         $product_id = $product['product_id'];

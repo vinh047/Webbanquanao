@@ -197,8 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const pttg = parseFloat(document.getElementById("txtPttg").value.trim());
         const giaBanDau = parseFloat(document.getElementById("txtGiaSua").value.replace(/\./g, "").replace(",", "."));
         const giaBanNe = parseFloat(document.getElementById("txtGiaBanSua").value.replace(/\./g, "").replace(",", "."));
-        const gia = parseFloat(document.getElementById("txtGiaSua").value.trim());
-        const giaban = parseFloat(document.getElementById("txtGiaBanSua").value.trim());
+        const gia = parseFloat(document.getElementById("txtGiaSua").value.replace(/\./g, "").replace(",", "."));
+        const giaban = parseFloat(document.getElementById("txtGiaBanSua").value.replace(/\./g, "").replace(",", "."));
         const tbLoi = document.querySelector(".thongbaoLoi");
         const loiTB = tbLoi.querySelector("p");
         let loi = "";
