@@ -62,7 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $successCount++;
+
+        
     }
+
+    // Sau khi thêm tất cả chi tiết, cập nhật lại tổng giá trị của phiếu nhập
+$stmt4 = $pdo->prepare("
+UPDATE importreceipt 
+SET total_price = (
+    SELECT SUM(total_price) 
+    FROM importreceipt_details 
+    WHERE importreceipt_id = ?
+) 
+WHERE importreceipt_id = ?
+");
+$stmt4->execute([$import_receipt_id, $import_receipt_id]);
+
 
     echo json_encode([
         'success' => $successCount > 0,
@@ -71,3 +86,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             : "Không lưu được sản phẩm nào"
     ]);
 }
+?>
