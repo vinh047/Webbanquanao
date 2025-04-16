@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $successCount = 0;
 
     foreach ($products as $jsonProduct) {
-        $product = json_decode($jsonProduct, associative: true);
+        $product = json_decode($jsonProduct, true);
         if (!$product) continue;
 
         $product_id = $product['product_id'];
@@ -25,47 +25,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $quantity = intval($product['quantity']);
         $image = basename($product['image']);
         $imagePath = "../../assets/img/sanpham/" . $image;
+        $variant_id = $product['variant_id'] ?? null;
 
         if (!file_exists($imagePath)) continue;
 
-        // Lấy giá sản phẩm
+        // Lấy giá nhập
         $stmt0 = $pdo->prepare("SELECT price FROM products WHERE product_id = ?");
         $stmt0->execute([$product_id]);
         $price = $stmt0->fetchColumn();
         if (!$price) $price = 0;
 
-        $total_price = $price * $quantity;
+        // Nếu chưa có biến thể → tạo mới
+        if (empty($variant_id)) {
+            $stmt1 = $pdo->prepare("INSERT INTO product_variants (product_id, image, size_id, stock, color_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt1->execute([$product_id, $image, $size_id, $quantity, $color_id]);
+            $variant_id = $pdo->lastInsertId();
+        } else {
+            // Nếu đã có → cộng thêm tồn kho
+            $stmt2 = $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?");
+            $stmt2->execute([$quantity, $variant_id]);
+        }
 
-        // Thêm vào bảng importreceipt_details
-        $stmtInsert = $pdo->prepare("INSERT INTO importreceipt_details (ImportReceipt_id, product_id, total_price) VALUES (?, ?, ?)");
-        $stmtInsert->execute([$import_receipt_id, $product_id, $total_price]);
-        $import_detail_id = $pdo->lastInsertId();
-
-        // Thêm vào bảng product_variants
-        $stmt2 = $pdo->prepare("INSERT INTO product_variants 
-            (product_id, image, size_id, stock, color_id, importreceipt_details_id) 
-            VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt2->execute([
+        // Lưu chi tiết phiếu nhập
+        $stmt3 = $pdo->prepare("
+            INSERT INTO importreceipt_details 
+            (ImportReceipt_id, product_id, variant_id, quantity, import_price, total_price)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $stmt3->execute([
+            $import_receipt_id,
             $product_id,
-            $image,
-            $size_id,
+            $variant_id,
             $quantity,
-            $color_id,
-            $import_detail_id
+            $price,
+            $quantity * $price
         ]);
 
         $successCount++;
     }
 
-    if ($successCount > 0) {
-        echo json_encode([
-            'success' => true,
-            'message' => "Đã lưu $successCount sản phẩm"
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => "Không lưu được sản phẩm nào"
-        ]);
-    }
+    echo json_encode([
+        'success' => $successCount > 0,
+        'message' => $successCount > 0
+            ? "Đã lưu $successCount sản phẩm"
+            : "Không lưu được sản phẩm nào"
+    ]);
 }

@@ -115,7 +115,7 @@ min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
 .thongbaoThanhCong,
 .thongbaoUpdateThanhCong,
 .thongbaoXoaThanhCong,.thongBaoLoiGia,.thongbaoXoaKhongThanhCong,.thongbaoXoaThatBai,.thongbaoUpdateKhongThanhCong,
-.thongbaoLuuKhongThanhCong,.thongbaoLuuThanhCong  {
+.thongbaoLuuKhongThanhCong,.thongbaoLuuThanhCong,.thongbaoXoaHiddenThanhCong  {
     display: block;
     opacity: 0;
     transition: opacity 0.6s ease;
@@ -139,7 +139,7 @@ min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
 .thongbaoThanhCong.show,
 .thongbaoUpdateThanhCong.show,
 .thongbaoXoaThanhCong.show,.thongBaoLoiGia.show,.thongbaoXoaKhongThanhCong.show,.thongbaoXoaThatBai.show,.thongbaoUpdateKhongThanhCong.show,
-.thongbaoLuuKhongThanhCong.show,.thongbaoLuuThanhCong.show {
+.thongbaoLuuKhongThanhCong.show,.thongbaoLuuThanhCong.show,.thongbaoXoaHiddenThanhCong.show {
     display: block;
     opacity: 1;
 }

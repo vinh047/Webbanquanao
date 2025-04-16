@@ -5,7 +5,7 @@ require_once('../../layout/phantrang.php');
 $db = DBConnect::getInstance();
 
 // Phân trang
-$total = $db->select("SELECT COUNT(*) AS total FROM product_variants", []);
+$total = $db->select("SELECT COUNT(*) AS total FROM product_variants WHERE is_deleted = 0", []);
 $totalItems = $total[0]['total'];
 $page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
 $limit = 10;
@@ -20,9 +20,11 @@ $data = $db->select("
     JOIN colors c ON p.color_id = c.color_id
     JOIN products pr ON p.product_id = pr.product_id
     JOIN sizes s ON s.size_id = p.size_id
+    WHERE p.is_deleted = 0
     ORDER BY p.variant_id ASC
     LIMIT $limit OFFSET $offset
 ", []);
+
 
 ob_start();
 foreach ($data as $row) {

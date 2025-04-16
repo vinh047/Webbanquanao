@@ -92,14 +92,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         const idctpn = this.dataset.idct;
                         const idpn = this.dataset.idpn;
                         const idsp = this.dataset.idsp;
+                        const idbt = this.dataset.variant;
                         const gia = this.dataset.gia;
                         const ngaylap = this.dataset.ngaylap;
+                        const tongtien = this.dataset.tongtien;
+                        const soluong = this.dataset.soluong;
 
                         document.getElementById('txtMaCTPNsua').value = idctpn;
                         document.getElementById('txtMaPNsua').value = idpn;
                         document.getElementById('txtMaSPsua').value = idsp;
-                        document.getElementById('txtTongGT').value = formatPrice(gia);
+                        document.getElementById('txtTongGT').value = formatPrice(tongtien);
                         document.getElementById('txtNgayLap').value = ngaylap;
+                        document.getElementById('txtMaBTsua').value = idbt;
+                        document.getElementById('txtGiaNhap').value = formatPrice(gia);
+                        document.getElementById('txtSlsuaTon').value = soluong;
                     });
                 });
             });
@@ -252,60 +258,71 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('add_product').addEventListener('click', async function () {
-        const import_receipt_id = document.getElementById('txtMaPN').value;
-        const product_id = document.getElementById('txtMa').value;
+        const import_receipt_id = document.getElementById('txtMaPN').value.trim();
+        const product_id = document.getElementById('txtMa').value.trim();
         const cbSizeSelect = document.getElementById('cbSize');
         const cbColorSelect = document.getElementById('cbMau');
         const size_id = cbSizeSelect.value;
         const color_id = cbColorSelect.value;
         const sizeName = cbSizeSelect.options[cbSizeSelect.selectedIndex].text;
         const colorName = cbColorSelect.options[cbColorSelect.selectedIndex].text;
-        const quantity = document.getElementById('txtSl').value;
+        const quantity = document.getElementById('txtSl').value.trim();
         const imageInput = document.getElementById('fileAnh');
-
+    
         if (!import_receipt_id || !product_id || !size_id || !color_id || !quantity || isNaN(quantity) || quantity <= 0) {
             return showError("Vui lòng nhập đầy đủ và đúng thông tin!");
         }
+    
         if (!imageInput.files || imageInput.files.length === 0) {
             return showError("Vui lòng chọn ảnh!");
         }
-        
+    
         const file = imageInput.files[0];
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (!validImageTypes.includes(file.type)) {
-            return showError("Tệp được chọn không phải là ảnh (chỉ chấp nhận .jpg, .png, .gif)!");
+            return showError("Tệp được chọn không phải là ảnh hợp lệ!");
         }
-        
+    
+        // ✅ Kiểm tra mã phiếu nhập tồn tại
         try {
             const res = await fetch(`../ajax/checkPN.php?pn_id=${import_receipt_id}`);
             const data = await res.json();
-            if (!data.exists) {
-                return showError("Mã phiếu nhập không tồn tại!");
-            }
-                        
-        } catch (error) {
+            if (!data.exists) return showError("Mã phiếu nhập không tồn tại!");
+        } catch (err) {
             return showError("Lỗi kiểm tra mã phiếu nhập!");
-
         }
-
+    
+        // ✅ Kiểm tra mã sản phẩm tồn tại
         try {
             const res = await fetch(`../ajax/checkID.php?product_id=${product_id}`);
             const data = await res.json();
-            if (!data.exists) {
-                return showError("Mã sản phẩm không tồn tại!");
-            }
-        } catch (error) {
+            if (!data.exists) return showError("Mã sản phẩm không tồn tại!");
+        } catch (err) {
             return showError("Lỗi kiểm tra mã sản phẩm!");
         }
-
-
-
-        let filename = imageInput.files[0]?.name || '';
-
+    
+        // ✅ Tìm variant_id (nếu có)
+        let variant_id = '';
+        try {
+            const filename = file.name;
+            const res = await fetch(`../ajax/checkBT.php?product_id=${product_id}&size_id=${size_id}&color_id=${color_id}&image=${encodeURIComponent(filename)}`);
+            const data = await res.json();
+            if (data.exists) {
+                variant_id = data.variant_id;
+            } else {
+                variant_id = ''; // sẽ tạo mới khi lưu nếu chưa có
+            }
+        } catch (err) {
+            return showError("Không thể kiểm tra biến thể sản phẩm!");
+        }
+    
+        const filename = file.name;
+    
+        // ✅ Thêm vào danh sách tạm
         productList.push({
             id: ++productCount,
             import_receipt_id,
-            variant_id: '',
+            variant_id,
             product_id,
             image: filename,
             size_id,
@@ -314,11 +331,13 @@ document.addEventListener('DOMContentLoaded', function () {
             color: colorName,
             quantity
         });
-
+    
         updateProductList();
         document.getElementById('formNhapSPbienThe').reset();
         document.querySelector('#hienthianh img').style.display = 'none';
     });
+    
+    
 
     document.getElementById('formNhapSPbienThe').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -365,9 +384,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const idpn = document.getElementById("txtMaPNsua").value;
         const idsp = document.getElementById("txtMaSPsua").value;
         let tonggt = document.getElementById("txtTongGT").value;
-    
+        const quantity = document.getElementById("txtSlsuaTon").value;
         tonggt = parseFloat(tonggt.replace(/\./g, '').replace(',', '.'));
-    
+        const variantId = document.getElementById("txtMaBTsua").value;
+
         if(!idpn)
         {
             return showError("Mã phiếu nhập không được để trống!");
@@ -377,7 +397,13 @@ document.addEventListener('DOMContentLoaded', function () {
         {
             return showError("Mã Sản phẩm không được để trống!"); 
         }
-
+        if (!variantId) {
+            return showError("Mã biến thể không được để trống!");
+        }
+        if (isNaN(quantity) || quantity <= 0) {
+            return showError("Số lượng phải là số hợp lệ và lớn hơn 0!");
+        }
+        
         try {
             const res1 = await fetch(`../ajax/checkPN.php?pn_id=${idpn}`);
             const data1 = await res1.json();
@@ -390,6 +416,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!data2.exists) {
                 return showError("Mã sản phẩm không tồn tại!");
             }
+            const res3 = await fetch(`../ajax/checkVariantProduct.php?product_id=${idsp}&variant_id=${variantId}`);
+            const data3 = await res3.json();
+            if (!data3.match) {
+                return showError("Mã biến thể không thuộc sản phẩm này!");
+            }
         } catch (error) {
             return showError("Lỗi kiểm tra dữ liệu!");
         }
@@ -399,7 +430,9 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append("txtMaPNsua", idpn);
         formData.append("txtMaSPsua", idsp);        
         formData.append("txtTongGT", tonggt);
-    
+        formData.append("txtSlsuaTon", quantity);
+        formData.append("txtMaBTsua", variantId);
+
         fetch("../ajax/updateCTPhieuNhap.php", {
             method: "POST",
             body: formData

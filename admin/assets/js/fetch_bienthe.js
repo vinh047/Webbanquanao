@@ -86,22 +86,41 @@ document.addEventListener("DOMContentLoaded", function () {
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
                                 },
-                                body: `id=${id}`
+                                body: `variant_id=${id}`
                             })
                             .then(res => res.json())
                             .then(data => {
                                 console.log("Xoá biến thể trả về:", data); // ✅ debug
+                                const action = data.action; // 👈 thiếu dòng này!
                                 if (data.success) {
                                     // Hiển thị thông báo xóa thành công
-                                    const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
-                                    tbXoa.style.display = "block";
-                                    tbXoa.classList.add("show");
-
-                                    setTimeout(() => tbXoa.classList.remove('show'), 2000);
-
-
-                                    // Tải lại danh sách sản phẩm sau khi xóa
-                                    fetchBienThe(currentPage);
+                                    if(action === 'hidden')
+                                    {
+                                        const tbXoane = document.querySelector(".thongbaoXoaHiddenThanhCong");
+                                        tbXoane.style.display = "block";
+                                        tbXoane.classList.add("show");
+    
+                                        setTimeout(() => tbXoane.classList.remove('show'), 2000);
+    
+                                        if (document.querySelectorAll(".btn-sua").length === 1 && currentPage > 1) {
+                                            currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
+                                        }
+                                        // Tải lại danh sách sản phẩm sau khi xóa
+                                        fetchBienThe(currentPage);
+                                    }else
+                                    {
+                                        const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
+                                        tbXoa.style.display = "block";
+                                        tbXoa.classList.add("show");
+    
+                                        setTimeout(() => tbXoa.classList.remove('show'), 2000);
+    
+                                        if (document.querySelectorAll(".btn-sua").length === 1 && currentPage > 1) {
+                                            currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
+                                        }
+                                        // Tải lại danh sách sản phẩm sau khi xóa
+                                        fetchBienThe(currentPage);
+                                    }
                                 } else {
                                     const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
                                     tbXoaTB.style.display = "block";

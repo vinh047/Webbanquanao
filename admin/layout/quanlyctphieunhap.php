@@ -140,6 +140,7 @@
                                 <th class="hienthiid">ID CTPN</th>
                                 <th class="hienthiid">ID PN</th>
                                 <th class="hienthiid">ID SP</th>
+                                <th class="hienthiid">ID BT</th>
                                 <th class="hienthigia">Tổng tiền</th>
                                 <th class="tensp">Ngày lập</th>
                                 <th class="hienthibtn-ne">Xử lý</th>
@@ -232,7 +233,8 @@
             <div class="" style="font-size: 16px;">
             <form action="../ajax/updateCTPhieuNhap.php" id="formSuaPN"> 
                     <!-- Chọn nhà cung cấp -->
-                    <div class="pt-3">
+                    <div class="d-flex">
+                    <div class="pt-3 me-auto">
                         <label for="txtMaCTPNsua">Mã CTPN: </label>
                         <input type="text" name="txtMaCTPNsua" id="txtMaCTPNsua" readonly class="form-control">
                     </div>
@@ -240,9 +242,27 @@
                         <label for="txtMaPNsua">Mã PN: </label>
                         <input type="text" name="txtMaPNsua" id="txtMaPNsua"  class="form-control">
                     </div>
-                    <div class="pt-3">
+                    </div>
+                    <div class="d-flex">
+                    <div class="pt-3 me-auto">
                         <label for="txtMaSPsua">Mã SP: </label>
                         <input type="text" name="txtMaSPsua" id="txtMaSPsua"  class="form-control">
+                    </div>
+
+                    <div class="pt-3">
+                        <label for="txtMaBTsua">Mã BT: </label>
+                        <input type="text" name="txtMaBTsua" id="txtMaBTsua"  class="form-control">
+                    </div>
+                    </div>
+
+                    <div class="pt-3">
+                        <label for="txtSlsuaTon">Số lượng: </label>
+                        <input type="text" name="txtSlsuaTon" id="txtSlsuaTon"  class="form-control">
+                    </div>
+
+                    <div class="pt-3">
+                        <label for="txtGiaNhap">Giá nhập ban đầu: </label>
+                        <input type="text" name="txtGiaNhap" id="txtGiaNhap" readonly class="form-control">
                     </div>
 
                     <div class="pt-3">

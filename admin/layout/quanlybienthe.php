@@ -84,7 +84,7 @@
     
                     <div class="pt-3">
                         <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSl" id="txtSl" class="form-control " placeholder="Số lượng của sản phẩm">
+                        <input type="text" name="txtSl" id="txtSl" class="form-control" readonly placeholder="Số lượng của sản phẩm">
                     </div>
 
                     <div class="pt-3">
@@ -153,6 +153,12 @@
         <div class="thongbaoXoaThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
                 Xóa biến thể thành công
+            </p>
+        </div>
+
+        <div class="thongbaoXoaHiddenThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Do tồn tại trong hóa đơn nên chỉ ẩn đi
             </p>
         </div>
 
@@ -234,7 +240,7 @@
     
                     <div class="pt-3">
                         <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control " placeholder="Số lượng của sản phẩm">
+                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control" readonly placeholder="Số lượng của sản phẩm">
                     </div>
 
     

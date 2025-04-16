@@ -15,9 +15,12 @@ $limit = 5;
 $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
-// Truy vấn dữ liệu chi tiết phiếu nhập
+// Truy vấn dữ liệu chi tiết phiếu nhập (tính luôn total_price)
 $data = $db->select("
-    SELECT * FROM importreceipt_details 
+    SELECT 
+        ImportReceipt_details_id, ImportReceipt_id, product_id, variant_id, quantity, import_price, 
+        (quantity * import_price) AS total_price, created_at
+    FROM importreceipt_details 
     ORDER BY ImportReceipt_details_id ASC
     LIMIT $limit OFFSET $offset
 ", []);
@@ -27,7 +30,10 @@ foreach ($data as $row) {
     $id_ct = $row['ImportReceipt_details_id'];
     $id_pn = $row['ImportReceipt_id'];
     $id_sp = $row['product_id'];
-    $total = number_format($row['total_price'], 0, ',', '.');
+    $variant_id = $row['variant_id'];
+    $quantity = $row['quantity'];
+    $import_price = number_format($row['import_price'], 0, ',', '.');
+    $total_price = number_format($row['total_price'], 0, ',', '.');
     $ngaylap = $row['created_at'];
 
     echo "
@@ -35,7 +41,8 @@ foreach ($data as $row) {
             <td class='hienthiid'>$id_ct</td>
             <td class='hienthiid'>$id_pn</td>
             <td class='hienthiid'>$id_sp</td>
-            <td class='hienthigia'>$total VNĐ</td>
+            <td class='hienthiid'>$variant_id</td>
+            <td class='hienthigia'>$total_price VNĐ</td>
             <td class='tensp'>$ngaylap</td>
             <td>
                 <div class='d-flex justify-content-center gap-3'>
@@ -43,8 +50,11 @@ foreach ($data as $row) {
                         data-idct='$id_ct'
                         data-idpn='$id_pn'
                         data-idsp='$id_sp'
-                        data-gia='{$row['total_price']}'
+                        data-variant='$variant_id'
+                        data-soluong='$quantity'
+                        data-gia='{$row['import_price']}'
                         data-ngaylap='$ngaylap'
+                        data-tongtien='{$row['total_price']}'
                         style='width:60px;'>Sửa</button>
                     <button class='btn btn-danger btn-xoa'
                         data-idct='$id_ct'

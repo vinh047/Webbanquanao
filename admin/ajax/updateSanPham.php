@@ -29,18 +29,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         $stmt = $conn->prepare($sql);
         $stmt->execute([$ten, $loai, $mota, $giaMoi, $giaban, $pttg, $id]);
 
-        // ✅ Tự cập nhật lại total_price bên chi tiết phiếu nhập
-        $stmt = $conn->prepare("SELECT variant_id, stock FROM product_variants WHERE product_id = ? ORDER BY variant_id DESC LIMIT 1");
-        $stmt->execute([$id]);
-        $variant = $stmt->fetch();
-
-        if ($variant && isset($variant['stock'])) {
-            $soLuongMoiNhat = $variant['stock'];
-            $tongGiaTri = $soLuongMoiNhat * $giaMoi;
-
-            $stmtUpdateDetail = $conn->prepare("UPDATE importreceipt_details SET total_price = ? WHERE product_id = ?");
-            $stmtUpdateDetail->execute([$tongGiaTri, $id]);
-        }
+        // ✅ Cập nhật toàn bộ chi tiết phiếu nhập theo sản phẩm
+        $stmtUpdate = $conn->prepare("
+        UPDATE importreceipt_details 
+        SET 
+            import_price = ?, 
+            total_price = quantity * ?
+        WHERE product_id = ?
+    ");
+    $stmtUpdate->execute([$giaMoi, $giaMoi, $id]);
+    
 
         echo json_encode(['success' => true]);
 
@@ -56,3 +54,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         'message' => 'Thiếu dữ liệu đầu vào hoặc phương thức không hợp lệ.'
     ]);
 }
+?>
