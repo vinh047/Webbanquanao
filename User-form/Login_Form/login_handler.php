@@ -5,9 +5,9 @@ function handleDangKy($conn) {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['pswd'] ?? '';
     $sdt = trim($_POST['sdt'] ?? '');
-    $diachi = trim($_POST['diachi'] ?? '');
+    
 
-    if (!$username || !$email || !$password || !$sdt || !$diachi) {
+    if (!$username || !$email || !$password || !$sdt) {
         echo "MISSING_FIELDS";
         return;
     }
@@ -31,7 +31,7 @@ function handleDangKy($conn) {
 
     $stmt = $conn->prepare("INSERT INTO users (user_id, username, email, password, phone, address, role_id, status)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssssi", $next_id, $username, $email, $hashed, $sdt, $diachi, $role_id, $status);
+    $stmt->bind_param("issssssi", $next_id, $username, $email, $hashed, $sdt, $role_id, $status);
 
     if ($stmt->execute()) {
         echo "REGISTER_SUCCESS";

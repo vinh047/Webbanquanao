@@ -21,10 +21,7 @@ function loadForm() {
         <label class="text-black">Số điện thoại</label>
         <input type="tel" name="sdt" class="form-control border-dark" placeholder="Nhập số điện thoại">
       </div>
-      <div class="mb-3">
-        <label class="text-black">Địa chỉ</label>
-        <input type="text" name="diachi" class="form-control border-dark" placeholder="Nhập địa chỉ">
-      </div>
+      
       <hr>
       <button type="submit" class="btn btn-success w-100">Đăng ký ngay</button>
       <div class="text-center mt-3">
