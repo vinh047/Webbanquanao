@@ -2,10 +2,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 205px; 
-    height: 100vh; 
-    background-color: #f8f9fa; 
-    z-index: 1000; 
+    width: 205px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    z-index: 1000;
     overflow-y: auto;
     border-right: 1px solid #dee2e6;
 }
@@ -15,111 +15,169 @@
 }
 
 .hienthi table {
-table-layout: auto; /* Để bảng tự động điều chỉnh chiều rộng các cột */
-width: 100%; /* Bảng chiếm toàn bộ chiều rộng */
+    table-layout: auto;
+    /* Để bảng tự động điều chỉnh chiều rộng các cột */
+    width: 100%;
+    /* Bảng chiếm toàn bộ chiều rộng */
 }
 
 .hienthi td {
-padding: 8px; /* Thêm khoảng đệm để cải thiện hiển thị */
-text-align: center; /* Căn giữa văn bản */
-overflow: hidden; /* Ẩn phần vượt ngoài */
-text-overflow: ellipsis; /* Dùng dấu ba chấm khi văn bản bị tràn */
-white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
+    padding: 8px;
+    /* Thêm khoảng đệm để cải thiện hiển thị */
+    text-align: center;
+    /* Căn giữa văn bản */
+    overflow: hidden;
+    /* Ẩn phần vượt ngoài */
+    text-overflow: ellipsis;
+    /* Dùng dấu ba chấm khi văn bản bị tràn */
+    white-space: nowrap;
+    /* Ngăn không cho văn bản xuống dòng */
 }
 
-.hienthi td.tensp, .hienthi td.mota {
-width: 20%; /* Chiều rộng của cột tên sản phẩm và mô tả */
-max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
-min-width: 150px; /* Đảm bảo cột không quá nhỏ */
+.hienthi td.tensp,
+.hienthi td.mota {
+    width: 20%;
+    /* Chiều rộng của cột tên sản phẩm và mô tả */
+    max-width: 250px;
+    /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
+    min-width: 150px;
+    /* Đảm bảo cột không quá nhỏ */
 }
 
-.tensp,.mota{
-    width: 20%; /* Chiều rộng của cột tên sản phẩm và mô tả */
-max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
-min-width: 150px; /* Đảm bảo cột không quá nhỏ */
-overflow: hidden; /* Ẩn phần vượt ngoài */
-text-overflow: ellipsis; /* Dùng dấu ba chấm khi văn bản bị tràn */
-white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
-}
-.hienthianh
-{
-    width: 20%; /* Chiều rộng của cột tên sản phẩm và mô tả */
-    max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
-    min-width: 150px; 
+.tensp,
+.mota {
+    width: 20%;
+    /* Chiều rộng của cột tên sản phẩm và mô tả */
+    max-width: 250px;
+    /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
+    min-width: 150px;
+    /* Đảm bảo cột không quá nhỏ */
+    overflow: hidden;
+    /* Ẩn phần vượt ngoài */
+    text-overflow: ellipsis;
+    /* Dùng dấu ba chấm khi văn bản bị tràn */
+    white-space: nowrap;
+    /* Ngăn không cho văn bản xuống dòng */
 }
 
-.hienthiidbt,.hienthiidsp
-{
-    width: 10%; /* Cố định chiều rộng cho cột ID */
-    max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
-    min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+.hienthianh {
+    width: 20%;
+    /* Chiều rộng của cột tên sản phẩm và mô tả */
+    max-width: 250px;
+    /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
+    min-width: 150px;
+}
+
+.hienthiidbt,
+.hienthiidsp {
+    width: 10%;
+    /* Cố định chiều rộng cho cột ID */
+    max-width: 50px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;
+    /* Đảm bảo cột ID không quá nhỏ */
 }
 
 .hienthiid {
-width: 5%; /* Cố định chiều rộng cho cột ID */
-max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
-min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+    width: 5%;
+    /* Cố định chiều rộng cho cột ID */
+    max-width: 50px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;
+    /* Đảm bảo cột ID không quá nhỏ */
 }
 
-.hienthisize,.hienthimau
-{
-    width: 10%; /* Cố định chiều rộng cho cột ID */
-    max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
-    min-width: 50px;  
+.hienthisize,
+.hienthimau {
+    width: 10%;
+    /* Cố định chiều rộng cho cột ID */
+    max-width: 50px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;
 }
 
-.hienthi-tamluu table
-{
-    table-layout: auto; /* Để bảng tự động điều chỉnh chiều rộng các cột */
-width: 100%; /* Bảng chiếm toàn bộ chiều rộng */
+.hienthi-tamluu table {
+    table-layout: auto;
+    /* Để bảng tự động điều chỉnh chiều rộng các cột */
+    width: 100%;
+    /* Bảng chiếm toàn bộ chiều rộng */
 }
+
 .hienthi-tamluu td {
-    padding: 8px; /* Thêm khoảng đệm để cải thiện hiển thị */
-    text-align: center; /* Căn giữa văn bản */
-    overflow: hidden; /* Ẩn phần vượt ngoài */
-    text-overflow: ellipsis; /* Dùng dấu ba chấm khi văn bản bị tràn */
-    white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
-    }
+    padding: 8px;
+    /* Thêm khoảng đệm để cải thiện hiển thị */
+    text-align: center;
+    /* Căn giữa văn bản */
+    overflow: hidden;
+    /* Ẩn phần vượt ngoài */
+    text-overflow: ellipsis;
+    /* Dùng dấu ba chấm khi văn bản bị tràn */
+    white-space: nowrap;
+    /* Ngăn không cho văn bản xuống dòng */
+}
 
-    .hienthi-tamluu td.tensp, .hienthi-tamluu td.mota {
-        width: 20%; /* Chiều rộng của cột tên sản phẩm và mô tả */
-        max-width: 250px; /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
-        min-width: 150px; /* Đảm bảo cột không quá nhỏ */
-        }
+.hienthi-tamluu td.tensp,
+.hienthi-tamluu td.mota {
+    width: 20%;
+    /* Chiều rộng của cột tên sản phẩm và mô tả */
+    max-width: 250px;
+    /* Giới hạn chiều rộng tối đa cho cột tên và mô tả */
+    min-width: 150px;
+    /* Đảm bảo cột không quá nhỏ */
+}
 
-        .hienthibtn,.hienthiloai
-{
-width: 12%; /* Cố định chiều rộng cho cột ID */
-max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
-min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+.hienthibtn,
+.hienthiloai {
+    width: 12%;
+    /* Cố định chiều rộng cho cột ID */
+    max-width: 50px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;
+    /* Đảm bảo cột ID không quá nhỏ */
 }
-.hienthibtn,.hienthiloai
-{
-width: 12%; /* Cố định chiều rộng cho cột ID */
-max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
-min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+
+.hienthibtn,
+.hienthiloai {
+    width: 12%;
+    /* Cố định chiều rộng cho cột ID */
+    max-width: 50px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;
+    /* Đảm bảo cột ID không quá nhỏ */
 }
-.hienthibtn-ne
-{
-    width: 15%; /* Cố định chiều rộng cho cột ID */
-    max-width: 150px; /* Giới hạn chiều rộng tối đa cho cột ID */
-    min-width: 150px; /* Đảm bảo cột ID không quá nhỏ */  
+
+.hienthibtn-ne {
+    width: 15%;
+    /* Cố định chiều rộng cho cột ID */
+    max-width: 150px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 150px;
+    /* Đảm bảo cột ID không quá nhỏ */
 }
-.hienthigia
-{
-width:10%;
-max-width: 50px; /* Giới hạn chiều rộng tối đa cho cột ID */
-min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
+
+.hienthigia {
+    width: 10%;
+    max-width: 50px;
+    /* Giới hạn chiều rộng tối đa cho cột ID */
+    min-width: 50px;
+    /* Đảm bảo cột ID không quá nhỏ */
 }
+
 .thongbaoLoi,
 .thongbaoThanhCong,
 .thongbaoUpdateThanhCong,
-.thongbaoXoaThanhCong,.thongBaoLoiGia,.thongbaoXoaKhongThanhCong,.thongbaoXoaThatBai,.thongbaoUpdateKhongThanhCong,
-.thongbaoLuuKhongThanhCong,.thongbaoLuuThanhCong,.thongbaoXoaHiddenThanhCong  {
+.thongbaoXoaThanhCong,
+.thongBaoLoiGia,
+.thongbaoXoaKhongThanhCong,
+.thongbaoXoaThatBai,
+.thongbaoUpdateKhongThanhCong,
+.thongbaoLuuKhongThanhCong,
+.thongbaoLuuThanhCong,
+.thongbaoXoaHiddenThanhCong {
     display: block;
     opacity: 0;
     transition: opacity 0.6s ease;
-    
+
     /* Vị trí góc phải trên màn hình */
     position: fixed;
     top: 20px;
@@ -131,15 +189,21 @@ min-width: 50px; /* Đảm bảo cột ID không quá nhỏ */
     border-radius: 8px;
     color: #fff;
     min-width: 250px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Hiện khi có class show */
 .thongbaoLoi.show,
 .thongbaoThanhCong.show,
 .thongbaoUpdateThanhCong.show,
-.thongbaoXoaThanhCong.show,.thongBaoLoiGia.show,.thongbaoXoaKhongThanhCong.show,.thongbaoXoaThatBai.show,.thongbaoUpdateKhongThanhCong.show,
-.thongbaoLuuKhongThanhCong.show,.thongbaoLuuThanhCong.show,.thongbaoXoaHiddenThanhCong.show {
+.thongbaoXoaThanhCong.show,
+.thongBaoLoiGia.show,
+.thongbaoXoaKhongThanhCong.show,
+.thongbaoXoaThatBai.show,
+.thongbaoUpdateKhongThanhCong.show,
+.thongbaoLuuKhongThanhCong.show,
+.thongbaoLuuThanhCong.show,
+.thongbaoXoaHiddenThanhCong.show {
     display: block;
     opacity: 1;
 }
@@ -157,10 +221,13 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
 .product-img {
     width: 100%;
-    height: 390px;        /* 👈 chỉnh chiều cao tùy ý */
-    object-fit: cover;    /* Cắt ảnh nhưng giữ tỷ lệ */
+    height: 390px;
+    /* 👈 chỉnh chiều cao tùy ý */
+    object-fit: cover;
+    /* Cắt ảnh nhưng giữ tỷ lệ */
 }
 
 .thongBaoXoa {
@@ -180,8 +247,7 @@ input[type=number] {
     transition: all 0.2s ease-in-out;
 }
 
-.thongBaoGia
-{
+.thongBaoGia {
     display: none;
     position: fixed;
     top: 50%;
@@ -197,11 +263,12 @@ input[type=number] {
     max-width: 90%;
     transition: all 0.2s ease-in-out;
 }
+
 .overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
 
@@ -213,14 +280,13 @@ input[type=number] {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #ffffff;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     max-width: 500px;
     width: 90%;
     border-radius: 12px;
 }
 
-.formSuaPN
-{
+.formSuaPN {
     display: none;
     position: fixed;
     z-index: 1050;
@@ -228,10 +294,10 @@ input[type=number] {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #ffffff;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     max-width: 500px;
     width: 90%;
-    border-radius: 12px;   
+    border-radius: 12px;
 }
 
 .d-none {
@@ -243,22 +309,25 @@ input[type=number] {
     height: 100px;
     object-fit: cover;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 767.98px) {
     .quanlysp {
         margin-left: 0 !important;
     }
-    .nav-left
-    {
+
+    .nav-left {
         display: none;
     }
 
 }
+
 button {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* mượt như bơ */
-    will-change: transform; /* tối ưu hiệu năng */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* mượt như bơ */
+    will-change: transform;
+    /* tối ưu hiệu năng */
 }
 
 button:hover {

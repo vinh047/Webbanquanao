@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Điền thông tin sản phẩm vào form sửa
             document.getElementById('stt').value = product.id;
             document.getElementById('supplier_idSua').value = product.supplier_id;
+            document.getElementById('supplier_idSua').disabled = true;
             document.getElementById('user_idSua').value = product.user_id;
             document.getElementById('txtTenSua').value = product.name;
             document.getElementById('txtMotaSua').value = product.description;

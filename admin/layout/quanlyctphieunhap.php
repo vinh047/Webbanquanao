@@ -20,6 +20,8 @@
 
             <div class="sanpham py-3" style="font-size: 19px;">
 
+                <div class="row">
+                    <div class="col-md-4">
                 <form action="./ajax/insertCTPhieuNhap.php" method="POST" id="formNhapSPbienThe" enctype="multipart/form-data">
 
                     <div class="pt-3">
@@ -41,6 +43,19 @@
                     </div>
     
                     <div class="">
+                        <label for="cbMau">Màu : </label>
+                        <select name="cbMau" id="cbMau" class="form-select">
+                            <option value="">Chọn màu sản phẩm</option>
+                            <?php foreach($color as $cl): ?>
+
+                                <option value="<?=$cl['color_id']?>"><?=$cl['name']?></option>
+
+
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+
+                    <div class="pt-3">
                         <label for="cbSize">Size : </label>
                         <select name="cbSize" id="cbSize" class="form-select ">
                             <option value="">Chọn size sản phẩm</option>
@@ -55,27 +70,19 @@
                         <input type="text" name="txtSl" id="txtSl" class="form-control " placeholder="Số lượng của sản phẩm">
                     </div>
 
-                    <div class="pt-3">
-                        <label for="cbMau">Màu : </label>
-                        <select name="cbMau" id="cbMau" class="form-select">
-                            <option value="">Chọn màu sản phẩm</option>
-                            <?php foreach($color as $cl): ?>
-
-                                <option value="<?=$cl['color_id']?>"><?=$cl['name']?></option>
-
-
-                            <?php endforeach ?>
-                        </select>
-                    </div>
     
-                    <div class="pt-3">
-                        <button class="btn btn-outline-primary" id="add_product" type="button">Thêm CT phiếu nhập</button>
+                    <div class="pt-3 d-flex gap-2 justify-content-center">
+                        <button class="btn btn-outline-secondary" id="add_product" type="button">Thêm CT phiếu nhập</button>
                         <button class="btn btn-outline-primary"  type="submit">Lưu CT phiếu nhập</button>
+                        <button class="btn btn-outline-success" id="block_product" type="button">Mở khóa</button>
+
                     </div>
                 </form>
+                    </div>
 
                 <!-- Hiển thị sản phẩm trong hàng đợi -->
-                <div class="hienthi-tamluu pt-3">
+                    <div class="col-md-8">
+                    <div class="hienthi-tamluu pt-3">
                 <div class="d-flex justify-content-center border border-3 border-bottom-0 p-2 bg-light">
                             <p class="mb-0 fs-3">
                                 Xử lý hàng chờ chi tiết phiếu nhập
@@ -97,6 +104,8 @@
                         <tbody id="product-list-tamluu">
                         </tbody>
                     </table>
+                </div>
+                    </div>
                 </div>
 
                                 <hr class="my-5">

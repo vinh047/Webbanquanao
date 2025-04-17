@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${index + 1}</td>
                 <td>${product.import_receipt_id}</td>
                 <td>${product.product_id}</td>
-                <td><img src="../../assets/img/sanpham/${product.image || ''}" class="img-fluid" style="width: 100%px; max-height: 150px; object-fit: contain;"></td>
+                <td><img src="../../assets/img/sanpham/${product.image || ''}" class="img-fluid" style="width: 100%px; max-height: 80px; object-fit: contain;"></td>
                 <td>${product.size}</td>
                 <td>${product.quantity}</td>
                 <td>${product.color}</td>
@@ -251,6 +251,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function removeProduct(id) {
         productList = productList.filter(product => product.id !== id);
+        if(productList.length === 0)
+        {
+            document.getElementById('fileAnh').disabled = false;
+            document.getElementById('cbMau').disabled = false;
+            document.getElementById('txtMaPN').disabled = false;
+            document.getElementById('txtMa').disabled = false;
+        }
         updateProductList();
     }
 
@@ -268,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const sizeName = cbSizeSelect.options[cbSizeSelect.selectedIndex].text;
         const colorName = cbColorSelect.options[cbColorSelect.selectedIndex].text;
         const quantity = document.getElementById('txtSl').value.trim();
+
         const imageInput = document.getElementById('fileAnh');
     
         if (!import_receipt_id || !product_id || !size_id || !color_id || !quantity || isNaN(quantity) || quantity <= 0) {
@@ -318,32 +326,65 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     
         const filename = file.name;
-    
+        const existing = productList.find(item =>
+            item.import_receipt_id === import_receipt_id &&
+            item.product_id === product_id &&
+            item.size_id === size_id &&
+            item.color_id === color_id &&
+            item.image === filename
+        );
         // ✅ Thêm vào danh sách tạm
-        productList.push({
-            id: ++productCount,
-            import_receipt_id,
-            variant_id,
-            product_id,
-            image: filename,
-            size_id,
-            size: sizeName,
-            color_id,
-            color: colorName,
-            quantity
-        });
+        if (existing) {
+            existing.quantity = parseInt(existing.quantity) + parseInt(quantity);
+        } else {
+            productList.push({
+                id: ++productCount,
+                import_receipt_id,
+                variant_id,
+                product_id,
+                image: filename,
+                size_id,
+                size: sizeName,
+                color_id,
+                color: colorName,
+                quantity: parseInt(quantity)
+            });
+        }
     
         updateProductList();
-        document.getElementById('formNhapSPbienThe').reset();
-        document.querySelector('#hienthianh img').style.display = 'none';
+        // document.getElementById('formNhapSPbienThe').reset();
+        document.getElementById('txtMaPN').disabled = true;
+        document.getElementById('txtMa').disabled = true;
+        document.getElementById('fileAnh').disabled = true;
+        document.getElementById('cbMau').disabled = true;
+        document.getElementById('cbSize').value = '';
+        document.getElementById('txtSl').value = '';
     });
     
-    
+    document.getElementById('block_product').addEventListener('click', function () {
+        const anh = document.getElementById('fileAnh');
+        const mau = document.getElementById('cbMau');
+        const idpn = document.getElementById('txtMaPN');
+        const idsp = document.getElementById('txtMa');
+        if (anh.disabled && mau.disabled && idpn.disabled && idsp.disabled) {
+            anh.disabled = false;
+            mau.disabled = false;
+            idpn.disabled = false;
+            idsp.disabled = false;
+        } else {
+            anh.disabled = true;
+            mau.disabled = true;
+            idpn.disabled = true;
+            idsp.disabled = true;
+        }
+    });
 
     document.getElementById('formNhapSPbienThe').addEventListener('submit', function (e) {
         e.preventDefault();
-
         const form = document.getElementById('formNhapSPbienThe');
+        form.reset();
+        document.querySelector('#hienthianh img').style.display = 'none';
+
         const formData = new FormData(form);
 
         productList.forEach(product => {
@@ -357,6 +398,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
+                document.getElementById('fileAnh').disabled = false;
+                document.getElementById('cbMau').disabled = false;
+                document.getElementById('txtMaPN').disabled = false;
+                document.getElementById('txtMa').disabled = false;
                 const tbTC = document.querySelector(".thongbaoLuuThanhCong");
                 tbTC.style.display = "block";
                 tbTC.classList.add("show");

@@ -2,15 +2,15 @@ Array
 (
     [0] => Array
         (
-            [id] => 3
-            [supplier_id] => 7
-            [supplier] => Công ty TNHH ElegantCo
+            [id] => 1
+            [supplier_id] => 5
+            [supplier] => Công ty TNHH UrbanLook
             [user_id] => 3
             [name] => 1
-            [description] => 1
-            [category_id] => 4
-            [category] => Áo Polo
-            [price] => 3123
+            [description] => 12
+            [category_id] => 2
+            [category] => Quần
+            [price] => 12
             [ptgg] => 30
         )
 
