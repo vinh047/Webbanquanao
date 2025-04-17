@@ -3,12 +3,16 @@
 function sapXepSanPham()
 {
     $sort = $_GET['sapxep'] ?? '';
+
     if ($sort === 'tangdan') {
         return 'ORDER BY price ASC';
-    } else {
+    } elseif ($sort === 'giamdan') {
         return 'ORDER BY price DESC';
+    } else {
+        return 'ORDER BY products.product_id ASC'; // Mặc định là theo ID tăng dần
     }
 }
+
 
 function locSanPham($connection)
 {

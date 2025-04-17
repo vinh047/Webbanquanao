@@ -1,5 +1,4 @@
 <?php
-
 $connection = mysqli_connect("localhost","root","","db_web_quanao");
 if(!$connection)
 {
@@ -11,10 +10,23 @@ mysqli_set_charset($connection, 'utf8');
 
 require_once('product_filter_sort.php');
 require_once('../layout/phantrang.php');
+
 $limit = 8;
 $page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
+
 $loc = locSanPham($connection);
 $sapxep = sapXepSanPham();
+
+// ✅ Lọc thêm is_deleted = 0 và stock > 0
+$whereCondition = "product_variants.is_deleted = 0 AND product_variants.stock > 0";
+if (!empty($loc)) {
+    // locSanPham() đã trả về câu WHERE rồi, nên nối bằng AND
+    $loc = str_replace("WHERE", "WHERE $whereCondition AND", $loc);
+} else {
+    $loc = "WHERE $whereCondition";
+}
+
+// ✅ Câu đếm
 $countSQL = "SELECT COUNT(DISTINCT products.product_id) AS total
              FROM products
              JOIN product_variants ON products.product_id = product_variants.product_id
@@ -29,11 +41,10 @@ if ($totalItems == 0) {
     exit;
 }
 
-
 $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
-
+// ✅ Truy vấn sản phẩm
 $productSQL = "SELECT products.*, MIN(product_variants.image) as image
                FROM products 
                JOIN product_variants ON products.product_id = product_variants.product_id
@@ -43,7 +54,6 @@ $productSQL = "SELECT products.*, MIN(product_variants.image) as image
                LIMIT $limit OFFSET $offset";
 
 $result = mysqli_query($connection, $productSQL);
-
 
 while($row = mysqli_fetch_assoc($result))
 {
@@ -76,26 +86,17 @@ while($row = mysqli_fetch_assoc($result))
                     </div>
             </div>
 ';
-
 }
 
-// Nếu chỉ có 1 trang thì cho nó cái padding trên dưới 3 để kh bị xấu :v
-if($totalPage == 1)
-{
-    $paddingTest = 'py-3';
-}else
-{
-    $paddingTest = 'py-0';
-}
-echo '<div class = "' . $paddingTest . '">
+// Padding nếu chỉ có 1 trang
+$paddingTest = ($totalPage == 1) ? 'py-3' : 'py-0';
+echo '<div class="' . $paddingTest . '"></div>';
 
-    </div>
-';
-
-
+// Phân trang
 if ($pagination->totalPages > 1) {
     $pagination->render(['page' => 'sanpham']);
 }
 
 mysqli_close($connection);
+
 ?>
