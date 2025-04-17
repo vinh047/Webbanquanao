@@ -117,18 +117,18 @@
                                 Xử lý hàng chờ phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-dark table-striped table-sm">
+                    <table class="table table-secondary table-striped table-sm">
                         <thead>
                             <tr class="text-center">
-                                <th class="hienthiid">STT</th>
-                                <th class="hienthiid">ID NV</th>
-                                <th class="hienthiid">ID NCC</th>
-                                <th class="tensp">Tên sản phẩm</th>
-                                <th class="hienthiloai">Loại</th>
-                                <th class="mota">Mô tả</th>
-                                <th class="hienthigia">Giá</th>
-                                <th class="hienthigia">PT sản phẩm</th>
-                                <th class="hienthibtn-ne">Xử lý</th>
+                                <th class="bg-secondary text-white hienthiid">STT</th>
+                                <th class="bg-secondary text-white hienthiid">ID NV</th>
+                                <th class="bg-secondary text-white hienthiid">ID NCC</th>
+                                <th class="bg-secondary text-white tensp">Tên sản phẩm</th>
+                                <th class="bg-secondary text-white hienthiloai">Loại</th>
+                                <th class="bg-secondary text-white mota">Mô tả</th>
+                                <th class="bg-secondary text-white hienthigia">Giá</th>
+                                <th class="bg-secondary text-white hienthigia">PT sản phẩm</th>
+                                <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                             </tr>
                         </thead>
                         <tbody id="product-list-tamluu">
@@ -145,15 +145,15 @@
                                 Xử lý phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-dark table-striped table-sm">
+                    <table class="table table-secondary table-striped table-sm">
                         <thead>
                             <tr class="text-center">
-                                <th class="hienthiid">ID PN</th>
-                                <th class="hienthiid">ID NV</th>
-                                <th class="hienthiid">ID NCC</th>
-                                <th class="hienthigia">Tổng tiền</th>
-                                <th class="tensp">Ngày lập</th>
-                                <th class="hienthibtn-ne">Xử lý</th>
+                                <th class="bg-secondary text-white hienthiid">ID PN</th>
+                                <th class="bg-secondary text-white hienthiid">ID NV</th>
+                                <th class="bg-secondary text-white hienthiid">ID NCC</th>
+                                <th class="bg-secondary text-white hienthigia">Tổng tiền</th>
+                                <th class="bg-secondary text-white tensp">Ngày lập</th>
+                                <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                             </tr>
                         </thead>
                         <tbody id="product-list">

@@ -80,6 +80,7 @@
                 </form>
                     </div>
 
+
                 <!-- Hiển thị sản phẩm trong hàng đợi -->
                     <div class="col-md-8">
                     <div class="hienthi-tamluu pt-3">
@@ -88,17 +89,17 @@
                                 Xử lý hàng chờ chi tiết phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-dark table-striped table-sm">
+                    <table class="table table-secondary table-striped table-sm">
                         <thead>
                         <tr class="text-center">
-                            <th class="hienthiid">STT</th>
-                            <th class="hienthiid">ID PN</th>
-                            <th class="hienthiid">ID SP</th>
-                            <th class="hienthianh">Hình ảnh</th>
-                            <th class="hienthisize">Size</th>
-                            <th class="hienthigia">Số lượng</th>
-                            <th class="hienthimau">Màu</th>
-                            <th class="hienthibtn-ne">Xử lý</th>
+                            <th class="bg-secondary text-white hienthiid">STT</th>
+                            <th class="bg-secondary text-white hienthiid">ID PN</th>
+                            <th class="bg-secondary text-white hienthiid">ID SP</th>
+                            <th class="bg-secondary text-white hienthianh">Hình ảnh</th>
+                            <th class="bg-secondary text-white hienthisize">Size</th>
+                            <th class="bg-secondary text-white hienthigia">Số lượng</th>
+                            <th class="bg-secondary text-white hienthimau">Màu</th>
+                            <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                         </tr>
                         </thead>
                         <tbody id="product-list-tamluu">
@@ -117,16 +118,16 @@
                                 Xử lý chi tiết phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-dark table-striped table-sm">
+                    <table class="table table-secondary table-striped table-sm">
                         <thead>
                             <tr class="text-center">
-                                <th class="hienthiid">ID CTPN</th>
-                                <th class="hienthiid">ID PN</th>
-                                <th class="hienthiid">ID SP</th>
-                                <th class="hienthiid">ID BT</th>
-                                <th class="hienthigia">Tổng tiền</th>
-                                <th class="tensp">Ngày lập</th>
-                                <th class="hienthibtn-ne">Xử lý</th>
+                                <th class="bg-secondary text-white hienthiid">ID CTPN</th>
+                                <th class="bg-secondary text-white hienthiid">ID PN</th>
+                                <th class="bg-secondary text-white hienthiid">ID SP</th>
+                                <th class="bg-secondary text-white hienthiid">ID BT</th>
+                                <th class="bg-secondary text-white hienthigia">Tổng tiền</th>
+                                <th class="bg-secondary text-white tensp">Ngày lập</th>
+                                <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                             </tr>
                         </thead>
                         <tbody id="product-list">
@@ -267,7 +268,7 @@
         </div>
 
       
-        <div class="thongBaoXoa rounded-2">
+    <div class="thongBaoXoa rounded-2">
     <p class="mb-0 fs-5 text-center">
         Bạn có chắc chắn muốn xóa CT phiếu nhập hay không?       
     </p>
@@ -311,6 +312,22 @@
     Lưu chi tiết phiếu nhập thành công
     </p>
 </div>
+
+<div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border" style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
+    <p class="mb-0 fs-5 text-center">Sản phẩm này đã có trong hàng đợi!</p>
+    <p class="mb-0 fs-5 text-center">Bạn có muốn cộng dồn vào không?</p>
+    <div class="d-flex justify-content-center gap-3 mt-2">
+        <div>
+            <button id="btnCoTrung" class="btn btn-danger" style="width:80px;">Có</button>
+        </div>
+        <div>
+            <button id="btnKhongTrung" class="btn btn-primary" style="width:80px;">Không</button>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="overlay"></div>
 <div class="thongbaoLoi  bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       

@@ -264,6 +264,24 @@ input[type=number] {
     transition: all 0.2s ease-in-out;
 }
 
+.thongBaoTrung
+{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1200;
+    background-color: #FFF9E6;
+    color: #5C3D00;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+    transition: all 0.2s ease-in-out;
+}
+
 .overlay {
     display: none;
     position: fixed;
@@ -340,7 +358,7 @@ button:active {
 
 .nav-left {
     height: 100vh;
-    background: linear-gradient(180deg, #007CF0, #00DFD8);
+    background: linear-gradient(180deg, #81afae, #c7d2dc);
     color: white;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
 }

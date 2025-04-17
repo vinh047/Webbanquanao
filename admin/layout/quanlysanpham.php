@@ -101,16 +101,16 @@
             </div>
 
             <div class="hienthi">
-                <table class="table table-dark table-striped table-sm">
+                <table class="table table-secondary table-striped table-sm">
                     <thead>
                         <tr class="text-center">
-                            <th class="hienthiid">ID</th>
-                            <th class="tensp">Tên sản phẩm</th>
-                            <th class="hienthiloai">Loại</th>
-                            <th class="mota">Mô tả Sản phẩm</th>
-                            <th class="hienthigia">Giá nhập</th>
-                            <th class="hienthigia">Giá bán</th>
-                            <th class="hienthibtn">Xử lý</th>
+                            <th class="bg-secondary text-white hienthiid">ID</th>
+                            <th class="bg-secondary text-white tensp">Tên sản phẩm</th>
+                            <th class="bg-secondary text-white hienthiloai">Loại</th>
+                            <th class="bg-secondary text-white mota">Mô tả Sản phẩm</th>
+                            <th class="bg-secondary text-white hienthigia">Giá nhập</th>
+                            <th class="bg-secondary text-white hienthigia">Giá bán</th>
+                            <th class="bg-secondary text-white hienthibtn">Xử lý</th>
                         </tr>
                     </thead>
                     <tbody id="product-list">

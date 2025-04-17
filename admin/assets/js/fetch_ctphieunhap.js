@@ -1,7 +1,8 @@
+let productList = [];
+let productCount = 0;
+let productPendingToAdd = null; 
 // fetch_ctphieunhap.js (kiểm tra product_id tồn tại trước khi thêm)
 document.addEventListener('DOMContentLoaded', function () {
-    let productList = [];
-    let productCount = 0;
 
 
     let currentPage = 1; // ⚠️ Fix thiếu biến này gây lỗi load lại trang khi xoá
@@ -326,17 +327,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     
         const filename = file.name;
-        const existing = productList.find(item =>
-            item.import_receipt_id === import_receipt_id &&
+        // ✅ Thêm vào danh sách tạm
+        const existedItem = productList.find(item =>
             item.product_id === product_id &&
             item.size_id === size_id &&
-            item.color_id === color_id &&
-            item.image === filename
+            item.color_id === color_id
         );
-        // ✅ Thêm vào danh sách tạm
-        if (existing) {
-            existing.quantity = parseInt(existing.quantity) + parseInt(quantity);
-        } else {
+        
+        if (existedItem) {
+            // Hiển thị modal xác nhận
+            document.getElementById('boxTrungSP').style.display = 'block';
+        
+            // Lưu tạm sản phẩm đang nhập
+            productPendingToAdd = {
+                existedItem,
+                quantity: parseInt(quantity)
+            };
+        
+            return; // Chờ người dùng chọn Có / Không
+        }
             productList.push({
                 id: ++productCount,
                 import_receipt_id,
@@ -349,7 +358,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 color: colorName,
                 quantity: parseInt(quantity)
             });
-        }
+        
+
+    
     
         updateProductList();
         // document.getElementById('formNhapSPbienThe').reset();
@@ -424,6 +435,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+        // Nút Có
+        document.getElementById('btnCoTrung').addEventListener('click', () => {
+            if (productPendingToAdd) {
+                productPendingToAdd.existedItem.quantity += productPendingToAdd.quantity;
+                updateProductList();
+            }
+            document.getElementById('boxTrungSP').style.display = 'none';
+            productPendingToAdd = null;
+        });
+    
+        // Nút Không
+        document.getElementById('btnKhongTrung').addEventListener('click', () => {
+            document.getElementById('boxTrungSP').style.display = 'none';
+            productPendingToAdd = null;
+        });
 
     document.getElementById("btn_sua_pn").addEventListener("click", async function () {
         const idctpn = document.getElementById("txtMaCTPNsua").value;

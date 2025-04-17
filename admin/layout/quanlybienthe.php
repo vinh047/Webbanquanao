@@ -73,16 +73,16 @@
             </div>
 
             <div class="hienthi">
-                <table class="table table-dark table-striped table-sm">
+                <table class="table table-secondary table-striped table-sm">
                     <thead>
                         <tr class="text-center">
-                            <th class="hienthiidbt">ID BT</th>
-                            <th class="hienthiidsp">ID SP</th>
-                            <th class="hienthianh">Hình ảnh</th>
-                            <th class="hienthisize">Size</th>
-                            <th class="hienthigia">Số lượng</th>
-                            <th class="hienthimau">Màu</th>
-                            <th class="hienthibtn">Xử lý</th>
+                            <th class="bg-secondary text-white hienthiidbt">ID BT</th>
+                            <th class="bg-secondary text-white hienthiidsp">ID SP</th>
+                            <th class="bg-secondary text-white hienthianh">Hình ảnh</th>
+                            <th class="bg-secondary text-white hienthisize">Size</th>
+                            <th class="bg-secondary text-white hienthigia">Số lượng</th>
+                            <th class="bg-secondary text-white hienthimau">Màu</th>
+                            <th class="bg-secondary text-white hienthibtn">Xử lý</th>
 
                         </tr>
                     </thead>

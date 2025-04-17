@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Xử lý các sản phẩm
         $products = $_POST['products'];
         $productList = json_decode($products, true);
-        file_put_contents("debug_products.json", print_r($productList, true));
+        // file_put_contents("debug_products.json", print_r($productList, true));
 
         // ✅ Kiểm tra tất cả sản phẩm có cùng supplier_id
         foreach ($productList as $product) {
