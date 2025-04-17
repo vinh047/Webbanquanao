@@ -172,4 +172,37 @@ function loadReviews(page = 1, rating = 'all') {
     
 });
 
+document.querySelector('.suggest-products-scroll').addEventListener('click', function(e) {
+    const productItem = e.target.closest('.product-item');
+    if (productItem && this.contains(productItem)) {
+        const productId = productItem.getAttribute('data-id');
+        if (productId) {
+            window.location.href = `product_detail.php?product_id=${productId}`;
+        }
+    }
+});
 
+document.querySelectorAll('.color-option').forEach(colorEl => {
+    colorEl.addEventListener('click', function () {
+        const colorId = this.dataset.colorId;
+        const productId = document.body.dataset.productId;
+
+        fetch('../ajax/get_sizes_by_color.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ color_id: colorId, product_id: productId })
+        })
+        .then(res => res.json())
+        .then(data => { 
+            const sizeContainer = document.querySelector('.size-option').parentElement;
+            sizeContainer.innerHTML = '';
+            data.forEach(size => {
+                const sizeDiv = document.createElement('div');
+                sizeDiv.className = 'size-option border py-2 px-3';
+                sizeDiv.textContent = size.size_name;
+                sizeContainer.appendChild(sizeDiv);
+            });
+        })
+        .catch(err => console.error('Lỗi khi tải size:', err));
+    });
+});
