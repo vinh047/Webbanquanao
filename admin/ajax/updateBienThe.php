@@ -1,6 +1,6 @@
 <?php
-require_once('../../database/DBConnection.php');
-header('Content-Type: application/json');
+    require_once(__DIR__ . '/../../database/DBConnection.php');
+    header('Content-Type: application/json');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' &&

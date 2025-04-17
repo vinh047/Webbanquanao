@@ -7,16 +7,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1; // ⚠️ Fix thiếu biến này gây lỗi load lại trang khi xoá
 
     function loadPhieuNhap(page = 1) {
-        fetch('../ajax/quanlyChiTietPhieuNhap_ajax.php?pageproduct=' + page)
+        fetch('./ajax/quanlyChiTietPhieuNhap_ajax.php?pageproduct=' + page)
             .then(res => res.json())
             .then(data => {
                 document.getElementById('product-list').innerHTML = data.products;
                 document.getElementById("pagination").innerHTML = data.pagination;
+                
                 document.querySelectorAll(".page-link-custom").forEach(btn => {
                     btn.addEventListener("click", function (e) {
                         e.preventDefault();
                         currentPage = parseInt(this.dataset.page);
-                        loadPhieuNhap(currentPage);
+                        loadPhieuNhap(this.dataset.page);
                     });
                 });
 
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         overlay.style.display = "block";
 
                         popup.querySelector(".btn-danger").onclick = function () {
-                            fetch("../ajax/deleteCTphieunhap.php", {
+                            fetch("./ajax/deleteCTphieunhap.php", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
@@ -209,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            const res = await fetch(`../ajax/checkPN.php?pn_id=${import_receipt_id}`);
+            const res = await fetch(`./ajax/checkPN.php?pn_id=${import_receipt_id}`);
             const data = await res.json();
             if (!data.exists) {
                 return showError("Mã phiếu nhập không tồn tại!");
@@ -221,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            const res = await fetch(`../ajax/checkID.php?product_id=${product_id}`);
+            const res = await fetch(`./ajax/checkID.php?product_id=${product_id}`);
             const data = await res.json();
             if (!data.exists) {
                 return showError("Mã sản phẩm không tồn tại!");
@@ -285,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // ✅ Kiểm tra mã phiếu nhập tồn tại
         try {
-            const res = await fetch(`../ajax/checkPN.php?pn_id=${import_receipt_id}`);
+            const res = await fetch(`./ajax/checkPN.php?pn_id=${import_receipt_id}`);
             const data = await res.json();
             if (!data.exists) return showError("Mã phiếu nhập không tồn tại!");
         } catch (err) {
@@ -294,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // ✅ Kiểm tra mã sản phẩm tồn tại
         try {
-            const res = await fetch(`../ajax/checkID.php?product_id=${product_id}`);
+            const res = await fetch(`./ajax/checkID.php?product_id=${product_id}`);
             const data = await res.json();
             if (!data.exists) return showError("Mã sản phẩm không tồn tại!");
         } catch (err) {
@@ -305,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let variant_id = '';
         try {
             const filename = file.name;
-            const res = await fetch(`../ajax/checkBT.php?product_id=${product_id}&size_id=${size_id}&color_id=${color_id}&image=${encodeURIComponent(filename)}`);
+            const res = await fetch(`./ajax/checkBT.php?product_id=${product_id}&size_id=${size_id}&color_id=${color_id}&image=${encodeURIComponent(filename)}`);
             const data = await res.json();
             if (data.exists) {
                 variant_id = data.variant_id;
@@ -349,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('products[]', JSON.stringify(product));
         });
 
-        fetch('../ajax/insertCTphieunhap.php', {
+        fetch('./ajax/insertCTphieunhap.php', {
             method: 'POST',
             body: formData
         })
@@ -405,18 +406,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         try {
-            const res1 = await fetch(`../ajax/checkPN.php?pn_id=${idpn}`);
+            const res1 = await fetch(`/admin/ajax/checkPN.php?pn_id=${idpn}`);
             const data1 = await res1.json();
             if (!data1.exists) {
                 return showError("Mã phiếu nhập không tồn tại!");
             }
     
-            const res2 = await fetch(`../ajax/checkID.php?product_id=${idsp}`);
+            const res2 = await fetch(`./ajax/checkID.php?product_id=${idsp}`);
             const data2 = await res2.json();
             if (!data2.exists) {
                 return showError("Mã sản phẩm không tồn tại!");
             }
-            const res3 = await fetch(`../ajax/checkVariantProduct.php?product_id=${idsp}&variant_id=${variantId}`);
+            const res3 = await fetch(`./ajax/checkVariantProduct.php?product_id=${idsp}&variant_id=${variantId}`);
             const data3 = await res3.json();
             if (!data3.match) {
                 return showError("Mã biến thể không thuộc sản phẩm này!");
@@ -433,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append("txtSlsuaTon", quantity);
         formData.append("txtMaBTsua", variantId);
 
-        fetch("../ajax/updateCTPhieuNhap.php", {
+        fetch("./ajax/updateCTPhieuNhap.php", {
             method: "POST",
             body: formData
         })

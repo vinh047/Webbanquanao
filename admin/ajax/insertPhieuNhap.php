@@ -1,5 +1,5 @@
 <?php
-require_once('../../database/DBConnection.php');
+require_once(__DIR__ . '/../../database/DBConnection.php');
 header('Content-Type: application/json'); // Đảm bảo trả về dữ liệu JSON
 
 $db = DBConnect::getInstance();

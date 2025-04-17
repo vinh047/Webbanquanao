@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1;
 
     function fetchSanPham(page = 1) {
-        fetch(`../ajax/quanlySanPham_ajax.php?pageproduct=${page}`)
+        fetch(`./ajax/quanlySanPham_ajax.php?pageproduct=${page}`)
             .then(res => res.json())
             .then(data => {
                 document.getElementById("product-list").innerHTML = data.products;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         };
 
                         btnCo.onclick = () => {
-                            fetch("../ajax/deleteSanPham.php", {
+                            fetch("./ajax/deleteSanPham.php", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.set("gia", gia);
         formData.set("giaban", giaban);
     
-        fetch("../ajax/updateSanPham.php", {
+        fetch("./ajax/updateSanPham.php", {
             method: "POST",
             body: formData
         })

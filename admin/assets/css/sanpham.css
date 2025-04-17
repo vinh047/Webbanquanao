@@ -269,3 +269,27 @@ button:active {
     transform: scale(0.96);
 }
 
+.nav-left {
+    height: 100vh;
+    background: linear-gradient(180deg, #007CF0, #00DFD8);
+    color: white;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-left .nav-link {
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.nav-left .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    text-decoration: none;
+    transform: translateX(4px);
+}
+
+.nav-left .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateX(4px);
+}

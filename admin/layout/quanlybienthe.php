@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../../assets/fonts/font.css">
-    <link rel="stylesheet" href="../assets/css/sanpham.css">
+    <link rel="stylesheet" href="./assets/css/sanpham.css">
 
     <?php
-    require_once('../../database/DBConnection.php');
+    require_once(__DIR__ . '/../../database/DBConnection.php');
     $db = DBConnect::getInstance();
     $color = $db->select("SELECT * FROM colors",[]);
     $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
@@ -20,41 +20,6 @@
 </head>
 <body>
     
-
-    <section class="d-flex position-relative">
-
-
-        <nav class="nav-left">
-                <ul class="list-group">
-
-                    <li class="list-group-item">
-                        <img src="../../assets/img/logo_favicon/logo.png" alt="logo" class="img-fluid" style="height:80px;width:100%;">
-                    </li>
-
-                    <li class="list-group-item">
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Quản lý sản phẩm
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Sản phẩm</a></li>
-                                <li><a class="dropdown-item" href="#">Biến thể sản phẩm</a></li>
-                            </ul>
-                        </div>
-                        
-
-                    </li>
-                </ul>
-        </nav>
-
-        <div class="quanlysp container-md">
-            <div class="infouser row p-2" style="background-color: #f8f9fa;">
-                <div class="col-md text-end">
-                    <p class="mb-0 fs-3"><i class="fa-solid fa-user"></i></p>
-                </div>
-            </div>
-
-
             <div class="sanpham py-3" style="font-size: 19px;display:none;">
 
 
@@ -263,7 +228,6 @@
 
 
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-      <script src="../assets/js/fetch_bienthe.js"></script>
+      <script src="./assets/js/fetch_bienthe.js"></script>
 </body>
 </html>

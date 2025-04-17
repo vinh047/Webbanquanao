@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 1;
 
     function fetchBienThe(page = 1) {
-        fetch(`../ajax/quanlyBienThe_ajax.php?pageproduct=${page}`)
+        fetch(`./ajax/quanlyBienThe_ajax.php?pageproduct=${page}`)
             .then(res => res.json())
             .then(data => {
                 document.getElementById("product-list").innerHTML = data.products;
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Xử lý khi nhấn nút "Có"
                         popup.querySelector(".btn-danger").onclick = function () {
                             // Gửi yêu cầu xóa sản phẩm qua AJAX
-                            fetch("../ajax/deleteBienThe.php", {
+                            fetch("./ajax/deleteBienThe.php", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        fetch(`../ajax/checkID.php?product_id=${idsp}`)
+        fetch(`./ajax/checkID.php?product_id=${idsp}`)
             .then(res => res.json())
             .then(data => {
                 if (!data.exists) {
@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // ✅ Nếu hợp lệ và tồn tại, tiếp tục thêm
                 const formData = new FormData(form);
-                fetch('../ajax/insertBienThe.php', {
+                fetch('./ajax/insertBienThe.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     
         // Kiểm tra mã sản phẩm trước khi cập nhật
-        fetch(`../ajax/checkID.php?product_id=${idsp}`)
+        fetch(`./ajax/checkID.php?product_id=${idsp}`)
             .then(res => res.json())
             .then(data => {
                 if (!data.exists) {
@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Nếu mã sản phẩm hợp lệ → tiếp tục gửi form update
                 const formData = new FormData(formSua);
     
-                fetch("../ajax/updateBienThe.php", {
+                fetch("./ajax/updateBienThe.php", {
                     method: "POST",
                     body: formData
                 })

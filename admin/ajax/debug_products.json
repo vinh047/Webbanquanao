@@ -2,15 +2,15 @@ Array
 (
     [0] => Array
         (
-            [id] => 1
-            [supplier_id] => 1
-            [supplier] => Công ty TNHH Minh Tâm
+            [id] => 3
+            [supplier_id] => 7
+            [supplier] => Công ty TNHH ElegantCo
             [user_id] => 3
             [name] => 1
             [description] => 1
             [category_id] => 4
             [category] => Áo Polo
-            [price] => 123123
+            [price] => 3123
             [ptgg] => 30
         )
 

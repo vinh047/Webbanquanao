@@ -1,5 +1,5 @@
 <?php
-require_once('../../database/DBConnection.php');
+require_once(__DIR__ . '/../../database/DBConnection.php');
 $pdo = DBConnect::getInstance()->getConnection();
 header('Content-Type: application/json');
 
@@ -19,7 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("SELECT variant_id, quantity, import_price FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
     $stmt->execute([$id_ctpn]);
     $old = $stmt->fetch();
-
+    $old_importreceipt_id = $pdo->prepare("SELECT importreceipt_id FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
+    $old_importreceipt_id->execute([$id_ctpn]);
+    $old_pn_id = $old_importreceipt_id->fetchColumn();
+    
     if (!$old) {
         echo json_encode(['success' => false, 'message' => 'Không tìm thấy chi tiết phiếu nhập']);
         exit;
@@ -64,14 +67,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 6. Cập nhật lại chi tiết phiếu nhập
     $total_price = $quantity_new * $import_price;
     $stmtUpdate = $pdo->prepare("
-        UPDATE importreceipt_details 
-        SET product_id = ?, variant_id = ?, quantity = ?, total_price = ?, import_price = ?
-        WHERE ImportReceipt_details_id = ?
-    ");
-    $stmtUpdate->execute([$product_id_new, $variant_id_new, $quantity_new, $total_price, $import_price, $id_ctpn]);
+    UPDATE importreceipt_details 
+    SET importreceipt_id = ?, product_id = ?, variant_id = ?, quantity = ?, total_price = ?, import_price = ?
+    WHERE ImportReceipt_details_id = ?
+");
+$stmtUpdate->execute([$id_pn, $product_id_new, $variant_id_new, $quantity_new, $total_price, $import_price, $id_ctpn]);
+
 
     // 7. ✅ Cập nhật lại tổng tiền trong bảng phiếu nhập
-    $stmtUpdateTotal = $pdo->prepare("
+// Cập nhật tổng tiền mới của phiếu nhập hiện tại
+$stmtUpdateTotal = $pdo->prepare("
+    UPDATE importreceipt 
+    SET total_price = (
+        SELECT SUM(total_price) 
+        FROM importreceipt_details 
+        WHERE importreceipt_id = ?
+    ) 
+    WHERE importreceipt_id = ?
+");
+$stmtUpdateTotal->execute([$id_pn, $id_pn]);
+
+// Cập nhật lại tổng tiền của phiếu nhập cũ (nếu khác với mới)
+if ($id_pn != $old_pn_id) {
+    $stmtUpdateTotalOld = $pdo->prepare("
         UPDATE importreceipt 
         SET total_price = (
             SELECT SUM(total_price) 
@@ -80,7 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ) 
         WHERE importreceipt_id = ?
     ");
-    $stmtUpdateTotal->execute([$id_pn, $id_pn]);
+    $stmtUpdateTotalOld->execute([$old_pn_id, $old_pn_id]);
+}
+
 
     echo json_encode(['success' => true]);
 }

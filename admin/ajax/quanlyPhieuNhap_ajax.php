@@ -1,6 +1,7 @@
 <?php
-require_once('../../database/DBConnection.php');
-require_once('../../layout/phantrang.php');
+require_once(__DIR__ . '/../../database/DBConnection.php');
+require_once(__DIR__ . '/../../layout/phantrang.php');
+
 $db = DBConnect::getInstance();
 
 // Tổng sản phẩm

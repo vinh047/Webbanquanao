@@ -231,7 +231,7 @@ if (loi === "") {
         data.append('total_price', totalPrice);
         data.append('products', JSON.stringify(productList)); // Gửi danh sách sản phẩm dưới dạng JSON
 
-        fetch('../ajax/insertPhieuNhap.php', {
+        fetch('./ajax/insertPhieuNhap.php', {
             method: 'POST',
             body: data
         })
@@ -261,11 +261,13 @@ if (loi === "") {
         });
     });
     function loadPhieuNhap(page = 1) {
-    fetch('../ajax/quanlyPhieuNhap_ajax.php?pageproduct=' + page)
+    fetch('./ajax/quanlyPhieuNhap_ajax.php?pageproduct=' + page)
         .then(res => res.json())
         .then(data => {
             document.getElementById('product-list').innerHTML = data.products;
             document.getElementById("pagination").innerHTML = data.pagination;
+
+
             // Gán lại sự kiện cho nút chuyển trang
             document.querySelectorAll(".page-link-custom").forEach(btn => {
                 btn.addEventListener("click", function (e) {
@@ -288,7 +290,7 @@ if (loi === "") {
                         // Xử lý khi nhấn nút "Có"
                         popup.querySelector(".btn-danger").onclick = function () {
                             // Gửi yêu cầu xóa sản phẩm qua AJAX
-                            fetch("../ajax/deletePhieuNhap.php", {
+                            fetch("./ajax/deletePhieuNhap.php", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
@@ -379,7 +381,7 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
     let cleanGia = rawGia.replace(/\./g, '');
     formData.set('txtTongGT', cleanGia);
 
-    fetch('../ajax/updatePhieuNhap.php', {
+    fetch('./ajax/updatePhieuNhap.php', {
         method: 'POST',
         body: formData
     })

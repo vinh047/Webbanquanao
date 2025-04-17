@@ -1,6 +1,6 @@
 <?php
-require_once('../../database/DBConnection.php');
-header('Content-Type: application/json');
+        require_once(__DIR__ . '/../../database/DBConnection.php');
+        header('Content-Type: application/json');
 
 if (isset($_GET['product_id'])) {
     $id = (int)$_GET['product_id'];
