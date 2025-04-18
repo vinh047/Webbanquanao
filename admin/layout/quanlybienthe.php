@@ -20,6 +20,42 @@
 </head>
 <body>
     
+                <section class="py-3">
+                <div class="boloc ms-5 position-relative">
+                    <span class="fs-3"><i class="fa-solid fa-filter filter-icon" title="Lọc biến thể"></i> <span class="fs-5">Lọc danh sách biến thể</span> </span>
+                    <div class="filter-loc position-absolute bg-light p-2 rounded-2 d-none" style="width:270px;">
+                        <form action="" method="POST" id="formLoc">
+                            <label for="txtIDBT">Mã BT : </label>
+                            <input type="text" name="txtIDBT" id="txtIDBT" class="form-control form-control-sm">
+                            <label for="txtIDSP" class="pt-2">Mã SP : </label>
+                            <input type="text" name="txtIDSP" id="txtIDSP" class="form-control form-control-sm">
+                            <label for="cbSizeLoc" class="pt-2">Size : </label>
+                            <select name="cbSizeLoc" id="cbSizeLoc" class="form-select">
+                                <option value="">Chọn size : </option>
+                                <?php foreach($size as $s): ?>
+                                <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <label for="cbMauLoc" class="pt-2">Màu : </label>
+                            <select name="cbMauLoc" id="cbMauLoc" class="form-select">
+                                <option value="">Chọn màu : </option>
+                                <?php foreach($color as $c): ?>
+                                <option value="<?=$c['color_id']?>"><?=$c['name']?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <label for="txtSoLuong" class="py-2">Số lượng : </label>
+                            <input type="text" name="txtSoLuong" id="txtSoLuong" class="form-control form-control-sm">
+
+                            <div class="d-flex justify-content-center gap-2 pt-2">
+                                <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
+                                <button class="btn btn-danger"  style="width:70px;" type="reset">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+
             <div class="sanpham py-3" style="font-size: 19px;display:none;">
 
 

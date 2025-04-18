@@ -109,7 +109,8 @@
                     </div>
                 </div>
 
-                                <hr class="my-5">
+                <hr class="my-5">
+
 
                                 <!-- Hiện thông tin phiếu nhập -->
                     <div class="hienthi">

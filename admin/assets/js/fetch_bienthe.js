@@ -6,10 +6,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const tc = tbThanhCong.querySelector("p");
     const formSua = document.getElementById("formSuaSPbienThe");
     let currentPage = 1;
+    const formLoc = document.getElementById("formLoc");
+
 
     function fetchBienThe(page = 1) {
-        fetch(`./ajax/quanlyBienThe_ajax.php?pageproduct=${page}`)
-            .then(res => res.json())
+        const formData = new FormData(formLoc);
+        formData.append("pageproduct", page); // giữ phân trang
+
+        fetch(`./ajax/quanlyBienThe_ajax.php`, {
+            method: "POST",
+            body: formData
+        })
+                    .then(res => res.json())
             .then(data => {
                 document.getElementById("product-list").innerHTML = data.products;
                 document.getElementById("pagination").innerHTML = data.pagination;
@@ -38,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     });
                 }
+                
                 document.querySelectorAll(".btn-sua").forEach(btn => {
                     btn.addEventListener("click", function (e) {
                         const idvr = this.dataset.idvr;
@@ -148,9 +157,17 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.error("Lỗi khi fetch biến thể:", err));
 
     }
-
+    formLoc.addEventListener("submit", function (e) {
+        e.preventDefault();
+        currentPage = 1;
+        fetchBienThe(currentPage); // lọc từ trang đầu
+    });
     fetchBienThe(currentPage); // load ban đầu
-
+    document.querySelector(".filter-icon").addEventListener("click", function () {
+        const filterBox = document.querySelector(".filter-loc");
+        filterBox.classList.toggle("d-none"); // toggle hiện/ẩn
+    });
+    
     form.addEventListener("submit", function (e) {
 
         const idsp = document.getElementById("txtMa").value.trim();
