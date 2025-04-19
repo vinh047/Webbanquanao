@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . '/../../database/DBConnection.php');
 require_once(__DIR__ . '/../../layout/phantrang.php');
-require_once('locBienThe.php');
+require_once('functionLoc.php');
 $db = DBConnect::getInstance();
 $connection = $db->getConnection();
 // Lọc

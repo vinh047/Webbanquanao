@@ -17,51 +17,40 @@
         ?>
 </head>
 <body>
-    
-
-<!-- <section class="d-flex position-relative">
-
-
-<nav class="nav-left">
-    <ul class="list-group">
-
-        <li class="list-group-item">
-            <img src="../../assets/img/logo_favicon/logo.png" alt="logo" class="img-fluid" style="height:80px;width:100%;">
-        </li>
-
-        <li class="list-group-item">
-
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Quản lý phiếu nhập
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="index.php?page=phieunhap">Phiếu nhập</a></li>
-                    <li><a class="dropdown-item" href="index.php?page=ctphieunhap">Chi tiết phiếu nhập</a></li>
-                </ul>
-            </div>
-
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Quản lý sản phẩm
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="index.php?page=sanpham">Sản phẩm</a></li>
-                    <li><a class="dropdown-item" href="index.php?page=bienthe">Biến thể sản phẩm</a></li>
-                </ul>
-            </div>
-
-
-        </li>
-    </ul>
-</nav>
-
-<div class="quanlysp container-md">
-<div class="infouser row p-2" style="background-color: #f8f9fa;">
-    <div class="col-md text-end">
-        <p class="mb-0 fs-3"><i class="fa-solid fa-user"></i></p>
-    </div>
-</div> -->
+<section class="py-3">
+                <div class="boloc ms-5 position-relative">
+                    <span class="fs-3"><i class="fa-solid fa-filter filter-icon" title="Lọc biến thể"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
+                    <div class="filter-loc position-absolute bg-light p-2 rounded-2 d-none" style="width:270px;">
+                        <form action="" method="POST" id="formLoc">
+                            <label for="txtIDSP">Mã sản phẩm : </label>
+                            <input type="text" name="txtIDSP" id="txtIDSP" class="form-control form-control-sm">
+                            <label for="txtTensp">Tên sản phẩm</label>
+                            <input type="text" name="txtTensp" id="txtTensp" class="form-control form-control-sm">
+                            <label for="cbTheLoai">Thể loại : </label>
+                            <select name="cbTheLoai" id="cbTheLoai" class="form-select">
+                                <option value="">Chọn thể loại</option>
+                                <?php foreach($categories as $theloai): ?>
+                                <option value="<?=$theloai['category_id']?>"><?=$theloai['name']?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <div class="d-flex gap-2">
+                                <div class="">
+                                <label for="txtGiaMin">Giá min : </label>
+                                <input type="text" name="txtGiaMin" id="txtGiaMin" class="form-control form-control-sm">
+                                </div>
+                                <div class="">
+                                <label for="txtGiaMax">Giá max : </label>
+                                <input type="text" name="txtGiaMax" id="txtGiaMax" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center gap-2 pt-2">
+                                <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
+                                <button class="btn btn-danger"  style="width:70px;" type="reset">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
 
 
             <div class="sanpham py-3" style="font-size: 19px;display:none;">

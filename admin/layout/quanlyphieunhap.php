@@ -215,7 +215,7 @@
                     </div>
 
                     <div class="pt-3">
-                        <label for="txtPTSua">Phần trăm giá sản phẩm : </label>
+                        <label for="txtPTSua">Phần trăm tăng giá sản phẩm : </label>
                         <input type="text" name="txtPTSua" id="txtPTSua" class="form-control " placeholder="Phần trăm giá sản phẩm" value="30%">
                     </div>
 

@@ -75,7 +75,7 @@
     
                     <div class="">
                         <label for="cbSize">Size : </label>
-                        <select name="cbSize" id="cbSize" class="form-select ">
+                        <select name="cbSize" id="cbSize" class="form-select">
                             <option value="">Chọn size sản phẩm</option>
                             <?php foreach($size as $s): ?>
                             <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
