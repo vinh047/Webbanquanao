@@ -17,24 +17,24 @@ $offset = $pagination->offset();
 
 // Truy vấn dữ liệu chi tiết phiếu nhập (tính luôn total_price)
 $data = $db->select("
-    SELECT 
-        ImportReceipt_details_id, ImportReceipt_id, product_id, variant_id, quantity, import_price, 
-        (quantity * import_price) AS total_price, created_at
-    FROM importreceipt_details 
-    ORDER BY ImportReceipt_details_id ASC
-    LIMIT $limit OFFSET $offset
+SELECT 
+    importreceipt_details_id, importreceipt_id, product_id, variant_id, quantity, created_at, status
+FROM importreceipt_details
+ORDER BY importreceipt_details_id ASC
+LIMIT $limit OFFSET $offset
 ", []);
 
 ob_start();
 foreach ($data as $row) {
-    $id_ct = $row['ImportReceipt_details_id'];
-    $id_pn = $row['ImportReceipt_id'];
+    $id_ct = $row['importreceipt_details_id'];
+    $id_pn = $row['importreceipt_id'];    
     $id_sp = $row['product_id'];
     $variant_id = $row['variant_id'];
     $quantity = $row['quantity'];
-    $import_price = number_format($row['import_price'], 0, ',', '.');
-    $total_price = number_format($row['total_price'], 0, ',', '.');
     $ngaylap = $row['created_at'];
+    $hideBtn = $row['status'] == 0 ? 'style="display:none;"' : '';
+
+
 
     echo "
         <tr class='text-center'>
@@ -42,24 +42,33 @@ foreach ($data as $row) {
             <td class='hienthiid'>$id_pn</td>
             <td class='hienthiid'>$id_sp</td>
             <td class='hienthiid'>$variant_id</td>
-            <td class='hienthigia'>$total_price VNĐ</td>
             <td class='tensp'>$ngaylap</td>
+<td class='tensp'>
+    " . ($row['status'] == 1 ? "
+        <button class='btn btn-warning btn-sm btn-toggle-status fs-6 rounded-4' data-idct='$id_ct'>Xác nhận</button>
+    " : "<span class='badge bg-success'>Đã xác nhận</span>") . "
+</td>
+
             <td>
-                <div class='d-flex justify-content-center gap-3'>
-                    <button class='btn btn-success btn-sua'
-                        data-idct='$id_ct'
-                        data-idpn='$id_pn'
-                        data-idsp='$id_sp'
-                        data-variant='$variant_id'
-                        data-soluong='$quantity'
-                        data-gia='{$row['import_price']}'
-                        data-ngaylap='$ngaylap'
-                        data-tongtien='{$row['total_price']}'
-                        style='width:60px;'>Sửa</button>
-                    <button class='btn btn-danger btn-xoa'
-                        data-idct='$id_ct'
-                        style='width:60px;'>Xóa</button>
-                </div>
+<div class='d-flex justify-content-center gap-3'>
+    " . ($row['status'] == 1 ? "
+        <button class='btn btn-success btn-sua'
+            data-idct='$id_ct'
+            data-idpn='$id_pn'
+            data-idsp='$id_sp'
+            data-variant='$variant_id'
+            data-soluong='$quantity'
+            data-ngaylap='$ngaylap'
+            style='width:60px;'>Sửa</button>
+        <button class='btn btn-danger btn-xoa'
+            data-idct='$id_ct'
+            style='width:60px;'>Xóa</button>
+    " : "") . "
+    <button class='btn btn-info btn-xemchitiet'
+        data-idct='$id_ct'
+        style='width:100px;'>Xem chi tiết</button>
+</div>
+
             </td>
         </tr>
     ";

@@ -53,7 +53,7 @@
             </section>
 
 
-            <div class="sanpham py-3" style="font-size: 19px;display:none;">
+            <div class="sanpham py-3" style="font-size: 19px">
 
 
                 <form action="../ajax/insertSanPham.php" method="POST" id="formNhapSP">
@@ -80,6 +80,11 @@
                     <div class="pt-3">
                         <label for="txtGia">Giá sản phẩm : </label>
                         <input type="text" name="txtGia" id="txtGia" class="form-control " placeholder="Giá của sản phẩm">
+                    </div>
+
+                    <div class="pt-3">
+                        <label for="txtPT">Tỉ lệ phần trăm tăng giá bán : </label>
+                        <input type="text" name="txtPT" id="txtPT" class="form-control " placeholder="Phần trăm giá sản phẩm" value="30">
                     </div>
     
                     <div class="pt-3">

@@ -19,104 +19,11 @@
 
 
             <div class="sanpham py-3" style="font-size: 19px;">
-
-                <div class="row">
-                    <div class="col-md-4">
-                <form action="./ajax/insertCTPhieuNhap.php" method="POST" id="formNhapSPbienThe" enctype="multipart/form-data">
-
-                    <div class="pt-3">
-                        <label for="txtMaPN">Mã phiếu nhập : </label>
-                        <input type="text" name="txtMaPN" id="txtMaPN" placeholder="Mã của sản phẩm" class="form-control ">
-                    </div>
-
-                    <div class="pt-3">
-                        <label for="txtMa">Mã sản phẩm : </label>
-                        <input type="text" name="txtMa" id="txtMa" placeholder="Mã của sản phẩm" class="form-control ">
-                    </div>
-    
-                    <div class="pt-3 pb-2">
-                        <label for="fileAnh">Hình ảnh : </label>
-                        <input type="file" name="fileAnh" id="fileAnh" class="form-control">
-                        <div class="pt-2" style="max-width:170px;max-height: 200px;" id="hienthianh">
-                            <img src="" alt="" class="img-fluid" style="width: 170px; height: 200px; object-fit: contain; display: none;">
-                        </div>
-                    </div>
-    
-                    <div class="">
-                        <label for="cbMau">Màu : </label>
-                        <select name="cbMau" id="cbMau" class="form-select">
-                            <option value="">Chọn màu sản phẩm</option>
-                            <?php foreach($color as $cl): ?>
-
-                                <option value="<?=$cl['color_id']?>"><?=$cl['name']?></option>
-
-
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-
-                    <div class="pt-3">
-                        <label for="cbSize">Size : </label>
-                        <select name="cbSize" id="cbSize" class="form-select ">
-                            <option value="">Chọn size sản phẩm</option>
-                            <?php foreach($size as $s): ?>
-                            <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-    
-                    <div class="pt-3">
-                        <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSl" id="txtSl" class="form-control " placeholder="Số lượng của sản phẩm">
-                    </div>
-
-    
-                    <div class="pt-3 d-flex gap-2 justify-content-center">
-                        <button class="btn btn-outline-secondary" id="add_product" type="button">Thêm CT phiếu nhập</button>
-                        <button class="btn btn-outline-primary"  type="submit">Lưu CT phiếu nhập</button>
-                        <button class="btn btn-outline-success" id="block_product" type="button">Mở khóa</button>
-
-                    </div>
-                </form>
-                    </div>
-
-
-                <!-- Hiển thị sản phẩm trong hàng đợi -->
-                    <div class="col-md-8">
-                    <div class="hienthi-tamluu pt-3">
-                <div class="d-flex justify-content-center border border-3 border-bottom-0 p-2 bg-light">
-                            <p class="mb-0 fs-3">
-                                Xử lý hàng chờ chi tiết phiếu nhập
-                            </p>
-                        </div>
-                    <table class="table table-secondary table-striped table-sm">
-                        <thead>
-                        <tr class="text-center">
-                            <th class="bg-secondary text-white hienthiid">STT</th>
-                            <th class="bg-secondary text-white hienthiid">ID PN</th>
-                            <th class="bg-secondary text-white hienthiid">ID SP</th>
-                            <th class="bg-secondary text-white hienthianh">Hình ảnh</th>
-                            <th class="bg-secondary text-white hienthisize">Size</th>
-                            <th class="bg-secondary text-white hienthigia">Số lượng</th>
-                            <th class="bg-secondary text-white hienthimau">Màu</th>
-                            <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
-                        </tr>
-                        </thead>
-                        <tbody id="product-list-tamluu">
-                        </tbody>
-                    </table>
-                </div>
-                    </div>
-                </div>
-
-                <hr class="my-5">
-
-
                                 <!-- Hiện thông tin phiếu nhập -->
                     <div class="hienthi">
                         <div class="d-flex justify-content-center border border-3 border-bottom-0 p-2 bg-light">
                             <p class="mb-0 fs-3">
-                                Xử lý chi tiết phiếu nhập
+                                Danh sách chi tiết phiếu nhập
                             </p>
                         </div>
                     <table class="table table-secondary table-striped table-sm">
@@ -126,8 +33,8 @@
                                 <th class="bg-secondary text-white hienthiid">ID PN</th>
                                 <th class="bg-secondary text-white hienthiid">ID SP</th>
                                 <th class="bg-secondary text-white hienthiid">ID BT</th>
-                                <th class="bg-secondary text-white hienthigia">Tổng tiền</th>
                                 <th class="bg-secondary text-white tensp">Ngày lập</th>
+                                <th class="bg-secondary text-white tensp">Trạng thái</th>
                                 <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                             </tr>
                         </thead>
@@ -246,16 +153,6 @@
                     </div>
 
                     <div class="pt-3">
-                        <label for="txtGiaNhap">Giá nhập ban đầu: </label>
-                        <input type="text" name="txtGiaNhap" id="txtGiaNhap" readonly class="form-control">
-                    </div>
-
-                    <div class="pt-3">
-                        <label for="txtTongGT">Tổng giá trị: </label>
-                        <input type="text" name="txtTongGT" id="txtTongGT" class="form-control" readonly >
-                    </div>
-
-                    <div class="pt-3">
                         <label for="txtNgayLap">Ngày lập: </label>
                         <input type="text" name="txtNgayLap" id="txtNgayLap" class="form-control" readonly >
                     </div>
@@ -335,6 +232,33 @@
             </p>
         </div>
     </section>
+
+    <!-- Modal Chi tiết biến thể -->
+<div class="modal fade" id="modalChiTietBienThe" tabindex="-1" aria-labelledby="modalChiTietLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalChiTietLabel">Chi tiết biến thể đã nhập</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row align-items-center">
+          <div class="col-md-4 text-center">
+            <img id="ctbt_image" src="" class="img-fluid rounded border" style="max-height: 250px; object-fit: contain;" alt="Ảnh sản phẩm">
+          </div>
+          <div class="col-md-8">
+            <p><strong>Sản phẩm:</strong> <span id="ctbt_tensp"></span></p>
+            <p><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
+            <p><strong>Size:</strong> <span id="ctbt_size"></span></p>
+            <p><strong>Số lượng nhập:</strong> <span id="ctbt_sl"></span></p>
+            <p><strong>Giá nhập:</strong> <span id="ctbt_gia"></span> VNĐ</p>
+            <p><strong>Ngày lập:</strong> <span id="ctbt_ngay"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <script src="./assets/js/fetch_ctphieunhap.js"></script>

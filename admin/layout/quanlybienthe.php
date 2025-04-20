@@ -169,6 +169,19 @@
             </p>
         </div>
 
+        <div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border" style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
+    <p class="mb-0 fs-5 text-center">Sản phẩm này đã có trong hàng đợi!</p>
+    <p class="mb-0 fs-5 text-center">Bạn có muốn cộng dồn vào không?</p>
+    <div class="d-flex justify-content-center gap-3 mt-2">
+        <div>
+            <button id="btnCoTrung" class="btn btn-danger" style="width:80px;">Có</button>
+        </div>
+        <div>
+            <button id="btnKhongTrung" class="btn btn-primary" style="width:80px;">Không</button>
+        </div>
+    </div>
+</div>
+
         <div class="overlay"></div>
 
         <div class="thongBaoXoa rounded-2">

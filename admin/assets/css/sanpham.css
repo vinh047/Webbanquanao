@@ -304,6 +304,21 @@ input[type=number] {
     border-radius: 12px;
 }
 
+.formNhapSanPham
+{
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    border-radius: 12px;
+}
+
 .formSuaPN {
     display: none;
     position: fixed;

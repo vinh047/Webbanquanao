@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Không tìm thấy formSuaSPbienThe");
         return;
     }
-    formSua.addEventListener("submit", function (e) {
+    formSua.addEventListener("submit", async function (e) {
         e.preventDefault();
         console.log("Đã submit form!");
 
@@ -334,6 +334,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const size = document.getElementById("cbSizeSua").value.trim();
         const mau = document.getElementById("cbMauSua").value;
         const sl = document.getElementById("txtSlSua").value.trim();
+        const idBienThe = document.getElementById("txtMaBt").value; // 👈 mã biến thể (ẩn)
+        // Lấy tên ảnh hiện tại trong thẻ <div id="tenFileAnhSua">
+        const tenAnh = document.getElementById("tenFileAnhSua").textContent.trim();
+        
 
     
         if (!idsp) {
@@ -426,49 +430,51 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     
         // Kiểm tra mã sản phẩm trước khi cập nhật
-        fetch(`./ajax/checkID.php?product_id=${idsp}`)
-            .then(res => res.json())
-            .then(data => {
-                if (!data.exists) {
-                    loi.textContent = "Mã sản phẩm không tồn tại!";
-                    document.getElementById("txtMaSua").focus();
-                    return showError();
-                }
+        try {
+            const resID = await fetch(`./ajax/checkID.php?product_id=${idsp}`);
+            const dataID = await resID.json();
+            if (!dataID.exists) return showError("Mã sản phẩm không tồn tại!");
     
-                // Nếu mã sản phẩm hợp lệ → tiếp tục gửi form update
-                const formData = new FormData(formSua);
+            // 🧠 Kiểm tra biến thể đã tồn tại chưa
+            const urlBT = `./ajax/checkBT.php?product_id=${idsp}&size_id=${size}&color_id=${mau}&image=${encodeURIComponent(tenAnh)}&current_id=${idBienThe}`;
+            const resBT = await fetch(urlBT);
+            const dataBT = await resBT.json();
     
-                fetch("./ajax/updateBienThe.php", {
-                    method: "POST",
-                    body: formData
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.querySelector(".formSua").style.display = "none";
-                            document.querySelector(".overlay").style.display = "none";
+            if (dataBT.exists) return showError("Đã tồn tại biến thể này rồi!");
     
-                            const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
-                            tbUpdate.style.display = "block";
-                            tbUpdate.classList.add("show");
-    
-                            setTimeout(() => tbUpdate.classList.remove('show'), 2000);
-
-    
-                            fetchBienThe(currentPage); // reload danh sách
-                        } else {
-                            alert(data.message || "Lỗi cập nhật");
-                        }
-                    });
-            })
-            .catch(error => {
-                console.error("Lỗi khi kiểm tra mã sản phẩm:", error);
+            // ✅ Tiến hành gửi form
+            const formData = new FormData(formSua);
+            const resUpdate = await fetch("./ajax/updateBienThe.php", {
+                method: "POST",
+                body: formData
             });
-            function showError() {
-                thongbao.style.display = 'block';
-                thongbao.classList.add('show');
-                setTimeout(() => thongbao.classList.remove('show'), 2000);
+            const result = await resUpdate.json();
+    
+            if (result.success) {
+                document.querySelector(".formSua").style.display = "none";
+                document.querySelector(".overlay").style.display = "none";
+    
+                const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
+                tbUpdate.style.display = "block";
+                tbUpdate.classList.add("show");
+                setTimeout(() => tbUpdate.classList.remove('show'), 2000);
+    
+                fetchBienThe(currentPage);
+            } else {
+                alert(result.message || "Lỗi cập nhật");
             }
+    
+        } catch (err) {
+            console.error("Lỗi mạng hoặc máy chủ:", err);
+            showError("Lỗi kết nối tới máy chủ!");
+        }
+        function showError(message) {
+            loi.textContent = message; // ⚠️ Đây là dòng bạn thiếu!
+            thongbao.style.display = 'block';
+            thongbao.classList.add('show');
+            setTimeout(() => thongbao.classList.remove('show'), 2000);
+        }
+        
     });
     
     

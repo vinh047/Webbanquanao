@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once(__DIR__ . '/../../database/DBConnection.php');
 $pdo = DBConnect::getInstance()->getConnection();
 header('Content-Type: application/json');
@@ -7,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_ctpn = $_POST['txtMaCTPNsua'] ?? null;
     $id_pn = $_POST['txtMaPNsua'] ?? null;
     $id_sp = $_POST['txtMaSPsua'] ?? null;
-    $quantity_new = $_POST['txtSlsuaTon'] ?? null;
+    $quantity_new = intval($_POST['txtSlsuaTon'] ?? 0);
     $variant_id_new = $_POST['txtMaBTsua'] ?? null;
 
     if (!$id_ctpn || !$id_pn || !$id_sp || !$quantity_new || !$variant_id_new) {
@@ -16,28 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 1. Lấy dữ liệu cũ từ CTPN
-    $stmt = $pdo->prepare("SELECT variant_id, quantity, import_price FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
+    $stmt = $pdo->prepare("SELECT variant_id, quantity, importreceipt_id FROM importreceipt_details WHERE importreceipt_details_id = ?");
     $stmt->execute([$id_ctpn]);
     $old = $stmt->fetch();
-    $old_importreceipt_id = $pdo->prepare("SELECT importreceipt_id FROM importreceipt_details WHERE ImportReceipt_details_id = ?");
-    $old_importreceipt_id->execute([$id_ctpn]);
-    $old_pn_id = $old_importreceipt_id->fetchColumn();
-    
+
     if (!$old) {
         echo json_encode(['success' => false, 'message' => 'Không tìm thấy chi tiết phiếu nhập']);
         exit;
     }
 
     $variant_id_old = $old['variant_id'];
-    $quantity_old = $old['quantity'];
+    $quantity_old = intval($old['quantity']);
+    $old_pn_id = $old['importreceipt_id'];
 
-    // 2. Lấy giá nhập mới
-    $stmtPrice = $pdo->prepare("SELECT price FROM products WHERE product_id = ?");
-    $stmtPrice->execute([$id_sp]);
-    $import_price = $stmtPrice->fetchColumn();
-    if (!$import_price) $import_price = 0;
-
-    // 3. Kiểm tra variant_id mới có hợp lệ không
+    // 2. Kiểm tra biến thể có đúng thuộc sản phẩm không
     $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM product_variants WHERE variant_id = ? AND product_id = ?");
     $stmtCheck->execute([$variant_id_new, $id_sp]);
     $isMatch = $stmtCheck->fetchColumn();
@@ -46,61 +42,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // 4. Lấy lại product_id từ variant mới
-    $stmtPID = $pdo->prepare("SELECT product_id FROM product_variants WHERE variant_id = ?");
-    $stmtPID->execute([$variant_id_new]);
-    $product_id_new = $stmtPID->fetchColumn();
+    // 3. Lấy lại giá sản phẩm mới
+    $stmtPrice = $pdo->prepare("SELECT price FROM products WHERE product_id = ?");
+    $stmtPrice->execute([$id_sp]);
+    $product_price = $stmtPrice->fetchColumn();
+    if (!$product_price) $product_price = 0;
 
-    // 5. Cập nhật tồn kho
+    // 4. Cập nhật tồn kho
     if ($variant_id_old != $variant_id_new) {
-        $stmt1 = $pdo->prepare("UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?");
-        $stmt1->execute([$quantity_old, $variant_id_old]);
+        $pdo->prepare("UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?")
+            ->execute([$quantity_old, $variant_id_old]);
 
-        $stmt2 = $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?");
-        $stmt2->execute([$quantity_new, $variant_id_new]);
+        $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?")
+            ->execute([$quantity_new, $variant_id_new]);
     } else {
         $delta = $quantity_new - $quantity_old;
-        $stmt3 = $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?");
-        $stmt3->execute([$delta, $variant_id_old]);
+        $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?")
+            ->execute([$delta, $variant_id_old]);
     }
 
-    // 6. Cập nhật lại chi tiết phiếu nhập
-    $total_price = $quantity_new * $import_price;
+    // 5. Cập nhật lại chi tiết phiếu nhập
     $stmtUpdate = $pdo->prepare("
-    UPDATE importreceipt_details 
-    SET importreceipt_id = ?, product_id = ?, variant_id = ?, quantity = ?, total_price = ?, import_price = ?
-    WHERE ImportReceipt_details_id = ?
-");
-$stmtUpdate->execute([$id_pn, $product_id_new, $variant_id_new, $quantity_new, $total_price, $import_price, $id_ctpn]);
+        UPDATE importreceipt_details 
+        SET importreceipt_id = ?, product_id = ?, variant_id = ?, quantity = ?
+        WHERE importreceipt_details_id = ?
+    ");
+    $stmtUpdate->execute([
+        $id_pn,
+        $id_sp,
+        $variant_id_new,
+        $quantity_new,
+        $id_ctpn
+    ]);
 
-
-    // 7. ✅ Cập nhật lại tổng tiền trong bảng phiếu nhập
-// Cập nhật tổng tiền mới của phiếu nhập hiện tại
-$stmtUpdateTotal = $pdo->prepare("
-    UPDATE importreceipt 
-    SET total_price = (
-        SELECT SUM(total_price) 
-        FROM importreceipt_details 
-        WHERE importreceipt_id = ?
-    ) 
-    WHERE importreceipt_id = ?
-");
-$stmtUpdateTotal->execute([$id_pn, $id_pn]);
-
-// Cập nhật lại tổng tiền của phiếu nhập cũ (nếu khác với mới)
-if ($id_pn != $old_pn_id) {
-    $stmtUpdateTotalOld = $pdo->prepare("
+    // 6. Cập nhật lại tổng tiền phiếu nhập mới
+    $stmtUpdateTotal = $pdo->prepare("
         UPDATE importreceipt 
         SET total_price = (
-            SELECT SUM(total_price) 
-            FROM importreceipt_details 
-            WHERE importreceipt_id = ?
-        ) 
+            SELECT SUM(d.quantity * p.price)
+            FROM importreceipt_details d
+            JOIN products p ON d.product_id = p.product_id
+            WHERE d.importreceipt_id = ?
+        )
         WHERE importreceipt_id = ?
     ");
-    $stmtUpdateTotalOld->execute([$old_pn_id, $old_pn_id]);
-}
+    $stmtUpdateTotal->execute([$id_pn, $id_pn]);
 
+    // 7. Nếu mã phiếu nhập mới khác mã cũ, cập nhật lại phiếu nhập cũ
+    if ($id_pn != $old_pn_id) {
+        $stmtUpdateTotalOld = $pdo->prepare("
+            UPDATE importreceipt 
+            SET total_price = (
+                SELECT SUM(d.quantity * p.price)
+                FROM importreceipt_details d
+                JOIN products p ON d.product_id = p.product_id
+                WHERE d.importreceipt_id = ?
+            )
+            WHERE importreceipt_id = ?
+        ");
+        $stmtUpdateTotalOld->execute([$old_pn_id, $old_pn_id]);
+    }
 
     echo json_encode(['success' => true]);
 }

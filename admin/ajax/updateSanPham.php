@@ -29,15 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         $stmt = $conn->prepare($sql);
         $stmt->execute([$ten, $loai, $mota, $giaMoi, $giaban, $pttg, $id]);
 
-        // ✅ Cập nhật toàn bộ chi tiết phiếu nhập theo sản phẩm
-        $stmtUpdate = $conn->prepare("
-        UPDATE importreceipt_details 
-        SET 
-            import_price = ?, 
-            total_price = quantity * ?
-        WHERE product_id = ?
-    ");
-    $stmtUpdate->execute([$giaMoi, $giaMoi, $id]);
+    //     // ✅ Cập nhật toàn bộ chi tiết phiếu nhập theo sản phẩm
+    //     $stmtUpdate = $conn->prepare("
+    //     UPDATE importreceipt_details 
+    //     SET 
+    //         import_price = ?, 
+    //         total_price = quantity * ?
+    //     WHERE product_id = ?
+    // ");
+    // $stmtUpdate->execute([$giaMoi, $giaMoi, $id]);
     
 
         echo json_encode(['success' => true]);

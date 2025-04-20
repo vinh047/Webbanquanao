@@ -28,30 +28,40 @@ foreach ($data as $row) {
     $idncc = $row['supplier_id'];
     $gia = number_format($row['total_price'], 0, ',', '.');
     $ngaylap = $row['created_at'];
+    $hideBtn = $row['status'] == 0 ? 'display:none;' : '';
     echo "
-        <tr class='text-center'>
-            <td class='hienthiid'>$idpn</td>
-            <td class='hienthiid'>$idnv</td>
-            <td class='hienthiid'>$idncc</td>
-            <td class='hienthigia'>$gia VNĐ</td>
-            <td class='tensp'>$ngaylap</td>
-            <td>
-                <div class='d-flex justify-content-center gap-3'>
+    <tr class='text-center'>
+        <td class='hienthiid'>$idpn</td>
+        <td class='hienthiid'>$idnv</td>
+        <td class='hienthiid'>$idncc</td>
+        <td class='hienthigia'>$gia VNĐ</td>
+        <td class='tensp'>$ngaylap</td>
+        <td class='tensp'>
+            " . ($row['status'] == 1
+                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6' data-idpn='$idpn'>Xác nhận</button>"
+                : "<span class='badge bg-success'>Đã xác nhận</span>") . "
+        </td>
+        <td>
+            <div class='d-flex justify-content-center gap-3'>
                 <div>
-                <button class='btn btn-success btn-sua'
-                data-idpn='$idpn'
-                data-idnv='$idnv'
-                data-idncc='$idncc'
-                data-gia='{$row['total_price']}'
-                data-ngaylap='$ngaylap'
-                style='width:60px;' >Sửa</button></div>
+<button class='btn btn-success btn-sua'
+    data-idpn='$idpn'
+    data-idnv='$idnv'
+    data-idncc='$idncc'
+    data-gia='{$row['total_price']}'
+    data-ngaylap='$ngaylap'
+    style='width:60px; $hideBtn'>Sửa</button>
+                </div>
                 <div>
-                <button class='btn btn-danger btn-xoa' data-idpn='$idpn' style='width:60px;'>Xóa</button>
+                    <button class='btn btn-danger btn-xoa'
+    data-idpn='$idpn'
+    style='width:60px; $hideBtn'>Xóa</button>
+                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn'>Xem chi tiết</button>
                 </div>
-                </div>
-            </td>
-        </tr>
-    ";
+            </div>
+        </td>
+    </tr>";
+
 }
 $productHTML = ob_get_clean(); // lấy nội dung ra và dừng buffer
 

@@ -42,8 +42,8 @@ $stmt = $conn->prepare("SELECT importreceipt_details_id FROM importreceipt_detai
 
         $tongGiaTri = $sl * $giaNhap;
 
-        $stmt = $conn->prepare("UPDATE importreceipt_details SET total_price = ? WHERE ImportReceipt_details_id = ?");
-        $stmt->execute([$tongGiaTri, $idctpn]);
+        // $stmt = $conn->prepare("UPDATE importreceipt_details SET total_price = ? WHERE ImportReceipt_details_id = ?");
+        // $stmt->execute([$tongGiaTri, $idctpn]);
 
         echo json_encode(['success' => true]);
     } else {
