@@ -30,51 +30,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $total_price_all = 0;
 
-        foreach ($productList as $index => $product) {
+        foreach ($productList as $product) {
             $product_id = intval($product['product_id']);
             $color_id = intval($product['color_id']);
             $size_id = intval($product['size_id']);
             $quantity = intval($product['quantity']);
 
-            $originalName = isset($_FILES['images']['name'][$index]) ? basename($_FILES['images']['name'][$index]) : null;
-
-            $uniqueName = time() . '_' . $originalName;
-            $targetPath = '../../assets/img/sanpham/' . $uniqueName;
-
-            // Kiểm tra xem biến thể đã tồn tại với tên ảnh đã đổi chưa
-            $stmtVar = $conn->prepare("SELECT variant_id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ? AND image = ?");
-            $stmtVar->execute([$product_id, $color_id, $size_id, $uniqueName]);
+            // Kiểm tra biến thể đã tồn tại
+            $stmtVar = $conn->prepare("SELECT variant_id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?");
+            $stmtVar->execute([$product_id, $color_id, $size_id]);
             $variant = $stmtVar->fetch();
 
-            if (!$variant) {
-                if ($originalName && isset($_FILES['images']['tmp_name'][$index])) {
-                    if (move_uploaded_file($_FILES['images']['tmp_name'][$index], $targetPath)) {
-                        $stmtNewVar = $conn->prepare("INSERT INTO product_variants (product_id, color_id, size_id, stock, image) VALUES (?, ?, ?, ?, ?)");
-                        $stmtNewVar->execute([$product_id, $color_id, $size_id, $quantity, $uniqueName]);
-                        $variant_id = $conn->lastInsertId();
-                    } else {
-                        throw new Exception("Không thể lưu ảnh sản phẩm!");
-                    }
-                } else {
-                    throw new Exception("Thiếu ảnh sản phẩm để tạo biến thể mới!");
-                }
-            } else {
+            if ($variant) {
                 $variant_id = $variant['variant_id'];
                 $stmtUpdateStock = $conn->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?");
                 $stmtUpdateStock->execute([$quantity, $variant_id]);
+            } else {
+                // Nếu chưa tồn tại → thêm mới
+                $image_name = $product['image_name'] ?? null;
+                $stmtNewVar = $conn->prepare("INSERT INTO product_variants (product_id, color_id, size_id, stock, image) VALUES (?, ?, ?, ?, ?)");
+                $stmtNewVar->execute([$product_id, $color_id, $size_id, $quantity, $image_name]);
+                $variant_id = $conn->lastInsertId();
             }
 
+            // Lấy giá nhập của sản phẩm
             $stmtPrice = $conn->prepare("SELECT price FROM products WHERE product_id = ?");
             $stmtPrice->execute([$product_id]);
             $row = $stmtPrice->fetch();
-            $import_price = $row ? floatval($row['price']) : 0;
+            $unit_price = $row ? floatval($row['price']) : 0;
+            $total_price = $unit_price * $quantity;
+            $total_price_all += $total_price;
 
-            $total_price_all += $quantity * $import_price;
-
-            $stmtCT = $conn->prepare("INSERT INTO importreceipt_details (importreceipt_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)");
-            $stmtCT->execute([$importreceipt_id, $product_id, $variant_id, $quantity]);
+            // ✅ Thêm vào chi tiết phiếu nhập, có unit_price và total_price
+            $stmtCT = $conn->prepare("INSERT INTO importreceipt_details (importreceipt_id, product_id, variant_id, quantity, unit_price, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmtCT->execute([$importreceipt_id, $product_id, $variant_id, $quantity, $unit_price, $total_price]);
         }
 
+        // Cập nhật tổng tiền phiếu nhập
         $stmtTotal = $conn->prepare("UPDATE importreceipt SET total_price = ? WHERE ImportReceipt_id = ?");
         $stmtTotal->execute([$total_price_all, $importreceipt_id]);
 
@@ -95,5 +87,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Chỉ hỗ trợ POST']);
 }
-
 ?>

@@ -6,7 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Hàm format giá
     const formatPrice = price => Number(price).toLocaleString('vi-VN');
 
-
+    function adjustPageIfLastItem() {
+        const btnCount = document.querySelectorAll(".btn-sua").length;
+        if (btnCount === 1 && currentPage > 1) {
+            currentPage -= 1;
+        }
+    }
 
     // Cập nhật bảng sản phẩm hiển thị
     function updateProductList() {
@@ -160,10 +165,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const size_name = document.getElementById('cbSize').options[document.getElementById('cbSize').selectedIndex].text;
         const quantity = parseInt(document.getElementById('txtSl').value);
         const imageFile = document.getElementById('fileAnh').files[0];
-
+        function showError(loinhan)
+        {
+            const thongbao = document.querySelector(".thongbaoLoi");
+            const loi = thongbao.querySelector("p");
+            loi.textContent = loinhan;
+            thongbao.style.display = 'block';
+            thongbao.classList.add('show');
+            setTimeout(() => thongbao.classList.remove('show'), 2000);
+        }
         if (!supplier_id || !user_id || !product_id || !color_id || !size_id || !quantity || quantity <= 0 || !imageFile) {
-            alert("Vui lòng nhập đầy đủ thông tin sản phẩm và số lượng hợp lệ.");
-            return;
+            return showError("Vui lòng nhập đầy đủ thông tin");
         }
 
         const imageUrl = URL.createObjectURL(imageFile);
@@ -206,19 +218,20 @@ if (existingIndex !== -1) {
             size_name: size_name,
             quantity: quantity,
             image_preview: imageUrl,
-            image_file: imageFile // dùng cho FormData khi gửi lên
+            image_file: imageFile, // dùng nếu muốn preview
+            image_name: imageFile.name // TÊN ẢNH để lưu vào DB
         });
 
         updateProductList();
 
         // Reset form chi tiết
         document.getElementById('supplier_id').disabled = true;
-        document.getElementById('cbTen').value = '';
-        document.getElementById('cbMau').value = '';
+        // document.getElementById('cbTen').value = '';
+        // document.getElementById('cbMau').value = '';
         document.getElementById('cbSize').value = '';
         document.getElementById('txtSl').value = '';
-        document.getElementById('fileAnh').value = '';
-        document.querySelector('#hienthianh img').style.display = 'none';
+        // document.getElementById('fileAnh').value = '';
+        // document.querySelector('#hienthianh img').style.display = 'none';
     });
     // Hiển thị ảnh preview
     document.getElementById('fileAnh').addEventListener('change', function () {
@@ -308,32 +321,34 @@ function capNhatLaiDropdownTenSanPham(id, name) {
     // Khi nhấn "Lưu phiếu nhập"
     document.getElementById('formNhapPhieuNhap').addEventListener('submit', function (e) {
         e.preventDefault();
-
+    
         const supplier_id = document.getElementById('supplier_id').value;
         const user_id = document.getElementById('user_id').value;
-
+    
         if (productList.length === 0) {
-            alert("Chưa có sản phẩm nào trong phiếu nhập.");
+            const tbLoi = document.querySelector('.thongbaoLuuKhongThanhCong');
+            tbLoi.style.display = "block";
+            tbLoi.classList.add("show");
+            setTimeout(() => tbLoi.classList.remove('show'), 2000);
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('supplier_id', supplier_id);
         formData.append('user_id', user_id);
-
-        // Gửi mảng sản phẩm (JSON)
-        const dataToSend = productList.map((item, index) => {
-            formData.append(`images[${index}]`, item.image_file); // gửi ảnh từng sản phẩm
+    
+        const dataToSend = productList.map((item) => {
             return {
                 product_id: item.product_id,
                 color_id: item.color_id,
                 size_id: item.size_id,
-                quantity: item.quantity
+                quantity: item.quantity,
+                image_name: item.image_name || null
             };
         });
-
+    
         formData.append('products', JSON.stringify(dataToSend));
-
+    
         fetch('./ajax/insertPhieuNhap.php', {
             method: 'POST',
             body: formData
@@ -342,13 +357,17 @@ function capNhatLaiDropdownTenSanPham(id, name) {
         .then(res => {
             if (res.success) {
                 document.getElementById('supplier_id').disabled = false;
-                alert("Lưu phiếu nhập thành công!");
+                const tbTC = document.querySelector('.thongbaoLuuThanhCong');
+                tbTC.style.display = "block";
+                tbTC.classList.add("show");
+                setTimeout(() => tbTC.classList.remove('show'), 2000);
                 productList = [];
                 productCount = 0;
                 updateProductList();
                 document.getElementById('formNhapPhieuNhap').reset();
                 document.querySelector('#hienthianh img').style.display = 'none';
                 // load lại bảng phiếu nhập nếu cần
+                loadPhieuNhap(currentPage);
             } else {
                 alert("Lỗi khi lưu: " + res.message);
             }
@@ -358,6 +377,7 @@ function capNhatLaiDropdownTenSanPham(id, name) {
             alert("Đã có lỗi khi gửi dữ liệu!");
         });
     });
+    
     function loadPhieuNhap(page = 1) {
     fetch('./ajax/quanlyPhieuNhap_ajax.php?pageproduct=' + page)
         .then(res => res.json())
@@ -378,38 +398,56 @@ function capNhatLaiDropdownTenSanPham(id, name) {
 
                 // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
                 document.querySelectorAll('.btn-toggle-status').forEach(btn => {
-                    btn.addEventListener('click', async function () {
+                    btn.addEventListener('click', function () {
                         const id = this.dataset.idpn;
-                        const confirmClose = confirm("Bạn có chắc muốn đóng chi tiết này không? Sau khi đóng sẽ không thể sửa / xoá.");
                 
-                        if (!confirmClose) return;
+                        // Lưu ID vào nút xác nhận
+                        document.getElementById('btnXacNhan').dataset.idpn = id;
                 
-                        try {
-                            const res = await fetch('./ajax/moDongPN.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
-                                body: `id=${id}&status=0`
-                            });
-                        
-                            if (!res.ok) throw new Error(`HTTP ${res.status}`); // check lỗi HTTP 500, 404,...
-                        
-                            const data = await res.json();
-                        
-                            if (data.success) {
-                                alert("Đã đóng thành công!");
-                                loadPhieuNhap(currentPage); // reload lại bảng
-                            } else {
-                                alert("Đóng thất bại: " + data.message);
-                            }
-                        } catch (err) {
-                            alert("Lỗi máy chủ!");
-                            console.error('Lỗi:', err);
-                        }
-                        
+                        // Hiện thông báo xác nhận tùy biến
+                        document.getElementById('xacNhanCho').style.display = 'block';
+                        document.querySelector('.overlay').style.display = 'block';
                     });
-                });    
+                });
+                
+                // Khi người dùng ấn nút Hủy
+                document.getElementById('btnHuy').addEventListener('click', function () {
+                    document.getElementById('xacNhanCho').style.display = 'none';
+                    document.querySelector('.overlay').style.display = 'none';
+
+                });
+                
+                // Khi người dùng ấn nút Xác nhận trong popup
+                document.getElementById('btnXacNhan').addEventListener('click', async function () {
+                    const id = this.dataset.idpn;
+                
+                    try {
+                        const res = await fetch('./ajax/moDongPN.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `id=${id}&status=0`
+                        });
+                
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                
+                        const data = await res.json();
+                
+                        if (data.success) {
+                            document.getElementById('xacNhanCho').style.display = 'none';
+                            document.querySelector('.overlay').style.display = 'none';
+
+                            loadPhieuNhap(currentPage);
+                        } else {
+                            alert("Đóng thất bại: " + data.message);
+                        }
+                    } catch (err) {
+                        alert("Lỗi máy chủ!");
+                        console.error('Lỗi:', err);
+                    }
+                });
+                 
 
                 document.addEventListener("click", function (e) {
                     if (e.target.classList.contains("btn-xemchitietPN")) {
@@ -492,18 +530,32 @@ function capNhatLaiDropdownTenSanPham(id, name) {
                                 .then(res => res.json())
                                 .then(newData => {
                                     renderChiTietPhieuNhap(newData);
-                                    if (page === 1) {
-                                        const modal = new bootstrap.Modal(document.getElementById('modalChiTietPhieuNhap'));
+                        
+                                    // ✅ Mở modal nếu chưa hiển thị
+                                    const modalElement = document.getElementById('modalChiTietPhieuNhap');
+                                    const existingModal = bootstrap.Modal.getInstance(modalElement);
+                        
+                                    if (!existingModal) {
+                                        const modal = new bootstrap.Modal(modalElement);
                                         modal.show();
+                                    } else {
+                                        existingModal.show(); // nếu modal đã có thể gọi lại
                                     }
                                 });
                         }
+                        
                 
                         fetchPage(1);
                     }
                 });
                 
-            
+                document.getElementById('modalChiTietPhieuNhap').addEventListener('hidden.bs.modal', function () {
+                    // Loại bỏ backdrop nếu có
+                    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    document.body.classList.remove('modal-open');
+                    document.body.style = '';
+                });
+                
             
             
 
@@ -549,6 +601,7 @@ function capNhatLaiDropdownTenSanPham(id, name) {
                                     tbXoa.style.display = "block";
                                     tbXoa.classList.add("show");
                                     setTimeout(() => tbXoa.classList.remove('show'), 2000);
+                                    adjustPageIfLastItem();
                                     loadPhieuNhap(currentPage);
                                 } else {
                                     const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
@@ -584,6 +637,7 @@ function capNhatLaiDropdownTenSanPham(id, name) {
                         if (page > max) page = max;
 
                         if (page >= 1 && page <= max) {
+                            currentPage = page;
                             loadPhieuNhap(page);
                         }
                     }
@@ -631,6 +685,8 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
             tbThanhCong.classList.add("show");
             setTimeout(() => tbThanhCong.classList.remove('show'), 2000);
             document.querySelector('.formSuaPN').style.display = 'none';
+            adjustPageIfLastItem();
+
             loadPhieuNhap(currentPage);
         } else {
             tbThatBai.style.display = "block";

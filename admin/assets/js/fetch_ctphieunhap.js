@@ -5,7 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     let currentPage = 1; // ⚠️ Fix thiếu biến này gây lỗi load lại trang khi xoá
-
+    function adjustPageIfLastItem() {
+        const btnCount = document.querySelectorAll(".btn-sua").length;
+        if (btnCount === 1 && currentPage > 1) {
+            currentPage -= 1;
+        }
+    }
     function loadPhieuNhap(page = 1) {
         fetch('./ajax/quanlyChiTietPhieuNhap_ajax.php?pageproduct=' + page)
             .then(res => res.json())
@@ -45,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     tbXoa.style.display = "block";
                                     tbXoa.classList.add("show");
                                     setTimeout(() => tbXoa.classList.remove('show'), 2000);
-
+                                    adjustPageIfLastItem();
                                     loadPhieuNhap(currentPage);
                                 } else {
                                     const tbXoaTB = document.querySelector(".thongbaoXoaKhongThanhCong");
@@ -79,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             if (page > max) page = max;
 
                             if (page >= 1 && page <= max) {
+                                currentPage = page;
                                 loadPhieuNhap(page);
                             }
                         }
@@ -87,70 +93,99 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
                 document.querySelectorAll('.btn-toggle-status').forEach(btn => {
-                    btn.addEventListener('click', async function () {
-                        const id = this.dataset.idct;
-                        const confirmClose = confirm("Bạn có chắc muốn đóng chi tiết này không? Sau khi đóng sẽ không thể sửa / xoá.");
+                    btn.addEventListener('click', function () {
+                        const id = this.dataset.idct; // lấy id chi tiết
                 
-                        if (!confirmClose) return;
+                        // Gán lại ID vào nút xác nhận trong popup
+                        const btnXacNhan = document.getElementById('btnXacNhan');
+                        btnXacNhan.dataset.type = 'ctpn'; // đánh dấu loại
+                        btnXacNhan.dataset.id = id;
                 
-                        try {
-                            const res = await fetch('./ajax/moDongCTPN.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
-                                body: `id=${id}&status=0`
-                            });
-                        
-                            if (!res.ok) throw new Error(`HTTP ${res.status}`); // check lỗi HTTP 500, 404,...
-                        
-                            const data = await res.json();
-                        
-                            if (data.success) {
-                                alert("Đã đóng thành công!");
-                                loadPhieuNhap(currentPage); // reload lại bảng
-                            } else {
-                                alert("Đóng thất bại: " + data.message);
-                            }
-                        } catch (err) {
-                            alert("Lỗi máy chủ!");
-                            console.error('Lỗi:', err);
-                        }
-                        
+                        // Hiện popup
+                        document.getElementById('xacNhanCho').style.display = 'block';
+                        document.querySelector('.overlay').style.display = 'block';
+
                     });
-                });                
+                });
+                document.getElementById('btnXacNhan').addEventListener('click', async function () {
+                    const type = this.dataset.type; // 'pn' hoặc 'ctpn'
+                    const id = this.dataset.id;
+                
+                    let url = '';
+                    if (type === 'pn') url = './ajax/moDongPN.php';
+                    else if (type === 'ctpn') url = './ajax/moDongCTPN.php';
+                    else return;
+                
+                    try {
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `id=${id}&status=0`
+                        });
+                
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                
+                        const data = await res.json();
+                
+                        if (data.success) {
+                            document.getElementById('xacNhanCho').style.display = 'none';
+                            document.querySelector('.overlay').style.display = 'none';
+                            loadPhieuNhap(currentPage); // ✅ reload bảng
+                        } else {
+                            alert("Đóng thất bại: " + data.message);
+                        }
+                    } catch (err) {
+                        alert("Lỗi máy chủ!");
+                        console.error('Lỗi:', err);
+                    }
+                });
+                document.getElementById('btnHuy').addEventListener('click', function () {
+                    document.getElementById('xacNhanCho').style.display = 'none';
+                    document.querySelector('.overlay').style.display = 'none';
+
+                });
+                
+                
+                            
 
                 document.querySelectorAll('.btn-xemchitiet').forEach(button => {
                     button.addEventListener('click', async function () {
-                        const id = this.dataset.idct;
-                        try {
-                            const res = await fetch(`./ajax/infoCTPN.php?id=${id}`);
-                            const text = await res.text();
-                            console.log("Kết quả trả về:", text); // debug
-                
-                            const data = JSON.parse(text); // ✅ PARSE JSON!
-                
-                            if (data.success) {
-                                const info = data.data;
-                                document.getElementById('ctbt_image').src = `../../assets/img/sanpham/${info.image}`;
-                                document.getElementById('ctbt_tensp').textContent = info.product_name;
-                                document.getElementById('ctbt_mau').textContent = info.color_name;
-                                document.getElementById('ctbt_size').textContent = info.size_name;
-                                document.getElementById('ctbt_sl').textContent = info.quantity;
-                                document.getElementById('ctbt_gia').textContent = "Đã ẩn";
-                                document.getElementById('ctbt_ngay').textContent = info.created_at;
-                
-                                const modal = new bootstrap.Modal(document.getElementById('modalChiTietBienThe'));
-                                modal.show();
-                            } else {
-                                alert(data.message || 'Không lấy được chi tiết');
-                            }
-                        } catch (err) {
-                            alert('Lỗi kết nối máy chủ!');
-                            console.error(err);
+                      const id = this.dataset.idct;
+                      try {
+                        const res = await fetch(`./ajax/infoCTPN.php?id=${id}`);
+                        const text = await res.text();
+                        console.log("Kết quả trả về:", text);
+                  
+                        const data = JSON.parse(text);
+                  
+                        if (data.success) {
+                          const info = data.data;
+                          document.getElementById('ctbt_image').src = `../../assets/img/sanpham/${info.image}`;
+                          document.getElementById('ctbt_tensp').textContent = info.product_name;
+                          document.getElementById('ctbt_mau').textContent = info.color_name;
+                          document.getElementById('ctbt_size').textContent = info.size_name;
+                          document.getElementById('ctbt_sl').textContent = info.quantity;
+                  
+                          // ✅ Hiển thị giá nhập và tổng tiền
+                          document.getElementById('ctbt_gia').textContent = parseInt(info.unit_price).toLocaleString();
+                          document.getElementById('ctbt_thanhtien').textContent = parseInt(info.total_price).toLocaleString();
+                  
+                          document.getElementById('ctbt_ngay').textContent = info.created_at;
+                  
+                          const modal = new bootstrap.Modal(document.getElementById('modalChiTietBienThe'));
+                          modal.show();
+                        } else {
+                          alert(data.message || 'Không lấy được chi tiết');
                         }
+                      } catch (err) {
+                        alert('Lỗi kết nối máy chủ!');
+                        console.error(err);
+                      }
                     });
-                });
+                  });
+                  
                               
 
                 document.querySelectorAll('.btn-sua').forEach(button => {
@@ -341,6 +376,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
                     document.querySelector(".formSuaPN").style.display = "none";
                     document.querySelector(".overlay").style.display = "none";
+                    adjustPageIfLastItem();
+
                     loadPhieuNhap(currentPage);
                 } else {
                     alert(result.message || "Cập nhật không thành công!");

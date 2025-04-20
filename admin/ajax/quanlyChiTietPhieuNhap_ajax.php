@@ -10,7 +10,7 @@ $totalItems = $total[0]['total'];
 
 // Trang hiện tại
 $page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
-$limit = 5;
+$limit = 10;
 
 $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
@@ -45,8 +45,8 @@ foreach ($data as $row) {
             <td class='tensp'>$ngaylap</td>
 <td class='tensp'>
     " . ($row['status'] == 1 ? "
-        <button class='btn btn-warning btn-sm btn-toggle-status fs-6 rounded-4' data-idct='$id_ct'>Xác nhận</button>
-    " : "<span class='badge bg-success'>Đã xác nhận</span>") . "
+        <button class='btn btn-warning btn-sm btn-toggle-status fs-6 rounded-4' data-idct='$id_ct'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>
+    " : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "
 </td>
 
             <td>
@@ -59,14 +59,14 @@ foreach ($data as $row) {
             data-variant='$variant_id'
             data-soluong='$quantity'
             data-ngaylap='$ngaylap'
-            style='width:60px;'>Sửa</button>
+            style='width:90px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
         <button class='btn btn-danger btn-xoa'
             data-idct='$id_ct'
-            style='width:60px;'>Xóa</button>
+            style='width:90px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
     " : "") . "
     <button class='btn btn-info btn-xemchitiet'
         data-idct='$id_ct'
-        style='width:100px;'>Xem chi tiết</button>
+        style='width:100px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
 </div>
 
             </td>

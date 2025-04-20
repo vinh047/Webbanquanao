@@ -103,7 +103,7 @@
     </div>
 
     <div class="mt-4 d-flex gap-3">
-        <button type="button" id="add_product" class="btn btn-outline-secondary">Thêm phiếu nhập</button>
+        <button type="button" id="add_product" class="btn btn-outline-secondary">Thêm vào hàng chờ</button>
         <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
     </div>
 </form>
@@ -377,7 +377,7 @@
         </div>
 
 <div class="modal fade" id="modalChiTietPhieuNhap" tabindex="-1">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header bg-info text-white">
         <h5 class="modal-title">Chi tiết phiếu đã nhập</h5>
@@ -420,7 +420,7 @@
 
 
 
-        <div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border" style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
+<div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border" style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
     <p class="mb-0 fs-5 text-center">Sản phẩm này đã có trong hàng đợi!</p>
     <p class="mb-0 fs-5 text-center">Bạn có muốn cộng dồn vào không?</p>
     <div class="d-flex justify-content-center gap-3 mt-2">
@@ -432,6 +432,22 @@
         </div>
     </div>
 </div>
+
+<div id="xacNhanCho" class="thongBaoTrung rounded-2 bg-light p-3 border">
+    <p class="mb-0 fs-5 text-center">Khi chọn xác nhận sẽ không còn xử lý được nữa!</p>
+    <p class="mb-0 fs-5 text-center">Bạn có chắc chắn không?</p>
+    <div class="d-flex justify-content-center gap-3 mt-2">
+        <div>
+            <button id="btnXacNhan" class="btn btn-danger" style="width:80px;">Xác nhận</button>
+        </div>
+        <div>
+            <button id="btnHuy" class="btn btn-primary" style="width:80px;">Hủy</button>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="thongbaoXoaThatBai  bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
                 Xóa phiếu nhập thất bại

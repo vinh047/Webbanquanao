@@ -8,7 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 1;
     const formLoc = document.getElementById("formLoc");
 
-
+    function adjustPageIfLastItem() {
+        const btnCount = document.querySelectorAll(".btn-sua").length;
+        if (btnCount === 1 && currentPage > 1) {
+            currentPage -= 1;
+        }
+    }
     function fetchBienThe(page = 1) {
         const formData = new FormData(formLoc);
         formData.append("pageproduct", page); // giữ phân trang
@@ -41,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (page > max) page = max;
                 
                             if (page >= 1 && page <= max) {
+                                currentPage = page; 
                                 fetchBienThe(page); // ✅ đúng
                             }
                         }
@@ -115,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
                                         }
                                         // Tải lại danh sách sản phẩm sau khi xóa
+                                        adjustPageIfLastItem();
                                         fetchBienThe(currentPage);
                                     }else
                                     {
@@ -458,7 +465,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 tbUpdate.style.display = "block";
                 tbUpdate.classList.add("show");
                 setTimeout(() => tbUpdate.classList.remove('show'), 2000);
-    
+                adjustPageIfLastItem();
                 fetchBienThe(currentPage);
             } else {
                 alert(result.message || "Lỗi cập nhật");

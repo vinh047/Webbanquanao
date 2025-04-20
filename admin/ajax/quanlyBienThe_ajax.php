@@ -5,7 +5,12 @@ require_once('functionLoc.php');
 $db = DBConnect::getInstance();
 $connection = $db->getConnection();
 // Lọc
-$loc = locBienThe($connection);
+$locRaw = locBienThe($connection);
+$loc = "WHERE product_variants.is_deleted = 0";
+if (!empty($locRaw)) {
+    // Nếu locBienThe trả về điều kiện, gộp thêm AND
+    $loc .= " AND " . ltrim($locRaw, "WHERE ");
+}
 
 // Phân trang
 $total = $db->select("    

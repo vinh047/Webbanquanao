@@ -225,7 +225,18 @@
 </div>
 
 
-
+<div id="xacNhanCho" class="thongBaoTrung rounded-2 bg-light p-3 border">
+    <p class="mb-0 fs-5 text-center">Khi chọn xác nhận sẽ không còn xử lý được nữa!</p>
+    <p class="mb-0 fs-5 text-center">Bạn có chắc chắn không?</p>
+    <div class="d-flex justify-content-center gap-3 mt-2">
+        <div>
+            <button id="btnXacNhan" class="btn btn-danger" style="width:80px;">Xác nhận</button>
+        </div>
+        <div>
+            <button id="btnHuy" class="btn btn-primary" style="width:80px;">Hủy</button>
+        </div>
+    </div>
+</div>
 <div class="overlay"></div>
 <div class="thongbaoLoi  bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
@@ -244,14 +255,15 @@
       <div class="modal-body">
         <div class="row align-items-center">
           <div class="col-md-4 text-center">
-            <img id="ctbt_image" src="" class="img-fluid rounded border" style="max-height: 250px; object-fit: contain;" alt="Ảnh sản phẩm">
+            <img id="ctbt_image" src="" class="img-fluid rounded border" style="max-height: 280px; object-fit: contain;" alt="Ảnh sản phẩm">
           </div>
-          <div class="col-md-8">
-            <p><strong>Sản phẩm:</strong> <span id="ctbt_tensp"></span></p>
-            <p><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
-            <p><strong>Size:</strong> <span id="ctbt_size"></span></p>
+          <div class="col-md-8 fs-6">
+            <p style="font-size: 17px;"><strong>Sản phẩm:</strong> <span id="ctbt_tensp"></span></p>
+            <p style="font-size: 17px;"><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
+            <p style="font-size: 17px;"><strong>Size:</strong> <span id="ctbt_size"></span></p>
             <p><strong>Số lượng nhập:</strong> <span id="ctbt_sl"></span></p>
             <p><strong>Giá nhập:</strong> <span id="ctbt_gia"></span> VNĐ</p>
+            <p><strong>Tổng tiền:</strong> <span id="ctbt_thanhtien"></span> VNĐ</p>
             <p><strong>Ngày lập:</strong> <span id="ctbt_ngay"></span></p>
           </div>
         </div>

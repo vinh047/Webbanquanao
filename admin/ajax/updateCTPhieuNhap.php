@@ -45,8 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 3. Lấy lại giá sản phẩm mới
     $stmtPrice = $pdo->prepare("SELECT price FROM products WHERE product_id = ?");
     $stmtPrice->execute([$id_sp]);
-    $product_price = $stmtPrice->fetchColumn();
-    if (!$product_price) $product_price = 0;
+    $unit_price = $stmtPrice->fetchColumn();
+    if (!$unit_price) $unit_price = 0;
+
+    $total_price = $unit_price * $quantity_new;
 
     // 4. Cập nhật tồn kho
     if ($variant_id_old != $variant_id_new) {
@@ -64,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 5. Cập nhật lại chi tiết phiếu nhập
     $stmtUpdate = $pdo->prepare("
         UPDATE importreceipt_details 
-        SET importreceipt_id = ?, product_id = ?, variant_id = ?, quantity = ?
+        SET importreceipt_id = ?, product_id = ?, variant_id = ?, quantity = ?, unit_price = ?, total_price = ?
         WHERE importreceipt_details_id = ?
     ");
     $stmtUpdate->execute([
@@ -72,31 +74,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_sp,
         $variant_id_new,
         $quantity_new,
+        $unit_price,
+        $total_price,
         $id_ctpn
     ]);
 
-    // 6. Cập nhật lại tổng tiền phiếu nhập mới
+    // 6. Cập nhật lại tổng tiền phiếu nhập hiện tại
     $stmtUpdateTotal = $pdo->prepare("
         UPDATE importreceipt 
         SET total_price = (
-            SELECT SUM(d.quantity * p.price)
-            FROM importreceipt_details d
-            JOIN products p ON d.product_id = p.product_id
-            WHERE d.importreceipt_id = ?
+            SELECT SUM(total_price)
+            FROM importreceipt_details
+            WHERE importreceipt_id = ?
         )
         WHERE importreceipt_id = ?
     ");
     $stmtUpdateTotal->execute([$id_pn, $id_pn]);
 
-    // 7. Nếu mã phiếu nhập mới khác mã cũ, cập nhật lại phiếu nhập cũ
+    // 7. Nếu mã phiếu nhập mới khác mã cũ, cập nhật lại tổng tiền phiếu nhập cũ
     if ($id_pn != $old_pn_id) {
         $stmtUpdateTotalOld = $pdo->prepare("
             UPDATE importreceipt 
             SET total_price = (
-                SELECT SUM(d.quantity * p.price)
-                FROM importreceipt_details d
-                JOIN products p ON d.product_id = p.product_id
-                WHERE d.importreceipt_id = ?
+                SELECT SUM(total_price)
+                FROM importreceipt_details
+                WHERE importreceipt_id = ?
             )
             WHERE importreceipt_id = ?
         ");

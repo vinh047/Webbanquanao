@@ -38,8 +38,8 @@ foreach ($data as $row) {
         <td class='tensp'>$ngaylap</td>
         <td class='tensp'>
             " . ($row['status'] == 1
-                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6' data-idpn='$idpn'>Xác nhận</button>"
-                : "<span class='badge bg-success'>Đã xác nhận</span>") . "
+                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
+                : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "
         </td>
         <td>
             <div class='d-flex justify-content-center gap-3'>
@@ -50,13 +50,13 @@ foreach ($data as $row) {
     data-idncc='$idncc'
     data-gia='{$row['total_price']}'
     data-ngaylap='$ngaylap'
-    style='width:60px; $hideBtn'>Sửa</button>
+    style='width:60px; $hideBtn'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
                 </div>
                 <div>
                     <button class='btn btn-danger btn-xoa'
     data-idpn='$idpn'
-    style='width:60px; $hideBtn'>Xóa</button>
-                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn'>Xem chi tiết</button>
+    style='width:60px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
+                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn'><i class='fa-regular fa-eye'></i> chi tiết</button>
                 </div>
             </div>
         </td>

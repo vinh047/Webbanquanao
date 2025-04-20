@@ -6,7 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const tbLoaiThanhCong = document.querySelector(".thongbaoThanhCong");
     const tc = tbLoaiThanhCong.querySelector("p");
     let currentPage = 1;
-
+    function adjustPageIfLastItem() {
+        const btnCount = document.querySelectorAll(".btn-sua").length;
+        if (btnCount === 1 && currentPage > 1) {
+            currentPage -= 1;
+        }
+    }
     function fetchSanPham(page = 1) {
         fetch(`./ajax/quanlySanPham_ajax.php?pageproduct=${page}`)
             .then(res => res.json())
@@ -34,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             if (page > max) page = max;
                 
                             if (page >= 1 && page <= max) {
+                                currentPage = page;
                                 fetchSanPham(page); // ✅ đúng
                             }
                         }
@@ -107,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         if (document.querySelectorAll(".btn-sua").length === 1 && currentPage > 1) {
                                             currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
                                         }
+                                        adjustPageIfLastItem();
                                         fetchSanPham(currentPage);                                    }
                                     else {
                                         const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
@@ -128,15 +135,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Thêm sản phẩm
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-
+    
         const ten = document.getElementById("txtTen").value.trim();
         const mota = document.getElementById("txtMota").value.trim();
         const gia = document.getElementById("txtGia").value.trim().replace(/\./g, '').replace(',', '.');
         const loai = document.getElementById("cbLoai").value.trim();
-
+        const pttg = document.getElementById('txtPT').value.trim();
+    
         tbLoai.classList.remove('show');
         tbLoai.style.display = 'none';
-
+    
         if (!ten || !mota || !loai || !gia || isNaN(gia)) {
             let message = !ten ? "Tên không được để trống!" :
                 !mota ? "Mô tả không được để trống!" :
@@ -149,11 +157,16 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => tbLoai.classList.remove('show'), 2000);
             return;
         }
-
-        const formData = new FormData(this);
-        formData.set("txtGia", gia);
-
-        fetch('../ajax/insertSanPham.php', {
+    
+        // ⚠️ Sửa tại đây — mapping thủ công theo yêu cầu PHP
+        const formData = new FormData();
+        formData.append("name", ten);
+        formData.append("description", mota);
+        formData.append("category_id", loai);
+        formData.append("price", gia);
+        formData.append("ptgg", pttg);
+    
+        fetch('./ajax/insertSanPham.php', {
             method: 'POST',
             body: formData
         })
@@ -174,20 +187,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Có lỗi xảy ra:', error);
             });
     });
-
-    function validatePrice(value, selector) {
-        const cleaned = value.replace(/\./g, "").replace(",", ".");
-        const number = parseFloat(cleaned);
-        if (isNaN(number) || number <= 0) {
-            const tbGia = document.querySelector(selector);
-            tbGia.classList.add("show");
-            tbGia.style.display = "block";
-            setTimeout(() => tbGia.classList.remove('show'), 2000);
-            return null;
-        }
-        return number;
-    }
     
+
     
     formSua.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -364,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tbUpdate.style.display = "block";
                 tbUpdate.classList.add("show");
                 setTimeout(() => tbUpdate.classList.remove('show'), 2000);
-    
+                adjustPageIfLastItem();
                 fetchSanPham(currentPage);
             } else {
                 alert(data.message || "Lỗi cập nhật");
