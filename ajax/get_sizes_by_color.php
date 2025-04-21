@@ -21,3 +21,4 @@ $sizes = $db->select("
 ", [$product_id, $color_id]);
 
 echo json_encode($sizes);
+?>

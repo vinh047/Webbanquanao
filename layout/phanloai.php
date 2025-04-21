@@ -305,9 +305,13 @@ if (isset($_GET['colors'])) {
                   'aokhoac' => 5];
     
     $selectPhanloai =  $_GET['phanloai'] ?? null;
+    $where = [];
+    $where[] = "products.is_deleted = 0";
+    $where[] = "product_variants.stock >= 0";
     if($selectPhanloai && isset($phanloaiA[$selectPhanloai]))
     {
         $where[] = "products.category_id = ". $phanloaiA[$selectPhanloai];
+        
     }else
     {
         $where[] = "products.category_id = -1";
