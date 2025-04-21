@@ -26,19 +26,34 @@ echo '<section class="d-md-block d-none">
                 <img src="./assets/img/theloai/newarrival.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="index.php?page=sanpham&phanloai=ao"><img src="./assets/img/theloai/ao.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <!-- ÁO THUN (id=1) -->
+                <a href="index.php?page=sanpham&pageproduct=1&selectTheloai=1">
+                  <img src="./assets/img/theloai/ao.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
+                </a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="index.php?page=sanpham&phanloai=quan"><img src="./assets/img/theloai/quan.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <!-- QUẦN (id=2) -->
+                <a href="index.php?page=sanpham&pageproduct=2&selectTheloai=2">
+                  <img src="./assets/img/theloai/quan.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
+                </a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="index.php?page=sanpham&phanloai=aopolo"><img src="./assets/img/theloai/aopolo.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <!-- ÁO POLO (id=4) -->
+                <a href="index.php?page=sanpham&pageproduct=1&selectTheloai=4">
+                  <img src="./assets/img/theloai/aopolo.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
+                </a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="index.php?page=sanpham&phanloai=aosomi"><img src="./assets/img/theloai/aosomi.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <!-- ÁO SƠ MI (id=3) -->
+                <a href="index.php?page=sanpham&pageproduct=1&selectTheloai=3">
+                  <img src="./assets/img/theloai/aosomi.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
+                </a>
             </div>
             <div class="col-md-2 d-flex justify-content-center">
-                <a href="index.php?page=sanpham&phanloai=aokhoac"><img src="./assets/img/theloai/aokhoac.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;"></a>
+                <!-- ÁO KHOÁC (id=5) -->
+                <a href="index.php?page=sanpham&pageproduct=1&selectTheloai=5">
+                  <img src="./assets/img/theloai/aokhoac.jpg" alt="" class="img-fluid effect-theloai" style="height: 110px;">
+                </a>
             </div>
         </div>
     </div>
