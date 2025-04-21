@@ -16,6 +16,10 @@ class Pagination {
         return ($this->page - 1) * $this->limit;
     }
 
+    public function getTotalPages() {
+        return $this->totalPages;
+    }
+
     public function render($baseQueryParams = []) {
         $prevPage = max(1, $this->page - 1);
         $nextPage = min($this->totalPages, $this->page + 1);

@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const loi = tbLoai.querySelector("p");
     const tbLoaiThanhCong = document.querySelector(".thongbaoThanhCong");
     const tc = tbLoaiThanhCong.querySelector("p");
+    const formLoc = document.getElementById("formLoc");
+
     let currentPage = 1;
     function adjustPageIfLastItem() {
         const btnCount = document.querySelectorAll(".btn-sua").length;
@@ -13,7 +15,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     function fetchSanPham(page = 1) {
-        fetch(`./ajax/quanlySanPham_ajax.php?pageproduct=${page}`)
+        const formData = new FormData(formLoc);
+        formData.append("pageproduct", page); // giữ phân trang
+        fetch(`./ajax/quanlySanPham_ajax.php`,{
+            method : "POST",
+            body : formData
+        })
             .then(res => res.json())
             .then(data => {
                 document.getElementById("product-list").innerHTML = data.products;
@@ -23,6 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll(".page-link-custom").forEach(btn => {
                     btn.addEventListener("click", function (e) {
                         e.preventDefault();
+                        console.log("Page clicked:", this.dataset.page); // 👈 THÊM DÒNG NÀY
+
                         currentPage = parseInt(this.dataset.page); // lưu lại trang hiện tại
                         fetchSanPham(this.dataset.page);
                     });
@@ -131,6 +140,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Lấy dữ liệu lúc đầu
     fetchSanPham();
+
+    formLoc.addEventListener("submit", function (e) {
+        e.preventDefault();
+        currentPage = 1;
+        fetchSanPham(currentPage); // lọc từ trang đầu
+    });
+    document.getElementById('filter-icon').addEventListener('click', function () {
+        const filterBox = document.querySelector('.filter-loc');
+        filterBox.classList.toggle('d-none');
+    });
+    
+    document.addEventListener('click', function (e) {
+        const filterBox = document.querySelector('.filter-loc');
+        const icon = document.getElementById('filter-icon');
+    
+        if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+            filterBox.classList.add('d-none');
+        }
+    });
+
+    document.getElementById('tatFormLoc').addEventListener('click',function()
+{
+    const filterBox = document.querySelector('.filter-loc');
+    filterBox.classList.toggle('d-none');
+});
 
     // Thêm sản phẩm
     form.addEventListener("submit", function (event) {

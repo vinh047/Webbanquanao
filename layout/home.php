@@ -9,7 +9,7 @@ echo '<section class="d-md-block d-none">
             <img src="./assets/img/banner/banner3.jpg" alt="banner 3" class="img-fluid slide-img">
         </div>
         <div class="position-absolute centerbutton">
-            <a href="index.php?page=sanpham" class="btn btn-outline-light rounded-0 fs-5 d-flex align-items-center justify-content-center effect-theloai rounded-1 fw-bold" style="width:150px;height: 50px;">
+            <a href="index.php?page=sanpham&pageproduct=1" class="btn btn-outline-light rounded-0 fs-5 d-flex align-items-center justify-content-center effect-theloai rounded-1 fw-bold" style="width:150px;height: 50px;">
                 Shop Now
             </a>
         </div>

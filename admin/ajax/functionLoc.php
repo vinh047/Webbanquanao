@@ -30,4 +30,40 @@ function locBienThe($connection)
 
     return (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
 }
+
+function locSanPham($connection)
+{
+    $where = [];
+    if(!empty($_POST['txtIDSP']))
+    {
+        $idsp = (int)$_POST['txtIDSP'];
+        $where[] = "p.product_id = $idsp";    }
+
+    if(!empty($_POST['txtTensp']))
+    {
+        $tensp = addslashes($_POST['txtTensp']);
+        $where[] = "p.name LIKE '%$tensp%'";        
+        
+    }
+
+    if(!empty($_POST['cbTheLoai']))
+    {
+        $cbtheloai = $_POST['cbTheLoai'];
+        $where[] = "p.category_id = $cbtheloai";
+    }
+
+    if(!empty($_POST['txtGiaMin']))
+    {
+        $tienMin = (int)$_POST['txtGiaMin'];
+        $where[] = "p.price >= $tienMin";
+    }
+
+    if(!empty($_POST['txtGiaMax']))
+    {
+        $tienMax = (int)$_POST['txtGiaMax'];
+        $where[] = "p.price <= $tienMax";
+    }
+
+    return (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
+}
 ?>

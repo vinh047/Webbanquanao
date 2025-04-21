@@ -164,6 +164,12 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.error("Lỗi khi fetch biến thể:", err));
 
     }
+
+    document.getElementById('tatFormLoc').addEventListener('click',function()
+    {
+        const filterBox = document.querySelector('.filter-loc');
+        filterBox.classList.toggle('d-none');
+    });
     formLoc.addEventListener("submit", function (e) {
         e.preventDefault();
         currentPage = 1;

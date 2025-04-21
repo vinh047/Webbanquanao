@@ -21,6 +21,7 @@ $sapxep = str_replace("products.", "p.", $sapxep);
 $whereCondition = "v.is_deleted = 0 AND v.stock > 0";
 if (!empty($loc)) {
     // Replace alias đúng cho subquery
+    $loc = str_replace("products.", "p.", $loc);
     $loc = str_replace("product_variants.", "v.", $loc);
     $loc = str_replace("WHERE", "WHERE $whereCondition AND", $loc);
 } else {

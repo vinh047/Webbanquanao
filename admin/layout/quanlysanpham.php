@@ -19,21 +19,29 @@
 <body>
 <section class="py-3">
                 <div class="boloc ms-5 position-relative">
-                    <span class="fs-3"><i class="fa-solid fa-filter filter-icon" title="Lọc biến thể"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
-                    <div class="filter-loc position-absolute bg-light p-2 rounded-2 d-none" style="width:270px;">
+                    <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc sản phẩm"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
+                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;display:block;">
                         <form action="" method="POST" id="formLoc">
+                            <div class="d-flex">
+                                <div class="me-auto">
+                                    <h5>Lọc sản phẩm</h5>
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                </div>  
+                            </div>
                             <label for="txtIDSP">Mã sản phẩm : </label>
                             <input type="text" name="txtIDSP" id="txtIDSP" class="form-control form-control-sm">
-                            <label for="txtTensp">Tên sản phẩm</label>
+                            <label for="txtTensp" class="mt-2">Tên sản phẩm</label>
                             <input type="text" name="txtTensp" id="txtTensp" class="form-control form-control-sm">
-                            <label for="cbTheLoai">Thể loại : </label>
+                            <label for="cbTheLoai" class="mt-2">Thể loại : </label>
                             <select name="cbTheLoai" id="cbTheLoai" class="form-select">
                                 <option value="">Chọn thể loại</option>
                                 <?php foreach($categories as $theloai): ?>
                                 <option value="<?=$theloai['category_id']?>"><?=$theloai['name']?></option>
                                 <?php endforeach ?>
                             </select>
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2 mt-2">
                                 <div class="">
                                 <label for="txtGiaMin">Giá min : </label>
                                 <input type="text" name="txtGiaMin" id="txtGiaMin" class="form-control form-control-sm">

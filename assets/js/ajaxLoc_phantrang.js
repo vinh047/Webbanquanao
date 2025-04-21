@@ -61,15 +61,33 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
     
         const formData = new FormData(this);
-        formData.delete("page"); // xoá nếu có
+        formData.delete("page");
+    
+        // 👉 Lấy trang hiện tại
+        const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
+        formData.set("pageproduct", currentPage);
     
         const queryString = formDataToQueryString(formData);
         fetchProducts(queryString);
     
-        // ✅ Đảm bảo luôn có page=sanpham nếu không có filter nào
-        const newURL = window.location.pathname + "?page=sanpham" + (queryString ? "&" + queryString : "");
+        // 👉 Sắp xếp lại thứ tự: page -> pageproduct -> còn lại
+        const oldParams = new URLSearchParams(queryString);
+        const queryParams = new URLSearchParams();
+    
+        queryParams.set("page", "sanpham");
+        queryParams.set("pageproduct", currentPage);
+    
+        for (const [key, value] of oldParams.entries()) {
+            if (key !== "page" && key !== "pageproduct") {
+                queryParams.append(key, value);
+            }
+        }
+    
+        const newURL = window.location.pathname + "?" + queryParams.toString();
         history.replaceState(null, "", newURL);
     });
+    
+    
     
     
     
@@ -88,13 +106,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentSort = "";
     
                 const formData = new FormData(filterForm);
+
+                // ✅ Thêm dòng này để giữ lại page hiện tại
+                const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
+                formData.set("pageproduct", currentPage);
+                
                 const queryString = formDataToQueryString(formData);
                 fetchProducts(queryString);
-    
+                
                 const queryParams = new URLSearchParams(queryString);
                 queryParams.set("page", "sanpham");
+                
+                // ✅ Đảm bảo giữ pageproduct hiện tại
+                queryParams.set("pageproduct", currentPage);
+                
                 const newURL = window.location.pathname + "?" + queryParams.toString();
-                                history.pushState(null, "", newURL);
+                history.pushState(null, "", newURL);
+                
             } else {
                 // Chọn sắp xếp mới
                 currentSort = sapxep;
@@ -104,6 +132,11 @@ document.addEventListener("DOMContentLoaded", function () {
     
                 const formData = new FormData(filterForm);
                 formData.append("sapxep", sapxep);
+                
+                // ✅ Thêm dòng này: lấy page hiện tại từ URL
+                const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
+                formData.set("pageproduct", currentPage);
+                
                 const queryString = formDataToQueryString(formData);
                 fetchProducts(queryString);
     

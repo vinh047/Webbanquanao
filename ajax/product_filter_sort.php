@@ -30,12 +30,12 @@ function locSanPham($connection)
 
     if (!empty($_GET['giamin'])) {
         $giamin = (int)$_GET['giamin'];
-        $where[] = "products.price >= $giamin";
+        $where[] = "products.price_sale >= $giamin";
     }
 
     if (!empty($_GET['giamax'])) {
         $giamax = (int)$_GET['giamax'];
-        $where[] = "products.price <= $giamax";
+        $where[] = "products.price_sale <= $giamax";
     }
 
     if (!empty($_GET['colors'])) {

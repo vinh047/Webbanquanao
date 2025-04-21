@@ -23,8 +23,16 @@
                 <section class="py-3">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" title="Lọc biến thể"></i> <span class="fs-5">Lọc danh sách biến thể</span> </span>
-                    <div class="filter-loc position-absolute bg-light p-2 rounded-2 d-none" style="width:270px;">
+                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;">
                         <form action="" method="POST" id="formLoc">
+                        <div class="d-flex">
+                                <div class="me-auto">
+                                    <h5>Lọc sản phẩm</h5>
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                </div>  
+                            </div>
                             <label for="txtIDBT">Mã BT : </label>
                             <input type="text" name="txtIDBT" id="txtIDBT" class="form-control form-control-sm">
                             <label for="txtIDSP" class="pt-2">Mã SP : </label>
