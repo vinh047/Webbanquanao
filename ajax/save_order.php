@@ -47,6 +47,20 @@ try {
         ]);
 
     }    
+    error_log("Trừ tồn kho: variant_id = " . $item['variant_id'] . ", quantity = " . $item['quantity']);
+
+    // ✅ Sau khi thêm order_details, trừ tồn kho:
+    foreach ($data['cart'] as $item) {
+        $sql = "UPDATE product_variants 
+                SET stock = stock - ? 
+                WHERE variant_id = ? AND stock >= ?";
+        $db->execute($sql, [
+            $item['quantity'],
+            $item['variant_id'],
+            $item['quantity']
+        ]);
+    }
+    
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);

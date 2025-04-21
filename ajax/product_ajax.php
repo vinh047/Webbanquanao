@@ -45,13 +45,17 @@ $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
 // ✅ Truy vấn sản phẩm
-$productSQL = "SELECT products.*, MIN(product_variants.image) as image
+$productSQL = "SELECT products.*, 
+                      MIN(product_variants.variant_id) AS variant_id, 
+                      MIN(product_variants.image) AS image
                FROM products 
-               JOIN product_variants ON products.product_id = product_variants.product_id
+               JOIN product_variants 
+                    ON products.product_id = product_variants.product_id
                $loc
                GROUP BY products.product_id
                $sapxep
                LIMIT $limit OFFSET $offset";
+
 
 $result = mysqli_query($connection, $productSQL);
 
@@ -67,6 +71,7 @@ while($row = mysqli_fetch_assoc($result))
     $sold_count = $row['sold_count'];
     $img = $row['image'];
     $imagePath = 'assets/img/sanpham/' . $img;
+    $variant_id = $row['variant_id'];
 
     echo '
         <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover p-md-2 p-1">
@@ -80,7 +85,7 @@ while($row = mysqli_fetch_assoc($result))
                         <p class="mb-0">' . $gia . ' VNĐ</p>   
                         <p class="mb-0 limit-text">' . $name . '</p>
                         <button class="btn btn-dark btn-sm mt-2 w-100"
-                            onclick="addToCart(' . $id . ', \'' . addslashes($name) . '\', ' . $row['price'] . ', \'' . $imagePath . '\', 0)">
+                           onclick="addToCart(' . $id . ', \'' . addslashes($name) . '\', ' . $row['price'] . ', \'' . $imagePath . '\', ' . $variant_id . ')">
                             <i class="fa fa-cart-plus me-1"></i> Thêm vào giỏ
                         </button> 
                     </div>
