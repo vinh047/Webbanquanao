@@ -1,3 +1,40 @@
+<?php
+
+$menu = [
+  [
+    'label' => 'ÁO',
+    'subs'  => [
+      ['id'=>1, 'label'=>'Áo thun'],
+      ['id'=>3, 'label'=>'Áo sơ mi'],
+      ['id'=>4, 'label'=>'Áo polo'],
+      ['id'=>5, 'label'=>'Áo khoác'],
+    ],
+  ],
+  [
+    'label' => 'QUẦN',
+    'subs'  => [
+      ['id'=>2, 'label'=>'Quần'],
+      ['id'=>2, 'label'=>'Quần short'],
+      ['id'=>6, 'label'=>'Quần lót'],
+    ],
+  ],
+  [
+    'label' => 'PHỤ KIỆN',
+    'subs'  => [
+      ['id'=>7, 'label'=>'Nón'],
+      ['id'=>8, 'label'=>'Túi'],
+      ['id'=>9, 'label'=>'Thắt lưng'],
+    ],
+  ],
+  [
+    'label' => 'SP ƯU ĐÃI',
+    'subs'  => [],  //phần này chưa biết làm gì cho submenu :)
+  ],
+];
+?>
+
+
+
 <header class="header">
 
   <button class="menu-toggle">
@@ -11,38 +48,39 @@
   </div>
   
   <nav class="menu_header">
-    <!-- Nút đóng menu -->
     <button class="menu-close">
       <i class="fa-solid fa-xmark"></i>
     </button>
 
-
     <ul class="mb-0">
-      <li>
-        <a href="index.php?page=sanpham&phanloai=ao">ÁO <i class="fa-solid fa-chevron-down"></i></a>
-        <ul class="submenu">
-          <li><a href="index.php?page=sanpham&phanloai=aopolo">Áo Polo</a></li>
-          <li><a href="index.php?page=sanpham&phanloai=aosomi">Áo sơ mi</a></li>
-          <li><a href="index.php?page=sanpham&phanloai=aokhoac">Áo khoác</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="index.php?page=sanpham&phanloai=quan">QUẦN <i class="fa-solid fa-chevron-down"></i></a>
-        <ul class="submenu">
-          <li><a href="index.php?page=sanpham&phanloai=quanjean">Quần jean</a></li>
-          <li><a href="index.php?page=sanpham&phanloai=quanshort">Quần short</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="index.php?page=sanpham&phanloai=phukien">PHỤ KIỆN <i class="fa-solid fa-chevron-down"></i></a>
-        <ul class="submenu">
-          <li><a href="index.php?page=sanpham&phanloai=non">Nón</a></li>
-          <li><a href="index.php?page=sanpham&phanloai=tui">Túi</a></li>
-        </ul>
-      </li>
-      <li><a href="index.php?page=sanpham&phanloai=uudai">SP ƯU ĐÃI</a></li>
+      <?php foreach($menu as $index => $item): 
+        // Mỗi mục cha sẽ có pageproduct = $index + 1
+        $parentId = $index + 1;
+      ?>
+        <li>
+          <a href="index.php?page=sanpham&amp;pageproduct=<?= $parentId ?>">
+            <?= htmlspecialchars($item['label']) ?>
+            <?php if (!empty($item['subs'])): ?>
+              <i class="fa-solid fa-chevron-down"></i>
+            <?php endif; ?>
+          </a>
+
+          <?php if (!empty($item['subs'])): ?>
+            <ul class="submenu">
+              <?php foreach($item['subs'] as $sub): ?>
+                <li>
+                  <a href="index.php?page=sanpham&amp;pageproduct=<?= $parentId ?>&amp;selectTheloai=<?= $sub['id'] ?>">
+                    <?= htmlspecialchars($sub['label']) ?>
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          <?php endif; ?>
+        </li>
+      <?php endforeach; ?>
     </ul>
   </nav>
+  
 
   <div class="icon-group">
     <a href="search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
