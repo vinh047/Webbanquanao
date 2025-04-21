@@ -213,7 +213,7 @@
                     </div>
                     <div class="pt-3">
                         <label for="txtMa">Mã sản phẩm : </label>
-                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control ">
+                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control" readonly>
                     </div>
     
                     <div class="pt-3 pb-2">

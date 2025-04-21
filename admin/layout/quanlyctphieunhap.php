@@ -50,7 +50,7 @@
 
         <div class="formSua border container-md p-4">
             <div class="" style="font-size: 16px;">
-            <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
+            <p class="mb-0 text-center fs-4">Sửa thông tin chi tiết phiếu nhập</p>
 
             <form action="" method="POST" id="formNhapSPbienThe" enctype="multipart/form-data">
 
@@ -121,7 +121,7 @@
         </div>
 
         <div class="formSuaPN border container-md p-4">
-        <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
+        <p class="mb-0 text-center fs-4">Sửa thông tin chi tiết phiếu nhập</p>
             <div class="" style="font-size: 16px;">
             <form action="./ajax/updateCTPhieuNhap.php" id="formSuaPN"> 
                     <!-- Chọn nhà cung cấp -->
@@ -225,7 +225,7 @@
 </div>
 
 
-<div id="xacNhanCho" class="thongBaoTrung rounded-2 bg-light p-3 border">
+<div id="xacNhanCho" class="thongBaoCho rounded-2 bg-light p-3 border">
     <p class="mb-0 fs-5 text-center">Khi chọn xác nhận sẽ không còn xử lý được nữa!</p>
     <p class="mb-0 fs-5 text-center">Bạn có chắc chắn không?</p>
     <div class="d-flex justify-content-center gap-3 mt-2">

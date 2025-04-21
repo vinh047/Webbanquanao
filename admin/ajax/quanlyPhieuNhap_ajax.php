@@ -50,14 +50,15 @@ foreach ($data as $row) {
     data-idncc='$idncc'
     data-gia='{$row['total_price']}'
     data-ngaylap='$ngaylap'
-    style='width:60px; $hideBtn'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
+    style='width:90px; $hideBtn'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
                 </div>
                 <div>
                     <button class='btn btn-danger btn-xoa'
     data-idpn='$idpn'
-    style='width:60px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
-                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn'><i class='fa-regular fa-eye'></i> chi tiết</button>
+    style='width:90px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
                 </div>
+                <div>                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
+</div>
             </div>
         </td>
     </tr>";
