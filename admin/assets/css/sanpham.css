@@ -173,7 +173,8 @@
 .thongbaoUpdateKhongThanhCong,
 .thongbaoLuuKhongThanhCong,
 .thongbaoLuuThanhCong,
-.thongbaoXoaHiddenThanhCong {
+.thongbaoXoaHiddenThanhCong,
+.thongbaoThemSp {
     display: block;
     opacity: 0;
     transition: opacity 0.6s ease;
@@ -203,7 +204,8 @@
 .thongbaoUpdateKhongThanhCong.show,
 .thongbaoLuuKhongThanhCong.show,
 .thongbaoLuuThanhCong.show,
-.thongbaoXoaHiddenThanhCong.show {
+.thongbaoXoaHiddenThanhCong.show,
+.thongbaoThemSp.show {
     display: block;
     opacity: 1;
 }
@@ -264,7 +266,7 @@ input[type=number] {
     transition: all 0.2s ease-in-out;
 }
 
-.thongBaoTrung
+ .thongBaoCho
 {
     display: none;
     position: fixed;
@@ -280,7 +282,46 @@ input[type=number] {
     width: 400px;
     max-width: 90%;
     transition: all 0.2s ease-in-out;
+} 
+
+.thongBaoTrung {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    z-index: 1200;
+    background-color: #FFF9E6;
+    color: #5C3D00;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+    opacity: 0;
+    transition: all 0.3s ease;
 }
+
+/* Khi hiện */
+.thongBaoTrung.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Hiệu ứng rung */
+.thongBaoTrung.shake {
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0% { transform: translate(-50%, -50%) translateX(0); }
+    25% { transform: translate(-50%, -50%) translateX(-5px); }
+    50% { transform: translate(-50%, -50%) translateX(5px); }
+    75% { transform: translate(-50%, -50%) translateX(-5px); }
+    100% { transform: translate(-50%, -50%) translateX(0); }
+}
+
 
 .overlay {
     display: none;

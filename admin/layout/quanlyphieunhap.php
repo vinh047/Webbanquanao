@@ -420,9 +420,10 @@
 
 
 
-<div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border" style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
-    <p class="mb-0 fs-5 text-center">Sản phẩm này đã có trong hàng đợi!</p>
-    <p class="mb-0 fs-5 text-center">Bạn có muốn cộng dồn vào không?</p>
+<div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border">
+<p class="mb-0 fs-5 text-center" id="trungTenSP">Sản phẩm đã có trong hàng đợi!</p>
+<p class="mb-0 fs-6 text-center" id="trungChiTiet">Bạn có muốn cộng dồn vào không?</p>
+
     <div class="d-flex justify-content-center gap-3 mt-2">
         <div>
             <button id="btnCoTrung" class="btn btn-danger" style="width:80px;">Có</button>
@@ -433,7 +434,18 @@
     </div>
 </div>
 
-<div id="xacNhanCho" class="thongBaoTrung rounded-2 bg-light p-3 border">
+<div id="boxTrungBT" class="thongBaoTrung rounded-2 bg-light p-3 border">
+  <p class="mb-0 fs-5 text-center" id="trungTenBT">Thông báo</p>
+  <p class="mb-0 fs-6 text-center" id="trungCTBT">Bạn có muốn cộng dồn vào không?</p>
+
+  <div class="d-flex justify-content-center gap-3 mt-2">
+    <button id="btnXacNhanThem" class="btn btn-danger" style="width:80px;">Có</button>
+    <button id="btnHuyThem" class="btn btn-primary" style="width:80px;">Không</button>
+  </div>
+</div>
+
+
+<div id="xacNhanCho" class="thongBaoCho rounded-2 bg-light p-3 border">
     <p class="mb-0 fs-5 text-center">Khi chọn xác nhận sẽ không còn xử lý được nữa!</p>
     <p class="mb-0 fs-5 text-center">Bạn có chắc chắn không?</p>
     <div class="d-flex justify-content-center gap-3 mt-2">
@@ -456,6 +468,11 @@
         <div class="thongbaoLuuThanhCong bg-success me-3 mt-3 p-3 rounded-2">
     <p class="mb-0 text-white">       
         Lưu phiếu nhập thành công
+    </p>
+</div>
+<div class="thongbaoThemSp bg-success me-3 mt-3 p-3 rounded-2">
+    <p class="mb-0 text-white">       
+        Thêm sản phẩm mới thành công
     </p>
 </div>
 <div class="overlay"></div>
