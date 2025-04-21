@@ -45,9 +45,7 @@ $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
 // ✅ Truy vấn sản phẩm
-$productSQL = "SELECT products.*, 
-                      MIN(product_variants.variant_id) AS variant_id, 
-                      MIN(product_variants.image) AS image
+$productSQL = "SELECT products.*, product_variants.variant_id, product_variants.image
                FROM products 
                JOIN product_variants 
                     ON products.product_id = product_variants.product_id
@@ -55,6 +53,8 @@ $productSQL = "SELECT products.*,
                GROUP BY products.product_id
                $sapxep
                LIMIT $limit OFFSET $offset";
+
+
 
 
 $result = mysqli_query($connection, $productSQL);
