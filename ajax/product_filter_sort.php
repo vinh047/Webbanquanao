@@ -9,7 +9,7 @@ function sapXepSanPham()
     } elseif ($sort === 'giamdan') {
         return 'ORDER BY price DESC';
     } else {
-        return 'ORDER BY products.product_id ASC'; // Mặc định là theo ID tăng dần
+        return 'ORDER BY p.product_id ASC'; // Mặc định là theo ID tăng dần
     }
 }
 
