@@ -155,9 +155,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const filterBox = document.querySelector('.filter-loc');
         const icon = document.getElementById('filter-icon');
     
-        if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
-            filterBox.classList.add('d-none');
-        }
+        // if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+        //     filterBox.classList.add('d-none');
+        // }
     });
 
     document.getElementById('tatFormLoc').addEventListener('click',function()

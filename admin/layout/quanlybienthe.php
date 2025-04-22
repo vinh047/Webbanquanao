@@ -23,7 +23,7 @@
                 <section class="py-3">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" title="Lọc biến thể"></i> <span class="fs-5">Lọc danh sách biến thể</span> </span>
-                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;">
+                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;z-index : 2000;border:1px solid black;">
                         <form action="" method="POST" id="formLoc">
                         <div class="d-flex">
                                 <div class="me-auto">

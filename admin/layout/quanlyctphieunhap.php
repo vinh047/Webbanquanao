@@ -16,7 +16,54 @@
     ?>
 </head>
 <body>
+            <section class="py-3">
+                <div class="boloc ms-5 position-relative">
+                    <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc chi tiết phiếu nhập"></i> <span class="fs-5">Lọc danh sách CTPN</span> </span>
+                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="z-index : 2000;border:1px solid black;">
+                        <form action="" method="POST" id="formLoc">
+                        <div class="d-flex">
+                                <div class="me-auto">
+                                    <h5>Lọc CTPN</h5>
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                </div>  
+                            </div>
+                            <label for="txtIDctpn" class="mt-2">Mã CTPN : </label>
+                            <input type="text" class="form-control form-control-sm" id="txtIDctpn" name="txtIDctpn">
+                            <label for="txtIDpn" class="mt-2">Mã PN : </label>
+                            <input type="text" class="form-control form-control-sm" id="txtIDpn" name="txtIDpn">
+                            <label for="txtIDsp" class="mt-2">Mã SP : </label>
+                            <input type="text" class="form-control form-control-sm" id="txtIDsp" name="txtIDsp">
+                            <label for="txtIDbt" class="mt-2">Mã BT : </label>
+                            <input type="text" class="form-control form-control-sm" id="txtIDbt" name="txtIDbt">
 
+                            <div class="d-flex gap-3 mt-2">
+                                <div class="me-auto">
+                                    <label for="dateNhap">Từ ngày : </label>
+                                    <input type="date" class="form-control form-control-sm" id="dateNhap" name="dateNhap">
+                                </div>
+                                <div class="">
+                                    <label for="dateKT">Đến ngày : </label>
+                                    <input type="date" class="form-control form-control-sm" id="dateKT" name="dateKT">
+                                </div>
+                            </div>
+
+                            <label for="txtTrangThai" class="mt-2">Trạng thái</label>
+                            <select name="txtTrangThai" id="txtTrangThai" class="form-select">
+                                <option value="">Chọn trạng thái</option>
+                                <option value="0">Đã xác nhận</option>
+                                <option value="1">Chờ xác nhận</option>
+                            </select>
+
+                            <div class="d-flex justify-content-center gap-2 pt-3">
+                                <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
+                                <button class="btn btn-danger"  style="width:70px;" type="reset">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
 
             <div class="sanpham py-3" style="font-size: 19px;">
                                 <!-- Hiện thông tin phiếu nhập -->

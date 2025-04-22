@@ -16,13 +16,16 @@
         $tensp = $db->select("SELECT * FROM products",[]);
         $color = $db->select("SELECT * FROM colors",[]);
         $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
+        $nhanvien = $db->select("SELECT * FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.role_id > 1",[]);
     ?>
 </head>
 <body> 
 
-            <div class="sanpham py-3" style="font-size: 19px;">
 
-<form action="./ajax/insertPhieuNhap.php" id="formNhapPhieuNhap" class="p-4 bg-white shadow rounded-3 border">
+
+<div class="sanpham py-3" style="font-size: 19px;">
+
+<form action="./ajax/insertPhieuNhap.php" id="formNhapPhieuNhap" class="p-4 bg-white rounded-3 border">
     <h5 class="mb-3 fw-bold">Thông tin phiếu nhập</h5>
 
     <div class="row g-3">
@@ -63,7 +66,9 @@
         </div>
     </div>
 
-    <div class="row g-3 mt-3">
+    <hr class="my-4">
+
+    <div class="row g-3">
     <h6 class="fw-bold mb-0">Chi tiết sản phẩm</h6>
                 <!-- Ảnh -->
         <div class="col-md-3">
@@ -134,9 +139,68 @@
                     </table>
                 </div>
 
-                                <hr class="my-5">
+                                <hr class="mt-5">
 
                                 <!-- Hiện thông tin phiếu nhập -->
+
+                                <!-- Phần xử lý bộ lọc -->
+                                <section class="pb-4 pt-2">
+                <div class="boloc ms-5 position-relative">
+                    <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc phiếu nhập"></i> <span class="fs-5">Lọc danh sách CTPN</span> </span>
+                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="z-index : 2000;border:1px solid black;">
+                        <form action="" method="POST" id="formLoc">
+                        <div class="d-flex">
+                                <div class="me-auto">
+                                    <h5>Lọc PN</h5>
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                </div>  
+                            </div>
+                            <label for="txtIDpn" class="mt-2">Mã PN : </label>
+                            <input type="text" class="form-control form-control-sm" id="txtIDpn" name="txtIDpn">
+                            <label for="txtIDncc" class="mt-3">Nhà cung cấp : </label>
+                            <select name="txtIDncc" id="txtIDncc" class="form-select">
+                                <option value="">Chọn nhà cung cấp</option>
+                                <?php foreach($suppliers as $s): ?>
+                                <option value="<?=$s['supplier_id']?>"><?=$s['name']?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <label for="txtIDnv" class="mt-2">Nhân viên : </label>
+                            <select name="txtIDnv" id="txtIDnv" class="form-select">
+                                <option value="">Chọn nhân viên</option>
+                                <?php foreach($nhanvien as $n): ?>
+                                <option value="<?=$n['user_id']?>"><?=$n['username']?></option>
+                                <?php endforeach ?>
+                            </select>
+
+                            <div class="d-flex gap-3 mt-2">
+                                <div class="me-auto">
+                                    <label for="dateNhap">Từ ngày : </label>
+                                    <input type="date" class="form-control form-control-sm" id="dateNhap" name="dateNhap">
+                                </div>
+                                <div class="">
+                                    <label for="dateKT">Đến ngày : </label>
+                                    <input type="date" class="form-control form-control-sm" id="dateKT" name="dateKT">
+                                </div>
+                            </div>
+
+                            <label for="txtTrangThai" class="mt-2">Trạng thái</label>
+                            <select name="txtTrangThai" id="txtTrangThai" class="form-select">
+                                <option value="">Chọn trạng thái</option>
+                                <option value="0">Đã xác nhận</option>
+                                <option value="1">Chờ xác nhận</option>
+                            </select>
+
+                            <div class="d-flex justify-content-center gap-2 pt-3">
+                                <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
+                                <button class="btn btn-danger"  style="width:70px;" type="reset">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+                                    <!-- phần xử lý danh sách phiêu nhập -->
                     <div class="hienthi">
                         <div class="d-flex justify-content-center border border-3 border-bottom-0 p-2 bg-light">
                             <p class="mb-0 fs-3">
@@ -165,6 +229,7 @@
             </div>
         </div>
 
+                                    <!-- Xử lý form sửa danh sách chờ -->
         <div class="formSua border container-md p-4">
             <div class="" style="font-size: 16px;">
             <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
@@ -253,6 +318,9 @@
             </div>
         </div>
 
+
+
+                                <!-- Xử lý phần sửa phiếu nhập -->
         <div class="formSuaPN border container-md p-4">
         <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
             <div class="" style="font-size: 16px;">
@@ -297,6 +365,7 @@
         </div>
 
 
+                                <!-- Xử lý phần thêm 1 sản phẩm mới nếu như chưa có -->
         <div class="formNhapSanPham p-3">
                     <div class="pt-3 text-center">
                         <h3 class="mb-0">Thêm sản phẩm</h3>
@@ -336,6 +405,7 @@
         </div>
 
       
+        <!-- Toàn bộ đa số dưới đây là thông báo thôi -->
         <div class="thongBaoXoa rounded-2">
     <p class="mb-0 fs-5 text-center">
         Bạn có chắc chắn muốn xóa phiếu nhập hay không?       
@@ -376,6 +446,8 @@
             </p>
         </div>
 
+
+        <!-- Này xử lý modal hiển thị chi tiết phiếu nhập -->
 <div class="modal fade" id="modalChiTietPhieuNhap" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -419,7 +491,7 @@
 </div>
 
 
-
+<!-- Lại là thông báo -->
 <div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border">
 <p class="mb-0 fs-5 text-center" id="trungTenSP">Sản phẩm đã có trong hàng đợi!</p>
 <p class="mb-0 fs-6 text-center" id="trungChiTiet">Bạn có muốn cộng dồn vào không?</p>
@@ -481,7 +553,7 @@
             </p>
         </div>
     </section>
-
+<!-- end -->
     <script src="./assets/js/fetch_phieuNhap.js"></script>
 </body>
 </html>

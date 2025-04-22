@@ -2,9 +2,35 @@ document.addEventListener('DOMContentLoaded', function () {
     let productList = [];
     let productCount = 0;
     let currentPage = 1;
+    const formLoc = document.getElementById("formLoc");
 
     // Hàm format giá
     const formatPrice = price => Number(price).toLocaleString('vi-VN');
+
+    formLoc.addEventListener("submit", function (e) {
+        e.preventDefault();
+        currentPage = 1;
+        loadPhieuNhap(currentPage); // lọc từ trang đầu
+    });
+    document.getElementById('filter-icon').addEventListener('click', function () {
+        const filterBox = document.querySelector('.filter-loc');
+        filterBox.classList.toggle('d-none');
+    });
+    
+    document.addEventListener('click', function (e) {
+        const filterBox = document.querySelector('.filter-loc');
+        const icon = document.getElementById('filter-icon');
+    
+        // if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+        //     filterBox.classList.add('d-none');
+        // }
+    });
+    
+    document.getElementById('tatFormLoc').addEventListener('click',function()
+    {
+    const filterBox = document.querySelector('.filter-loc');
+    filterBox.classList.toggle('d-none');
+    });
 
     function adjustPageIfLastItem() {
         const btnCount = document.querySelectorAll(".btn-sua").length;
@@ -389,7 +415,7 @@ document.getElementById('btnLuuSanPham').addEventListener('click', function () {
     const name = document.getElementById('txtTen').value.trim();
     const description = document.getElementById('txtMota').value.trim();
     const category_id = document.getElementById('cbLoai').value;
-    const price = document.getElementById('txtGia').value.trim();
+    const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
     const ptgg = document.getElementById('txtPT').value.trim();
 
     // Kiểm tra dữ liệu
@@ -539,8 +565,12 @@ formData.append('products', JSON.stringify(dataToSend));
     });
     
     function loadPhieuNhap(page = 1) {
-    fetch('./ajax/quanlyPhieuNhap_ajax.php?pageproduct=' + page)
-        .then(res => res.json())
+        const formData = new FormData(formLoc);
+        formData.append("pageproduct", page); // giữ phân trang
+        fetch(`./ajax/quanlyPhieuNhap_ajax.php`,{
+            method : "POST",
+            body : formData
+        })        .then(res => res.json())
         .then(data => {
             document.getElementById('product-list').innerHTML = data.products;
             document.getElementById("pagination").innerHTML = data.pagination;
@@ -824,6 +854,7 @@ formData.append('products', JSON.stringify(dataToSend));
         document.getElementById('txtNgayLap').value = ngaylap;
     });
 });
+
 document.getElementById('btn_sua_pn').addEventListener('click', function () {
     const form = document.getElementById('formSuaPN');
     const tbThanhCong = document.querySelector(".thongbaoUpdateThanhCong");

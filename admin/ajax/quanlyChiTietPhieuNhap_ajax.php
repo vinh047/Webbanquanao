@@ -1,15 +1,18 @@
 <?php
 require_once(__DIR__ . '/../../database/DBConnection.php');
 require_once(__DIR__ . '/../../layout/phantrang.php');
-
+require_once('functionLoc.php');
 $db = DBConnect::getInstance();
+$conn = $db->getConnection();
+$locRaw = locCTPN($conn);
+$loc = $locRaw ?: "";
 
 // Tổng số chi tiết phiếu nhập
-$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt_details", []);
+$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt_details $loc", []);
 $totalItems = $total[0]['total'];
 
 // Trang hiện tại
-$page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
+$page = isset($_POST['pageproduct']) ? (int)$_POST['pageproduct'] : 1;
 $limit = 10;
 
 $pagination = new Pagination($totalItems, $limit, $page);
@@ -20,6 +23,7 @@ $data = $db->select("
 SELECT 
     importreceipt_details_id, importreceipt_id, product_id, variant_id, quantity, created_at, status
 FROM importreceipt_details
+$loc
 ORDER BY importreceipt_details_id ASC
 LIMIT $limit OFFSET $offset
 ", []);
@@ -73,11 +77,15 @@ foreach ($data as $row) {
         </tr>
     ";
 }
-$productHTML = ob_get_clean();
+$productHTML = ob_get_clean(); // ❗ THIẾU DÒNG NÀY
 
 ob_start();
 $pagination->render();
 $paginationHTML = ob_get_clean();
+
+if ($pagination->getTotalPages() <= 1) {
+    $paginationHTML = ''; // không hiển thị nếu chỉ có 1 trang
+}
 
 // Trả về JSON
 header('Content-Type: application/json');

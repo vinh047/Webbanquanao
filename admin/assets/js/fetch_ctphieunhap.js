@@ -2,6 +2,7 @@ let productList = [];
 let productCount = 0;
 let productPendingToAdd = null; 
 document.addEventListener('DOMContentLoaded', function () {
+    const formLoc = document.getElementById("formLoc");
 
 
     let currentPage = 1; // ⚠️ Fix thiếu biến này gây lỗi load lại trang khi xoá
@@ -12,7 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     function loadPhieuNhap(page = 1) {
-        fetch('./ajax/quanlyChiTietPhieuNhap_ajax.php?pageproduct=' + page)
+        const formData = new FormData(formLoc);
+        formData.append("pageproduct", page); // giữ phân trang
+        // ✅ Loại bỏ các field rỗng
+        fetch(`./ajax/quanlyChiTietPhieuNhap_ajax.php`,{
+            method : "POST",
+            body : formData
+        })
             .then(res => res.json())
             .then(data => {
                 document.getElementById('product-list').innerHTML = data.products;
@@ -217,7 +224,30 @@ document.addEventListener('DOMContentLoaded', function () {
     loadPhieuNhap();
 
     // (Phần dưới giữ nguyên - đã chuẩn)
+    formLoc.addEventListener("submit", function (e) {
+        e.preventDefault();
+        currentPage = 1;
+        loadPhieuNhap(currentPage); // lọc từ trang đầu
+    });
+    document.getElementById('filter-icon').addEventListener('click', function () {
+        const filterBox = document.querySelector('.filter-loc');
+        filterBox.classList.toggle('d-none');
+    });
+    
+    document.addEventListener('click', function (e) {
+        const filterBox = document.querySelector('.filter-loc');
+        const icon = document.getElementById('filter-icon');
+    
+        // if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+        //     filterBox.classList.add('d-none');
+        // }
+    });
 
+    document.getElementById('tatFormLoc').addEventListener('click',function()
+{
+    const filterBox = document.querySelector('.filter-loc');
+    filterBox.classList.toggle('d-none');
+});
 
     function formatPrice(price) {
         return Number(price).toLocaleString('vi-VN');
