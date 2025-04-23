@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let productCount = 0;
     let currentPage = 1;
     const formLoc = document.getElementById("formLoc");
+    const roleId = JSON.parse(document.getElementById('role_id').getAttribute('data-role'));
 
     // Hàm format giá
     const formatPrice = price => Number(price).toLocaleString('vi-VN');
@@ -319,7 +320,19 @@ function showVariantModal({ title, content, onConfirm }) {
         const size_name = document.getElementById('cbSize').options[document.getElementById('cbSize').selectedIndex].text;
         const quantity = parseInt(document.getElementById('txtSl').value);
         const imageFile = document.getElementById('fileAnh').files[0];
-    
+        const formNhap = document.getElementById('formNhapPhieuNhap');
+        
+        if (roleId !== 2 && roleId !== 3) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            const img = document.querySelector('#hienthianh img');
+            img.style.display = 'none';
+            formNhap.reset();
+            return; 
+        }
+
         function showError(loinhan) {
             const thongbao = document.querySelector(".thongbaoLoi");
             const loi = thongbao.querySelector("p");
@@ -417,6 +430,16 @@ document.getElementById('btnLuuSanPham').addEventListener('click', function () {
     const category_id = document.getElementById('cbLoai').value;
     const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
     const ptgg = document.getElementById('txtPT').value.trim();
+
+    if (roleId !== 2 && roleId !== 3) {
+        const tBquyen = document.querySelector('.thongBaoQuyen');
+        tBquyen.style.display = 'block';
+        tBquyen.classList.add('show');
+        document.querySelector('.formNhapSanPham').style.display = 'none';
+        document.querySelector('.overlay').style.display = 'none';
+        setTimeout(() => tBquyen.classList.remove('show'), 2000);
+        return; 
+    }
 
     // Kiểm tra dữ liệu
     if (!name || !category_id || !price || isNaN(price)) {
@@ -588,9 +611,10 @@ formData.append('products', JSON.stringify(dataToSend));
 
                 // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
                 document.querySelectorAll('.btn-toggle-status').forEach(btn => {
+                    
                     btn.addEventListener('click', function () {
                         const id = this.dataset.idpn;
-                
+                        
                         // Lưu ID vào nút xác nhận
                         document.getElementById('btnXacNhan').dataset.idpn = id;
                 
@@ -610,7 +634,15 @@ formData.append('products', JSON.stringify(dataToSend));
                 // Khi người dùng ấn nút Xác nhận trong popup
                 document.getElementById('btnXacNhan').addEventListener('click', async function () {
                     const id = this.dataset.idpn;
-                
+                    if (roleId !== 2 && roleId !== 3) {
+                        const tBquyen = document.querySelector('.thongBaoQuyen');
+                        tBquyen.style.display = 'block';
+                        tBquyen.classList.add('show');
+                        document.getElementById('xacNhanCho').style.display = 'none';
+                        document.querySelector('.overlay').style.display = 'none';
+                        setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                        return; 
+                    }
                     try {
                         const res = await fetch('./ajax/moDongPN.php', {
                             method: 'POST',
@@ -761,6 +793,15 @@ formData.append('products', JSON.stringify(dataToSend));
 
                         // Xử lý khi nhấn nút "Có"
                         popup.querySelector(".btn-danger").onclick = function () {
+                            if (roleId !== 2 && roleId !== 3) {
+                                const tBquyen = document.querySelector('.thongBaoQuyen');
+                                tBquyen.style.display = 'block';
+                                tBquyen.classList.add('show');
+                                popup.style.display='none';
+                                overlay.style.display = 'none';
+                                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                                return; 
+                            }
                             // Gửi yêu cầu xóa sản phẩm qua AJAX
                             fetch("./ajax/deletePhieuNhap.php", {
                                 method: "POST",
@@ -864,6 +905,15 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
     let rawGia = formData.get('txtTongGT');
     let cleanGia = rawGia.replace(/\./g, '');
     formData.set('txtTongGT', cleanGia);
+
+    if (roleId !== 2 && roleId !== 3) {
+        const tBquyen = document.querySelector('.thongBaoQuyen');
+        tBquyen.style.display = 'block';
+        tBquyen.classList.add('show');
+        document.querySelector('.formSuaPN').style.display='none';
+        setTimeout(() => tBquyen.classList.remove('show'), 2000);
+        return; 
+    }
 
     fetch('./ajax/updatePhieuNhap.php', {
         method: 'POST',

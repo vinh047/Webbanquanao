@@ -3,6 +3,7 @@ let productCount = 0;
 let productPendingToAdd = null; 
 document.addEventListener('DOMContentLoaded', function () {
     const formLoc = document.getElementById("formLoc");
+    const roleId = JSON.parse(document.getElementById('role_id').getAttribute('data-role'));
 
 
     let currentPage = 1; // ⚠️ Fix thiếu biến này gây lỗi load lại trang khi xoá
@@ -43,6 +44,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         overlay.style.display = "block";
 
                         popup.querySelector(".btn-danger").onclick = function () {
+                            if (roleId !== 2 && roleId !== 3) {
+                                const tBquyen = document.querySelector('.thongBaoQuyen');
+                                tBquyen.style.display = 'block';
+                                tBquyen.classList.add('show');
+                                popup.style.display = 'none';
+                                overlay.style.display = 'none';
+                                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                                return; 
+                            }
                             fetch("./ajax/deleteCTphieunhap.php", {
                                 method: "POST",
                                 headers: {
@@ -117,7 +127,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('btnXacNhan').addEventListener('click', async function () {
                     const type = this.dataset.type; // 'pn' hoặc 'ctpn'
                     const id = this.dataset.id;
-                
+                    if (roleId !== 2 && roleId !== 3) {
+                        const tBquyen = document.querySelector('.thongBaoQuyen');
+                        tBquyen.style.display = 'block';
+                        tBquyen.classList.add('show');
+                        document.getElementById('xacNhanCho').style.display = 'none';
+                        document.querySelector('.overlay').style.display = 'none';
+                        setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                        return; 
+                    }
                     let url = '';
                     if (type === 'pn') url = './ajax/moDongPN.php';
                     else if (type === 'ctpn') url = './ajax/moDongCTPN.php';
@@ -354,6 +372,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const variantId = document.getElementById("txtMaBTsua").value.trim();
             const quantity = parseInt(document.getElementById("txtSlsuaTon").value.trim());
         
+            if (roleId !== 2 && roleId !== 3) {
+                const tBquyen = document.querySelector('.thongBaoQuyen');
+                tBquyen.style.display = 'block';
+                tBquyen.classList.add('show');
+                document.querySelector('.formSuaPN').style.display = 'none';
+                document.querySelector('.overlay').style.display = 'none';
+                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                return; 
+            }
+
+
             if (!idpn) return showError("Mã phiếu nhập không được để trống!");
             if (!idsp) return showError("Mã sản phẩm không được để trống!");
             if (!variantId) return showError("Mã biến thể không được để trống!");

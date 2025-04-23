@@ -9,13 +9,38 @@
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css">
     <?php
+// Bắt đầu session để truy cập thông tin người dùng đã đăng nhập
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+}
+// Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
+$user_id = $_SESSION['user_id'] ?? null;
+$role_id = $_SESSION['role_id'] ?? null;
+
+if ($user_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
     require_once(__DIR__ . '/../../database/DBConnection.php');
     $db = DBConnect::getInstance();
+    
+    // Truy vấn để lấy tên người dùng dựa trên user_id
+    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
+    
+    if ($stmt) {
+        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
+    } else {
+        $username = "Không tìm thấy người dùng";
+    }
+} else {
+    // Nếu không có user_id trong session, người dùng chưa đăng nhập
+    $username = "Chưa đăng nhập";
+}
     $color = $db->select("SELECT * FROM colors",[]);
     $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
     ?>
 </head>
 <body>
+        <!-- Thẻ ẩn để chứa giá trị role_id -->
+        <div id="role_id" data-role="<?= json_encode($role_id); ?>" style="display:none;"></div>
             <section class="py-3">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc chi tiết phiếu nhập"></i> <span class="fs-5">Lọc danh sách CTPN</span> </span>
@@ -318,7 +343,11 @@
     </div>
   </div>
 </div>
-
+<div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Bạn không có quyền thực hiện chức năng này
+            </p>
+        </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <script src="./assets/js/fetch_ctphieunhap.js"></script>
 </body>

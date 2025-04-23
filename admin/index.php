@@ -14,6 +14,10 @@
 <body>
 <section class="d-flex position-relative">
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+}
+
 $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 ?>
 

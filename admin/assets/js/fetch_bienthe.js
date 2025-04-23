@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const formSua = document.getElementById("formSuaSPbienThe");
     let currentPage = 1;
     const formLoc = document.getElementById("formLoc");
+    const roleId = JSON.parse(document.getElementById('role_id').getAttribute('data-role'));
 
     function adjustPageIfLastItem() {
         const btnCount = document.querySelectorAll(".btn-sua").length;
@@ -95,6 +96,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // Xử lý khi nhấn nút "Có"
                         popup.querySelector(".btn-danger").onclick = function () {
+                            if (roleId !== 2 && roleId !== 3) {
+                                const tBquyen = document.querySelector('.thongBaoQuyen');
+                                tBquyen.style.display = 'block';
+                                tBquyen.classList.add('show');
+                                popup.style.display = "none";
+                                document.querySelector(".overlay").style.display = "none";
+
+                                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                                return; 
+                            }
                             // Gửi yêu cầu xóa sản phẩm qua AJAX
                             fetch("./ajax/deleteBienThe.php", {
                                 method: "POST",
@@ -351,7 +362,15 @@ document.addEventListener("DOMContentLoaded", function () {
         // Lấy tên ảnh hiện tại trong thẻ <div id="tenFileAnhSua">
         const tenAnh = document.getElementById("tenFileAnhSua").textContent.trim();
         
-
+        if (roleId !== 2 && roleId !== 3) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            document.querySelector('.formSua').style.display = 'none';
+            document.querySelector('.overlay').style.display = 'none';
+            return; 
+        }
     
         if (!idsp) {
             loi.textContent = "Không được để trống ID sản phẩm";

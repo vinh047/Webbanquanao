@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const tbLoaiThanhCong = document.querySelector(".thongbaoThanhCong");
     const tc = tbLoaiThanhCong.querySelector("p");
     const formLoc = document.getElementById("formLoc");
+    const roleId = JSON.parse(document.getElementById('role_id').getAttribute('data-role'));
 
     let currentPage = 1;
     function adjustPageIfLastItem() {
@@ -99,6 +100,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         };
 
                         btnCo.onclick = () => {
+                            if (roleId !== 2 && roleId !== 3) {
+                                const tBquyen = document.querySelector('.thongBaoQuyen');
+                                tBquyen.style.display = 'block';
+                                tBquyen.classList.add('show');
+                                popup.style.display = "none";
+                                document.querySelector(".overlay").style.display = "none";
+
+                                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                                return; 
+                            }
                             fetch("./ajax/deleteSanPham.php", {
                                 method: "POST",
                                 headers: {
@@ -176,6 +187,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const loai = document.getElementById("cbLoai").value.trim();
         const pttg = document.getElementById('txtPT').value.trim();
     
+        if (roleId !== 2 && roleId !== 3) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            document.getElementById('formNhapSP').reset();
+            return; 
+        }
+
         tbLoai.classList.remove('show');
         tbLoai.style.display = 'none';
     
@@ -237,6 +257,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const tbLoi = document.querySelector(".thongbaoLoi");
         const loiTB = tbLoi.querySelector("p");
         let loi = "";
+
+        if (roleId !== 2 && roleId !== 3) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            document.querySelector('.formSua').style.display = 'none';
+            document.querySelector('.overlay').style.display = 'none';
+            return; 
+        }
 
         if(!ten)
         {
