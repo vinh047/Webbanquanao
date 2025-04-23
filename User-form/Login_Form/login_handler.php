@@ -1,67 +1,97 @@
 <?php
-
+// Xử lý đăng ký tài khoản
 function handleDangKy($conn) {
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['pswd'] ?? '';
     $sdt = trim($_POST['sdt'] ?? '');
-    
 
     if (!$username || !$email || !$password || !$sdt) {
-        echo "MISSING_FIELDS";
+        echo json_encode(["status" => "MISSING_FIELDS"]);
+        return;
+    }
+    $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        echo json_encode(["status" => "USERNAME_EXISTS"]);
         return;
     }
 
+    // Kiểm tra email đã tồn tại
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        echo "EMAIL_EXISTS";
+        echo json_encode(["status" => "EMAIL_EXISTS"]);
         return;
     }
 
+
+
+    // Tạo user_id mới
     $result = $conn->query("SELECT MAX(user_id) AS max_id FROM users");
     $row = $result->fetch_assoc();
     $next_id = ($row['max_id'] !== null) ? $row['max_id'] + 1 : 1;
 
+    // Mã hóa mật khẩu
     $hashed = password_hash($password, PASSWORD_DEFAULT);
-    $role_id = 1;
-    $status = 1;
+    $role_id = 1; // Mặc định là user
+    $status = 1; // Trạng thái hoạt động
 
-    $stmt = $conn->prepare("INSERT INTO users (user_id, username, email, password, phone, address, role_id, status)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssssi", $next_id, $username, $email, $hashed, $sdt, $role_id, $status);
+    // Thêm người dùng mới vào cơ sở dữ liệu
+    $stmt = $conn->prepare("INSERT INTO users (user_id, username, email, password, phone, role_id, status)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("issssii", $next_id, $username, $email, $hashed, $sdt, $role_id, $status);
 
     if ($stmt->execute()) {
-        echo "REGISTER_SUCCESS";
+        echo json_encode([
+            'status' => 'REGISTER_SUCCESS',
+            'role' => $role_id
+    ]);
     } else {
-        echo "ERROR";
+        echo json_encode(["status" => "ERROR"]);
     }
 }
 
+// Xử lý đăng nhập
 function handleDangNhap($conn) {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['pswd'] ?? '';
 
     if (!$email || !$password) {
-        echo "MISSING_FIELDS";
+        echo json_encode(["status" => "MISSING_FIELDS"]);
         return;
     }
 
-    $stmt = $conn->prepare("SELECT user_id, password FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT user_id, password, role_id FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($user = $result->fetch_assoc()) {
+        // Kiểm tra mật khẩu
         if (password_verify($password, $user['password']) || $password === $user['password']) {
+            // Lưu session
             $_SESSION['user_id'] = $user['user_id'];
-            echo "LOGIN_SUCCESS";
+            $_SESSION['role_id'] = $user['role_id'];
+
+            // Trả về dữ liệu JSON
+            echo json_encode([
+                'status' => 'LOGIN_SUCCESS',
+                'role' => $user['role_id']
+            ]);
         } else {
-            echo "INVALID_PASSWORD";
+            echo json_encode(["status" => "INVALID_PASSWORD"]);
         }
     } else {
-        echo "NO_ACCOUNT";
+        echo json_encode(["status" => "NO_ACCOUNT"]);
     }
 }
+// Xử lý đăng ký tài khoản
+
+
+
+?>

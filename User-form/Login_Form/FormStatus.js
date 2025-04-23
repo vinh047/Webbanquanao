@@ -75,20 +75,22 @@ function loadForm() {
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
-
+  
     const isValid = validateForm();
     if (!isValid) return;
-
+  
     const formData = new FormData(form);
-
+  
     try {
       const response = await fetch("/User-form/Login_Form/userdb_func.php", {
         method: "POST",
         body: formData
       });
-
-      const text = await response.text();
-
+  
+      // Use .json() to parse the response as JSON
+      const responseData = await response.json();
+      console.log (responseData.status);
+      // Clear previous validation errors
       form.querySelectorAll(".form-control").forEach(input => {
         input.classList.remove("is-invalid", "border-danger");
         input.classList.add("border-dark");
@@ -97,24 +99,51 @@ function loadForm() {
           next.remove();
         }
       });
+  
+      // Handle login or registration success
+      if (responseData.status === "LOGIN_SUCCESS" || responseData.status === "REGISTER_SUCCESS") {
+        const role = responseData.role; 
+        console.log(role);
+        console.log("Type of role:", typeof role);
+        if (role === 1) {
 
-      if (text === "REGISTER_SUCCESS" || text === "LOGIN_SUCCESS") {
-        window.location.href = "../../index.php";
-      } else if (text === "EMAIL_EXISTS") {
+  
+            console.log("Redirecting to the new page...");
+            window.location.replace("../../index.php");
+
+        } else if (role === 2 || role === 3 || role === 4) {
+   
+    
+           
+          console.log("Redirecting to the new page...");
+          window.location.replace("../../admin/index.php");
+        }
+
+      } else if (responseData.status === "USERNAME_EXISTS") {
+        addError(form.querySelector('[name="username"]'), "Username đã tồn tại.");
+      } else if (responseData.status === "EMAIL_EXISTS") {
         addError(form.querySelector('[name="email"]'), "Email đã tồn tại.");
-      } else if (text === "INVALID_PASSWORD") {
+      } else if (responseData.status === "INVALID_PASSWORD") {
+        // Show error if password is invalid
         addError(form.querySelector('[name="pswd"]'), "Mật khẩu không hợp lệ.");
-      } else if (text === "NO_ACCOUNT") {
+      } else if (responseData.status === "NO_ACCOUNT") {
+        // Show error if account doesn't exist
         addError(form.querySelector('[name="email"]'), "Tài khoản không tồn tại.");
-      } else if (text === "MISSING_FIELDS") {
+      } else if (responseData.status === "MISSING_FIELDS") {
+        // Show error if any field is missing
         addError(form.querySelector('[name="username"]'), "Vui lòng điền đầy đủ thông tin.");
       } else {
+        // Show generic error
         addError(form.querySelector('[name="username"]'), "Đã xảy ra lỗi không xác định.");
       }
     } catch (err) {
+      // Handle error in case of server issues
       addError(form.querySelector('[name="username"]'), "Lỗi máy chủ hoặc kết nối.");
     }
   });
+  
+  
+  
 }
 
 document.addEventListener("DOMContentLoaded", loadForm);
