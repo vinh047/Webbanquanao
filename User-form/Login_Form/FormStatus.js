@@ -2,6 +2,7 @@ function loadForm() {
   const form = document.getElementById("mainformmainform");
   if (!form) return;
 
+  // Xử lý form đăng ký và đăng nhập
   if (trangthai === "dangky") {
     form.innerHTML = `
       <h2 class="text-center text-black">Đăng ký tài khoản</h2>
@@ -73,77 +74,8 @@ function loadForm() {
   hiddenInput.value = trangthai;
   form.appendChild(hiddenInput);
 
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-  
-    const isValid = validateForm();
-    if (!isValid) return;
-  
-    const formData = new FormData(form);
-  
-    try {
-      const response = await fetch("/User-form/Login_Form/userdb_func.php", {
-        method: "POST",
-        body: formData
-      });
-  
-      // Use .json() to parse the response as JSON
-      const responseData = await response.json();
-      console.log (responseData.status);
-      // Clear previous validation errors
-      form.querySelectorAll(".form-control").forEach(input => {
-        input.classList.remove("is-invalid", "border-danger");
-        input.classList.add("border-dark");
-        const next = input.nextElementSibling;
-        if (next && next.classList.contains("invalid-feedback")) {
-          next.remove();
-        }
-      });
-  
-      // Handle login or registration success
-      if (responseData.status === "LOGIN_SUCCESS" || responseData.status === "REGISTER_SUCCESS") {
-        const role = responseData.role; 
-        console.log(role);
-        console.log("Type of role:", typeof role);
-        if (role === 1) {
-
-  
-            console.log("Redirecting to the new page...");
-            window.location.replace("../../index.php");
-
-        } else if (role === 2 || role === 3 || role === 4) {
-   
-    
-           
-          console.log("Redirecting to the new page...");
-          window.location.replace("../../admin/index.php");
-        }
-
-      } else if (responseData.status === "USERNAME_EXISTS") {
-        addError(form.querySelector('[name="username"]'), "Username đã tồn tại.");
-      } else if (responseData.status === "EMAIL_EXISTS") {
-        addError(form.querySelector('[name="email"]'), "Email đã tồn tại.");
-      } else if (responseData.status === "INVALID_PASSWORD") {
-        // Show error if password is invalid
-        addError(form.querySelector('[name="pswd"]'), "Mật khẩu không hợp lệ.");
-      } else if (responseData.status === "NO_ACCOUNT") {
-        // Show error if account doesn't exist
-        addError(form.querySelector('[name="email"]'), "Tài khoản không tồn tại.");
-      } else if (responseData.status === "MISSING_FIELDS") {
-        // Show error if any field is missing
-        addError(form.querySelector('[name="username"]'), "Vui lòng điền đầy đủ thông tin.");
-      } else {
-        // Show generic error
-        addError(form.querySelector('[name="username"]'), "Đã xảy ra lỗi không xác định.");
-      }
-    } catch (err) {
-      // Handle error in case of server issues
-      addError(form.querySelector('[name="username"]'), "Lỗi máy chủ hoặc kết nối.");
-    }
-  });
-  
-  
-  
+  // Gọi logic xử lý submit form từ file khác (userdb_func.js)
+  form.addEventListener("submit", submitForm);
 }
 
 document.addEventListener("DOMContentLoaded", loadForm);
