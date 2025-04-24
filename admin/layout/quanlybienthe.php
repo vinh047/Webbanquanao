@@ -246,11 +246,11 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                 <input type="hidden" name="txtMaCTPN" id="txtMaCTPN">
                     <div class="">
                         <label for="txtMaBt">Mã biến thể : </label>
-                        <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control" readonly>
+                        <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control bg-light" readonly>
                     </div>
                     <div class="pt-3">
                         <label for="txtMa">Mã sản phẩm : </label>
-                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control" readonly>
+                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control bg-light" readonly>
                     </div>
     
                     <div class="pt-3 pb-2">
@@ -292,7 +292,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
     
                     <div class="pt-3">
                         <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control" readonly placeholder="Số lượng của sản phẩm">
+                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control bg-light" readonly placeholder="Số lượng của sản phẩm">
                     </div>
 
     
@@ -317,6 +317,55 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             </p>
         </div>
 
+
+    <!-- Modal Chi tiết biến thể -->
+    <div class="modal fade" id="modalChiTietBienThe" tabindex="-1" aria-labelledby="modalChiTietLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalChiTietLabel">Chi tiết biến thể</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row align-items-center">
+          <div class="col-md-4 text-center">
+            <img id="ctbt_image" src="" class="img-fluid rounded border" style="max-height: 280px; object-fit: contain;" alt="Ảnh sản phẩm">
+          </div>
+          <div class="col-md-8 fs-6">
+            <p style="font-size: 17px;"><strong>Mã biến thể:</strong> <span id="idbt_sp"></span></p>
+            <p style="font-size: 17px;"><strong>Sản phẩm:</strong> <span id="ctbt_tensp"></span></p>
+            <p style="font-size: 17px;"><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
+            <p style="font-size: 17px;"><strong>Size:</strong> <span id="ctbt_size"></span></p>
+            <p><strong>Tồn kho:</strong> <span id="ctbt_sl"></span></p>
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-bordered" id="chitiet-phieunhap">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Mã ctpn</th>
+              <th class="text-center">Mã pn</th>
+              <th class="text-center">Mã sp</th>
+              <th class="text-center">Mã bt</th>
+              <th class="text-center">Số lượng nhập</th>
+              <th class="text-center">Ngày nhập</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS sẽ render -->
+          </tbody>
+        </table>
+
+        <!-- 👇 Phân trang -->
+        <div id="modal-pagination" class="d-flex justify-content-center align-items-center gap-2 mb-3"></div>
+        <!-- JS sẽ render nút -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
       <script src="./assets/js/fetch_bienthe.js"></script>
 </body>

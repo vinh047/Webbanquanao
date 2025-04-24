@@ -357,6 +357,7 @@ function showVariantModal({ title, content, onConfirm }) {
             loi.textContent = loinhan;
             thongbao.style.display = 'block';
             thongbao.classList.add('show');
+            document.getElementById('supplier_id').disabled = false;
             setTimeout(() => thongbao.classList.remove('show'), 2000);
         }
     

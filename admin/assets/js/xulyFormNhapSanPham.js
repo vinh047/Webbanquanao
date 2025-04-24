@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         data.variants.forEach((item, index) => {
                           const row = document.createElement('tr');
                           row.innerHTML = `
+                            <td class="text-center">${(currentPage - 1) * 5 + index + 1}</td>
                             <td class="text-center">${item.variant_id}</td>
                             <td>${item.product_name}</td>
                             <td class="text-center">${item.size}</td>

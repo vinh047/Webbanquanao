@@ -207,8 +207,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                         <input type="text" name="txtMaCTPNsua" id="txtMaCTPNsua" readonly class="form-control bg-light">
                     </div>
                     <div class="pt-3">
-                        <label for="txtMaPNsua">Mã PN: </label>
-                        <input type="text" name="txtMaPNsua" id="txtMaPNsua"  class="form-control">
+                        <label for="txtMaBTsua">Mã BT: </label>
+                        <input type="text" name="txtMaBTsua" id="txtMaBTsua"  class="form-control bg-light" readonly>
                     </div>
                     </div>
                     <div class="d-flex">
@@ -218,8 +218,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                     </div>
 
                     <div class="pt-3">
-                        <label for="txtMaBTsua">Mã BT: </label>
-                        <input type="text" name="txtMaBTsua" id="txtMaBTsua"  class="form-control bg-light" readonly>
+                        <label for="txtMaPNsua">Mã PN: </label>
+                        <input type="text" name="txtMaPNsua" id="txtMaPNsua"  class="form-control">
                     </div>
                     </div>
 

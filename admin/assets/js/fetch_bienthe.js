@@ -67,6 +67,123 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     });
                 }
+
+                document.addEventListener("click", function (e) {
+                    if (e.target.classList.contains("btn-xemchitietPN")) {
+                      const variantId = e.target.dataset.id; // lấy variant_id từ data-id
+                      let currentVariantId = variantId;
+                  
+                      function renderChiTietBienThe(data) {
+                        const tbody = document.querySelector('#chitiet-phieunhap tbody');
+                        tbody.innerHTML = '';
+                  
+                        const currentPage = data.pagination?.current || 1;
+                        const totalPages = data.pagination?.total || 1;
+                  
+                        // Render các dòng chi tiết phiếu nhập
+                        data.chitiet.forEach((item, index) => {
+                          const row = document.createElement('tr');
+                          row.innerHTML = `
+                            <td class="text-center">${(currentPage - 1) * 5 + index + 1}</td>
+                            <td class="text-center">${item.id_ctpn}</td>
+                            <td class="text-center">${item.id_pn}</td>
+                            <td class="text-center">${item.id_sp}</td>
+                            <td class="text-center">${item.id_bt}</td>
+                            <td class="text-center">${item.so_luong}</td>
+                            <td class="text-center">${item.ngay_nhap}</td>
+                          `;
+                          tbody.appendChild(row);
+                        });
+                  
+                        // Hiển thị info biến thể
+                        const info = data.info;
+                        if (info) {
+                          document.getElementById('ctbt_image').src = `../../assets/img/sanpham/${info.anh}`;
+                          document.getElementById('ctbt_tensp').textContent = info.ten_sp;
+                          document.getElementById('ctbt_mau').textContent = info.mau;
+                          document.getElementById('ctbt_size').textContent = info.size;
+                          document.getElementById('ctbt_sl').textContent = info.stock;
+                          document.getElementById('idbt_sp').textContent = info.id_bt_sp;
+                        }
+                  
+                        // Phân trang
+                        const paginationWrap = document.getElementById("modal-pagination");
+                        paginationWrap.innerHTML = '';
+                  
+                        if (totalPages > 1) {
+                          const btnPrev = document.createElement("button");
+                          btnPrev.innerHTML = '<i class="fa fa-chevron-left text-dark"></i>';
+                          btnPrev.className = "btn btn-outline-secondary";
+                          btnPrev.disabled = currentPage === 1;
+                          btnPrev.onclick = () => fetchPage(currentPage - 1);
+                  
+                          const inputPage = document.createElement("input");
+                          inputPage.type = "number";
+                          inputPage.min = 1;
+                          inputPage.max = totalPages;
+                          inputPage.value = currentPage;
+                          inputPage.style.width = "60px";
+                          inputPage.className = "form-control d-inline-block text-center mx-2";
+                          inputPage.addEventListener("keypress", function (e) {
+                            if (e.key === "Enter") {
+                              let value = parseInt(this.value);
+                              if (isNaN(value)) return;
+                              if (value < 1) value = 1;
+                              if (value > totalPages) value = totalPages;
+                              fetchPage(value);
+                            }
+                          });
+                  
+                          const spanTotal = document.createElement("span");
+                          spanTotal.innerHTML = `/ ${totalPages}`;
+                          spanTotal.classList.add("mx-1");
+                  
+                          const btnNext = document.createElement("button");
+                          btnNext.innerHTML = '<i class="fa fa-chevron-right text-dark"></i>';
+                          btnNext.className = "btn btn-outline-secondary";
+                          btnNext.disabled = currentPage === totalPages;
+                          btnNext.onclick = () => fetchPage(currentPage + 1);
+                  
+                          paginationWrap.appendChild(btnPrev);
+                          paginationWrap.appendChild(inputPage);
+                          paginationWrap.appendChild(spanTotal);
+                          paginationWrap.appendChild(btnNext);
+                        }
+                      }
+                  
+                      function fetchPage(page) {
+                        fetch(`./ajax/get_chitiet_phieunhap.php`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                          body: `variant_id=${currentVariantId}&page=${page}`
+                        })
+                          .then(res => res.text())
+                          .then(text => {
+                            try {
+                              const data = JSON.parse(text);
+                              renderChiTietBienThe(data);
+                              const modalElement = document.getElementById('modalChiTietBienThe');
+                              const existingModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                              existingModal.show();
+                            } catch (e) {
+                              console.error("❌ Lỗi parse JSON:", e);
+                              console.log("Phản hồi server:", text);
+                            }
+                          });
+                      }
+                  
+                      fetchPage(1);
+                    }
+                  });
+                  
+                  // Khi modal đóng, dọn lại giao diện
+                  document.getElementById('modalChiTietBienThe').addEventListener('hidden.bs.modal', function () {
+                    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    document.body.classList.remove('modal-open');
+                    document.body.style = '';
+                  });
+                  
+                  
                 
                 document.querySelectorAll(".btn-sua").forEach(btn => {
                     btn.addEventListener("click", function (e) {

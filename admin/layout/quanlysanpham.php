@@ -144,7 +144,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                             <th class="bg-secondary text-white tensp">Tên sản phẩm</th>
                             <th class="bg-secondary text-white hienthiloai">Loại</th>
                             <th class="bg-secondary text-white mota">Mô tả Sản phẩm</th>
-                            <th class="bg-secondary text-white hienthigia">Giá nhập</th>
+                            <!-- <th class="bg-secondary text-white hienthigia">Giá nhập</th> -->
                             <th class="bg-secondary text-white hienthigia">Giá bán</th>
                             <th class="bg-secondary text-white hienthibtn">Xử lý</th>
                         </tr>
@@ -240,7 +240,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
     <div class="">
         <label for="txtId">ID sản phẩm : </label>
         <!-- name phải là 'id' -->
-        <input type="text" class="form-control" name="id" id="txtId" readonly>
+        <input type="text" class="form-control bg-light" name="id" id="txtId" readonly>
     </div>      
 
     <div class="py-3">
@@ -314,18 +314,19 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
 
       <div class="modal-body">
         <div class="mb-3">
-          <p><strong>Mã SP:</strong> <span id="idSP"></span></p>
+          <p><strong>Mã sản phẩm:</strong> <span id="idSP"></span></p>
           <p><strong>Tên sản phẩm:</strong> <span id="tenNSP"></span></p>
           <p><strong>Loại sản phẩm:</strong> <span id="loaiSP"></span></p>
           <p><strong>Mô tả sản phẩm:</strong> <span id="motaSP"></span></p>
           <p><strong>Giá nhập:</strong> <span id="gianhapSP"></span> VNĐ</p>
           <p><strong>Giá bán:</strong> <span id="giabanSP"></span> VNĐ</p>
-          <p><strong>Phân trăm tăng giá:</strong> <span id="pttgSP"></span>%</p>
+          <p><strong>Phần trăm tăng giá:</strong> <span id="pttgSP"></span>%</p>
         </div>
 
         <table class="table table-bordered" id="chitiet-phieunhap">
           <thead>
             <tr class="text-center">
+                <th>#</th>
               <th>Mã biến thể</th>
               <th>Sản phẩm</th>
               <th>Size</th>

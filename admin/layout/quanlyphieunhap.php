@@ -73,7 +73,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 <form action="./ajax/insertPhieuNhap.php" id="formNhapPhieuNhap" class="p-4 bg-white rounded-3 border">
     <h5 class="mb-3 fw-bold">Thông tin phiếu nhập</h5>
 
-    <div class="row g-3">
+    <div class="row g-4">
         <!-- Nhà cung cấp -->
         <div class="col-md-4">
             <label for="supplier_id" class="form-label">Nhà cung cấp</label>
@@ -94,14 +94,9 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 <!-- Trường ẩn chứa giá trị user_id (không hiển thị cho người dùng, nhưng gửi đi khi submit) -->
 <input type="hidden" name="user_id" id="user_id" value="<?= htmlspecialchars($user_id) ?>" readonly class="form-control bg-light">
         </div>
-    </div>
 
-    <hr class="my-4">
-
-    <h6 class="fw-bold">Sản phẩm nhập</h6>
-    <div class="row g-3 align-items-end">
+        <div class="col-md-6">
         <!-- Tên sản phẩm -->
-        <div class="col-md-5">
             <label for="cbTen" class="form-label">Tên sản phẩm</label>
             <div class="d-flex">
                 <select name="cbTen" id="cbTen" class="form-select w-auto">
@@ -111,13 +106,13 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                     <?php endforeach; ?>
                 </select>
                 <button class="btn btn-outline-primary ms-2" type="button" id="btnMoForm">Thêm SP</button>
-            </div>
+    </div>
         </div>
     </div>
 
     <hr class="my-4">
 
-    <div class="row g-3">
+    <div class="row g-4">
     <h6 class="fw-bold mb-0">Chi tiết sản phẩm</h6>
                 <!-- Ảnh -->
         <div class="col-md-3">
