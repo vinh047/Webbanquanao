@@ -10,39 +10,48 @@
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css"> 
     <?php
-// Bắt đầu session để truy cập thông tin người dùng đã đăng nhập
 if (session_status() == PHP_SESSION_NONE) {
     session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
 }
-// Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
+
+// Kiểm tra quyền của người dùng
 $user_id = $_SESSION['user_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
 
-if ($user_id) {
-    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
+if ($role_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy quyền của người dùng
     require_once(__DIR__ . '/../../database/DBConnection.php');
     $db = DBConnect::getInstance();
-    
-    // Truy vấn để lấy tên người dùng dựa trên user_id
-    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
-    
-    if ($stmt) {
-        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
-    } else {
-        $username = "Không tìm thấy người dùng";
+
+    // Truy vấn để lấy tất cả quyền của người dùng với permission_id = 1
+    $permissions = $db->select("SELECT action, permission_id FROM role_permission_details WHERE role_id = ? AND permission_id = 1", [$role_id]);
+
+    // Lưu các quyền vào mảng permissions trong session
+    $permissionsArray = [];
+    foreach ($permissions as $permission) {
+        $permissionsArray[] = $permission['action']; // Lưu các hành động vào mảng permissions
     }
-} else {
-    // Nếu không có user_id trong session, người dùng chưa đăng nhập
-    $username = "Chưa đăng nhập";
+
+    // Lưu các quyền vào session
+    $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
 }
-        $categories = $db->select("SELECT * FROM categories", []);
-        $product = $db->select("SELECT products.*, categories.name as category_name FROM products JOIN categories ON products.category_id = categories.category_id ORDER BY products.product_id ASC", []);
-        ?>
+
+// Truyền quyền vào thẻ HTML
+$permissionsJson = json_encode($_SESSION['permissions'] ?? []);
+
+$categories = $db->select("SELECT * FROM categories", []);
+$product = $db->select("SELECT products.*, categories.name as category_name FROM products JOIN categories ON products.category_id = categories.category_id ORDER BY products.product_id ASC", []);
+?>
+
 </head>
 <body>
         <!-- Thẻ ẩn để chứa giá trị role_id -->
-        <div id="role_id" data-role="<?= json_encode($role_id); ?>" style="display:none;"></div>
-<section class="py-3">
+<!-- Thẻ ẩn để chứa dữ liệu quyền -->
+<div id="permissions" data-permissions='<?= $permissionsJson ?>' style="display:none;"></div>
+
+
+
+        <section class="py-3">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc sản phẩm"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
                     <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;z-index : 2000;border:1px solid black;">
@@ -188,7 +197,7 @@ if ($user_id) {
         <div class="overlay"></div>
         <div class="thongbaoXoaThatBai  bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
-                Xóa biến thể thất bại
+                Xóa sản phẩm thất bại
             </p>
             </div>
         <div class="thongBaoXoa rounded-2">
@@ -256,7 +265,7 @@ if ($user_id) {
 
     <div class="pt-3">
         <label for="txtGia">Giá nhập : </label>
-        <input type="text" name="gia" id="txtGiaSua" class="form-control" readonly>
+        <input type="text" name="gia" id="txtGiaSua" class="form-control">
     </div>
 
     <div class="pt-3">
@@ -293,6 +302,48 @@ if ($user_id) {
                 Bạn không có quyền thực hiện chức năng này
             </p>
         </div>
+
+        <!-- Chi tiết sản phẩm -->
+<div class="modal fade" id="modalChiTietSP" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">Chi tiết sản phẩm</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <p><strong>Mã SP:</strong> <span id="idSP"></span></p>
+          <p><strong>Tên sản phẩm:</strong> <span id="tenNSP"></span></p>
+          <p><strong>Loại sản phẩm:</strong> <span id="loaiSP"></span></p>
+          <p><strong>Mô tả sản phẩm:</strong> <span id="motaSP"></span></p>
+          <p><strong>Giá nhập:</strong> <span id="gianhapSP"></span> VNĐ</p>
+          <p><strong>Giá bán:</strong> <span id="giabanSP"></span> VNĐ</p>
+          <p><strong>Phân trăm tăng giá:</strong> <span id="pttgSP"></span>%</p>
+        </div>
+
+        <table class="table table-bordered" id="chitiet-phieunhap">
+          <thead>
+            <tr class="text-center">
+              <th>Mã biến thể</th>
+              <th>Sản phẩm</th>
+              <th>Size</th>
+              <th>Màu</th>
+              <th>Ảnh</th>
+              <th>Tồn kho</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS sẽ render -->
+          </tbody>
+        </table>
+
+        <div id="modal-pagination" class="d-flex justify-content-center align-items-center gap-2 mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
     <script src="./assets/js/xulyFormNhapSanPham.js"></script>
 </body>

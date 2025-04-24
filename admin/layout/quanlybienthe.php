@@ -11,32 +11,34 @@
     <link rel="stylesheet" href="./assets/css/sanpham.css">
 
     <?php
-// Bắt đầu session để truy cập thông tin người dùng đã đăng nhập
 if (session_status() == PHP_SESSION_NONE) {
     session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
 }
 
-// Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
+// Kiểm tra quyền của người dùng
 $user_id = $_SESSION['user_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
 
-if ($user_id) {
-    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
+if ($role_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy quyền của người dùng
     require_once(__DIR__ . '/../../database/DBConnection.php');
     $db = DBConnect::getInstance();
-    
-    // Truy vấn để lấy tên người dùng dựa trên user_id
-    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
-    
-    if ($stmt) {
-        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
-    } else {
-        $username = "Không tìm thấy người dùng";
+
+    // Truy vấn để lấy tất cả quyền của người dùng với permission_id = 1
+    $permissions = $db->select("SELECT action, permission_id FROM role_permission_details WHERE role_id = ? AND permission_id = 1", [$role_id]);
+
+    // Lưu các quyền vào mảng permissions trong session
+    $permissionsArray = [];
+    foreach ($permissions as $permission) {
+        $permissionsArray[] = $permission['action']; // Lưu các hành động vào mảng permissions
     }
-} else {
-    // Nếu không có user_id trong session, người dùng chưa đăng nhập
-    $username = "Chưa đăng nhập";
+
+    // Lưu các quyền vào session
+    $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
 }
+
+// Truyền quyền vào thẻ HTML
+$permissionsJson = json_encode($_SESSION['permissions'] ?? []);
     $color = $db->select("SELECT * FROM colors",[]);
     $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
     ?>
@@ -45,7 +47,7 @@ if ($user_id) {
 <body>
     
         <!-- Thẻ ẩn để chứa giá trị role_id -->
-        <div id="role_id" data-role="<?= json_encode($role_id); ?>" style="display:none;"></div>
+        <div id="permissions" data-permissions='<?= $permissionsJson ?>' style="display:none;"></div>
 
                 <section class="py-3">
                 <div class="boloc ms-5 position-relative">

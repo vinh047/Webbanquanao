@@ -7,7 +7,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const formSua = document.getElementById("formSuaSPbienThe");
     let currentPage = 1;
     const formLoc = document.getElementById("formLoc");
-    const roleId = JSON.parse(document.getElementById('role_id').getAttribute('data-role'));
+    const permissionsElement = document.getElementById('permissions');
+    let permissions = [];
+
+    // Lấy dữ liệu từ thuộc tính data-permissions
+    if (permissionsElement && permissionsElement.getAttribute('data-permissions')) {
+        try {
+            permissions = JSON.parse(permissionsElement.getAttribute('data-permissions'));
+            console.log('Permissions received:', permissions); // Kiểm tra giá trị permissions
+        } catch (error) {
+            console.error('Lỗi phân tích cú pháp JSON:', error);
+        }
+    } else {
+        console.log('Không có dữ liệu permissions hợp lệ');
+    }
+
 
     function adjustPageIfLastItem() {
         const btnCount = document.querySelectorAll(".btn-sua").length;
@@ -96,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // Xử lý khi nhấn nút "Có"
                         popup.querySelector(".btn-danger").onclick = function () {
-                            if (roleId !== 2 && roleId !== 3) {
+                                if (!permissions.includes('delete')) {
                                 const tBquyen = document.querySelector('.thongBaoQuyen');
                                 tBquyen.style.display = 'block';
                                 tBquyen.classList.add('show');
@@ -362,7 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Lấy tên ảnh hiện tại trong thẻ <div id="tenFileAnhSua">
         const tenAnh = document.getElementById("tenFileAnhSua").textContent.trim();
         
-        if (roleId !== 2 && roleId !== 3) {
+        if (!permissions.includes('update')) {
             const tBquyen = document.querySelector('.thongBaoQuyen');
             tBquyen.style.display = 'block';
             tBquyen.classList.add('show');

@@ -56,9 +56,12 @@ foreach ($data as $row) {
                 data-gia='{$row['price']}'
                 data-giaban='{$row['price_sale']}'
                 data-pttg = \"$pttg\"
-                data-loaiid='{$row['category_id']}' style='width:60px;' >Sửa</button></div>
+                data-loaiid='{$row['category_id']}' style='width:90px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button></div>
                 <div>
-                <button class='btn btn-danger btn-xoa' data-id='$id' style='width:60px;'>Xóa</button>
+                <button class='btn btn-danger btn-xoa' data-id='$id' style='width:90px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
+                </div>
+                <div>
+                <button class='btn btn-info btn-xemchitietPN' data-idpn='$id' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
                 </div>
                 </div>
             </td>

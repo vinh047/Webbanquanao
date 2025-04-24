@@ -71,8 +71,9 @@ foreach ($data as $row) {
             <td class='hienthigia'>$soluong</td>
             <td class='hienthimau'>$mau</td>
             <td class='hienthibtn'>
-                    <div class='d-flex justify-content-center gap-3'>
-                    <div><button class='btn btn-success btn-sm btn-sua' 
+                    <div class='d-flex justify-content-center gap-2'>
+                    <div>
+                    <button class='btn btn-success btn-sm btn-sua' 
                     data-idct='$idctpn'
                     data-idvr='$idvr'
                     data-idsp='$idsp'
@@ -80,8 +81,11 @@ foreach ($data as $row) {
                     data-size='$id_size'
                     data-soluong='$soluong'
                     data-mau='$id_mau'
-                    style='width:60px;height:40px;font-size:17px;'>Sửa</button></div>
-                    <div><button class='btn btn-danger btn-sm btn-xoa' data-id='$idvr' style='width:60px;height:40px;font-size:17px;'>Xóa</button></div>
+                    style='width:80px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
+                    </div>
+                    <div>
+                    <button class='btn btn-danger btn-sm btn-xoa' data-id='$idvr' style='width:80px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
+                    </div>
                     </div>
             </td>
         </tr>

@@ -3,8 +3,20 @@ document.addEventListener('DOMContentLoaded', function () {
     let productCount = 0;
     let currentPage = 1;
     const formLoc = document.getElementById("formLoc");
-    const roleId = JSON.parse(document.getElementById('role_id').getAttribute('data-role'));
+    const permissionsElement = document.getElementById('permissions');
+    let permissions = [];
 
+    // Lấy dữ liệu từ thuộc tính data-permissions
+    if (permissionsElement && permissionsElement.getAttribute('data-permissions')) {
+        try {
+            permissions = JSON.parse(permissionsElement.getAttribute('data-permissions'));
+            console.log('Permissions received:', permissions); // Kiểm tra giá trị permissions
+        } catch (error) {
+            console.error('Lỗi phân tích cú pháp JSON:', error);
+        }
+    } else {
+        console.log('Không có dữ liệu permissions hợp lệ');
+    }
     // Hàm format giá
     const formatPrice = price => Number(price).toLocaleString('vi-VN');
 
@@ -71,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (product) {
             const formSua = document.querySelector('.formSua');
             formSua.style.display = 'block';
+            document.querySelector('.overlay').style.display='block';
             document.getElementById('supplier_idSua').disabled = true;
             document.getElementById('stt').value = product.id;
             document.getElementById('supplier_idSua').value = product.supplier_id;
@@ -240,6 +253,8 @@ setTimeout(() => box.classList.remove('shake'), 400);
     
         updateProductList();
         document.querySelector('.formSua').style.display = 'none';
+        document.querySelector('.overlay').style.display = 'none';
+
     });
     
     
@@ -247,6 +262,7 @@ setTimeout(() => box.classList.remove('shake'), 400);
     // Khi nhấn "Đóng"
     document.querySelector('.formSua button.btn-outline-primary').addEventListener('click', function() {
     document.querySelector('.formSua').style.display = 'none';
+    document.querySelector('.overlay').style.display = 'none';
 });
 
 
@@ -322,7 +338,9 @@ function showVariantModal({ title, content, onConfirm }) {
         const imageFile = document.getElementById('fileAnh').files[0];
         const formNhap = document.getElementById('formNhapPhieuNhap');
         
-        if (roleId !== 2 && roleId !== 3) {
+        document.getElementById('supplier_id').disabled = true;
+
+        if (!permissions.includes('write')) {
             const tBquyen = document.querySelector('.thongBaoQuyen');
             tBquyen.style.display = 'block';
             tBquyen.classList.add('show');
@@ -347,7 +365,10 @@ function showVariantModal({ title, content, onConfirm }) {
         }
     
         const imageUrl = URL.createObjectURL(imageFile);
-    
+
+        document.getElementById('cbSize').value = '';
+        document.getElementById('txtSl').value = '';
+
         const newItem = {
             id: ++productCount,
             supplier_id: parseInt(supplier_id),
@@ -370,6 +391,8 @@ function showVariantModal({ title, content, onConfirm }) {
             p.size_id === newItem.size_id &&
             p.image_name === newItem.image_name
         );
+
+
     
         if (existingIndex !== -1) {
             showVariantModal({
@@ -401,6 +424,17 @@ function showVariantModal({ title, content, onConfirm }) {
     });
     
     
+    document.getElementById('resetFormProduct').addEventListener("click",function()
+{
+    document.getElementById('cbTen').value = '';
+    document.getElementById('fileAnh').value = '';
+    document.getElementById('hienthiimg').style.display = 'none';
+    document.getElementById('cbMau').value = '';
+    document.getElementById('cbSize').value = '';
+    document.getElementById('txtSl').value = '';
+
+});
+
     // Hiển thị ảnh preview
     document.getElementById('fileAnh').addEventListener('change', function () {
         const file = this.files[0];
@@ -431,7 +465,7 @@ document.getElementById('btnLuuSanPham').addEventListener('click', function () {
     const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
     const ptgg = document.getElementById('txtPT').value.trim();
 
-    if (roleId !== 2 && roleId !== 3) {
+    if (!permissions.includes('write')) {
         const tBquyen = document.querySelector('.thongBaoQuyen');
         tBquyen.style.display = 'block';
         tBquyen.classList.add('show');
@@ -634,7 +668,7 @@ formData.append('products', JSON.stringify(dataToSend));
                 // Khi người dùng ấn nút Xác nhận trong popup
                 document.getElementById('btnXacNhan').addEventListener('click', async function () {
                     const id = this.dataset.idpn;
-                    if (roleId !== 2 && roleId !== 3) {
+                    if (!permissions.includes('update')) {
                         const tBquyen = document.querySelector('.thongBaoQuyen');
                         tBquyen.style.display = 'block';
                         tBquyen.classList.add('show');
@@ -793,7 +827,7 @@ formData.append('products', JSON.stringify(dataToSend));
 
                         // Xử lý khi nhấn nút "Có"
                         popup.querySelector(".btn-danger").onclick = function () {
-                            if (roleId !== 2 && roleId !== 3) {
+                            if (!permissions.includes('delete')) {
                                 const tBquyen = document.querySelector('.thongBaoQuyen');
                                 tBquyen.style.display = 'block';
                                 tBquyen.classList.add('show');
@@ -906,7 +940,7 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
     let cleanGia = rawGia.replace(/\./g, '');
     formData.set('txtTongGT', cleanGia);
 
-    if (roleId !== 2 && roleId !== 3) {
+    if (!permissions.includes('update')) {
         const tBquyen = document.querySelector('.thongBaoQuyen');
         tBquyen.style.display = 'block';
         tBquyen.classList.add('show');
