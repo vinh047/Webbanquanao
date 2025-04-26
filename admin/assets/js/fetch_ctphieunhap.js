@@ -3,7 +3,20 @@ let productCount = 0;
 let productPendingToAdd = null; 
 document.addEventListener('DOMContentLoaded', function () {
     const formLoc = document.getElementById("formLoc");
+    const permissionsElement = document.getElementById('permissions');
+    let permissions = [];
 
+    // Lấy dữ liệu từ thuộc tính data-permissions
+    if (permissionsElement && permissionsElement.getAttribute('data-permissions')) {
+        try {
+            permissions = JSON.parse(permissionsElement.getAttribute('data-permissions'));
+            console.log('Permissions received:', permissions); // Kiểm tra giá trị permissions
+        } catch (error) {
+            console.error('Lỗi phân tích cú pháp JSON:', error);
+        }
+    } else {
+        console.log('Không có dữ liệu permissions hợp lệ');
+    }
 
     let currentPage = 1; // ⚠️ Fix thiếu biến này gây lỗi load lại trang khi xoá
     function adjustPageIfLastItem() {
@@ -43,6 +56,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         overlay.style.display = "block";
 
                         popup.querySelector(".btn-danger").onclick = function () {
+                            if (!permissions.includes('delete')) {
+                                const tBquyen = document.querySelector('.thongBaoQuyen');
+                                tBquyen.style.display = 'block';
+                                tBquyen.classList.add('show');
+                                popup.style.display = 'none';
+                                overlay.style.display = 'none';
+                                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                                return; 
+                            }
                             fetch("./ajax/deleteCTphieunhap.php", {
                                 method: "POST",
                                 headers: {
@@ -117,7 +139,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('btnXacNhan').addEventListener('click', async function () {
                     const type = this.dataset.type; // 'pn' hoặc 'ctpn'
                     const id = this.dataset.id;
-                
+                    if (!permissions.includes('update')) {
+                        const tBquyen = document.querySelector('.thongBaoQuyen');
+                        tBquyen.style.display = 'block';
+                        tBquyen.classList.add('show');
+                        document.getElementById('xacNhanCho').style.display = 'none';
+                        document.querySelector('.overlay').style.display = 'none';
+                        setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                        return; 
+                    }
                     let url = '';
                     if (type === 'pn') url = './ajax/moDongPN.php';
                     else if (type === 'ctpn') url = './ajax/moDongCTPN.php';
@@ -354,6 +384,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const variantId = document.getElementById("txtMaBTsua").value.trim();
             const quantity = parseInt(document.getElementById("txtSlsuaTon").value.trim());
         
+            if (!permissions.includes('update')) {
+                const tBquyen = document.querySelector('.thongBaoQuyen');
+                tBquyen.style.display = 'block';
+                tBquyen.classList.add('show');
+                document.querySelector('.formSuaPN').style.display = 'none';
+                document.querySelector('.overlay').style.display = 'none';
+                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                return; 
+            }
+
+
             if (!idpn) return showError("Mã phiếu nhập không được để trống!");
             if (!idsp) return showError("Mã sản phẩm không được để trống!");
             if (!variantId) return showError("Mã biến thể không được để trống!");
@@ -370,10 +411,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dataSP = await checkSP.json();
                 if (!dataSP.exists) return showError("Mã sản phẩm không tồn tại!");
         
-                // Kiểm tra biến thể có khớp với sản phẩm không
-                const checkBT = await fetch(`./ajax/checkVariantProduct.php?product_id=${idsp}&variant_id=${variantId}`);
-                const dataBT = await checkBT.json();
-                if (!dataBT.match) return showError("Mã biến thể không thuộc sản phẩm này!");
         
                 // Gửi dữ liệu đi
                 const formData = new FormData();

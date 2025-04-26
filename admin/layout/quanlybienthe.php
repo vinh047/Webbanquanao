@@ -11,8 +11,34 @@
     <link rel="stylesheet" href="./assets/css/sanpham.css">
 
     <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+}
+
+// Kiểm tra quyền của người dùng
+$user_id = $_SESSION['user_id'] ?? null;
+$role_id = $_SESSION['role_id'] ?? null;
+
+if ($role_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy quyền của người dùng
     require_once(__DIR__ . '/../../database/DBConnection.php');
     $db = DBConnect::getInstance();
+
+    // Truy vấn để lấy tất cả quyền của người dùng với permission_id = 1
+    $permissions = $db->select("SELECT action, permission_id FROM role_permission_details WHERE role_id = ? AND permission_id = 1", [$role_id]);
+
+    // Lưu các quyền vào mảng permissions trong session
+    $permissionsArray = [];
+    foreach ($permissions as $permission) {
+        $permissionsArray[] = $permission['action']; // Lưu các hành động vào mảng permissions
+    }
+
+    // Lưu các quyền vào session
+    $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
+}
+
+// Truyền quyền vào thẻ HTML
+$permissionsJson = json_encode($_SESSION['permissions'] ?? []);
     $color = $db->select("SELECT * FROM colors",[]);
     $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
     ?>
@@ -20,6 +46,9 @@
 </head>
 <body>
     
+        <!-- Thẻ ẩn để chứa giá trị role_id -->
+        <div id="permissions" data-permissions='<?= $permissionsJson ?>' style="display:none;"></div>
+
                 <section class="py-3">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" title="Lọc biến thể"></i> <span class="fs-5">Lọc danh sách biến thể</span> </span>
@@ -217,11 +246,11 @@
                 <input type="hidden" name="txtMaCTPN" id="txtMaCTPN">
                     <div class="">
                         <label for="txtMaBt">Mã biến thể : </label>
-                        <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control" readonly>
+                        <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control bg-light" readonly>
                     </div>
                     <div class="pt-3">
                         <label for="txtMa">Mã sản phẩm : </label>
-                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control" readonly>
+                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control bg-light" readonly>
                     </div>
     
                     <div class="pt-3 pb-2">
@@ -263,7 +292,7 @@
     
                     <div class="pt-3">
                         <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control" readonly placeholder="Số lượng của sản phẩm">
+                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control bg-light" readonly placeholder="Số lượng của sản phẩm">
                     </div>
 
     
@@ -282,8 +311,61 @@
             </div>
     </section>
 
+    <div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Bạn không có quyền thực hiện chức năng này
+            </p>
+        </div>
 
 
+    <!-- Modal Chi tiết biến thể -->
+    <div class="modal fade" id="modalChiTietBienThe" tabindex="-1" aria-labelledby="modalChiTietLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalChiTietLabel">Chi tiết biến thể</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row align-items-center">
+          <div class="col-md-4 text-center">
+            <img id="ctbt_image" src="" class="img-fluid rounded border" style="max-height: 280px; object-fit: contain;" alt="Ảnh sản phẩm">
+          </div>
+          <div class="col-md-8 fs-6">
+            <p style="font-size: 17px;"><strong>Mã biến thể:</strong> <span id="idbt_sp"></span></p>
+            <p style="font-size: 17px;"><strong>Sản phẩm:</strong> <span id="ctbt_tensp"></span></p>
+            <p style="font-size: 17px;"><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
+            <p style="font-size: 17px;"><strong>Size:</strong> <span id="ctbt_size"></span></p>
+            <p><strong>Tồn kho:</strong> <span id="ctbt_sl"></span></p>
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-bordered" id="chitiet-phieunhap">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Mã ctpn</th>
+              <th class="text-center">Mã pn</th>
+              <th class="text-center">Mã sp</th>
+              <th class="text-center">Mã bt</th>
+              <th class="text-center">Số lượng nhập</th>
+              <th class="text-center">Ngày nhập</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS sẽ render -->
+          </tbody>
+        </table>
+
+        <!-- 👇 Phân trang -->
+        <div id="modal-pagination" class="d-flex justify-content-center align-items-center gap-2 mb-3"></div>
+        <!-- JS sẽ render nút -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
       <script src="./assets/js/fetch_bienthe.js"></script>
 </body>

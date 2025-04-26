@@ -9,8 +9,52 @@
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css">
     <?php
-        require_once(__DIR__ . '/../../database/DBConnection.php');
-        $db = DBConnect::getInstance();
+// Bắt đầu session để truy cập thông tin người dùng đã đăng nhập
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+}
+// Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
+$user_id = $_SESSION['user_id'] ?? null;
+$role_id = $_SESSION['role_id'] ?? null;
+
+if ($user_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
+    require_once(__DIR__ . '/../../database/DBConnection.php');
+    $db = DBConnect::getInstance();
+    
+    // Truy vấn để lấy tên người dùng dựa trên user_id
+    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
+    
+    if ($stmt) {
+        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
+    } else {
+        $username = "Không tìm thấy người dùng";
+    }
+} else {
+    // Nếu không có user_id trong session, người dùng chưa đăng nhập
+    $username = "Chưa đăng nhập";
+}
+
+if ($role_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy quyền của người dùng
+    require_once(__DIR__ . '/../../database/DBConnection.php');
+    $db = DBConnect::getInstance();
+
+    // Truy vấn để lấy tất cả quyền của người dùng với permission_id = 1
+    $permissions = $db->select("SELECT action, permission_id FROM role_permission_details WHERE role_id = ? AND permission_id = 4", [$role_id]);
+
+    // Lưu các quyền vào mảng permissions trong session
+    $permissionsArray = [];
+    foreach ($permissions as $permission) {
+        $permissionsArray[] = $permission['action']; // Lưu các hành động vào mảng permissions
+    }
+
+    // Lưu các quyền vào session
+    $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
+}
+
+// Truyền quyền vào thẻ HTML
+$permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         $categories = $db->select("SELECT * FROM categories", []);
         $suppliers = $db->select("SELECT * FROM supplier",[]);
         $tensp = $db->select("SELECT * FROM products",[]);
@@ -21,14 +65,15 @@
 </head>
 <body> 
 
-
+    <!-- Thẻ ẩn để chứa giá trị role_id -->
+    <div id="permissions" data-permissions='<?= $permissionsJson ?>' style="display:none;"></div>
 
 <div class="sanpham py-3" style="font-size: 19px;">
 
 <form action="./ajax/insertPhieuNhap.php" id="formNhapPhieuNhap" class="p-4 bg-white rounded-3 border">
     <h5 class="mb-3 fw-bold">Thông tin phiếu nhập</h5>
 
-    <div class="row g-3">
+    <div class="row g-4">
         <!-- Nhà cung cấp -->
         <div class="col-md-4">
             <label for="supplier_id" class="form-label">Nhà cung cấp</label>
@@ -42,17 +87,16 @@
 
         <!-- Mã nhân viên -->
         <div class="col-md-2">
-            <label for="user_id" class="form-label">Mã nhân viên</label>
-            <input type="text" name="user_id" id="user_id" value="3" readonly class="form-control bg-light">
+            <label for="user_id" class="form-label">Tên nhân viên</label>
+<!-- Trường hiển thị tên người dùng -->
+<input type="text" name="username_display" id="username_display" value="<?= htmlspecialchars($username) ?>" readonly class="form-control bg-light">
+
+<!-- Trường ẩn chứa giá trị user_id (không hiển thị cho người dùng, nhưng gửi đi khi submit) -->
+<input type="hidden" name="user_id" id="user_id" value="<?= htmlspecialchars($user_id) ?>" readonly class="form-control bg-light">
         </div>
-    </div>
 
-    <hr class="my-4">
-
-    <h6 class="fw-bold">Sản phẩm nhập</h6>
-    <div class="row g-3 align-items-end">
+        <div class="col-md-6">
         <!-- Tên sản phẩm -->
-        <div class="col-md-5">
             <label for="cbTen" class="form-label">Tên sản phẩm</label>
             <div class="d-flex">
                 <select name="cbTen" id="cbTen" class="form-select w-auto">
@@ -62,20 +106,20 @@
                     <?php endforeach; ?>
                 </select>
                 <button class="btn btn-outline-primary ms-2" type="button" id="btnMoForm">Thêm SP</button>
-            </div>
+    </div>
         </div>
     </div>
 
     <hr class="my-4">
 
-    <div class="row g-3">
+    <div class="row g-4">
     <h6 class="fw-bold mb-0">Chi tiết sản phẩm</h6>
                 <!-- Ảnh -->
         <div class="col-md-3">
             <label for="fileAnh" class="form-label">Hình ảnh</label>
             <input type="file" name="fileAnh" id="fileAnh" class="form-control">
             <div class="pt-2" style="max-width: 150px;" id="hienthianh">
-                <img src="" alt="preview" class="img-thumbnail" style="height: 130px; object-fit: contain; display: none;">
+                <img src="" alt="preview" class="img-thumbnail" id="hienthiimg" style="height: 130px; object-fit: contain; display: none;">
             </div>
         </div>
         <!-- Màu -->
@@ -109,6 +153,7 @@
 
     <div class="mt-4 d-flex gap-3">
         <button type="button" id="add_product" class="btn btn-outline-secondary">Thêm vào hàng chờ</button>
+        <button type="button" id="resetFormProduct" class="btn btn-danger">Reset chi tiết</button>
         <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
     </div>
 </form>
@@ -237,7 +282,7 @@
                     <!-- Chọn nhà cung cấp -->
                     <div class="pt-3">
                         <label for="stt">Số TT: </label>
-                        <input type="text" name="stt" id="stt" readonly class="form-control">
+                        <input type="text" name="stt" id="stt" readonly class="form-control bg-light">
                     </div>
                     <div class="d-flex">
                     <div class="pt-3 me-auto">
@@ -253,7 +298,7 @@
                     <!-- Mã nhân viên -->
                     <div class="pt-3">
                         <label for="user_idSua">Mã nhân viên: </label>
-                        <input type="text" name="user_idSua" id="user_idSua" value="3" readonly class="form-control">
+                        <input type="text" name="user_idSua" id="user_idSua" value="3" readonly class="form-control bg-light">
                     </div>
                     </div>
 
@@ -328,7 +373,7 @@
                     <!-- Chọn nhà cung cấp -->
                     <div class="pt-3">
                         <label for="txtMaPNsua">Mã PN: </label>
-                        <input type="text" name="txtMaPNsua" id="txtMaPNsua" readonly class="form-control">
+                        <input type="text" name="txtMaPNsua" id="txtMaPNsua" readonly class="form-control bg-light">
                     </div>
                     <div class="pt-3">
                         <label for="supplier_idSuaPN">Chọn nhà cung cấp: </label>
@@ -343,17 +388,17 @@
                     <!-- Mã nhân viên -->
                     <div class="pt-3">
                         <label for="user_idSuaPN">Mã nhân viên: </label>
-                        <input type="text" name="user_idSuaPN" id="user_idSuaPN" value="3" readonly class="form-control">
+                        <input type="text" name="user_idSuaPN" id="user_idSuaPN" value="3" readonly class="form-control bg-light">
                     </div>
 
                     <div class="pt-3">
                         <label for="txtTongGT">Tổng giá trị: </label>
-                        <input type="text" name="txtTongGT" id="txtTongGT" class="form-control" readonly >
+                        <input type="text" name="txtTongGT" id="txtTongGT" class="form-control bg-light" readonly >
                     </div>
 
                     <div class="pt-3">
                         <label for="txtNgayLap">Ngày lập: </label>
-                        <input type="text" name="txtNgayLap" id="txtNgayLap" class="form-control" readonly >
+                        <input type="text" name="txtNgayLap" id="txtNgayLap" class="form-control bg-light" readonly >
                     </div>
 
                     <div class="d-flex pt-3 gap-3">
@@ -530,7 +575,11 @@
     </div>
 </div>
 
-
+<div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Bạn không có quyền thực hiện chức năng này
+            </p>
+        </div>
 
 <div class="thongbaoXoaThatBai  bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       

@@ -174,7 +174,8 @@
 .thongbaoLuuKhongThanhCong,
 .thongbaoLuuThanhCong,
 .thongbaoXoaHiddenThanhCong,
-.thongbaoThemSp {
+.thongbaoThemSp,
+.thongBaoQuyen {
     display: block;
     opacity: 0;
     transition: opacity 0.6s ease;
@@ -205,7 +206,8 @@
 .thongbaoLuuKhongThanhCong.show,
 .thongbaoLuuThanhCong.show,
 .thongbaoXoaHiddenThanhCong.show,
-.thongbaoThemSp.show {
+.thongbaoThemSp.show,
+.thongBaoQuyen.show {
     display: block;
     opacity: 1;
 }

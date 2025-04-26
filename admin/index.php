@@ -1,6 +1,6 @@
 
 <?php
-require_once 'auth.php'; // 
+require_once 'admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
 require_once '../User-form/Login_Form/get_user_id.php'; //lay user_id de hien thi thong tin 
 ?>
 
@@ -19,6 +19,10 @@ require_once '../User-form/Login_Form/get_user_id.php'; //lay user_id de hien th
 <body>
 <section class="d-flex position-relative">
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+}
+
 $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 ?>
 
@@ -90,6 +94,7 @@ if(isset($_GET['page']))
 </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-<script src="auto_logout.js"></script>
+<!-- Đạt thêm tắt khi close tab -->
+<script src="auto_logout.js"></script> 
 </body>
 </html>

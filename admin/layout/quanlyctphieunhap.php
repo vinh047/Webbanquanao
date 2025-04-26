@@ -9,14 +9,43 @@
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css">
     <?php
+// Bắt đầu session để truy cập thông tin người dùng đã đăng nhập
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+}
+
+// Kiểm tra quyền của người dùng
+$user_id = $_SESSION['user_id'] ?? null;
+$role_id = $_SESSION['role_id'] ?? null;
+
+if ($role_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy quyền của người dùng
     require_once(__DIR__ . '/../../database/DBConnection.php');
     $db = DBConnect::getInstance();
+
+    // Truy vấn để lấy tất cả quyền của người dùng với permission_id = 1
+    $permissions = $db->select("SELECT action, permission_id FROM role_permission_details WHERE role_id = ? AND permission_id = 4", [$role_id]);
+
+    // Lưu các quyền vào mảng permissions trong session
+    $permissionsArray = [];
+    foreach ($permissions as $permission) {
+        $permissionsArray[] = $permission['action']; // Lưu các hành động vào mảng permissions
+    }
+
+    // Lưu các quyền vào session
+    $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
+}
+
+// Truyền quyền vào thẻ HTML
+$permissionsJson = json_encode($_SESSION['permissions'] ?? []);
     $color = $db->select("SELECT * FROM colors",[]);
     $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
     ?>
 </head>
 <body>
-            <section class="py-3">
+        <!-- Thẻ ẩn để chứa giá trị role_id -->
+        <div id="permissions" data-permissions='<?= $permissionsJson ?>' style="display:none;"></div>
+        <section class="py-3">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc chi tiết phiếu nhập"></i> <span class="fs-5">Lọc danh sách CTPN</span> </span>
                     <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="z-index : 2000;border:1px solid black;">
@@ -175,11 +204,11 @@
                     <div class="d-flex">
                     <div class="pt-3 me-auto">
                         <label for="txtMaCTPNsua">Mã CTPN: </label>
-                        <input type="text" name="txtMaCTPNsua" id="txtMaCTPNsua" readonly class="form-control">
+                        <input type="text" name="txtMaCTPNsua" id="txtMaCTPNsua" readonly class="form-control bg-light">
                     </div>
                     <div class="pt-3">
-                        <label for="txtMaPNsua">Mã PN: </label>
-                        <input type="text" name="txtMaPNsua" id="txtMaPNsua"  class="form-control">
+                        <label for="txtMaBTsua">Mã BT: </label>
+                        <input type="text" name="txtMaBTsua" id="txtMaBTsua"  class="form-control bg-light" readonly>
                     </div>
                     </div>
                     <div class="d-flex">
@@ -189,8 +218,8 @@
                     </div>
 
                     <div class="pt-3">
-                        <label for="txtMaBTsua">Mã BT: </label>
-                        <input type="text" name="txtMaBTsua" id="txtMaBTsua"  class="form-control">
+                        <label for="txtMaPNsua">Mã PN: </label>
+                        <input type="text" name="txtMaPNsua" id="txtMaPNsua"  class="form-control">
                     </div>
                     </div>
 
@@ -201,7 +230,7 @@
 
                     <div class="pt-3">
                         <label for="txtNgayLap">Ngày lập: </label>
-                        <input type="text" name="txtNgayLap" id="txtNgayLap" class="form-control" readonly >
+                        <input type="text" name="txtNgayLap" id="txtNgayLap" class="form-control bg-light" readonly >
                     </div>
 
                     <div class="d-flex pt-3 gap-3">
@@ -318,7 +347,11 @@
     </div>
   </div>
 </div>
-
+<div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">       
+                Bạn không có quyền thực hiện chức năng này
+            </p>
+        </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <script src="./assets/js/fetch_ctphieunhap.js"></script>
 </body>
