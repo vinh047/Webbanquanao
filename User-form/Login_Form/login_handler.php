@@ -28,6 +28,14 @@ function handleDangKy($conn) {
         echo json_encode(["status" => "EMAIL_EXISTS"]);
         return;
     }
+    $stmt = $conn->prepare("SELECT user_id FROM users WHERE phone = ?");
+    $stmt->bind_param("s", $sdt);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        echo json_encode(["status" => "PHONE_EXISTS"]);
+        return;
+    }
 
 
 

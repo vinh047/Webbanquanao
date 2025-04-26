@@ -44,6 +44,8 @@ async function submitForm(e) {
         addError(e.target.querySelector('[name="username"]'), "Username đã tồn tại.");
       } else if (responseData.status === "EMAIL_EXISTS") {
         addError(e.target.querySelector('[name="email"]'), "Email đã tồn tại.");
+      } else if (responseData.status === "PHONE_EXISTS") {
+        addError(e.target.querySelector('[name="sdt"]'), "Số điện thoại đã tồn tại.");
       } else if (responseData.status === "INVALID_PASSWORD") {
         addError(e.target.querySelector('[name="pswd"]'), "Mật khẩu không hợp lệ.");
       } else if (responseData.status === "NO_ACCOUNT") {

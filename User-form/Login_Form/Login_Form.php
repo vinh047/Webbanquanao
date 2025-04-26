@@ -12,9 +12,18 @@ $trangthai = $_GET['trangthai'] ?? 'dangnhap';
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
   <link rel="stylesheet" href="Login_Form.css" />
+  <link rel="stylesheet" href="../../assets/css/header.css" />
 </head>
+
 <body>
-  <div class="container py-5 min-vh-100 d-flex align-items-center justify-content-center">
+  <header class="header shadow-lg" >
+      <div class="logo_header ms-5 ">
+        <a href="../../index.php">
+          <img src="../../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+        </a>
+        </div>
+  </header>
+  <div class="container mt-3 d-flex align-items-center justify-content-center">
     <div class="row w-100 g-3 flex-column flex-md-row justify-content-center align-items-center gap-5">
 
       <!-- Login/Register Form -->

@@ -40,11 +40,13 @@ function validateForm() {
     const usernameField = form.querySelector('[name="username"]');
     const emailField = form.querySelector('[name="email"]');
     const passwordField = form.querySelector('[name="pswd"]');
+    const passwordConfirmField = form.querySelector('[name="pswd-confirm"]');
     const phoneField = form.querySelector('[name="sdt"]');
     
     const username = usernameField.value.trim();
     const email = emailField.value.trim();
     const password = passwordField.value.trim();
+    const password_confirm=passwordConfirmField.value.trim()
     const sdt = phoneField.value.trim();
     
 
@@ -56,6 +58,10 @@ function validateForm() {
 
     if (!password) showError(passwordField, "Vui lòng nhập mật khẩu");
     else if (!passwordRegex.test(password)) showError(passwordField, "Mật khẩu tối thiểu 8 ký tự bao gồm số, chữ hoa, chữ thường, ký tự đặc biệt");
+    
+    if (!password_confirm) showError(passwordConfirmField, "Vui lòng nhập mật khẩu");
+    else if (password !== password_confirm) showError(passwordConfirmField, "Mật khẩu không chính xác");
+
 
     if (!sdt) showError(phoneField, "Vui lòng nhập số điện thoại");
     else if (!phoneRegex.test(sdt)) showError(phoneField, "Số điện thoại không hợp lệ");

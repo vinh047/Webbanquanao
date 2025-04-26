@@ -19,6 +19,10 @@ function loadForm() {
         <input type="password" name="pswd" class="form-control border-dark" placeholder="Nhập mật khẩu">
       </div>
       <div class="mb-3">
+        <label for="pswd-confirm" class="form-label text-black">Xác nhận mật khẩu</label>
+        <input type="password-confirm" class="form-control border-dark" id="pswd-confirm" name="pswd-confirm" placeholder="Nhập lại mật khẩu">
+      </div>
+      <div class="mb-3">
         <label class="text-black">Số điện thoại</label>
         <input type="tel" name="sdt" class="form-control border-dark" placeholder="Nhập số điện thoại">
       </div>

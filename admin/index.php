@@ -1,4 +1,9 @@
 
+<?php
+require_once 'auth.php'; // 
+require_once '../User-form/Login_Form/get_user_id.php'; //lay user_id de hien thi thong tin 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,6 +48,12 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
                 <i class="fa-solid fa-cubes"></i> <span>Biến thể sản phẩm</span>
             </a>
         </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white d-flex align-items-center gap-2" href="index.php?action=logout">
+                <i class="fa-solid fa-sign-out"></i> <span>Đăng xuất</span>
+            </a>
+        </li>
+
     </ul>
 </nav>
 
@@ -79,6 +90,6 @@ if(isset($_GET['page']))
 </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-
+<script src="auto_logout.js"></script>
 </body>
 </html>
