@@ -175,7 +175,9 @@
 .thongbaoLuuThanhCong,
 .thongbaoXoaHiddenThanhCong,
 .thongbaoThemSp,
-.thongBaoQuyen {
+.thongBaoQuyen,
+.thongbaoXoaPNthanhcong,
+.thongbaoXoaPNKhongThanhCong {
     display: block;
     opacity: 0;
     transition: opacity 0.6s ease;
@@ -207,7 +209,9 @@
 .thongbaoLuuThanhCong.show,
 .thongbaoXoaHiddenThanhCong.show,
 .thongbaoThemSp.show,
-.thongBaoQuyen.show {
+.thongBaoQuyen.show,
+.thongbaoXoaPNthanhcong.show,
+.thongbaoXoaPNKhongThanhCong.show {
     display: block;
     opacity: 1;
 }
@@ -240,7 +244,7 @@ input[type=number] {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1050;
+    z-index: 2000;
     background-color: #FFF9E6;
     color: #5C3D00;
     padding: 20px;
@@ -351,7 +355,7 @@ input[type=number] {
 {
     display: none;
     position: fixed;
-    z-index: 2000;
+    z-index: 1209;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

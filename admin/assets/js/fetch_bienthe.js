@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   
                   
                 
-                document.querySelectorAll(".btn-sua").forEach(btn => {
+                  document.querySelectorAll(".btn-sua").forEach(btn => {
                     btn.addEventListener("click", function (e) {
                         const idvr = this.dataset.idvr;
                         const idsp = this.dataset.idsp;
@@ -194,25 +194,31 @@ document.addEventListener("DOMContentLoaded", function () {
                         const soluong = this.dataset.soluong;
                         const mau = this.dataset.mau;
                         const idctpn = this.dataset.idct;
-                        document.querySelector(".formSua").style.display = "block";
-                        document.querySelector(".overlay").style.display = "block";
-
+                
+                        const formSua = document.getElementById("formSuaSPbienThe");
+                
                         // Truyền dữ liệu vào form
                         formSua.querySelector("input[name='txtMaBt']").value = idvr;
-                        document.getElementById("txtMaSua").value = idsp;
-                        document.getElementById("fileAnhSua").value = ""; // không thể gán đường dẫn file trực tiếp
-                        document.getElementById("cbSizeSua").value = size;
-                        document.getElementById("txtSlSua").value = soluong;
-                        document.getElementById("cbMauSua").value = mau;
+                        formSua.querySelector("input[name='txtMaSua']").value = idsp;
+                        formSua.querySelector("input[name='txtMaCTPN']").value = idctpn;
+                        formSua.querySelector("select[name='cbSizeSua']").value = size;
+                        formSua.querySelector("select[name='cbMauSua']").value = mau;
+                        formSua.querySelector("input[name='txtSlSua']").value = soluong;
+                
+                        // Gán tên file ảnh vào khu vực hiển thị tên file
                         document.getElementById("tenFileAnhSua").textContent = anh;
-                        document.getElementById("txtMaCTPN").value = idctpn;
-                        // Gán ảnh hiển thị
-                        const imgPreview = formSua.querySelector("#hienthianhSua img");
+                
+                        // Gán ảnh preview
+                        const imgPreview = document.querySelector("#hienthianhSua img");
                         imgPreview.src = "../../assets/img/sanpham/" + anh;
                         imgPreview.style.display = "block";
-                        
+                
+                        // ✅ Mở modal Bootstrap
+                        const modalSuaBienThe = new bootstrap.Modal(document.getElementById('modalSuaBienThe'));
+                        modalSuaBienThe.show();
                     });
                 });
+                
 
 
                     document.querySelectorAll(".btn-xoa").forEach(btn => {
@@ -614,13 +620,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const result = await resUpdate.json();
     
             if (result.success) {
-                document.querySelector(".formSua").style.display = "none";
-                document.querySelector(".overlay").style.display = "none";
-    
                 const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
                 tbUpdate.style.display = "block";
                 tbUpdate.classList.add("show");
                 setTimeout(() => tbUpdate.classList.remove('show'), 2000);
+                            // ✅ Ẩn modal sau khi cập nhật thành công
+            const modalElement = document.getElementById('modalSuaBienThe');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
                 adjustPageIfLastItem();
                 fetchBienThe(currentPage);
             } else {

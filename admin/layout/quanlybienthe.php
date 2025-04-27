@@ -239,76 +239,80 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         </div>       
         
             </div>
-        <div class="formSua border container-md p-4">
-            <div class="" style="font-size: 16px;">
-                <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
-                <form action="../ajax/updateBienthe.php" method="POST" id="formSuaSPbienThe" enctype="multipart/form-data">
-                <input type="hidden" name="txtMaCTPN" id="txtMaCTPN">
-                    <div class="">
-                        <label for="txtMaBt">Mã biến thể : </label>
-                        <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control bg-light" readonly>
-                    </div>
-                    <div class="pt-3">
-                        <label for="txtMa">Mã sản phẩm : </label>
-                        <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control bg-light" readonly>
-                    </div>
-    
-                    <div class="pt-3 pb-2">
-                        <label for="fileAnh">Hình ảnh : </label>
-                        <input type="file" name="fileAnhSua" id="fileAnhSua" class="form-control">
-                        <div class="d-flex">
-                        <div class="pt-2" style="max-width:170px;max-height: 200px;" id="hienthianhSua">
-                            <img src="" alt="" class="img-fluid" style="width: 170px; height: 200px; object-fit: contain; display: none;">
-                        </div>
-                        <div id="tenFileAnhSua" class="text-muted small fst-italic mt-1 ms-2"></div>
-                        </div>
-                    </div>
-    
-                    <div class="d-flex">
-                    <div class="me-auto">
-                        <label for="cbSize">Size : </label>
-                        <select name="cbSizeSua" id="cbSizeSua" class="form-select ">
-                            <option value="">Chọn size sản phẩm</option>
-                            <?php foreach($size as $s): ?>
-                            <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
-                            <?php endforeach ?>
+<!-- Modal Sửa Biến Thể Sản Phẩm -->
+<div class="modal fade" id="modalSuaBienThe" tabindex="-1" aria-labelledby="modalSuaBienTheLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
 
-                        </select>
-                    </div>
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title" id="modalSuaBienTheLabel">Sửa thông tin biến thể sản phẩm</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
 
-                    <div class="">
-                        <label for="cbMau">Màu : </label>
-                        <select name="cbMauSua" id="cbMauSua" class="form-select">
-                            <option value="">Chọn màu sản phẩm</option>
-                            <?php foreach($color as $cl): ?>
+      <div class="modal-body">
+        <form action="../ajax/updateBienthe.php" method="POST" id="formSuaSPbienThe" enctype="multipart/form-data">
+          <input type="hidden" name="txtMaCTPN" id="txtMaCTPN">
 
-                                <option value="<?=$cl['color_id']?>"><?=$cl['name']?></option>
+          <div class="mb-3">
+            <label for="txtMaBt" class="form-label">Mã biến thể:</label>
+            <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control bg-light" readonly>
+          </div>
 
+          <div class="mb-3">
+            <label for="txtMaSua" class="form-label">Mã sản phẩm:</label>
+            <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control bg-light" readonly>
+          </div>
 
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                    </div>
-    
-                    <div class="pt-3">
-                        <label for="txtSl">Số lượng sản phẩm : </label>
-                        <input type="text" name="txtSlSua" id="txtSlSua" class="form-control bg-light" readonly placeholder="Số lượng của sản phẩm">
-                    </div>
-
-    
-                    <div class="pt-3 d-flex justify-content-center gap-3">
-                        <div class="">
-                            <button class="btn btn-success" type="submit" style="width:80px;">Xác nhận</button>
-                        </div>
-                        <div class="">
-                            <button class="btn btn-danger" type="button" style="width:80px;">Hủy</button>
-                        </div>
-                    </div>
-                </form>
-
-                
+          <div class="mb-3">
+            <label for="fileAnhSua" class="form-label">Hình ảnh:</label>
+            <input type="file" name="fileAnhSua" id="fileAnhSua" class="form-control">
+            <div class="d-flex pt-2">
+              <div id="hienthianhSua" style="max-width:170px; max-height:200px;">
+                <img src="" alt="" class="img-fluid" style="width:170px; height:200px; object-fit:contain; display:none;">
+              </div>
+              <div id="tenFileAnhSua" class="text-muted small fst-italic mt-1 ms-2"></div>
             </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="cbSizeSua" class="form-label">Size:</label>
+              <select name="cbSizeSua" id="cbSizeSua" class="form-select">
+                <option value="">Chọn size sản phẩm</option>
+                <?php foreach($size as $s): ?>
+                <option value="<?= $s['size_id'] ?>"><?= $s['name'] ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="cbMauSua" class="form-label">Màu:</label>
+              <select name="cbMauSua" id="cbMauSua" class="form-select">
+                <option value="">Chọn màu sản phẩm</option>
+                <?php foreach($color as $cl): ?>
+                <option value="<?= $cl['color_id'] ?>"><?= $cl['name'] ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="txtSlSua" class="form-label">Số lượng sản phẩm:</label>
+            <input type="text" name="txtSlSua" id="txtSlSua" class="form-control bg-light" readonly placeholder="Số lượng của sản phẩm">
+          </div>
+
+          <div class="d-flex justify-content-center gap-3 pt-3">
+            <button type="submit" class="btn btn-success" style="width: 100px;">Xác nhận</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="width: 100px;">Hủy</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
     </section>
 
     <div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
@@ -341,7 +345,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         </div>
       </div>
 
-      <table class="table table-bordered" id="chitiet-phieunhap">
+        <div class="px-3">
+        <table class="table table-bordered" id="chitiet-phieunhap">
           <thead>
             <tr>
               <th class="text-center">#</th>
@@ -357,6 +362,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <!-- JS sẽ render -->
           </tbody>
         </table>
+        </div>
 
         <!-- 👇 Phân trang -->
         <div id="modal-pagination" class="d-flex justify-content-center align-items-center gap-2 mb-3"></div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2025 at 04:23 PM
+-- Generation Time: Apr 27, 2025 at 12:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -142,7 +142,7 @@ CREATE TABLE `importreceipt_details` (
   `variant_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) DEFAULT 0,
   `unit_price` decimal(12,2) NOT NULL DEFAULT 0.00,
   `total_price` decimal(14,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;

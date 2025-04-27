@@ -53,6 +53,11 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
 
         <section class="py-3">
                 <div class="boloc ms-5 position-relative">
+                    <div class="">
+                    <button type="button" class="btn btn-secondary" id="btnThemSanPhamMoi">
+    <i class="fa fa-plus"></i> Thêm SP mới
+  </button>
+                    </div>
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc sản phẩm"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
                     <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;z-index : 2000;border:1px solid black;">
                         <form action="" method="POST" id="formLoc">
@@ -94,47 +99,56 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                 </div>
             </section>
 
+            <div class="modal fade" id="modalNhapSanPham" tabindex="-1" aria-labelledby="modalNhapSanPhamLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modalNhapSanPhamLabel">Thêm sản phẩm</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
 
-            <div class="sanpham py-3" style="font-size: 19px">
+      <div class="modal-body">
+        <form id="formNhapSanPham">
+          <!-- Thêm sản phẩm -->
+          <div class="mb-3">
+            <label for="txtTen" class="form-label">Tên sản phẩm:</label>
+            <input type="text" name="txtTen" id="txtTen" placeholder="Tên của sản phẩm" class="form-control">
+          </div>
 
+          <div class="mb-3">
+            <label for="txtMota" class="form-label">Mô tả sản phẩm:</label>
+            <textarea name="txtMota" id="txtMota" class="form-control" placeholder="Mô tả"></textarea>
+          </div>
 
-                <form action="../ajax/insertSanPham.php" method="POST" id="formNhapSP">
-                    <div class="">
-                        <label for="txtTen">Tên sản phẩm : </label>
-                        <input type="text" name="txtTen" id="txtTen" placeholder="Tên của sản phẩm" class="form-control ">
-                    </div>
-    
-                    <div class="pt-3">
-                        <label for="txtMota">Mô tả sản phẩm : </label>
-                        <textarea name="txtMota" id="txtMota" class="form-control " placeholder="Mô tả"></textarea>
-                    </div>
-    
-                    <div class="pt-3">
-                        <label for="cbLoai">Loại sản phẩm : </label>
-                        <select name="cbLoai" id="cbLoai" class="form-select ">
-                            <option value="">Chọn loại sản phẩm</option>
-                            <?php foreach( $categories as $loai ): ?>
-                            <option value="<?=$loai['category_id']?>"><?=$loai['name']?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-    
-                    <div class="pt-3">
-                        <label for="txtGia">Giá sản phẩm : </label>
-                        <input type="text" name="txtGia" id="txtGia" class="form-control " placeholder="Giá của sản phẩm">
-                    </div>
+          <div class="mb-3">
+            <label for="cbLoai" class="form-label">Loại sản phẩm:</label>
+            <select name="cbLoai" id="cbLoai" class="form-select">
+              <option value="">Chọn loại sản phẩm</option>
+              <?php foreach($categories as $loai): ?>
+                  <option value="<?=$loai['category_id']?>"><?=$loai['name']?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
 
-                    <div class="pt-3">
-                        <label for="txtPT">Tỉ lệ phần trăm tăng giá bán : </label>
-                        <input type="text" name="txtPT" id="txtPT" class="form-control " placeholder="Phần trăm giá sản phẩm" value="30">
-                    </div>
-    
-                    <div class="pt-3">
-                        <button class="btn btn-outline-primary" type="submit">Thêm sản phẩm</button>
-                    </div>
-                </form>
+          <div class="mb-3">
+            <label for="txtGia" class="form-label">Giá sản phẩm:</label>
+            <input type="text" name="txtGia" id="txtGia" class="form-control" placeholder="Giá của sản phẩm">
+          </div>
 
-            </div>
+          <div class="mb-3">
+            <label for="txtPT" class="form-label">Tỉ lệ phần trăm tăng giá bán:</label>
+            <input type="text" name="txtPT" id="txtPT" class="form-control" placeholder="Phần trăm giá sản phẩm" value="30">
+          </div>
+
+          <div class="d-flex justify-content-center gap-2 pt-3">
+            <button type="button" class="btn btn-success" id="btnLuuSanPham" style="width: 120px;">Lưu sản phẩm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
             <div class="hienthi">
                 <table class="table table-secondary table-striped table-sm">
@@ -144,7 +158,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                             <th class="bg-secondary text-white tensp">Tên sản phẩm</th>
                             <th class="bg-secondary text-white hienthiloai">Loại</th>
                             <th class="bg-secondary text-white mota">Mô tả Sản phẩm</th>
-                            <!-- <th class="bg-secondary text-white hienthigia">Giá nhập</th> -->
+                            <th class="bg-secondary text-white hienthigia">Giá nhập</th>
                             <th class="bg-secondary text-white hienthigia">Giá bán</th>
                             <th class="bg-secondary text-white hienthibtn">Xử lý</th>
                         </tr>
@@ -233,65 +247,76 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
             </div>
         </div>   
         
-        <div class="formSua border container-md p-3">
-            <div class="" style="font-size: 17px;">
-                <p class="mb-0 text-center fs-4">Sửa thông tin sản phẩm</p>
-                <form action="../ajax/updateSanPham.php" method="POST" id="formSua">
-    <div class="">
-        <label for="txtId">ID sản phẩm : </label>
-        <!-- name phải là 'id' -->
-        <input type="text" class="form-control bg-light" name="id" id="txtId" readonly>
-    </div>      
+<!-- Modal Sửa sản phẩm -->
+<div class="modal fade" id="modalSuaSanPham" tabindex="-1" aria-labelledby="modalSuaSanPhamLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
+      
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modalSuaSanPhamLabel">Sửa thông tin sản phẩm</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
 
-    <div class="py-3">
-        <label for="txtTen">Tên sản phẩm : </label>
-        <input type="text" name="ten" id="txtTenSua" class="form-control">
+      <div class="modal-body">
+        <form action="../ajax/updateSanPham.php" method="POST" id="formSua">
+          
+          <div class="mb-3">
+            <label for="txtId" class="form-label">ID sản phẩm:</label>
+            <input type="text" class="form-control bg-light" name="id" id="txtId" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="txtTenSua" class="form-label">Tên sản phẩm:</label>
+            <input type="text" name="ten" id="txtTenSua" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label for="txtMotaSua" class="form-label">Mô tả sản phẩm:</label>
+            <textarea name="mota" id="txtMotaSua" class="form-control"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="cbLoaiSua" class="form-label">Loại sản phẩm:</label>
+            <select name="loai" id="cbLoaiSua" class="form-select">
+              <option value="">Chọn loại sản phẩm</option>
+              <?php foreach($categories as $loai): ?>
+                  <option value="<?= $loai['category_id'] ?>"><?= $loai['name'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="txtGiaSua" class="form-label">Giá nhập:</label>
+            <input type="text" name="gia" id="txtGiaSua" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label for="txtPttg" class="form-label">Phần trăm tăng giá:</label>
+            <input type="text" name="pttg" id="txtPttg" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label for="txtGiaBanSua" class="form-label">Giá sản phẩm:</label>
+            <input type="text" name="giaban" id="txtGiaBanSua" class="form-control">
+          </div>
+
+          <div class="d-flex justify-content-center gap-3 pt-3">
+            <button type="submit" class="btn btn-success" style="width: 100px;">Xác nhận</button>
+            <button type="button" class="btn btn-danger" style="width: 100px;" data-bs-dismiss="modal">Hủy</button>
+          </div>
+
+        </form>
+      </div>
+
     </div>
+  </div>
+</div>
 
-    <div class="pt-3">
-        <label for="txtMota">Mô tả sản phẩm : </label>
-        <textarea name="mota" id="txtMotaSua" class="form-control"></textarea>
-    </div>
 
-    <div class="pt-3">
-        <label for="cbLoai">Loại sản phẩm : </label>
-        <select name="loai" id="cbLoaiSua" class="form-select">
-            <option value="">Chọn loại sản phẩm</option>
-            <?php foreach($categories as $loai): ?>
-                <option value="<?=$loai['category_id']?>"><?=$loai['name']?></option>
-            <?php endforeach ?>
-        </select>
-    </div>
 
-    <div class="pt-3">
-        <label for="txtGia">Giá nhập : </label>
-        <input type="text" name="gia" id="txtGiaSua" class="form-control">
-    </div>
 
-    <div class="pt-3">
-        <label for="txtPttg">Phần trăm tăng giá : </label>
-        <input type="text" name="pttg" id="txtPttg" class="form-control">
-    </div>
 
-    <div class="pt-3">
-        <label for="txtGiaBanSua">Giá sản phẩm : </label>
-        <input type="text" name="giaban" id="txtGiaBanSua" class="form-control">
-    </div>
 
-                    
-                    <div class="pt-3 d-flex justify-content-center gap-3">
-                        <div class="">
-                            <button class="btn btn-success" style="width:80px;">Xác nhận</button>
-                        </div>
-                        <div class="">
-                            <button class="btn btn-danger" style="width:80px;">Hủy</button>
-                        </div>
-                    </div>
-            </form>
-
-                
-            </div>
-            </div>
             </div>
 
     </section>
@@ -302,6 +327,12 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                 Bạn không có quyền thực hiện chức năng này
             </p>
         </div>
+
+        <div class="thongbaoThemSp bg-success me-3 mt-3 p-3 rounded-2">
+    <p class="mb-0 text-white">       
+        Thêm sản phẩm mới thành công
+    </p>
+</div>
 
         <!-- Chi tiết sản phẩm -->
 <div class="modal fade" id="modalChiTietSP" tabindex="-1">
@@ -346,6 +377,6 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
   </div>
 </div>
 
-    <script src="./assets/js/xulyFormNhapSanPham.js"></script>
+    <script src="./assets/js/fetch_sanpham.js"></script>
 </body>
 </html>

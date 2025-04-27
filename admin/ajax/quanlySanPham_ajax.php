@@ -44,6 +44,7 @@ foreach ($data as $row) {
             <td class='tensp'>$ten</td>
             <td class='hienthiloai'>$loai</td>
             <td class='mota'>$mota</td>
+            <td class='hienthigia'>$gia VNĐ</td>
             <td class='hienthigia'>$giaban VNĐ</td>
             <td>
                 <div class='d-flex justify-content-center gap-3'>
