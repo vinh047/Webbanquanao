@@ -37,6 +37,24 @@ if (sizeContainer) {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btnUp = document.querySelector('.up');
+    const btnDown = document.querySelector('.down');
+    const input = document.querySelector('.input-qty');
+
+    btnUp.addEventListener('click', function () {
+        input.value = parseInt(input.value) + 1;
+    });
+
+    btnDown.addEventListener('click', function () {
+        let current = parseInt(input.value);
+        if (current > 1) {
+            input.value = current - 1;
+        }
+    });
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const slider = document.querySelector('.suggest-products-scroll');
     const btnLeft = document.querySelector('.scroll-left');

@@ -81,7 +81,7 @@ if (isset($_SESSION['user_id']) && ($_SESSION['role_id'] == 1)) {
                         <ul class="submenu">
                             <?php foreach ($item['subs'] as $sub): ?>
                                 <li>
-                                    <a href="index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $sub['id'] ?>">
+                                    <a href="/index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $sub['id'] ?>">
                                         <?= htmlspecialchars($sub['label']) ?>
                                     </a>
                                 </li>
