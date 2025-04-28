@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2025 at 05:16 PM
+-- Generation Time: Apr 28, 2025 at 06:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -68,7 +68,8 @@ INSERT INTO `categories` (`category_id`, `name`) VALUES
 (3, 'Áo Sơ Mi'),
 (4, 'Áo Polo'),
 (5, 'Áo Khoác'),
-(6, 'Quần lót');
+(6, 'Quần lót'),
+(7, 'Phụ kiện');
 
 -- --------------------------------------------------------
 
@@ -939,7 +940,7 @@ ALTER TABLE `cart_details`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `colors`
