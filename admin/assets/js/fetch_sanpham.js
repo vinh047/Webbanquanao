@@ -342,18 +342,35 @@ function locsanpham()
         const filterBox = document.querySelector('.filter-loc');
         const icon = document.getElementById('filter-icon');
     
-        // if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
-        //     filterBox.classList.add('d-none');
-        // }
+        if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+            filterBox.classList.add('d-none');
+        }
     });
 
-    document.getElementById('tatFormLoc').addEventListener('click',function()
-{
-    const filterBox = document.querySelector('.filter-loc');
-    filterBox.classList.toggle('d-none');
-});
-}
+    document.getElementById('tatFormLoc').addEventListener('click',function() {
+        const filterBox = document.querySelector('.filter-loc');
+        filterBox.classList.toggle('d-none');
+    });
 
+    // ✅✅ Thêm vào đây: Khi bấm nút "Lọc" thì gửi lại fetchSanPham(1)
+    const btnLoc = document.getElementById('btnLocSP');
+    if (btnLoc) {
+        btnLoc.addEventListener('click', function () {
+            currentPage = 1;
+            fetchSanPham(currentPage); // gọi lại đúng logic cũ (có FormData tự động gửi các bộ lọc)
+        });
+    }
+}
+    
+function showError(mess)
+{
+    const tbTC = document.querySelector('.thongbaoXoaKhongThanhCong');
+    const loi = tbTC.querySelector('p'); // gán loi trước
+    loi.textContent = mess; // rồi mới gán text
+    tbTC.style.display = 'block';
+    tbTC.classList.add('show');
+    setTimeout(() => tbTC.classList.remove('show'), 2000);
+}
 function themsanpham()
 {
     document.getElementById('btnLuuSanPham').addEventListener('click', function () {
@@ -361,8 +378,10 @@ function themsanpham()
         const description = document.getElementById('txtMota').value.trim();
         const category_id = document.getElementById('cbLoai').value;
         const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
-        const ptgg = document.getElementById('txtPT').value.trim();
+        const ptgg = document.getElementById('txtPT').value.trim().replace('%','');
     
+        const regexCheck = /[`~+=\-\/;'\><\\|@#$%^&*()]/; 
+
         if (!permissions.includes('write')) {
             const tBquyen = document.querySelector('.thongBaoQuyen');
             tBquyen.style.display = 'block';
@@ -371,11 +390,57 @@ function themsanpham()
             return; 
         }
     
-        // Kiểm tra dữ liệu
-        if (!name || !category_id || !price || isNaN(price)) {
-            alert('Vui lòng nhập đầy đủ và đúng định dạng!');
-            return;
-        }
+            if(!name)
+            {
+                document.getElementById('txtTen').focus();
+                return showError("Không được để trống tên sản phẩm");
+            }
+
+            if(regexCheck.test(name))
+            {
+                document.getElementById('txtTen').focus();
+                return showError("Tên không được chứa các ký tự đặc biệt");
+            }
+
+            if(!description)
+            {
+                document.getElementById('txtMota').focus();
+                return showError("Không được để trống mô tả sản phẩm");
+            }
+
+            if(regexCheck.test(description))
+                {
+                    document.getElementById('txtMota').focus();
+                    return showError("Mô tả không được chứa các ký tự đặc biệt");
+                }
+
+            if(!category_id)
+            {
+                document.getElementById('cbLoai').focus();
+                return showError("Không được để trống loại sản phẩm");
+            }
+            if(!price)
+            {
+                document.getElementById('txtGia').focus();
+                return showError("Không được để trống giá nhập");
+            }
+            const epPrice = parseFloat(price);
+            if(epPrice < 0 || epPrice === 0 || isNaN(price))
+            {
+                document.getElementById('txtGia').focus();
+                return showError("Giá phải là số dương");
+            }
+            if(!ptgg)
+            {
+                document.getElementById('txtPT').focus();
+                return showError("Không được để trống phần trăm tăng giá");
+            }
+            const epPtgg = parseFloat(ptgg);
+            if(epPtgg < 0 || epPtgg === 0 || isNaN(ptgg))
+                {
+                    document.getElementById('txtPT').focus();
+                    return showError("Phần trăm tăng giá phải là số dương");
+                }
     
         const data = new FormData();
         data.append('name', name);
@@ -398,12 +463,16 @@ function themsanpham()
                 TBsp.style.display = 'block';
                 TBsp.classList.add('show');
                 setTimeout(() => TBsp.classList.remove('show'), 2000);
-        
+                const modalElement = document.getElementById('modalNhapSanPham');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                modalInstance.hide();
+                }
                 document.getElementById('txtTen').value = '';
                 document.getElementById('txtMota').value = '';
                 document.getElementById('cbLoai').value = '';
                 document.getElementById('txtGia').value = '';
-                document.getElementById('txtPT').value = '30';
+                document.getElementById('txtPT').value = '30%';
                 } else {
                 alert("Thêm thất bại: " + res.message);
             }

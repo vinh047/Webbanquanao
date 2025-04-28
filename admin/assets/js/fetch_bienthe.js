@@ -675,12 +675,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    document.querySelector(".formSua .btn-danger").addEventListener("click", function (e) {
-        e.preventDefault();
-        document.querySelector(".formSua").style.display = "none";
-        document.querySelector(".overlay").style.display = "none";
-        formSua.reset();
-    });
+    // document.querySelector(".formSua .btn-danger").addEventListener("click", function (e) {
+    //     e.preventDefault();
+    //     document.querySelector(".formSua").style.display = "none";
+    //     document.querySelector(".overlay").style.display = "none";
+    //     formSua.reset();
+    // });
     document.getElementById("fileAnhSua").addEventListener("change", function () {
         const file = this.files[0];
         const tenFile = document.getElementById("tenFileAnhSua");

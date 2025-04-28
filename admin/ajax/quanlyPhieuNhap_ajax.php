@@ -55,7 +55,7 @@ foreach ($data as $row) {
         <td class='tensp'>$ngaylap</td>
         <td class='tensp'>
             " . ($row['status'] == 1
-                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
+                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6 text-dark' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
                 : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "
         </td>
         <td>
@@ -75,7 +75,7 @@ foreach ($data as $row) {
     data-idpn='$idpn'
     style='width:90px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
                 </div>
-                <div>                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
+                <div>                    <button class='btn btn-info btn-xemchitietPN text-white' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
 </div>
             </div>
         </td>

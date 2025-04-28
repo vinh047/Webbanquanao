@@ -22,7 +22,27 @@ require_once '../User-form/Login_Form/get_user_id.php'; //lay user_id de hien th
 if (session_status() == PHP_SESSION_NONE) {
     session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
 }
+// Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
+$user_id = $_SESSION['user_id'] ?? null;
+$role_id = $_SESSION['role_id'] ?? null;
 
+if ($user_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
+    require_once(__DIR__ . '/../database/DBConnection.php');
+    $db = DBConnect::getInstance();
+    
+    // Truy vấn để lấy tên người dùng dựa trên user_id
+    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
+    
+    if ($stmt) {
+        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
+    } else {
+        $username = "Không tìm thấy người dùng";
+    }
+} else {
+    // Nếu không có user_id trong session, người dùng chưa đăng nhập
+    $username = "Chưa đăng nhập";
+}
 $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 ?>
 
@@ -67,7 +87,7 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
     <div class="quanlysp container-md">
         <div class="infouser row p-2" style="background-color: #f8f9fa;">
             <div class="col-md text-end">
-                <p class="mb-0 fs-3"><i class="fa-solid fa-user"></i></p>
+                <p class="mb-0 fs-5">Xin chào, <i><?= htmlspecialchars($username) ?></i></p>
             </div>
         </div>
 <?php

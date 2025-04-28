@@ -102,7 +102,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 Danh sách chi tiết phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-secondary table-striped table-sm">
+                    <table class="table border-start border-end table-striped table-sm">
                         <thead>
                             <tr class="text-center">
                                 <th class="bg-secondary text-white hienthiid">ID CTPN</th>

@@ -203,7 +203,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 Danh sách phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-secondary table-striped table-sm">
+                    <table class="table table-striped table-sm border-start border-end">
                         <thead>
                             <tr class="text-center">
                                 <th class="bg-secondary text-white hienthiid">ID PN</th>
@@ -343,7 +343,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 
           <div class="mb-3">
             <label for="txtPT" class="form-label">Tỉ lệ phần trăm tăng giá bán:</label>
-            <input type="text" name="txtPT" id="txtPT" class="form-control" placeholder="Phần trăm giá sản phẩm" value="30">
+            <input type="text" name="txtPT" id="txtPT" class="form-control" placeholder="Phần trăm giá sản phẩm" value="30%">
           </div>
 
           <div class="d-flex justify-content-center gap-2 pt-3">
@@ -555,7 +555,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         </div>
     </section>
 <!-- end -->
-    <script src="./assets/js/cleancode.js"></script>
+    <script src="./assets/js/fetch_phieuNhap.js"></script>
     <script>
     const productListFromPHP = <?= json_encode($tensp, JSON_UNESCAPED_UNICODE) ?>;
     const sizeListFromPHP = <?= json_encode($size, JSON_UNESCAPED_UNICODE) ?>;

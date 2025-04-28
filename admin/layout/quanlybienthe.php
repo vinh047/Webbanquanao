@@ -80,8 +80,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <option value="<?=$c['color_id']?>"><?=$c['name']?></option>
                                 <?php endforeach ?>
                             </select>
-                            <label for="txtSoLuong" class="py-2">Số lượng : </label>
-                            <input type="text" name="txtSoLuong" id="txtSoLuong" class="form-control form-control-sm">
+                            <!-- <label for="txtSoLuong" class="py-2">Số lượng : </label>
+                            <input type="text" name="txtSoLuong" id="txtSoLuong" class="form-control form-control-sm"> -->
 
                             <div class="d-flex justify-content-center gap-2 pt-2">
                                 <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
@@ -146,7 +146,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             </div>
 
             <div class="hienthi">
-                <table class="table table-secondary table-striped table-sm">
+                <table class="table border-start border-end table-striped table-sm">
                     <thead>
                         <tr class="text-center">
                             <th class="bg-secondary text-white hienthiidbt">ID BT</th>
@@ -244,7 +244,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content">
 
-      <div class="modal-header bg-warning text-white">
+      <div class="modal-header bg-success text-white">
         <h5 class="modal-title" id="modalSuaBienTheLabel">Sửa thông tin biến thể sản phẩm</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>

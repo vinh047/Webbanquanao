@@ -66,7 +66,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                                     <h5>Lọc sản phẩm</h5>
                                 </div>
                                 <div class="">
-                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                    <button class="btn btn-outline-secondary btn-sm border-0" type="button" id="tatFormLoc" >X</button>
                                 </div>  
                             </div>
                             <label for="txtIDSP">Mã sản phẩm : </label>
@@ -91,7 +91,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center gap-2 pt-2">
-                                <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
+                                <button class="btn btn-primary" style="width:70px;" type="button" id="btnLocSP">Lọc</button>
                                 <button class="btn btn-danger"  style="width:70px;" type="reset">Reset</button>
                             </div>
                         </form>
@@ -137,7 +137,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
 
           <div class="mb-3">
             <label for="txtPT" class="form-label">Tỉ lệ phần trăm tăng giá bán:</label>
-            <input type="text" name="txtPT" id="txtPT" class="form-control" placeholder="Phần trăm giá sản phẩm" value="30">
+            <input type="text" name="txtPT" id="txtPT" class="form-control" placeholder="Phần trăm giá sản phẩm" value="30%">
           </div>
 
           <div class="d-flex justify-content-center gap-2 pt-3">
@@ -151,7 +151,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
 
 
             <div class="hienthi">
-                <table class="table table-secondary table-striped table-sm">
+                <table class="table border-start border-end table-striped table-sm">
                     <thead>
                         <tr class="text-center">
                             <th class="bg-secondary text-white hienthiid">ID</th>
