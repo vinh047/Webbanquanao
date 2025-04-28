@@ -75,6 +75,10 @@
     height: 390px;        /* 👈 chỉnh chiều cao tùy ý */
     object-fit: cover;    /* Cắt ảnh nhưng giữ tỷ lệ */
 }
+#notificationMessage {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+}
 
 @media (max-width: 768px) {
     .filter_loc {
