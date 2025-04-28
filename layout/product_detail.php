@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../assets/css/product_detail.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
+    <link rel="stylesheet" href="../assets/fonts/font.css">
 
 </head>
 
@@ -152,7 +153,17 @@ function getColorById($color_id)
                             </div>
 
                             <!-- Giá -->
-                            <div class="fs-4 fw-medium mt-2" style="font-size: 16px;"><?= number_format($product['price']); ?>đ</div>
+                            <div class="fs-4 fw-medium mt-2" style="font-size: 16px; color: #DC3545;"><?= number_format($product['price']); ?>đ</div>
+
+                            <!-- Mô tả sản phẩm -->
+                            <div class="mt-2 row">
+                                <div class="bg-white">
+                                    <p class="fw-bold" style="font-size: 16px;">Mô tả sản phẩm</p>
+
+                                    <p style="white-space: pre-line; "><?= $product['description'] ?></p>
+
+                                </div>
+                            </div>
 
                             <div class="row gap-1">
                                 <!-- Màu -->
@@ -304,15 +315,7 @@ function getColorById($color_id)
             </div>
 
 
-            <!-- Mô tả sản phẩm -->
-            <div class="mt-4 row">
-                <div class="border bg-white py-3 px-4">
-                    <h3 class="text-decoration-underline mb-4">Mô tả sản phẩm</h3>
 
-                    <p style="white-space: pre-line; "><?= $product['description'] ?></p>
-
-                </div>
-            </div>
 
             <!-- Đánh giá sản phẩm -->
             <div class="mt-4 row">
