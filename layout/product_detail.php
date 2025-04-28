@@ -89,7 +89,7 @@ function getColorById($color_id)
             <!-- Đường dẫn tới chi tiết sản phẩm -->
             <div class="mb-3 d-flex align-items-center justify-content-center">
 
-                <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="#">sagkuto</a>
+                <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="../index.php">sagkuto</a>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                 </svg>

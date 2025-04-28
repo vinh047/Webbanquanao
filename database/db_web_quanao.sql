@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2025 at 12:14 PM
+-- Generation Time: Apr 28, 2025 at 05:16 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -64,7 +64,7 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`category_id`, `name`) VALUES
 (1, 'Áo thun'),
-(2, 'Quần'),
+(2, 'Quần short'),
 (3, 'Áo Sơ Mi'),
 (4, 'Áo Polo'),
 (5, 'Áo Khoác'),
