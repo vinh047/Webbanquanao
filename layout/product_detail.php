@@ -94,7 +94,7 @@ function getColorById($color_id)
                     <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                 </svg>
 
-                <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="#"><?= $category['name']; ?></a>
+                <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="../index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $category['category_id'] ?>"><?= $category['name']; ?></a>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                 </svg>
@@ -106,12 +106,12 @@ function getColorById($color_id)
             <!-- Chi tiết sản phẩm -->
             <div>
                 <div class="row border bg-white">
-                    <div class="col-md-5  p-xl-4 p-md-2  h-auto d-flex justify-content-center">
-                        <img class="img-main img-fluid object-fit-contain" src="../assets/img/sanpham/<?= $product_variants[0]['image'] ?>" alt="<?= $product['name'] ?>"></img>
+                    <div class="col-lg-5 p-xl-4 p-0 p-md-2  h-auto d-flex justify-content-center">
+                        <img class="img-main img-fluid object-fit-lg-cover object-fit-contain" src="../assets/img/sanpham/<?= $product_variants[0]['image'] ?>" alt="<?= $product['name'] ?>"></img>
 
                     </div>
 
-                    <div class="col-md-7">
+                    <div class="col-lg-7">
                         <div class="p-xl-4 p-md-2 ps-sm-4 mt-2 mt-md-0">
                             <!-- Tên của sản phẩm -->
                             <div class="fs-3 fs-md-3"><?= $product['name']; ?></div>
@@ -159,8 +159,7 @@ function getColorById($color_id)
                             <div class="mt-2 row">
                                 <div class="bg-white">
                                     <p class="fw-bold" style="font-size: 16px;">Mô tả sản phẩm</p>
-
-                                    <p style="white-space: pre-line; "><?= $product['description'] ?></p>
+                                    <p style="white-space: pre-line;"><?= $product['description'] ?></p>
 
                                 </div>
                             </div>
@@ -196,7 +195,7 @@ function getColorById($color_id)
                                 </div>
 
                                 <!-- Size -->
-                                <div class="mt-4 d-flex col-12 align-items-center">
+                                <div class="mt-4 d-flex col-12 align-items-center size-wrap">
                                     <p class="lb m-0 text-secondary">Size</p>
 
                                     <!--  -->
@@ -215,19 +214,19 @@ function getColorById($color_id)
                                     <p class="lb m-0 text-secondary pt-2">Số lượng</p>
 
                                     <!--  -->
-                                    <div class="d-flex align-items-center border py-1 px-4 gap-2 justify-content-end">
-                                        <div class="down text-center">-</div>
+                                    <div class="d-flex align-items-center border py-1 px-2 gap-2 justify-content-end">
+                                        <div class="down text-center fs-5" style="width: 35px;">-</div>
                                         <input class="input-qty border-0 text-center" min="1" value="1" type="number" id="count">
-                                        <div class="up text-center">+</div>
+                                        <div class="up text-center fs-5" style="width: 35px;">+</div>
                                     </div>
                                 </div>
 
                                 <!-- Nút mua ngay + thêm vào giỏ hàng -->
                                 <div class="d-inline-flex row gap-2 mt-4 g-0 pe-sm-4">
 
-                                    <a href="#" class="buynow col-12 col-md-5  btn border-black">Mua ngay</a>
+                                    <a href="#" class="buynow col-12 col-lg-5  btn border-black">Mua ngay</a>
 
-                                    <p href="#" class="add-to-cart col-12 col-xl-5 col-md-6 bg-black d-flex justify-content-center align-items-center rounded m-md-0" style="cursor: pointer;">
+                                    <p href="#" class="add-to-cart btn col-12 col-xl-5 col-lg-6 bg-black d-flex justify-content-center align-items-center rounded m-md-0" style="cursor: pointer;">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" style="width: 16px; height: 16px;" class="me-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                             <path fill="currentColor" d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
                                         </svg>
@@ -236,7 +235,7 @@ function getColorById($color_id)
                                     </p>
                                 </div>
 
-                                <div class="notice-add-to-cart position-absolute top-50 start-50 d-flex flex-column justify-content-center align-items-center p-5 rounded w-auto opacity-0" style="background-color: rgba(0, 0, 0, 0.8);">
+                                <div class="notice-add-to-cart position-fixed top-50 start-50 d-flex flex-column justify-content-center align-items-center p-5 rounded w-auto opacity-0" style="background-color: rgba(0, 0, 0, 0.8); z-index: 9999;">
                                     <i class="fa-solid fa-circle-check fa-3x mb-2" style="color: #ffffff;"></i>
                                     <span class="text-white text-center">Đã thêm vào giỏ hàng</span>
                                 </div>
@@ -260,7 +259,7 @@ function getColorById($color_id)
 
                     <div class="d-flex justify-content-between align-items-center ps-4 pe-5 pt-3">
                         <h3 class="text-decoration-underline mb-4 pt-3 ps-4">Có thể bạn quan tâm</h3>
-                        <a href="#" class="view-all text-primary text-decoration-none text-black d-none d-sm-block" style="font-size: 14px;">
+                        <a href="../index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $category['category_id'] ?>" class="view-all text-primary text-decoration-none text-black d-none d-sm-block" style="font-size: 14px;">
                             Xem tất cả
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="width: 14px; height: 14px;" class="ms-1">
                                 <path fill="currentColor" d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />

@@ -57,7 +57,7 @@ if (isset($_SESSION['user_id']) && ($_SESSION['role_id'] == 1)) {
     </button>
 
     <div class="logo_header">
-        <a href="index.php">
+        <a href="/index.php">
             <img src="../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
         </a>
     </div>
