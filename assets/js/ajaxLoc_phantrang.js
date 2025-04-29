@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 productContainer.innerHTML = data;
+                
+                attachColorHoverEvents(); // ✅ Gắn lại sự kiện đổi ảnh
 
                 // ⏳ Gọi lại filter sync nếu có urlParams
                 const currentSearch = window.location.search;
@@ -259,6 +261,32 @@ function formDataToQueryString(formData) {
     return Object.entries(params)
         .map(([key, values]) => `${encodeURIComponent(key)}=${encodeURIComponent(values.join(","))}`)
         .join("&");
+}
+function attachColorHoverEvents() {
+    document.querySelectorAll(".color-thumb").forEach((img) => {
+        const productId = img.dataset.productId;
+        const newSrc = img.dataset.image;
+
+        img.addEventListener("mouseover", () => {
+            const mainImg = document.querySelector(`#main-image-${productId}`);
+            if (mainImg) {
+                mainImg.style.opacity = "0";
+                mainImg.style.transform = "translateX(-20px)";
+                setTimeout(() => {
+                    mainImg.src = newSrc;
+                    mainImg.style.transform = "translateX(0)";
+                    mainImg.style.opacity = "1";
+                }, 200);
+            }
+        });
+
+        img.addEventListener("click", () => {
+            document.querySelectorAll(`.color-thumb[data-product-id="${productId}"]`).forEach(el => {
+                el.classList.remove("selected");
+            });
+            img.classList.add("selected");
+        });
+    });
 }
 
 

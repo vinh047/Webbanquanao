@@ -79,6 +79,11 @@
     transition: opacity 0.5s ease, transform 0.5s ease;
     pointer-events: none;
 }
+.color-thumb.selected {
+    outline: 2px solid #333;        /* viền đen */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3); /* bóng mờ */
+    border-color: black;            /* tùy chọn: đổi màu viền */
+}
 
 @media (max-width: 768px) {
     .filter_loc {
