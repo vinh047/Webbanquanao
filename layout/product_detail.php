@@ -87,19 +87,22 @@ function getColorById($color_id)
     <div class="wrap py-4">
         <div class="container">
             <!-- Đường dẫn tới chi tiết sản phẩm -->
-            <div class="mb-3 d-flex align-items-center justify-content-center">
+            <div class="mb-3 row bg-white py-2 border px-4">
+                <div class="col-12 d-flex align-items-center justify-content-start py-2 px-1">
 
-                <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="../index.php">sagkuto</a>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                    <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
-                </svg>
+                    <a class="fs-6 underline-animate" style="cursor: pointer; text-decoration: none;" href="../index.php">Trang chủ</a>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-3 mt-1"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                    </svg>
+    
+                    <a class="fs-6 underline-animate" style="cursor: pointer; text-decoration: none; margin-top: 2px;" href="../index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $category['category_id'] ?>"><?= $category['name']; ?></a>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-3 mt-1"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                    </svg>
+    
+                    <p class="m-0"><?= $product['name']; ?></p>
+                </div>
 
-                <a class="fs-6 pb-1 underline-animate" style="cursor: pointer; text-decoration: none;" href="../index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $category['category_id'] ?>"><?= $category['name']; ?></a>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width: 12px; height: 12px;" class="mx-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                    <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
-                </svg>
-
-                <p class="m-0"><?= $product['name']; ?></p>
 
             </div>
 
@@ -226,7 +229,7 @@ function getColorById($color_id)
 
                                     <a href="#" class="buynow col-12 col-lg-5  btn border-black">Mua ngay</a>
 
-                                    <p href="#" class="add-to-cart btn col-12 col-xl-5 col-lg-6 bg-black d-flex justify-content-center align-items-center rounded m-md-0" style="cursor: pointer;">
+                                    <p class="add-to-cart btn col-12 col-xl-5 col-lg-6 bg-black d-flex justify-content-center align-items-center rounded m-md-0" style="cursor: pointer;">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" style="width: 16px; height: 16px;" class="me-2"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                             <path fill="currentColor" d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
                                         </svg>

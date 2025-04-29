@@ -139,19 +139,106 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+document.querySelector(".buynow").addEventListener("click", function (e) {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định nếu là thẻ <a>
 
+    const productId = document.body.dataset.productId;
+    const quantity = parseInt(document.getElementById("count").value.trim());
+
+    const activeColor = document.querySelector(".color-option.active");
+    const activeSize = document.querySelector(".size-option.active");
+
+    if (!activeColor || !activeSize) {
+        alert("Vui lòng chọn màu sắc và kích thước.");
+        return;
+    }
+
+    const colorId = activeColor.dataset.colorId;
+    const sizeName = activeSize.innerText.trim();
+
+    fetch("../ajax/add_to_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            color_id: colorId,
+            size_name: sizeName,
+            quantity: quantity
+        })
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (!result.success) {
+                console.error("Thêm vào giỏ thất bại:", result.message);
+            } else {
+                window.location.href = "/index.php?page=giohang"; 
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi fetch khi mua ngay:", error);
+        });
+});
 
 
 
 document.querySelector(".add-to-cart").addEventListener("click", function () {
-    let popup = document.querySelector(".notice-add-to-cart");
-    popup.classList.add("show"); // Hiện popup
+    const productId = document.body.dataset.productId;
+    const quantity = parseInt(document.getElementById("count").value.trim());
 
-    // Ẩn popup sau 2 giây (tùy chỉnh thời gian)
-    setTimeout(() => {
-        popup.classList.remove("show");
-    }, 2000);
+    const activeColor = document.querySelector(".color-option.active");
+    const activeSize = document.querySelector(".size-option.active");
+
+    if (!activeColor || !activeSize) {
+        alert("Vui lòng chọn màu sắc và kích thước.");
+        return;
+    }
+
+    const colorId = activeColor.dataset.colorId;
+    const sizeName = activeSize.innerText.trim();
+
+    fetch("../ajax/add_to_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            color_id: colorId,
+            size_name: sizeName,
+            quantity: quantity
+        })
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            if (result.success) {
+                // Hiển thị popup thông báo
+                let popup = document.querySelector(".notice-add-to-cart");
+                popup.classList.add("opacity-100", "translate-middle");
+                setTimeout(() => {
+                    popup.classList.remove("opacity-100", "translate-middle");
+                }, 2000);
+            } else {
+                alert(result.message || "Thêm vào giỏ hàng thất bại.");
+            }
+        })
+        .catch(function (error) {
+            console.error("Lỗi fetch:", error);
+            alert("Có lỗi khi thêm vào giỏ hàng.");
+        });
 });
+
+// let popup = document.querySelector(".notice-add-to-cart");
+// popup.classList.add("show"); // Hiện popup
+
+// // Ẩn popup sau 2 giây (tùy chỉnh thời gian)
+// setTimeout(() => {
+//     popup.classList.remove("show");
+// }, 2000);
+// });
 
 let isLoading = false; // Biến kiểm tra trạng thái tải
 
