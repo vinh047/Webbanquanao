@@ -55,7 +55,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                     <h5>Lọc CTPN</h5>
                                 </div>
                                 <div class="">
-                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" type="button">X</button>
                                 </div>  
                             </div>
                             <label for="txtIDctpn" class="mt-2">Mã CTPN : </label>
@@ -77,13 +77,6 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                     <input type="date" class="form-control form-control-sm" id="dateKT" name="dateKT">
                                 </div>
                             </div>
-
-                            <label for="txtTrangThai" class="mt-2">Trạng thái</label>
-                            <select name="txtTrangThai" id="txtTrangThai" class="form-select">
-                                <option value="">Chọn trạng thái</option>
-                                <option value="0">Đã xác nhận</option>
-                                <option value="1">Chờ xác nhận</option>
-                            </select>
 
                             <div class="d-flex justify-content-center gap-2 pt-3">
                                 <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>

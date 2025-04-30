@@ -29,7 +29,7 @@ $offset = $pagination->offset();
 
 // Truy vấn danh sách biến thể sản phẩm
 $data = $db->select("
-    SELECT product_variants.*, c.name AS tenMau, s.name AS tenSize, d.importreceipt_details_id
+    SELECT product_variants.*, c.name AS tenMau, s.name AS tenSize, d.importreceipt_details_id, pr.name AS tenSP
     FROM product_variants
     JOIN colors c ON product_variants.color_id = c.color_id
     JOIN products pr ON product_variants.product_id = pr.product_id
@@ -52,6 +52,7 @@ $data = $db->select("
 
 ob_start();
 foreach ($data as $row) {
+    $tensp = $row['tenSP'];
     $idvr = $row['variant_id'];
     $idsp = $row['product_id'];
     $anh = $row['image'];
@@ -65,8 +66,8 @@ foreach ($data as $row) {
     echo "
         <tr class='text-center'>
             <td class='hienthiidbt'>$idvr</td>
-            <td class='hienthiidsp'>$idsp</td>
-            <td class='hienthianh'><img src='../../assets/img/sanpham/$anh' style='width:100px;height:100px;object-fit:cover;' class='img-fluid'></td>
+            <td class='hienthianh'>$tensp</td>
+            <td class='hienthiidsp'><img src='../../assets/img/sanpham/$anh' style='width:100px;height:100px;object-fit:cover;' class='img-fluid'></td>
             <td class='hienthisize'>$size</td>
             <td class='hienthigia'>$soluong</td>
             <td class='hienthimau'>$mau</td>
@@ -81,6 +82,7 @@ foreach ($data as $row) {
                     data-size='$id_size'
                     data-soluong='$soluong'
                     data-mau='$id_mau'
+                    data-tensp='$tensp'
                     style='width:90px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
                     </div>
                     <div>

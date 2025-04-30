@@ -22,12 +22,27 @@ $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
 // Truy vấn sản phẩm theo trang
-$data = $db->select("SELECT p.*, c.name AS tenloai 
-                    FROM products p 
-                    JOIN categories c ON p.category_id = c.category_id 
-                    $loc
-                    ORDER BY p.product_id ASC 
-                    LIMIT $limit OFFSET $offset", []);
+$data = $db->select("
+    SELECT 
+        p.*, 
+        c.name AS tenloai, 
+        im.unit_price AS gianhap
+    FROM products p
+    JOIN categories c ON p.category_id = c.category_id
+    LEFT JOIN (
+        SELECT product_id, unit_price
+        FROM importreceipt_details
+        WHERE importreceipt_details_id IN (
+            SELECT MAX(importreceipt_details_id)
+            FROM importreceipt_details
+            GROUP BY product_id
+        )
+    ) im ON p.product_id = im.product_id
+    $loc
+    ORDER BY p.product_id ASC 
+    LIMIT $limit OFFSET $offset
+", []);
+
 
 ob_start();
 foreach ($data as $row) {
@@ -35,7 +50,8 @@ foreach ($data as $row) {
     $ten = $row['name'];
     $loai = $row['tenloai'];
     $mota = $row['description'];
-    $gia = number_format($row['price'], 0, ',', '.');
+    $gianhap = number_format($row['gianhap'],0,',','.');
+    // $gia = number_format($row['price'], 0, ',', '.');
     $giaban = number_format($row['price_sale'],0,',','.');
     $pttg = $row['pttg'];
     echo "
@@ -44,7 +60,6 @@ foreach ($data as $row) {
             <td class='tensp'>$ten</td>
             <td class='hienthiloai'>$loai</td>
             <td class='mota'>$mota</td>
-            <td class='hienthigia'>$gia VNĐ</td>
             <td class='hienthigia'>$giaban VNĐ</td>
             <td>
                 <div class='d-flex justify-content-center gap-3'>
@@ -53,7 +68,7 @@ foreach ($data as $row) {
                 data-id='$id'
                 data-ten=\"$ten\"
                 data-mota=\"$mota\"
-                data-gia='{$row['price']}'
+                data-gia='{$row['gianhap']}'
                 data-giaban='{$row['price_sale']}'
                 data-pttg = \"$pttg\"
                 data-loaiid='{$row['category_id']}' style='width:90px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button></div>

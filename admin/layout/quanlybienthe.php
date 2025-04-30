@@ -150,8 +150,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                     <thead>
                         <tr class="text-center">
                             <th class="bg-secondary text-white hienthiidbt">ID BT</th>
-                            <th class="bg-secondary text-white hienthiidsp">ID SP</th>
-                            <th class="bg-secondary text-white hienthianh">Hình ảnh</th>
+                            <th class="bg-secondary text-white hienthianh">ID SP</th>
+                            <th class="bg-secondary text-white hienthiidsp">Hình ảnh</th>
                             <th class="bg-secondary text-white hienthisize">Size</th>
                             <th class="bg-secondary text-white hienthigia">Số lượng</th>
                             <th class="bg-secondary text-white hienthimau">Màu</th>
@@ -196,7 +196,10 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 
         <div class="thongbaoXoaHiddenThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
-                Do tồn tại trong hóa đơn nên chỉ ẩn đi
+                Đã tạm thời ẩn đi
+            </p>
+            <p class="mb-0 text-white">       
+                Do có liên kết với nhiều bảng
             </p>
         </div>
 
@@ -257,10 +260,10 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <label for="txtMaBt" class="form-label">Mã biến thể:</label>
             <input type="text" name="txtMaBt" id="txtMaBt" placeholder="Mã của biến thể" class="form-control bg-light" readonly>
           </div>
-
           <div class="mb-3">
-            <label for="txtMaSua" class="form-label">Mã sản phẩm:</label>
-            <input type="text" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control bg-light" readonly>
+            <label for="txtTenspSua" class="form-label">Tên sản phẩm:</label>
+            <input type="hidden" name="txtMaSua" id="txtMaSua" placeholder="Mã của sản phẩm" class="form-control bg-light" readonly>
+            <input type="text" name="txtTenspSua" id="txtTenspSua" placeholder="Tên của sản phẩm" class="form-control bg-light" readonly>
           </div>
 
           <div class="mb-3">

@@ -130,10 +130,10 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
             </select>
           </div>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="txtGia" class="form-label">Giá sản phẩm:</label>
             <input type="text" name="txtGia" id="txtGia" class="form-control" placeholder="Giá của sản phẩm">
-          </div>
+          </div> -->
 
           <div class="mb-3">
             <label for="txtPT" class="form-label">Tỉ lệ phần trăm tăng giá bán:</label>
@@ -158,7 +158,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                             <th class="bg-secondary text-white tensp">Tên sản phẩm</th>
                             <th class="bg-secondary text-white hienthiloai">Loại</th>
                             <th class="bg-secondary text-white mota">Mô tả Sản phẩm</th>
-                            <th class="bg-secondary text-white hienthigia">Giá nhập</th>
+                            <!-- <th class="bg-secondary text-white hienthigia">Giá nhập</th> -->
                             <th class="bg-secondary text-white hienthigia">Giá bán</th>
                             <th class="bg-secondary text-white hienthibtn">Xử lý</th>
                         </tr>
@@ -287,7 +287,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
 
           <div class="mb-3">
             <label for="txtGiaSua" class="form-label">Giá nhập:</label>
-            <input type="text" name="gia" id="txtGiaSua" class="form-control">
+            <input type="text" name="gia" id="txtGiaSua" class="form-control bg-light" readonly>
           </div>
 
           <div class="mb-3">

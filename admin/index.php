@@ -15,6 +15,8 @@ require_once '../User-form/Login_Form/get_user_id.php'; //lay user_id de hien th
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 <body>
 <section class="d-flex position-relative">
@@ -53,22 +55,22 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 
     <ul class="nav flex-column">
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phieunhap' ? 'active' : '' ?>" href="index.php?page=phieunhap">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phieunhap' ? 'active' : '' ?>" href="index.php?page=phieunhap&pageadmin=1">
                 <i class="fa-solid fa-file-import"></i> <span>Phiếu nhập</span>
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap&pageadmin=1">
                 <i class="fa-solid fa-list"></i> <span>Chi tiết phiếu nhập</span>
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'sanpham' ? 'active' : '' ?>" href="index.php?page=sanpham">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'sanpham' ? 'active' : '' ?>" href="index.php?page=sanpham&pageadmin=1">
                 <i class="fa-solid fa-box-open"></i> <span>Sản phẩm</span>
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'bienthe' ? 'active' : '' ?>" href="index.php?page=bienthe">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'bienthe' ? 'active' : '' ?>" href="index.php?page=bienthe&pageadmin=1">
                 <i class="fa-solid fa-cubes"></i> <span>Biến thể sản phẩm</span>
             </a>
         </li>
@@ -115,6 +117,14 @@ if(isset($_GET['page']))
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <!-- Đạt thêm tắt khi close tab -->
+ <!-- Nhúng jQuery trước tất cả -->
+<!-- ✅ JQUERY PHẢI ĐƯỢC NHÚNG TRƯỚC -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 CSS + JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script src="auto_logout.js"></script> 
 </body>
 </html>

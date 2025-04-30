@@ -15,6 +15,12 @@
   display: inline-block;
   vertical-align: middle;
 }
+.preview-img:hover {
+  transform: scale(4.6);
+  transition: transform 0.2s ease;
+  z-index: 10;
+}
+
 </style>
 
     <?php
@@ -22,6 +28,16 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
 }
+// ✅ Kết nối DB
+require_once __DIR__ . '/../../database/DBConnection.php';
+$db = DBConnect::getInstance()->getConnection();
+
+
+// ✅ Lấy danh sách cần dùng để truyền vào JS
+$productList = $db->query("SELECT product_id, name FROM products")->fetchAll(PDO::FETCH_ASSOC);
+$sizeList = $db->query("SELECT size_id, name FROM sizes ORDER BY size_id ASC")->fetchAll(PDO::FETCH_ASSOC);
+$colorList = $db->query("SELECT color_id, name FROM colors")->fetchAll(PDO::FETCH_ASSOC);
+
 // Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
 $user_id = $_SESSION['user_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
@@ -82,6 +98,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 <button type="button" class="btn btn-secondary" id="btnThemSanPhamMoi">
     <i class="fa fa-plus"></i> Thêm SP mới
   </button>
+  <button id="btnMoModalBienThe" class="btn btn-warning">Thêm biến thể</button>
         <!-- Modal Tạo Phiếu Nhập -->
 <div class="modal fade" id="modalCreatePN" tabindex="-1" aria-labelledby="modalCreatePNLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -98,7 +115,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <!-- Nhà cung cấp -->
             <div class="col-md-4">
               <label class="form-label">Nhà cung cấp</label>
-              <select name="supplier_id" id="supplier_id" class="form-select">
+              <select name="supplier_id" id="supplier_id" class="form-select select2">
                 <option value="">-- Chọn nhà cung cấp --</option>
                 <?php foreach ($suppliers as $supplier): ?>
                     <option value="<?= $supplier['supplier_id'] ?>"><?= $supplier['name'] ?></option>
@@ -156,7 +173,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                             <label for="txtIDpn" class="mt-2">Mã PN : </label>
                             <input type="text" class="form-control form-control-sm" id="txtIDpn" name="txtIDpn">
                             <label for="txtIDncc" class="mt-3">Nhà cung cấp : </label>
-                            <select name="txtIDncc" id="txtIDncc" class="form-select">
+                            <select name="txtIDncc" id="txtIDncc" class="form-select select2">
                                 <option value="">Chọn nhà cung cấp</option>
                                 <?php foreach($suppliers as $s): ?>
                                 <option value="<?=$s['supplier_id']?>"><?=$s['name']?></option>
@@ -250,7 +267,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
               </div>
               <div class="mb-3">
                 <label class="form-label">Nhà cung cấp</label>
-                <select id="supplier_idSuaPN" name="supplier_idSuaPN" class="form-select" required>
+                <select id="supplier_idSuaPN" name="supplier_idSuaPN" class="form-select select2" required>
                   <option value="">-- Chọn nhà cung cấp --</option>
                   <?php foreach ($suppliers as $supplier): ?>
                     <option value="<?= $supplier['supplier_id'] ?>"><?= $supplier['name'] ?></option>
@@ -282,9 +299,9 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <table class="table table-bordered" id="tableChiTietPhieuNhap">
               <thead>
                 <tr class="text-center">
-                  <th>Mã sản phẩm</th>
-                  <th>Mã biến thể</th>
-                  <th>Số lượng nhập</th>
+                  <th>Tên sản phẩm</th>
+                  <th style="width:15%;">Mã biến thể</th>
+                  <th style="width:15%;">Số lượng nhập</th>
                 </tr>
               </thead>
               <tbody>
@@ -337,17 +354,51 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
           </div>
 
           <div class="mb-3">
-            <label for="txtGia" class="form-label">Giá sản phẩm:</label>
-            <input type="text" name="txtGia" id="txtGia" class="form-control" placeholder="Giá của sản phẩm">
-          </div>
-
-          <div class="mb-3">
             <label for="txtPT" class="form-label">Tỉ lệ phần trăm tăng giá bán:</label>
             <input type="text" name="txtPT" id="txtPT" class="form-control" placeholder="Phần trăm giá sản phẩm" value="30%">
           </div>
 
           <div class="d-flex justify-content-center gap-2 pt-3">
             <button type="button" class="btn btn-success" id="btnLuuSanPham" style="width: 120px;">Lưu sản phẩm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm biến thể -->
+<div class="modal fade" id="modalThemBienThe" tabindex="-1" aria-labelledby="modalThemBienTheLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalThemBienTheLabel">Thêm Biến Thể cho sản phẩm</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+
+      <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
+        <form id="formBienThe" enctype="multipart/form-data">
+          
+              <div class="row">
+                <div class="col-md-4">
+                <label class="form-label">Chọn sản phẩm</label>
+              <select name="id_sanpham" id="id_sanpham" class="form-select w-50 select2">
+                <option value="">-- Chọn sản phẩm --</option>
+                <?php foreach ($tensp as $ten): ?>
+                    <option value="<?= $ten['product_id'] ?>"><?=$ten['product_id']?> - <?= $ten['name'] ?></option>
+                <?php endforeach; ?>
+              </select>
+                </div>
+              </div>
+
+          <div id="variant-container"></div>
+
+          <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-danger me-auto" type="button" id="resetBienThe">Reset</button>
+            <button type="button" class="btn btn-secondary" id="btnAddVariantRow">
+              <i class="fa fa-plus me-1"></i> Thêm dòng biến thể
+            </button>
+            <button type="submit" class="btn btn-success">Lưu biến thể</button>
           </div>
         </form>
       </div>
@@ -489,24 +540,27 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 
 
 <!-- Lại là thông báo -->
-<div id="boxTrungSP" class="thongBaoTrung rounded-2 bg-light p-3 border">
-<p class="mb-0 fs-5 text-center" id="trungTenSP">Sản phẩm đã có trong hàng đợi!</p>
-<p class="mb-0 fs-6 text-center" id="trungChiTiet">Bạn có muốn cộng dồn vào không?</p>
-
-    <div class="d-flex justify-content-center gap-3 mt-2">
-        <div>
-            <button id="btnCoTrung" class="btn btn-danger" style="width:80px;">Có</button>
-        </div>
-        <div>
-            <button id="btnKhongTrung" class="btn btn-primary" style="width:80px;">Không</button>
-        </div>
+<!-- Modal thông báo -->
+<div class="modal fade" id="modalThongBao" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Thông báo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Nội dung thông báo -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
     </div>
+  </div>
 </div>
 
-<div id="boxTrungBT" class="thongBaoTrung rounded-2 bg-light p-3 border">
-  <p class="mb-0 fs-5 text-center" id="trungTenBT">Thông báo</p>
-  <p class="mb-0 fs-6 text-center" id="trungCTBT">Bạn có muốn cộng dồn vào không?</p>
 
+<div id="boxTrungBT" class="thongBaoTrung rounded-2 bg-light p-3 border">
+  <p class="mb-0 fs-5 text-center">Đã tồn tại biến thể này rồi!</p>
   <div class="d-flex justify-content-center gap-3 mt-2">
     <button id="btnXacNhanThem" class="btn btn-danger" style="width:80px;">Có</button>
     <button id="btnHuyThem" class="btn btn-primary" style="width:80px;">Không</button>
@@ -526,7 +580,11 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         </div>
     </div>
 </div>
-
+<div class="thongbaoThemBTThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">   
+              Lưu biến thể thành công    
+            </p>
+        </div>
 <div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
                 Bạn không có quyền thực hiện chức năng này
@@ -555,12 +613,14 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         </div>
     </section>
 <!-- end -->
-    <script src="./assets/js/fetch_phieuNhap.js"></script>
-    <script>
-    const productListFromPHP = <?= json_encode($tensp, JSON_UNESCAPED_UNICODE) ?>;
-    const sizeListFromPHP = <?= json_encode($size, JSON_UNESCAPED_UNICODE) ?>;
-    const colorListFromPHP = <?= json_encode($color, JSON_UNESCAPED_UNICODE) ?>;
+<script>
+  const productListFromPHP = <?= json_encode($productList) ?>;
+  const sizeListFromPHP = <?= json_encode($sizeList) ?>;
+  const colorListFromPHP = <?= json_encode($colorList) ?>;
 </script>
+    <script src="./assets/js/fetch_phieuNhap.js"></script>
+
+
 
 </body>
 </html>

@@ -15,8 +15,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // Chuyển trang khi chỉ còn 1
     adjustPageIfLastItem();
 
+
+    const params = new URLSearchParams(window.location.search);
+    const pageFromURL = parseInt(params.get('pageadmin')) || 1;
+    currentPage = pageFromURL;
+
+    for (let [key, value] of params.entries()) {
+        const el = document.querySelector(`[name="${key}"]`); // ❗ fix dấu ngoặc vuông bị sai
+        if (el) {
+            el.value = value;
+            if ($(el).hasClass('select2')) {
+                $(el).val(value).trigger('change');
+            }
+        }
+    }
+    
     // Xử lý ajax sản phẩm (thêm, sửa, xóa)
-    fetchSanPham();
+    fetchSanPham(currentPage);
 
     // Xử lý lọc sản phẩm
     locsanpham();
@@ -84,20 +99,21 @@ function fetchSanPham(page = 1) {
 
 fetchSanPham();
 
-
+function updateUrlWithPage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('pageadmin', page); // cập nhật hoặc thêm mới
+    window.history.pushState({}, '', url);    // thay đổi URL trên trình duyệt
+}
 function phantrang()
 {
-                // Phân trang
-                document.querySelectorAll(".page-link-custom").forEach(btn => {
-                    btn.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        console.log("Page clicked:", this.dataset.page); // 👈 THÊM DÒNG NÀY
-    
-                        currentPage = parseInt(this.dataset.page); // lưu lại trang hiện tại
-                        fetchSanPham(this.dataset.page);
-                    });
-                });
-
+    document.querySelectorAll(".page-link-custom").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            currentPage = parseInt(this.dataset.page);
+            updateUrlWithPage(currentPage);
+            fetchSanPham(currentPage);
+        });
+    });
                 const input = document.getElementById("pageInput");
                 if (input) {
                     input.addEventListener("keypress", function (e) {
@@ -331,36 +347,53 @@ function xoasanpham()
                 });
 }
 
-function locsanpham()
-{
+function locsanpham() {
     document.getElementById('filter-icon').addEventListener('click', function () {
         const filterBox = document.querySelector('.filter-loc');
         filterBox.classList.toggle('d-none');
     });
-    
+
     document.addEventListener('click', function (e) {
         const filterBox = document.querySelector('.filter-loc');
         const icon = document.getElementById('filter-icon');
-    
+
         if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
             filterBox.classList.add('d-none');
         }
     });
 
-    document.getElementById('tatFormLoc').addEventListener('click',function() {
+    document.getElementById('tatFormLoc').addEventListener('click', function () {
         const filterBox = document.querySelector('.filter-loc');
         filterBox.classList.toggle('d-none');
     });
 
-    // ✅✅ Thêm vào đây: Khi bấm nút "Lọc" thì gửi lại fetchSanPham(1)
     const btnLoc = document.getElementById('btnLocSP');
     if (btnLoc) {
         btnLoc.addEventListener('click', function () {
             currentPage = 1;
-            fetchSanPham(currentPage); // gọi lại đúng logic cũ (có FormData tự động gửi các bộ lọc)
+            const formData = new FormData(document.getElementById('formLoc'));
+            const filters = [];
+
+            for (let [key, value] of formData.entries()) {
+                if (value) {
+                    filters.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+                }
+            }
+
+            const queryParts = [
+                'page=sanpham', // hoặc trang hiện tại bạn đang dùng
+                ...filters,
+                `pageadmin=${currentPage}`
+            ];
+
+            const newUrl = `${location.pathname}?${queryParts.join('&')}`;
+            window.history.pushState({}, '', newUrl);
+
+            fetchSanPham(currentPage);
         });
     }
 }
+
     
 function showError(mess)
 {
@@ -506,8 +539,6 @@ function suasanpham()
             tBquyen.style.display = 'block';
             tBquyen.classList.add('show');
             setTimeout(() => tBquyen.classList.remove('show'), 2000);
-            document.querySelector('.formSua').style.display = 'none';
-            document.querySelector('.overlay').style.display = 'none';
             return; 
         }
 

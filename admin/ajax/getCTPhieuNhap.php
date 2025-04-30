@@ -26,12 +26,19 @@ try {
     
 
     $ctpn = $db->select(
-        "SELECT importreceipt_details_id, product_id, variant_id, quantity
-         FROM importreceipt_details
-         WHERE importreceipt_id = ?
+        "SELECT 
+            d.importreceipt_details_id, 
+            d.product_id, 
+            p.name AS product_name,
+            d.variant_id, 
+            d.quantity
+         FROM importreceipt_details d
+         JOIN products p ON d.product_id = p.product_id
+         WHERE d.importreceipt_id = ?
          LIMIT $perPage OFFSET $offset",
         [$idpn]
     );
+    
     
 
     echo json_encode([

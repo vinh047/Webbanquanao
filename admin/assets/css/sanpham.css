@@ -177,7 +177,8 @@
 .thongbaoThemSp,
 .thongBaoQuyen,
 .thongbaoXoaPNthanhcong,
-.thongbaoXoaPNKhongThanhCong {
+.thongbaoXoaPNKhongThanhCong,
+.thongbaoThemBTThanhCong {
     display: block;
     opacity: 0;
     transition: opacity 0.6s ease;
@@ -211,7 +212,8 @@
 .thongbaoThemSp.show,
 .thongBaoQuyen.show,
 .thongbaoXoaPNthanhcong.show,
-.thongbaoXoaPNKhongThanhCong.show {
+.thongbaoXoaPNKhongThanhCong.show,
+.thongbaoThemBTThanhCong.show {
     display: block;
     opacity: 1;
 }
@@ -465,4 +467,30 @@ button:active {
     transform: translateY(0);
     pointer-events: auto;
     visibility: visible;
+}
+/* Khung ô chọn */
+.select2-container .select2-selection--single {
+    height: 37px !important;        /* Nhỏ hơn mặc định */
+    padding: 4px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    font-size: 18px;
+}
+
+/* Text căn giữa + cỡ chữ */
+.select2-selection__rendered {
+    line-height: 24px !important;
+    font-size: 17px !important;
+}
+
+/* Mũi tên */
+.select2-selection__arrow {
+    height: 100% !important;
+    right: 8px !important;
+}
+
+/* Danh sách tùy chọn */
+.select2-container--default .select2-results__option {
+    font-size: 16px;
+    padding: 6px 10px;
 }
