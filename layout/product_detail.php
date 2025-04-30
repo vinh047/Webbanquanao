@@ -42,7 +42,7 @@ $distinct_colors = $db->select("
 
 $suggest_products = $db->select("
         SELECT 
-            p.product_id, p.name, p.price, p.description, p.category_id,
+            p.product_id, p.name, p.price_sale, p.description, p.category_id,
             (
                 SELECT pv.image
                 FROM product_variants pv
@@ -204,7 +204,7 @@ function getColorById($color_id)
 
                             <!-- Giá -->
                             <div class="fs-4 fw-medium mt-2" style="font-size: 16px; color: #DC3545;">
-                                <?= number_format($product['price']); ?>đ
+                                <?= number_format($product['price_sale']); ?>đ
                             </div>
 
                             <!-- Mô tả sản phẩm -->
@@ -372,7 +372,7 @@ function getColorById($color_id)
                                             <?= $p['name'] ?>
                                         </p>
                                         <p>
-                                            <?= number_format($p['price']); ?>đ
+                                            <?= number_format($p['price_sale']); ?>đ
                                         </p>
                                     </div>
                                 </div>
