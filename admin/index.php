@@ -75,11 +75,19 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
                 <i class="fa-solid fa-cubes"></i> <span>Biến thể sản phẩm</span>
             </a>
         </li>
+
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'nhacungcap' ? 'active' : '' ?>" href="index.php?page=nhacungcap&pageadmin=1">
+                <i class="fas fa-truck"></i> <span>Nhà cung cấp</span>
+            </a>
+        </li>
+
         <li class="nav-item mb-2">
             <a class="nav-link text-white d-flex align-items-center gap-2" href="index.php?action=logout">
                 <i class="fa-solid fa-sign-out"></i> <span>Đăng xuất</span>
             </a>
         </li>
+        
 
     </ul>
 </nav>
@@ -111,6 +119,8 @@ if(isset($_GET['page']))
         case 'bienthe':
             include '../admin/layout/quanlybienthe.php';
             break;
+        case 'nhacungcap':
+            include '../admin/layout/quanlynhacungcap.php';
     }
 }
 ?>
