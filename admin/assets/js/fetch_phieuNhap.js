@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 modal.show();
             });
         }
-    
+        cleanModalBackdropChonBienThe();
     
 });
 function tbThanhCong(mess)
@@ -269,85 +269,114 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
   // Gửi dữ liệu
   document.getElementById('formBienThe').addEventListener('submit', function (e) {
     e.preventDefault();
-  
+
     const productId = document.getElementById('id_sanpham').value;
     const rows = document.querySelectorAll('.variant-row');
-    // ✅ Nếu không có dòng nào → báo lỗi
+
     if (rows.length === 0) {
         return showError("Lưu biến thể thất bại");
-      }
+    }
+
     const variantKeys = new Set();
-    let isDuplicateInQueue = false;
+    let isValid = true;
+    let firstErrorRow = null;
+    const errorRows = [];
+
     for (let row of rows) {
-      const color = row.querySelector('[name="colors[]"]').value;
-      const size = row.querySelector('[name="sizes[]"]').value;
-      const fileInput = row.querySelector('[name="images[]"]');
-      const file = fileInput?.files?.[0];
-  
-      if (!color || !size || !file)
-      {
-        return showError("Không được để trống biến thể");
-      }
-  
-      const filename = file.name.trim().toLowerCase();
-      const key = `${productId}_${color}_${size}_${filename}`;
-  
-      if (variantKeys.has(key)) {
-        isDuplicateInQueue = true;
-        break;
-      }
-      variantKeys.add(key);
+        const color = row.querySelector('[name="colors[]"]').value;
+        const size = row.querySelector('[name="sizes[]"]').value;
+        const fileInput = row.querySelector('[name="images[]"]');
+        const file = fileInput?.files?.[0];
+
+        // ❌ Thiếu thông tin
+        if (!color || !size || !file) {
+            isValid = false;
+            if (!firstErrorRow) firstErrorRow = row;
+            errorRows.push(row);
+            continue;
+        }
+
+        const filename = file.name.trim().toLowerCase();
+        const key = `${productId}_${color}_${size}_${filename}`;
+
+        // ❌ Trùng hàng đợi
+        if (variantKeys.has(key)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Biến thể trùng',
+                text: 'Biến thể (màu, size, ảnh) đã tồn tại trong hàng đợi.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        variantKeys.add(key);
     }
-  
-    if (isDuplicateInQueue) {
-      showModalThongBao('Biến thể đã tồn tại trong hàng đợi (màu, size, ảnh giống nhau).');
-      return;
+
+    if (!isValid) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Thiếu thông tin',
+            text: 'Vui lòng nhập đầy đủ màu, size và ảnh cho tất cả các dòng.',
+            confirmButtonText: 'OK',
+            didClose: () => {
+                firstErrorRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                errorRows.forEach(row => {
+                    row.classList.add('row-error-highlight');
+                    setTimeout(() => {
+                        row.classList.remove('row-error-highlight');
+                    }, 3000);
+                });
+            }
+        });
+        return;
     }
-  
-    // ✅ Không trùng → gửi lên server
+
+    // ✅ Gửi lên server
     const formData = new FormData(this);
     fetch('./ajax/insertBienThe.php', {
-      method: 'POST',
-      body: formData
+        method: 'POST',
+        body: formData
     })
-      .then(res => res.json())
-      .then(res => {
+    .then(res => res.json())
+    .then(res => {
         if (res.success) {
             const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
             tbTC.style.display = 'block';
             tbTC.classList.add('show');
-            setTimeout(() => tbTC.classList.remove('show'), 2000);            
+            setTimeout(() => tbTC.classList.remove('show'), 2000);
+            
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
             if (modal) modal.hide();
-          
-            // ✅ Xoá tất cả dòng biến thể tạm
+
+            // Xoá tất cả dòng
             document.querySelectorAll('.variant-row').forEach(row => row.remove());
-          
-            // ✅ Reset select sản phẩm
+
+            // Reset sản phẩm
             const selectSanPham = document.getElementById('id_sanpham');
             if (selectSanPham) {
-              $(selectSanPham).val(null).trigger('change'); // reset select2
+                $(selectSanPham).val(null).trigger('change');
             }
-          
-            // ✅ Cập nhật biến thể trong các dòng phiếu nhập
+
+            // Cập nhật lại biến thể ở các dòng phiếu nhập
             document.querySelectorAll('.product-row').forEach(row => {
-              const selectProduct = row.querySelector('[name*="[product_id]"]');
-              if (selectProduct && selectProduct.value == document.getElementById('id_sanpham').value) {
-                handleProductChange(selectProduct, row);
-              }
+                const selectProduct = row.querySelector('[name*="[product_id]"]');
+                if (selectProduct && selectProduct.value == productId) {
+                    handleProductChange(selectProduct, row);
+                }
             });
-          
+
             if (typeof reloadVariantsInPhieuNhap === 'function') reloadVariantsInPhieuNhap();
-          }
-           else {
-          showModalThongBao(res.message || 'Đã tồn tại biến thể trong hệ thống.');
+        } else {
+            showModalThongBao(res.message || 'Đã tồn tại biến thể trong hệ thống.');
         }
-      })
-      .catch(err => {
+    })
+    .catch(err => {
         console.error(err);
         alert('Lỗi khi gửi dữ liệu!');
-      });
-  });
+    });
+});
+
   
   document.querySelector('#modalThemBienThe .btn-danger').addEventListener('click', function () {
     // 1. Reset select sản phẩm
@@ -452,7 +481,11 @@ function luuSanPham()
                 document.getElementById('txtPT').focus();
                 return showError("Phần trăm tăng giá phải là số dương");
             }
-    
+            if(epPtgg > 100)
+                {
+                    document.getElementById('txtPT').focus();
+                    return showError("Không được vướt mức 100%");
+                }
         const data = new FormData();
         data.append('name', name);
         data.append('description', description);
@@ -596,6 +629,141 @@ function xuLyThemPhieuNhap()
     });
     
 }
+document.addEventListener('click', async function (e) {
+    if (e.target.classList.contains('btn-open-variant-modal')) {
+        const index = e.target.dataset.index;
+        const row = document.querySelectorAll('.product-row')[index];
+        const productId = row.querySelector('[name*="[product_id]"]').value;
+
+        if (!productId) {
+            return showError("Vui lòng chọn sản phẩm trước");
+        }
+
+        window._currentVariantIndex = index;  // lưu lại index toàn cục
+        window._currentProductId = productId;
+
+        fetchVariantPage(1);
+    }
+});
+function cleanModalBackdropChonBienThe() {
+    const modal = document.getElementById('modalChonBienThe');
+    if (modal) {
+        modal.addEventListener('hidden.bs.modal', function () {
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style = '';
+        });
+    }
+}
+
+function fetchVariantPage(page = 1) {
+    fetch(`./ajax/load_variants.php?product_id=${_currentProductId}&page=${page}`)
+        .then(res => res.json())
+        .then(json => {
+            const tbody = document.querySelector('#variant-table tbody');
+            const paginationWrap = document.getElementById("variant-pagination");
+
+            tbody.innerHTML = json.data.map(v => `
+                <tr class="text-center">
+                  <td>${v.variant_id}</td>
+                  <td><img src="../../assets/img/sanpham/${v.image}" class="img-thumbnail img-phongto" style="max-height:70px;"></td>
+                  <td>${v.size_name}</td>
+                  <td>${v.color_name}</td>
+                  <td>${v.stock}</td>
+                  <td>
+                    <button class="btn btn-sm btn-success select-variant-btn" 
+                            data-index="${_currentVariantIndex}"
+                            data-variant='${JSON.stringify(v)}'>Chọn</button>
+                  </td>
+                </tr>
+            `).join('');
+
+            // Chỉ mở modal nếu chưa mở
+            const modalEl = document.getElementById('modalChonBienThe');
+            const existingModal = bootstrap.Modal.getInstance(modalEl);
+
+            if (!existingModal) {
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            } else {
+                modalEl.classList.contains('show') || existingModal.show(); // chỉ show nếu chưa mở
+            }
+
+            // Render phân trang như trước
+            const { current, total } = json.pagination;
+            paginationWrap.innerHTML = '';
+            if (total > 1) {
+                const btnPrev = document.createElement("button");
+                btnPrev.innerHTML = '<i class="fa fa-chevron-left text-dark"></i>';
+                btnPrev.className = "btn btn-outline-secondary";
+                btnPrev.disabled = current === 1;
+                btnPrev.onclick = () => fetchVariantPage(current - 1);
+
+                const inputPage = document.createElement("input");
+                inputPage.type = "number";
+                inputPage.min = 1;
+                inputPage.max = total;
+                inputPage.value = current;
+                inputPage.style.width = "60px";
+                inputPage.className = "form-control d-inline-block text-center mx-2";
+                inputPage.addEventListener("keypress", function (e) {
+                    if (e.key === "Enter") {
+                        let value = parseInt(this.value);
+                        if (isNaN(value)) return;
+                        if (value < 1) value = 1;
+                        if (value > total) value = total;
+                        fetchVariantPage(value);
+                    }
+                });
+
+                const spanTotal = document.createElement("span");
+                spanTotal.innerHTML = `/ ${total}`;
+                spanTotal.classList.add("mx-1");
+
+                const btnNext = document.createElement("button");
+                btnNext.innerHTML = '<i class="fa fa-chevron-right text-dark"></i>';
+                btnNext.className = "btn btn-outline-secondary";
+                btnNext.disabled = current === total;
+                btnNext.onclick = () => fetchVariantPage(current + 1);
+
+                paginationWrap.appendChild(btnPrev);
+                paginationWrap.appendChild(inputPage);
+                paginationWrap.appendChild(spanTotal);
+                paginationWrap.appendChild(btnNext);
+            }
+        })
+        .catch(err => console.error("❌ Lỗi load biến thể:", err));
+}
+
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('select-variant-btn')) {
+        const data = JSON.parse(e.target.dataset.variant);
+        const index = e.target.dataset.index;
+        const row = document.querySelectorAll('.product-row')[index];
+
+        // Gán ID biến thể
+        row.querySelector('.variant-id-input').value = data.variant_id;
+
+        // ✅ Gán hiển thị mã biến thể ra thẻ <p>
+        const pDisplay = row.querySelector('.btn-open-variant-modal').nextElementSibling;
+        if (pDisplay) {
+            pDisplay.textContent = `Mã: ${data.variant_id}`;
+            pDisplay.classList.add('text-muted', 'small');
+        }
+
+        // Gán size
+        const sizeSelect = row.querySelector('[name*="[size_id]"]');
+        sizeSelect.innerHTML = `<option value="${data.size_id}" selected>${data.size_name}</option>`;
+
+        // Gán màu
+        const colorSelect = row.querySelector('[name*="[color_id]"]');
+        colorSelect.innerHTML = `<option value="${data.color_id}" selected>${data.color_name}</option>`;
+
+        bootstrap.Modal.getInstance(document.getElementById('modalChonBienThe')).hide();
+    }
+});
+
 
 function generateProductForm(index) {
     const productOptions = generateOptions(productListFromPHP, 'product_id', 'name');
@@ -603,7 +771,7 @@ function generateProductForm(index) {
     const colorOptions = generateOptions(colorListFromPHP, 'color_id', 'name');
 
     return `
-<div class="row g-3 align-items-end mb-3 bg-white border rounded shadow-sm p-3 product-row">
+<div class="row g-3 align-items-end my-1 bg-white border rounded shadow-sm p-3 product-row">
   <div class="col-md-3">
     <label class="form-label">Tên sản phẩm</label>
     <select name="products[${index}][product_id]" class="form-control select2">
@@ -616,12 +784,17 @@ function generateProductForm(index) {
     <input type="text" name="products[${index}][unit_price]" class="form-control input-unit-price" placeholder="VD: 100000">
   </div>
 
-  <div class="col-md-2">
-    <label class="form-label">Mã biến thể</label>
-    <select name="products[${index}][variant_id]" class="form-control select2 select-variant">
-      <option value="">-- Chọn --</option>
-    </select>
+<div class="col-md-2">
+  <label class="form-label">Chọn biến thể</label>
+  <div class="d-flex align-items-center gap-2">
+    <input type="hidden" name="products[${index}][variant_id]" class="variant-id-input">
+    <button type="button" class="btn btn-outline-primary btn-sm btn-open-variant-modal" data-index="${index}">
+      Chọn
+    </button>
+<p class="mb-1 variant-display"></p>
   </div>
+</div>
+
 
   <div class="col-md-2">
     <label class="form-label">Màu</label>
@@ -639,7 +812,7 @@ function generateProductForm(index) {
 
   <div class="col-md-1">
     <label class="form-label">SL</label>
-    <input type="number" name="products[${index}][quantity]" class="form-control" min="1" placeholder="1">
+    <input type="number" name="products[${index}][quantity]" class="form-control" min="1" placeholder="999">
   </div>
 
   <div class="col-12 text-end pt-2">
@@ -658,23 +831,11 @@ function formatCurrency(value) {
 
 async function handleProductChange(selectEl, row) {
     const productId = selectEl.value;
-    const variantSelect = row.querySelector('[name*="[variant_id]"]');
     const unitPriceInput = row.querySelector('.input-unit-price');
 
     if (!productId) return;
 
     try {
-        const res = await fetch(`./ajax/load_variants.php?product_id=${productId}`);
-        const variants = await res.json();
-
-        variantSelect.innerHTML = `<option value="">-- Chọn --</option>` +
-            variants.map(v => `<option value="${v.variant_id}">${v.variant_id}</option>`).join('');
-
-        $(variantSelect).select2({
-            width: '100%',
-            dropdownParent: $('#modalCreatePN')
-        });
-
         const resPrice = await fetch(`./ajax/get_product_price.php?product_id=${productId}`);
         const dataPrice = await resPrice.json();
         unitPriceInput.value = dataPrice.unit_price ? formatCurrency(dataPrice.unit_price) : '';
@@ -714,35 +875,71 @@ async function handleVariantChange(selectEl, row) {
 }
 
 
-function guiFormPhieuNhap()
-{
+function guiFormPhieuNhap() {
     document.getElementById('formNhapPhieuNhap').addEventListener('submit', function (e) {
         e.preventDefault();
-    
+
         const supplier_id = document.getElementById('supplier_id').value;
         const user_id = document.getElementById('user_id').value;
-    
+
         const formData = new FormData();
         formData.append('supplier_id', supplier_id);
         formData.append('user_id', user_id);
-    
+
         const productBlocks = document.querySelectorAll('#dynamic-product-forms .row');
         const productList = [];
         let isValid = true;
+        let errorType = ''; // 'missing' | 'variant' | 'price'
+        let errorRows = [];
+        let firstErrorRow = null;
 
-        productBlocks.forEach((block, index) => {
+        productBlocks.forEach((block) => {
             const product_id = block.querySelector(`[name^="products"][name*="[product_id]"]`)?.value;
+            const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value;
+            const unit_price = raw_price.replace(/\./g, '').replace(',', '.');
             const color_id = block.querySelector(`[name^="products"][name*="[color_id]"]`)?.value;
             const size_id = block.querySelector(`[name^="products"][name*="[size_id]"]`)?.value;
             const quantity = block.querySelector(`[name^="products"][name*="[quantity]"]`)?.value;
-            const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value;
-            const unit_price = raw_price.replace(/\./g, '').replace(',', '.'); // ✅ loại bỏ dấu "." và thay "," nếu có
-            
+            const variantDisplay = block.querySelector('.variant-display');
+
+            // ❌ Thiếu trường bắt buộc
             if (!product_id || !color_id || !size_id || !quantity || !unit_price) {
                 isValid = false;
+                if (!firstErrorRow) {
+                    errorType = 'missing';
+                    firstErrorRow = block;
+                }
+                errorRows.push(block);
                 return;
             }
 
+            // ❌ Thiếu biến thể
+            if (!variantDisplay || !variantDisplay.textContent.trim()) {
+                isValid = false;
+                if (!firstErrorRow) {
+                    errorType = 'variant';
+                    firstErrorRow = block;
+                }
+                errorRows.push(block);
+                return;
+            }
+
+            // ❌ Trùng mã sản phẩm nhưng giá khác nhau
+            const existing = productList.find(p =>
+                p.product_id === product_id &&
+                p.unit_price !== unit_price
+            );
+            if (existing) {
+                isValid = false;
+                if (!firstErrorRow) {
+                    errorType = 'price';
+                    firstErrorRow = block;
+                }
+                errorRows.push(block);
+                return;
+            }
+
+            // ✅ Dòng hợp lệ
             productList.push({
                 product_id,
                 color_id,
@@ -751,41 +948,78 @@ function guiFormPhieuNhap()
                 unit_price
             });
         });
-    
-        if (!isValid || productList.length === 0) {
-            const TBsp = document.querySelector('.thongbaoLuuKhongThanhCong');
-            TBsp.style.display = 'block';
-            TBsp.classList.add('show');
-            setTimeout(() => TBsp.classList.remove('show'), 2000);            
+
+        // Nếu có lỗi
+        if (!isValid) {
+            let title = 'Lỗi dữ liệu';
+            let text = 'Hệ thống sẽ cuộn đến dòng đầu tiên lỗi và đánh dấu các dòng sai.';
+
+            if (errorType === 'missing') {
+                title = 'Thiếu thông tin';
+                text = 'Vui lòng điền đầy đủ tất cả các trường bắt buộc.';
+            } else if (errorType === 'variant') {
+                title = 'Thiếu biến thể';
+                text = 'Bạn chưa chọn biến thể cho một sản phẩm.';
+            } else if (errorType === 'price') {
+                title = 'Sai lệch giá nhập';
+                text = 'Có mã sản phẩm trùng nhưng giá nhập khác nhau.';
+            }
+
+            Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: text,
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didClose: () => {
+                    firstErrorRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    errorRows.forEach(row => {
+                        row.classList.add('row-error-highlight');
+                        setTimeout(() => {
+                            row.classList.remove('row-error-highlight');
+                        }, 3000);
+                        
+                    });
+                }
+            });
+
             return;
         }
 
+        if (productList.length === 0) {
+            return showError("Lưu phiếu nhập thất bại");
+        }
+
         formData.append('products', JSON.stringify(productList));
-    
+
         fetch('./ajax/insertPhieuNhap.php', {
             method: 'POST',
             body: formData
         })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
-                const tbtcthem = document.querySelector('.thongbaoLuuThanhCong');
-                tbtcthem.style.display = 'block';
-                tbtcthem.classList.add('show');
-                setTimeout(() => tbtcthem.classList.remove('show'), 2000);  
-                document.getElementById('formNhapPhieuNhap').reset();
-                document.getElementById('dynamic-product-forms').innerHTML = '';
-                bootstrap.Modal.getInstance(document.getElementById('modalCreatePN')).hide();
-            } else {
-                alert("❌ " + res.message);
-            }
-        })
-        .catch(error => {
-            console.error("Lỗi gửi Ajax:", error);
-            alert("❌ Đã xảy ra lỗi khi gửi dữ liệu!");
-        });
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    const tbtcthem = document.querySelector('.thongbaoLuuThanhCong');
+                    tbtcthem.style.display = 'block';
+                    tbtcthem.classList.add('show');
+                    setTimeout(() => tbtcthem.classList.remove('show'), 2000);
+                    document.getElementById('formNhapPhieuNhap').reset();
+                    document.getElementById('dynamic-product-forms').innerHTML = '';
+                    bootstrap.Modal.getInstance(document.getElementById('modalCreatePN')).hide();
+                } else {
+                    alert("❌ " + res.message);
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi gửi Ajax:", error);
+                alert("❌ Đã xảy ra lỗi khi gửi dữ liệu!");
+            });
     });
 }
+
+
+
 
 function resetForm()
 {

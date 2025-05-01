@@ -494,3 +494,8 @@ button:active {
     font-size: 16px;
     padding: 6px 10px;
 }
+.row-error-highlight {
+    border: 2px solid red !important;
+  }
+  
+  

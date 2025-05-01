@@ -266,7 +266,7 @@ function hienthisua() {
             formSua.querySelector("select[name='loai']").value = loai;
             formSua.querySelector("input[name='gia']").value = parseFloat(gia).toLocaleString('vi-VN');
             formSua.querySelector("input[name='giaban']").value = parseFloat(giaban).toLocaleString('vi-VN');
-            formSua.querySelector("input[name='pttg']").value = parseFloat(pttg);
+            formSua.querySelector("input[name='pttg']").value = `${parseFloat(pttg)}%`;
 
             // Lưu giá trị gốc vào dataset (nếu cần)
             formSua.dataset.giaNhapCu = parseFloat(gia.replace(/\./g, "").replace(",", "."));
@@ -410,7 +410,7 @@ function themsanpham()
         const name = document.getElementById('txtTen').value.trim();
         const description = document.getElementById('txtMota').value.trim();
         const category_id = document.getElementById('cbLoai').value;
-        const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
+        // const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
         const ptgg = document.getElementById('txtPT').value.trim().replace('%','');
     
         const regexCheck = /[`~+=\-\/;'\><\\|@#$%^&*()]/; 
@@ -452,17 +452,17 @@ function themsanpham()
                 document.getElementById('cbLoai').focus();
                 return showError("Không được để trống loại sản phẩm");
             }
-            if(!price)
-            {
-                document.getElementById('txtGia').focus();
-                return showError("Không được để trống giá nhập");
-            }
-            const epPrice = parseFloat(price);
-            if(epPrice < 0 || epPrice === 0 || isNaN(price))
-            {
-                document.getElementById('txtGia').focus();
-                return showError("Giá phải là số dương");
-            }
+            // if(!price)
+            // {
+            //     document.getElementById('txtGia').focus();
+            //     return showError("Không được để trống giá nhập");
+            // }
+            // const epPrice = parseFloat(price);
+            // if(epPrice < 0 || epPrice === 0 || isNaN(price))
+            // {
+            //     document.getElementById('txtGia').focus();
+            //     return showError("Giá phải là số dương");
+            // }
             if(!ptgg)
             {
                 document.getElementById('txtPT').focus();
@@ -474,12 +474,16 @@ function themsanpham()
                     document.getElementById('txtPT').focus();
                     return showError("Phần trăm tăng giá phải là số dương");
                 }
+            if(epPtgg > 100)
+            {
+                document.getElementById('txtPT').focus();
+                return showError("Không được vướt mức 100%");
+            }
     
         const data = new FormData();
         data.append('name', name);
         data.append('description', description);
         data.append('category_id', category_id);
-        data.append('price', price);
         data.append('ptgg', ptgg);
     
         fetch('./ajax/insertSanPham.php', {
@@ -504,7 +508,6 @@ function themsanpham()
                 document.getElementById('txtTen').value = '';
                 document.getElementById('txtMota').value = '';
                 document.getElementById('cbLoai').value = '';
-                document.getElementById('txtGia').value = '';
                 document.getElementById('txtPT').value = '30%';
                 } else {
                 alert("Thêm thất bại: " + res.message);
@@ -600,7 +603,12 @@ function suasanpham()
             document.getElementById("txtPttg").focus();
             return;
         }
-
+        const epPtgg = parseFloat(pttg);
+        if(epPtgg > 100)
+        {
+            document.getElementById('txtPT').focus();
+            return showError("Không được vướt mức 100%");
+        }
         if(isNaN(pttg))
         {
             loi = "Phần trăm tăng giá phải là số dương";

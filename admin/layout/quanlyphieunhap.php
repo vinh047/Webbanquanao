@@ -15,7 +15,7 @@
   display: inline-block;
   vertical-align: middle;
 }
-.preview-img:hover {
+.preview-img:hover,.img-phongto:hover {
   transform: scale(4.6);
   transition: transform 0.2s ease;
   z-index: 10;
@@ -147,6 +147,34 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         </form>
       </div>
 
+    </div>
+  </div>
+</div>
+<!-- Modal danh sách biến thể -->
+<div class="modal fade" id="modalChonBienThe" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">Chọn Biến Thể</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-hover" id="variant-table">
+        <thead>
+  <tr class="text-center">
+    <th>Mã</th>
+    <th style="width:15%;">Ảnh</th>
+    <th>Size</th>
+    <th>Màu</th>
+    <th style="width:15%;">Tồn kho</th>
+    <th>Xử lý</th>
+  </tr>
+</thead>
+          <tbody></tbody>
+        </table>
+        <div id="variant-pagination" class="d-flex justify-content-center align-items-center gap-2 mt-3"></div>
+
+      </div>
     </div>
   </div>
 </div>
