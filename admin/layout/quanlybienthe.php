@@ -199,7 +199,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                 Đã tạm thời ẩn đi
             </p>
             <p class="mb-0 text-white">       
-                Do có liên kết với nhiều bảng
+                Do đã có trong hóa đơn
             </p>
         </div>
 

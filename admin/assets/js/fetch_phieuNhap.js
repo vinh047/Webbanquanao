@@ -6,7 +6,7 @@ let permissions = [];
 const formatPrice = price => Number(price).toLocaleString('vi-VN');
 let cachedQuantities = {};
 let deleteAction = null;
-console.log('✅ productListFromPHP:', productListFromPHP);
+// console.log('✅ productListFromPHP:', productListFromPHP);
 
 document.addEventListener('DOMContentLoaded', function () {
     ktraQuyen();
@@ -388,19 +388,19 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     // 3. Reset lại form ảnh và inputs
     document.getElementById('formBienThe').reset();
   
-    // (Tuỳ chọn) 4. Tự thêm lại 1 dòng trống
-    const container = document.getElementById('variant-container');
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = createVariantRow(0); // hoặc variantIndex++ nếu bạn dùng biến đếm
-    container.appendChild(wrapper);
+    // // (Tuỳ chọn) 4. Tự thêm lại 1 dòng trống
+    // const container = document.getElementById('variant-container');
+    // const wrapper = document.createElement('div');
+    // wrapper.innerHTML = createVariantRow(0); // hoặc variantIndex++ nếu bạn dùng biến đếm
+    // container.appendChild(wrapper);
   
     // Kích hoạt lại Select2 trong dòng vừa thêm
-    wrapper.querySelectorAll('.select2').forEach(select => {
-      $(select).select2({
-        width: '100%',
-        dropdownParent: $('#modalThemBienThe')
-      });
-    });
+    // wrapper.querySelectorAll('.select2').forEach(select => {
+    //   $(select).select2({
+    //     width: '100%',
+    //     dropdownParent: $('#modalThemBienThe')
+    //   });
+    // });
   });
   
 
@@ -1007,6 +1007,7 @@ function guiFormPhieuNhap() {
                     document.getElementById('formNhapPhieuNhap').reset();
                     document.getElementById('dynamic-product-forms').innerHTML = '';
                     bootstrap.Modal.getInstance(document.getElementById('modalCreatePN')).hide();
+                    loadPhieuNhap(currentPage);
                 } else {
                     alert("❌ " + res.message);
                 }
@@ -1223,6 +1224,7 @@ function xemChiTiet()
                         <td>${item.product_name}</td>
                         <td>${item.size_name}</td>
                         <td>${item.color_name}</td>
+                        <td>${Number(item.unit_price).toLocaleString('vi-VN')}</td>
                         <td>${item.quantity}</td>
                         <td>${item.stock}</td>
                     `;
@@ -1340,12 +1342,12 @@ document.addEventListener('click', function(e) {
                     tbody.appendChild(tr);
                 });
 
-                const anhien = document.getElementById('anhienxoa');
-                if (data.details.length === 0) {
-                    anhien.style.display = 'inline-block';
-                } else {
-                    anhien.style.display = 'none';
-                }
+                // const anhien = document.getElementById('anhienxoa');
+                // if (data.details.length === 0) {
+                //     anhien.style.display = 'inline-block';
+                // } else {
+                //     anhien.style.display = 'none';
+                // }
 
                 const modal = new bootstrap.Modal(document.getElementById('modalXoaChiTietPN'));
                 document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());

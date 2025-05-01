@@ -36,17 +36,7 @@ try {
         $stmt3 = $pdo->prepare("DELETE FROM importreceipt_details WHERE importreceipt_details_id = ?");
         $stmt3->execute([$idctpn]);
 
-        // 4. Kiểm tra tồn kho => Nếu về 0 thì đánh dấu is_deleted = 1
-        $stmt4 = $pdo->prepare("SELECT stock FROM product_variants WHERE variant_id = ?");
-        $stmt4->execute([$variant_id]);
-        $stock = intval($stmt4->fetchColumn());
-
-        if ($stock <= 0) {
-            $stmt5 = $pdo->prepare("UPDATE product_variants SET is_deleted = 1 WHERE variant_id = ?");
-            $stmt5->execute([$variant_id]);
-        }
-
-        // 5. Cập nhật lại tổng tiền của phiếu nhập
+        // 4. Cập nhật lại tổng tiền của phiếu nhập
         $stmt6 = $pdo->prepare("
             UPDATE importreceipt
             SET total_price = (

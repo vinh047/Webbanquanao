@@ -515,6 +515,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
               <th>Sản phẩm</th>
               <th>Size</th>
               <th>Màu</th>
+              <th>Giá nhập</th>
               <th>Số lượng</th>
               <th>Tồn kho hiện tại</th>
             </tr>

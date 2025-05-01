@@ -29,6 +29,7 @@ SELECT
     c.name AS color_name,
     s.name AS size_name,
     d.quantity,
+    d.unit_price,
     v.stock
 FROM importreceipt_details d
 JOIN product_variants v ON d.variant_id = v.variant_id
