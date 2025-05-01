@@ -86,7 +86,7 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 
 
 
-    <div class="quanlysp container-md">
+    <div class="quanlysp flex-fill me-3">
         <div class="infouser row p-2" style="background-color: #f8f9fa;">
             <div class="col-md text-end">
                 <p class="mb-0 fs-5">Xin chào, <i><?= htmlspecialchars($username) ?></i></p>
