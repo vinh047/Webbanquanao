@@ -85,5 +85,110 @@ resetButton.addEventListener('click', function () {
         input.checked = false;
     });
 });
-
+document.body.addEventListener("click", function (e) {
+    // 🟦 Click vào ảnh màu
+    if (e.target.classList.contains("color-thumb")) {
+      const img = e.target;
+      const productId = img.dataset.productId;
+      const colorId = img.dataset.colorId;
+      const newSrc = img.dataset.image;
+      const container = img.closest('.border.rounded-1');
+      const mainImg = container.querySelector("#main-image-" + productId);
+  
+      // Đổi ảnh chính
+      if (mainImg) mainImg.src = newSrc;
+  
+      // Bỏ chọn ảnh màu khác
+      container.querySelectorAll(".color-thumb").forEach(el => el.classList.remove("selected"));
+      img.classList.add("selected");
+  
+      // Reset size
+      const sizeGroup = container.querySelector('.size-group');
+      sizeGroup.innerHTML = '';
+      container.querySelectorAll(".size-thumb").forEach(el => el.classList.remove("selected"));
+      disableAddToCart(container);
+  
+      // Gọi AJAX để load size theo màu
+      fetch('ajax/get_sizes_by_color.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: productId, color_id: colorId })
+      })
+        .then(res => res.text())
+        .then(html => {
+          sizeGroup.innerHTML = html;
+          sizeGroup.classList.remove('d-none');
+        });
+    }
+  
+    // 🟦 Click vào size
+    if (e.target.classList.contains("size-thumb")) {
+      const sizeDiv = e.target;
+      const container = sizeDiv.closest('.border.rounded-1');
+  
+      container.querySelectorAll(".size-thumb").forEach(el => el.classList.remove("selected"));
+      sizeDiv.classList.add("selected");
+  
+      // Kiểm tra nếu đã chọn màu
+      const hasColor = container.querySelector(".color-thumb.selected");
+      if (hasColor) {
+        enableAddToCart(container);
+      }
+    }
+  
+    // 🟦 Click vào nút thêm vào giỏ
+    if (e.target.closest(".add-to-cart-btn")) {
+      const btn = e.target.closest(".add-to-cart-btn");
+      if (btn.disabled) return;
+  
+      const container = btn.closest('.border.rounded-1');
+      const productId = btn.dataset.productId;
+      const productName = btn.dataset.productName;
+      const productPrice = btn.dataset.productPrice;
+  
+      const color = container.querySelector('.color-thumb.selected');
+      const size = container.querySelector('.size-thumb.selected');
+  
+      if (!color || !size) return;
+  
+      const variantImage = color.dataset.image;
+      const sizeId = size.dataset.sizeId;
+  
+      addToCart(productId, productName, productPrice, variantImage, sizeId);
+    }
+  });
+  
+  // 🟦 Hỗ trợ: Bật / tắt nút thêm giỏ
+  function enableAddToCart(container) {
+    const btn = container.querySelector('.add-to-cart-btn');
+    if (btn) btn.disabled = false;
+  }
+  function disableAddToCart(container) {
+    const btn = container.querySelector('.add-to-cart-btn');
+    if (btn) btn.disabled = true;
+  }
+  document.addEventListener('click', function (e) {
+    // Nếu click KHÔNG nằm trong 1 sản phẩm
+    const isInsideProduct = e.target.closest('.border.rounded-1');
+    if (!isInsideProduct) {
+      document.querySelectorAll('.border.rounded-1').forEach(container => {
+        // 1. Bỏ chọn màu
+        container.querySelectorAll('.color-thumb.selected').forEach(el => el.classList.remove('selected'));
+  
+        // 2. Bỏ chọn size
+        container.querySelectorAll('.size-thumb.selected').forEach(el => el.classList.remove('selected'));
+  
+        // 3. Ẩn bảng size
+        const sizeGroup = container.querySelector('.size-group');
+        if (sizeGroup) {
+          sizeGroup.classList.add('d-none');
+          sizeGroup.innerHTML = '';
+        }
+  
+        // 4. Disable nút giỏ hàng
+        disableAddToCart(container);
+      });
+    }
+  });
+  
 

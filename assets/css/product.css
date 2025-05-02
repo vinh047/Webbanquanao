@@ -84,6 +84,51 @@
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.3); /* bóng mờ */
     border-color: black;            /* tùy chọn: đổi màu viền */
 }
+.size-thumb.selected {
+    border: 2px solid #000 !important;
+}
+/* Phần container chứa ảnh và overlay */
+.border.rounded-1 {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Overlay bảng size */
+.size-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    z-index: 2;
+}
+.color-group img {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+.size-thumb {
+    width: 36px;
+    height: 30px;
+    font-size: 13px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    background-color: #fff;
+}
+.size-thumb.selected {
+    border: 2px solid #000;
+}
+
 
 @media (max-width: 768px) {
     .filter_loc {

@@ -73,62 +73,57 @@ while ($row = mysqli_fetch_assoc($result)) {
     while ($color = mysqli_fetch_assoc($color_result)) {
         $color_images_html .= '<img src="../assets/img/sanpham/' . $color['image'] . '" 
             data-product-id="' . $id . '" 
+            data-color-id="' . $color['color_id'] . '"
             data-image="../assets/img/sanpham/' . $color['image'] . '"
             class="color-thumb"
             style="width:28px;height:28px;object-fit:cover;border-radius:3px;border:1px solid #ccc;margin-right:4px;cursor:pointer;">';
     }
-
-    $size_query = "SELECT DISTINCT s.size_id, s.name FROM product_variants v JOIN sizes s ON v.size_id = s.size_id WHERE v.product_id = $id AND v.is_deleted = 0 AND v.stock > 0 ORDER BY s.size_id ASC";
-    $size_result = mysqli_query($connection, $size_query);
-    $size_buttons_html = '<div class="size-group d-flex flex-wrap gap-2 mt-2 d-none">'; // ✅ mở thẻ
-    while ($size = mysqli_fetch_assoc($size_result)) {
-        $size_buttons_html .= '<div class="size-thumb border text-center"
-            data-size-id="' . $size['size_id'] . '"
-            style="width:50px;height:35px;line-height:35px;font-size:14px;margin-right:4px;cursor:pointer;user-select:none;border-radius:3px;">
-            ' . $size['name'] . '
-            </div>';
-    }
-    $size_buttons_html .= '</div>'; // ✅ đóng thẻ    
-
     echo '
     <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover p-md-2 p-1">
-        <div class="border rounded-1">
-            <a href="../layout/product_detail.php?product_id=' . $id . '" class="text-decoration-none text-dark">
-                <img id="main-image-' . $id . '" src="../' . $imagePath . '" alt="" 
-                    class="img-fluid product-img" 
+        <div class="border rounded-1 position-relative overflow-hidden" style="background:#fff;">
+            <!-- Hình sản phẩm -->
+            <div class="position-relative">
+                <img id="main-image-' . $id . '" src="../' . $imagePath . '" alt=""
+                    class="img-fluid product-img w-100" 
                     style="transition:transform 0.4s ease, opacity 0.4s ease;">
-            </a>
-    
-            <!-- ✅ Di chuyển phần chọn màu + size RA KHỎI thẻ <a> -->
-            <div class="mt-2 px-2">
-                <div class="color-group d-flex justify-content-start">' . $color_images_html . '</div>
-                ' . $size_buttons_html . ' <!-- đây đã chứa div .size-group -->
+                
+                <!-- ✅ Size overlay đè lên ảnh -->
+                <div class="size-group position-absolute start-0 end-0 d-flex justify-content-center gap-1 py-2 d-none"
+                    style="bottom: 0; background: rgba(255, 255, 255, 0.9); z-index: 2;"></div>
             </div>
     
+            <!-- Ảnh màu -->
+            <div class="mt-2 px-2">
+                <div class="color-group d-flex justify-content-start">' . $color_images_html . '</div>
+            </div>
+    
+            <!-- Nội dung -->
             <div class="mt-2 p-2 pt-1">
                 <p class="mb-0 fw-lighter">Nam</p>
                 <p class="mb-0">' . $gia . ' VNĐ</p>
                 <p class="mb-0 limit-text">' . $name . '</p>
                 <button 
-                    class="btn btn-dark btn-sm mt-2 w-100 add-to-cart-btn"
+                    class="btn btn-dark btn-sm mt-2 w-100 add-to-cart-btn" 
                     data-product-id="' . $id . '"
                     data-product-name="' . htmlspecialchars($name, ENT_QUOTES) . '"
-                    data-product-price="' . $row['price_sale'] . '">
+                    data-product-price="' . $row['price_sale'] . '" disabled>
                     <i class="fa fa-cart-plus me-1"></i>Thêm vào giỏ
                 </button>
             </div>
         </div>
-    </div>';  
-} 
+    </div>';
+    
+    
+}
+
 $paddingTest = ($pagination->totalPages == 1) ? 'py-3' : 'py-0';
 echo '<div class="' . $paddingTest . '"></div>';
 
 if ($pagination->totalPages > 1) {
     $pagination->render(['page' => 'sanpham']);
 }
-
-// JAVASCRIPT Xử LÝ
 ?>
+
 <script>
 (function() {
     document.body.addEventListener("mouseover", function (e) {
@@ -138,7 +133,7 @@ if ($pagination->totalPages > 1) {
             const newSrc = img.getAttribute("data-image");
             const mainImg = document.querySelector("#main-image-" + productId);
             if (mainImg) {
-                mainImg.src = newSrc; // khi hover, đổi ảnh tạm
+                mainImg.src = newSrc;
             }
         }
     });
@@ -151,40 +146,53 @@ if ($pagination->totalPages > 1) {
             if (mainImg) {
                 const selectedThumb = img.closest('.border.rounded-1')?.querySelector(".color-thumb.selected[data-product-id='" + productId + "']");
                 if (selectedThumb) {
-                    mainImg.src = selectedThumb.getAttribute("data-image"); // khi mouseout, trở lại ảnh đang chọn
+                    mainImg.src = selectedThumb.getAttribute("data-image");
                 }
             }
         }
     });
 
     document.body.addEventListener("click", function (e) {
+        // 📌 Khi click màu
         if (e.target.classList.contains("color-thumb")) {
             const img = e.target;
             const productId = img.getAttribute("data-product-id");
+            const colorId = img.getAttribute("data-color-id");
             const newSrc = img.getAttribute("data-image");
             const container = img.closest('.border.rounded-1');
 
-            // Đổi ảnh chính ngay khi click
+            // Đổi ảnh chính
             const mainImg = container.querySelector("#main-image-" + productId);
             if (mainImg) {
                 mainImg.src = newSrc;
             }
 
-            // Đánh dấu ảnh màu được chọn
+            // Gỡ chọn cũ
             container.querySelectorAll(".color-thumb[data-product-id='" + productId + "']").forEach(el => {
                 el.classList.remove("selected");
             });
             img.classList.add("selected");
 
-            // Ẩn color-group, hiện size-group
-            const colorGroup = container.querySelector('.color-group');
-            const sizeGroup = container.querySelector('.size-group');
-            if (colorGroup && sizeGroup) {
-                colorGroup.classList.add('d-none');
+            // 🔥 GỌI AJAX để lấy size theo color_id
+            fetch('ajax/get_sizes_by_color.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_id: productId, color_id: colorId })
+            })
+            .then(res => res.text())
+            .then(html => {
+                const sizeGroup = container.querySelector('.size-group');
+                sizeGroup.innerHTML = html;
                 sizeGroup.classList.remove('d-none');
-            }
+            })
+            .catch(err => console.error("Lỗi khi lấy size:", err));
+
+            // Ẩn color-group nếu muốn
+            const colorGroup = container.querySelector('.color-group');
+            if (colorGroup) colorGroup.classList.add('d-none');
         }
 
+        // 📌 Khi click size
         if (e.target.classList.contains('size-thumb')) {
             const container = e.target.closest('.border.rounded-1');
             if (container) {
@@ -193,6 +201,7 @@ if ($pagination->totalPages > 1) {
             e.target.classList.add('selected');
         }
 
+        // 📌 Khi thêm vào giỏ
         if (e.target.closest('.add-to-cart-btn')) {
             const btn = e.target.closest('.add-to-cart-btn');
             const productId = btn.getAttribute('data-product-id');
