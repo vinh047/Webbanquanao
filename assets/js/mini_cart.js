@@ -16,7 +16,7 @@ function renderMiniCart() {
        style="width: 50px; height: 50px; object-fit: cover;" class="me-2 rounded">
   <div class="flex-grow-1">
       <p class="mb-0 small fw-bold">${item.name}</p>
-      <p class="mb-0 text-muted small">${item.color || 'Màu'} - ${item.size || 'Size'}</p>
+      <p class="mb-0 text-muted small">${item.color || '(không màu)'} - ${item.size || '(không size)'}</p>
       <div class="d-flex align-items-center mt-1">
           <span class="small me-2">SL:</span>
          <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeMiniCartQty(${index}, -1)">

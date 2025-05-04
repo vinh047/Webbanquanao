@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 productContainer.innerHTML = data;
                 
                 attachColorHoverEvents(); // ✅ Gắn lại sự kiện đổi ảnh
+                attachAddToCartEvents();
 
                 // ⏳ Gọi lại filter sync nếu có urlParams
                 const currentSearch = window.location.search;
@@ -285,6 +286,27 @@ function attachColorHoverEvents() {
                 el.classList.remove("selected");
             });
             img.classList.add("selected");
+        });
+    });
+}
+function attachAddToCartEvents() {
+    document.querySelectorAll(".btn-add-to-cart").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            const price = parseFloat(this.dataset.price);
+            const image = this.dataset.image;
+            const variant_id = this.dataset.variantId;
+
+            // Tìm màu đang chọn
+            const selectedColor = document.querySelector(".color-option.selected");
+            const colorName = selectedColor?.title || "Màu";
+
+            // Tìm size đang chọn
+            const selectedSize = document.querySelector(".size-option.selected");
+            const sizeName = selectedSize?.title || "Size";
+
+            addToCart(id, name, price, image, variant_id, colorName, sizeName);
         });
     });
 }

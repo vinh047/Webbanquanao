@@ -65,19 +65,24 @@ while ($row = mysqli_fetch_assoc($result)) {
     $name = $row['name'];
     $gia = number_format($row['price_sale'], 0, ',', '.');
     $imagePath = 'assets/img/sanpham/' . $row['image'];
-
-    $color_query = "SELECT DISTINCT color_id, image FROM product_variants WHERE product_id = $id AND is_deleted = 0 AND stock > 0";
+    $color_query = "
+        SELECT DISTINCT v.color_id, v.image, c.name AS color_name
+        FROM product_variants v
+        JOIN colors c ON v.color_id = c.color_id
+        WHERE v.product_id = $id AND v.is_deleted = 0 AND v.stock > 0
+        ";
     $color_result = mysqli_query($connection, $color_query);
 
     $color_images_html = '';
     while ($color = mysqli_fetch_assoc($color_result)) {
         $color_images_html .= '<img src="../assets/img/sanpham/' . $color['image'] . '" 
-            data-product-id="' . $id . '" 
-            data-color-id="' . $color['color_id'] . '"
-            data-image="../assets/img/sanpham/' . $color['image'] . '"
-            class="color-thumb"
-            style="width:28px;height:28px;object-fit:cover;border-radius:3px;border:1px solid #ccc;margin-right:4px;cursor:pointer;">';
-    }
+        data-product-id="' . $id . '" 
+        data-color-id="' . $color['color_id'] . '"
+        data-image="../assets/img/sanpham/' . $color['image'] . '"
+        title="' . htmlspecialchars($color['color_name'], ENT_QUOTES) . '"
+        class="color-thumb"
+        style="width:28px;height:28px;object-fit:cover;border-radius:3px;border:1px solid #ccc;margin-right:4px;cursor:pointer;">';
+    } 
     echo '
     <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover p-md-2 p-1">
         <div class="border rounded-1 position-relative overflow-hidden" style="background:#fff;">
@@ -219,8 +224,16 @@ if ($pagination->totalPages > 1) {
 
             const variantImage = selectedColor.getAttribute('data-image');
             const sizeId = selectedSize.getAttribute('data-size-id');
+            const colorName = selectedColor.getAttribute('title') || 'Màu';
+            const sizeName = selectedSize.getAttribute('data-size-name') || 'Size';
 
-            addToCart(productId, productName, productPrice, variantImage, sizeId);
+
+            console.log("✅ Add to cart:", {
+                productId, productName, productPrice,
+                variantImage, sizeId, colorName, sizeName
+            });
+            addToCart(productId, productName, productPrice, variantImage, sizeId, colorName, sizeName);
+
         }
     });
 })();
