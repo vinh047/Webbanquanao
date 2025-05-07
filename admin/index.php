@@ -2,7 +2,7 @@
 <?php
 require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
 
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,14 +19,6 @@ require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 </head>
-<script>
-    // Nếu quay lại từ lịch sử (Back), buộc reload trang
-    window.addEventListener("pageshow", function (event) {
-        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-            window.location.reload();
-        }
-    });
-</script>
 
 <body>
 <section class="d-flex position-relative">
