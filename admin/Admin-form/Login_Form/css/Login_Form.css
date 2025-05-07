@@ -1,0 +1,21 @@
+body, html {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #eeeeee, #f5f5f5);
+  margin: 0;
+}
+
+.retro-shadow {
+  box-shadow: 6px 6px 0px #aaaaaa, 12px 12px 0px #dcdcdc;
+  border: 2px solid #222;
+  transition: all 0.3s ease;
+}
+
+.retro-shadow:hover {
+  transform: translateY(-3px);
+  box-shadow: 8px 8px 0px #999, 14px 14px 0px #ccc;
+}
+.avatar img {
+  border: 1px solid black;
+}
+/* Vùng nền chứa icon động */
+

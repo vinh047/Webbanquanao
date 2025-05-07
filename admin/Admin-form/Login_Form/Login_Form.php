@@ -7,19 +7,19 @@ $trangthai = $_GET['trangthai'] ?? 'dangnhap';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sagkuto - Login</title>
+  <title>Sagkuto - Admin Login</title>
   <link rel="icon" href="../assets/img/logo_favicon/favicon.png" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
   <link rel="stylesheet" href="css/Login_Form.css" />
-  <link rel="stylesheet" href="../../assets/css/header.css" />
+  <link rel="stylesheet" href="../../../assets/css/header.css" />
 </head>
 
 <body>
   <header class="header shadow-lg" >
       <div class="logo_header ms-5 ">
-        <a href="../../index.php">
-          <img src="../../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+        <a href="../../../index.php">
+          <img src="../../../assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
         </a>
         </div>
   </header>

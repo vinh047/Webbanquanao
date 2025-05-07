@@ -14,16 +14,8 @@ body, html {
   transform: translateY(-3px);
   box-shadow: 8px 8px 0px #999, 14px 14px 0px #ccc;
 }
-
-.carousel-inner {
-  height: fit-content;
-  overflow: hidden;
-}
-
-.carousel-inner img {
-  object-fit: cover;
-}
-
 .avatar img {
   border: 1px solid black;
 }
+/* Vùng nền chứa icon động */
+

@@ -33,42 +33,35 @@ function validateForm() {
     }
   }
 
-  //focus vào trường đầu tiên không hợp lệ
-  
-
   if (trangthai === "dangky") {
     const usernameField = form.querySelector('[name="username"]');
     const emailField = form.querySelector('[name="email"]');
     const passwordField = form.querySelector('[name="pswd"]');
     const passwordConfirmField = form.querySelector('[name="pswd-confirm"]');
     const phoneField = form.querySelector('[name="sdt"]');
-    
+
     const username = usernameField.value.trim();
     const email = emailField.value.trim();
     const password = passwordField.value.trim();
-    const password_confirm=passwordConfirmField.value.trim()
+    const passwordConfirm = passwordConfirmField.value.trim();
     const sdt = phoneField.value.trim();
-    
 
     if (!username) showError(usernameField, "Vui lòng nhập tên người dùng");
-    else if (!usernameRegex.test(username)) showError(usernameField, "Tên người dùng có độ dài từ 4 đến 20 ký tự, không chứa ký tự đặc biệt");
+    else if (!usernameRegex.test(username)) showError(usernameField, "Tên người dùng phải từ 4–20 ký tự, không chứa ký tự đặc biệt");
 
     if (!email) showError(emailField, "Vui lòng nhập email");
     else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");
 
     if (!password) showError(passwordField, "Vui lòng nhập mật khẩu");
-    else if (!passwordRegex.test(password)) showError(passwordField, "Mật khẩu tối thiểu 8 ký tự bao gồm số, chữ hoa, chữ thường, ký tự đặc biệt");
-    
-    if (!password_confirm) showError(passwordConfirmField, "Vui lòng nhập mật khẩu");
-    else if (password !== password_confirm) showError(passwordConfirmField, "Mật khẩu không chính xác");
+    else if (!passwordRegex.test(password)) showError(passwordField, "Mật khẩu cần ≥8 ký tự, gồm số, chữ hoa, thường, ký tự đặc biệt");
 
+    if (!passwordConfirm) showError(passwordConfirmField, "Vui lòng nhập lại mật khẩu");
+    else if (password !== passwordConfirm) showError(passwordConfirmField, "Mật khẩu không khớp");
 
     if (!sdt) showError(phoneField, "Vui lòng nhập số điện thoại");
     else if (!phoneRegex.test(sdt)) showError(phoneField, "Số điện thoại không hợp lệ");
-
-    
-
-  } else if (trangthai === "dangnhap") {
+  } 
+  else if (trangthai === "dangnhap") {
     const emailField = form.querySelector('[name="email"]');
     const passwordField = form.querySelector('[name="pswd"]');
 
@@ -79,12 +72,30 @@ function validateForm() {
     else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");
 
     if (!password) showError(passwordField, "Vui lòng nhập mật khẩu");
-  }
+  } 
+  else if (trangthai === "quenmatkhau") {
+    const emailField = form.querySelector('[name="email"]');
+    const email = emailField.value.trim();
 
-  if (firstInvalidField) {
-    firstInvalidField.focus();
+    if (!email) showError(emailField, "Vui lòng nhập email");
+    else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");
+  } else if (trangthai === "nhapotp") {
+    const otpField = form.querySelector('[name="otp"]');
+    const passField = form.querySelector('[name="new_password"]');
+    const confirmField = form.querySelector('[name="confirm_password"]');
+  
+    const otp = otpField.value.trim();
+    const pass = passField.value.trim();
+    const confirm = confirmField.value.trim();
+  
+    if (!otp) showError(otpField, "Vui lòng nhập mã OTP");
+    if (!pass) showError(passField, "Vui lòng nhập mật khẩu mới");
+    if (!confirm) showError(confirmField, "Vui lòng nhập lại mật khẩu");
+    else if (pass !== confirm) showError(confirmField, "Mật khẩu không khớp");
   }
+  
 
+  if (firstInvalidField) firstInvalidField.focus();
   return isValid;
 }
 

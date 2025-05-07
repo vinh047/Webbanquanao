@@ -1,7 +1,7 @@
 
 <?php
-require_once 'admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
-require_once '../User-form/Login_Form/get_user_id.php'; //lay user_id de hien thi thong tin 
+require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
+
 ?>
 
 <!DOCTYPE html>
@@ -95,6 +95,6 @@ if(isset($_GET['page']))
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <!-- Đạt thêm tắt khi close tab -->
-<script src="auto_logout.js"></script> 
+<script src="Admin-form/Login_Form/Logout/auto_logout.js"></script> 
 </body>
 </html>
