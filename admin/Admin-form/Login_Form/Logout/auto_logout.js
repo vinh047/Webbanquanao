@@ -1,9 +1,16 @@
+// auto_logout.js
 
-// Nếu người dùng quay lại trang bằng nút Back → buộc reload lại để kiểm tra session
+// Khi trang được load lại (F5 hoặc quay lại bằng nút Back) → đánh dấu không logout
 window.addEventListener("pageshow", function (event) {
-    const isBack = event.persisted || (window.performance && window.performance.navigation.type === 2);
-    if (isBack) {
-        window.location.reload();
-    }
+    sessionStorage.setItem("stayActive", "true");
 });
 
+// Khi unload (trước khi đóng hoặc reload)
+window.addEventListener("beforeunload", function () {
+    const shouldLogout = sessionStorage.getItem("stayActive") !== "true";
+    if (shouldLogout) {
+        navigator.sendBeacon('/admin/index.php?action=logout_on_close');
+    }
+    // Reset lại cờ
+    sessionStorage.setItem("stayActive", "false");
+});
