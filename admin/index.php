@@ -19,6 +19,15 @@ require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 </head>
+<script>
+    // Nếu quay lại từ lịch sử (Back), buộc reload trang
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            window.location.reload();
+        }
+    });
+</script>
+
 <body>
 <section class="d-flex position-relative">
 <?php
@@ -140,7 +149,7 @@ if(isset($_GET['page']))
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="auto_logout.js"></script> 
+
 >>>>>>> e40e1eed05504ad47479b2a93eed064f33d3931f
 </body>
 </html>
