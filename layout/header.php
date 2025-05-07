@@ -98,7 +98,9 @@ if (isset($_SESSION['user_id']) && ($_SESSION['role_id'] == 1)) {
         <a href="search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
         <a href="/User-form/Login_Form/Login_Form.php" class="icon account-link">
             <i class="fa-solid fa-user"></i>
-            <span><?= isset($user) ? $user['username'] : 'Tài khoản' ?></span>
+            <span>
+                <?= is_array($user) && isset($user['username']) ? $user['username'] : 'Tài khoản' ?>
+            </span>
         </a>
     </div>
 
