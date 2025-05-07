@@ -312,19 +312,17 @@ function attachAddToCartEvents() {
     });
 }
 function attachProductClickEvents() {
-    document.querySelectorAll(".product-item").forEach(item => {
-        item.addEventListener("click", function (e) {
-            // Tránh click nhầm vào nút giỏ hàng
-            if (e.target.closest(".btn-add-to-cart")) return;
-
-            const productId = this.dataset.id;
+    document.querySelectorAll("img[id^='main-image-']").forEach(img => {
+        img.addEventListener("click", function () {
+            const idParts = this.id.split("-");
+            const productId = idParts[idParts.length - 1];
             if (productId) {
                 window.location.href = `layout/product_detail.php?product_id=${productId}`;
-
             }
         });
     });
 }
+
 
 
 
