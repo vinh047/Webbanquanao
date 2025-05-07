@@ -85,7 +85,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     } 
     echo '
     <div class="xacdinhZ col-md-3 col-6 mt-3 effect_hover p-md-2 p-1">
-        <div class="border rounded-1 position-relative overflow-hidden" style="background:#fff;">
+        <div class="border rounded-1 position-relative overflow-hidden product-item" 
+             data-id="' . $id . '" style="background:#fff; cursor:pointer;">
             <!-- Hình sản phẩm -->
             <div class="position-relative">
                 <img id="main-image-' . $id . '" src="../' . $imagePath . '" alt=""

@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 
                 attachColorHoverEvents(); // ✅ Gắn lại sự kiện đổi ảnh
                 attachAddToCartEvents();
+                attachProductClickEvents(); // ✅ Gán click để đi đến trang chi tiết
 
                 // ⏳ Gọi lại filter sync nếu có urlParams
                 const currentSearch = window.location.search;
@@ -307,6 +308,20 @@ function attachAddToCartEvents() {
             const sizeName = selectedSize?.title || "Size";
 
             addToCart(id, name, price, image, variant_id, colorName, sizeName);
+        });
+    });
+}
+function attachProductClickEvents() {
+    document.querySelectorAll(".product-item").forEach(item => {
+        item.addEventListener("click", function (e) {
+            // Tránh click nhầm vào nút giỏ hàng
+            if (e.target.closest(".btn-add-to-cart")) return;
+
+            const productId = this.dataset.id;
+            if (productId) {
+                window.location.href = `layout/product_detail.php?product_id=${productId}`;
+
+            }
         });
     });
 }
