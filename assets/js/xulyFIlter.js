@@ -41,22 +41,28 @@ document.addEventListener('click', function (e) {
 const selectedColors = [];
 const selectedSizes = [];
 
-document.querySelectorAll('.selectable').forEach(item => {
-    item.addEventListener('click', () => {
-        item.classList.toggle('selected');
+// Xử lý chọn màu
+document.querySelectorAll('.color-option').forEach((item, index) => {
+  item.addEventListener('click', function () {
+      document.querySelectorAll('.color-option').forEach(el => el.classList.remove('border-3', 'border-dark', 'selected'));
+      item.classList.add('border-3', 'border-dark', 'selected');
 
-        if (item.classList.contains('color-option')) {
-            const colorId = item.getAttribute('data-color-id');
-            const checkbox = document.querySelector(`input.color-checkbox[value="${colorId}"]`);
-            if (checkbox) checkbox.checked = item.classList.contains('selected');
-        }
+      const checkboxes = document.querySelectorAll('.color-checkbox');
+      checkboxes.forEach(cb => cb.checked = false);
+      if (checkboxes[index]) checkboxes[index].checked = true;
+  });
+});
 
-        if (item.classList.contains('size-option')) {
-            const sizeId = item.getAttribute('data-size-id');
-            const checkbox = document.querySelector(`input.size-checkbox[value="${sizeId}"]`);
-            if (checkbox) checkbox.checked = item.classList.contains('selected');
-        }
-    });
+// Xử lý chọn size
+document.querySelectorAll('.size-option').forEach((item, index) => {
+  item.addEventListener('click', function () {
+      document.querySelectorAll('.size-option').forEach(el => el.classList.remove('border-3', 'border-dark', 'selected'));
+      item.classList.add('border-3', 'border-dark', 'selected');
+
+      const checkboxes = document.querySelectorAll('.size-checkbox');
+      checkboxes.forEach(cb => cb.checked = false);
+      if (checkboxes[index]) checkboxes[index].checked = true;
+  });
 });
 
 

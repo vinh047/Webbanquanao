@@ -19,18 +19,12 @@ $result = mysqli_query($connection, $sql);
 
 $html = '';
 while ($row = mysqli_fetch_assoc($result)) {
-      $$html .= '<div class="size-thumb border text-center" 
-      data-size-id="'.$row['size_id'].'"
-      data-size-name="'.htmlspecialchars($row['name'], ENT_QUOTES).'" 
-      data-variant-id="'.$row['variant_id'].'"
-      style="width:50px;height:35px;line-height:35px;font-size:14px;margin-right:4px;cursor:pointer;user-select:none;border-radius:3px;">
-      '.$row['name'].'
-  </div>';
-  
-      data-size-id="'.$row['size_id'].'"
-      data-variant-id="'.$row['variant_id'].'"
-      style="width:50px;height:35px;line-height:35px;font-size:14px;margin-right:4px;cursor:pointer;user-select:none;border-radius:3px;">
-      '.$row['name'].'
+    $html .= '<div class="size-thumb border text-center" 
+        data-size-id="' . $row['size_id'] . '"
+        data-size-name="' . htmlspecialchars($row['name'], ENT_QUOTES) . '" 
+        data-variant-id="' . $row['variant_id'] . '"
+        style="width:50px;height:35px;line-height:35px;font-size:14px;margin-right:4px;cursor:pointer;user-select:none;border-radius:3px;">
+        ' . $row['name'] . '
     </div>';
 }
 echo $html;
