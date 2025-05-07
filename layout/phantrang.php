@@ -32,6 +32,12 @@ class Pagination {
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-auto text-center d-flex align-items-center gap-3">
+
+                        <a href="#" class="page-link-custom border-0 btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;" data-page="1">
+                            <i class="fa-solid fa-angles-left"></i>
+                        </a>
+
                         <a href="#" class="page-link-custom btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
                            style="width: 40px; height: 40px;" data-page="' . $prevPage . '">
                             <i class="fa fa-chevron-left text-dark"></i>
@@ -46,6 +52,11 @@ class Pagination {
                         <a href="#" class="page-link-custom btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
                            style="width: 40px; height: 40px;" data-page="' . $nextPage . '">
                             <i class="fa fa-chevron-right text-dark"></i>
+                        </a>
+
+                        <a href="#" class="page-link-custom border-0 btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;" data-page="' . $this->totalPages . '">
+                            <i class="fa-solid fa-angles-right"></i>
                         </a>
                     </div>
                 </div>

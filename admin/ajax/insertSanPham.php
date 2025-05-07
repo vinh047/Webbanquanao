@@ -8,17 +8,19 @@ try {
     $name = $_POST['name'] ?? '';
     $description = $_POST['description'] ?? '';
     $category_id = $_POST['category_id'] ?? null;
-    $price = floatval($_POST['price'] ?? 0);
     $ptgg = floatval($_POST['ptgg'] ?? 0);
-    $price_sale = $price * (1 + $ptgg / 100);
 
-    if (!$name || !$category_id || $price <= 0) {
+    // ✅ Xử lý thiếu dữ liệu
+    if (!$name || !$category_id) {
         echo json_encode(['success' => false, 'message' => 'Thiếu dữ liệu']);
         exit;
     }
 
-    $stmt = $db->prepare("INSERT INTO products (name, description, category_id, price, price_sale, pttg) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$name, $description, $category_id, $price, $price_sale, $ptgg]);
+    // ✅ Tạm gán price_sale = 0, bạn sẽ cập nhật sau khi nhập biến thể
+    $price_sale = 0;
+
+    $stmt = $db->prepare("INSERT INTO products (name, description, category_id, price_sale, pttg) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$name, $description, $category_id, $price_sale, $ptgg]);
 
     $product_id = $db->lastInsertId();
 
@@ -31,4 +33,5 @@ try {
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
+
 ?>

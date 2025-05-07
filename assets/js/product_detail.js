@@ -1,5 +1,5 @@
 document.querySelectorAll('.color-option').forEach(item => {
-    item.addEventListener('click', function() {
+    item.addEventListener('click', function () {
         // Xóa active của các lựa chọn khác
         document.querySelectorAll('.color-option').forEach(option => option.classList.remove('active'));
 
@@ -7,12 +7,12 @@ document.querySelectorAll('.color-option').forEach(item => {
         this.classList.add('active');
     });
 
-    item.addEventListener('mouseover', function() {
+    item.addEventListener('mouseover', function () {
         let src = item.querySelector('img').src;
         document.querySelector('.img-main').src = src;
     });
 
-    item.addEventListener('mouseout', function() {
+    item.addEventListener('mouseout', function () {
         let activeOption = document.querySelector('.color-option.active'); // Tìm phần tử đang active
         if (activeOption) {
             document.querySelector('.img-main').src = activeOption.querySelector('img').src; // Lấy ảnh của phần tử active
@@ -20,15 +20,23 @@ document.querySelectorAll('.color-option').forEach(item => {
     });
 });
 
-document.querySelectorAll('.size-option').forEach(item => {
-    item.addEventListener('click', function() {
-        // Xóa active của các lựa chọn khác
-        document.querySelectorAll('.size-option').forEach(option => option.classList.remove('active'));
+const sizeContainer = document.querySelector('.size-wrap');
 
-        // Thêm active vào item vừa click
-        this.classList.add('active');
+if (sizeContainer) {
+    sizeContainer.addEventListener('click', function (event) {
+        const clicked = event.target.closest('.size-option');
+
+        if (clicked) {
+            // Xóa active của tất cả các size-option
+            sizeContainer.querySelectorAll('.size-option').forEach(option =>
+                option.classList.remove('active')
+            );
+
+            // Thêm active vào item vừa click
+            clicked.classList.add('active');
+        }
     });
-});
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     const btnUp = document.querySelector('.up');
@@ -45,63 +53,198 @@ document.addEventListener("DOMContentLoaded", function () {
             input.value = current - 1;
         }
     });
-}); 
-
-
-const slider = document.querySelector('.suggest-products-scroll');
-let isDown = false;
-let startX;
-let scrollLeft;
-
-slider.addEventListener('mousedown', (e) => {
-    isDown = true;
-    slider.classList.add('active');
-    slider.style.scrollBehavior = 'auto';
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
 });
 
-slider.addEventListener('mouseleave', () => {
-    isDown = false;
+document.addEventListener("DOMContentLoaded", function () {
+    const slider = document.querySelector('.suggest-products-scroll');
+    const btnLeft = document.querySelector('.scroll-left');
+    const btnRight = document.querySelector('.scroll-right');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let moved = false;
+
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        moved = false;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+        slider.style.scrollBehavior = 'auto';
+    });
+
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX);
+        if (Math.abs(walk) > 5) {
+            moved = true;
+            slider.scrollLeft = scrollLeft - walk;
+        }
+    });
+
+    slider.addEventListener('mouseup', (e) => {
+        if (moved) {
+            // Nếu kéo, thì gắn chặn click 1 lần
+            const preventClick = (ev) => {
+                ev.stopImmediatePropagation();
+                ev.preventDefault();
+                slider.removeEventListener('click', preventClick, true);
+            };
+            slider.addEventListener('click', preventClick, true);
+        }
+        isDown = false;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
+
+    // Click chính thức vào sản phẩm
+    slider.addEventListener('click', function (e) {
+        const productItem = e.target.closest('.product-item');
+        if (productItem) {
+            const productId = productItem.getAttribute('data-id');
+            if (productId) {
+                window.location.href = `product_detail.php?product_id=${productId}`;
+            }
+        }
+    });
+
+    // Scroll trái/phải
+    window.scrollSuggestProducts = function (direction) {
+        if (!slider) return;
+        const scrollAmount = 300;
+        slider.style.scrollBehavior = 'smooth';
+        slider.scrollLeft += direction * scrollAmount;
+        setTimeout(checkScrollButton, 300);
+    }
+
+    function checkScrollButton() {
+        if (!slider) return;
+        if (slider.scrollLeft <= 0) {
+            btnLeft.style.display = 'none';
+        } else {
+            btnLeft.style.display = '';
+        }
+
+        if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 1) {
+            btnRight.style.display = 'none';
+        } else {
+            btnRight.style.display = '';
+        }
+    }
+
+    checkScrollButton();
 });
 
-slider.addEventListener('mouseup', () => {
-    isDown = false;
+
+
+document.querySelector(".buynow").addEventListener("click", function (e) {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định nếu là thẻ <a>
+
+    const productId = document.body.dataset.productId;
+    const quantity = parseInt(document.getElementById("count").value.trim());
+
+    const activeColor = document.querySelector(".color-option.active");
+    const activeSize = document.querySelector(".size-option.active");
+
+    if (!activeColor || !activeSize) {
+        alert("Vui lòng chọn màu sắc và kích thước.");
+        return;
+    }
+
+    const colorId = activeColor.dataset.colorId;
+    const sizeName = activeSize.innerText.trim();
+
+    fetch("../ajax/add_to_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            color_id: colorId,
+            size_name: sizeName,
+            quantity: quantity
+        })
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (!result.success) {
+                console.error("Thêm vào giỏ thất bại:", result.message);
+            } else {
+                window.location.href = "/index.php?page=giohang"; 
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi fetch khi mua ngay:", error);
+        });
 });
 
-slider.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX) * 1; // tốc độ kéo
-    slider.scrollLeft = scrollLeft - walk;
+
+
+document.querySelector(".add-to-cart").addEventListener("click", function () {
+    const productId = document.body.dataset.productId;
+    const quantity = parseInt(document.getElementById("count").value.trim());
+
+    const activeColor = document.querySelector(".color-option.active");
+    const activeSize = document.querySelector(".size-option.active");
+
+    if (!activeColor || !activeSize) {
+        alert("Vui lòng chọn màu sắc và kích thước.");
+        return;
+    }
+
+    const colorId = activeColor.dataset.colorId;
+    const sizeName = activeSize.innerText.trim();
+
+    fetch("../ajax/add_to_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            color_id: colorId,
+            size_name: sizeName,
+            quantity: quantity
+        })
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            if (result.success) {
+                // Hiển thị popup thông báo
+                let popup = document.querySelector(".notice-add-to-cart");
+                popup.classList.add("opacity-100", "translate-middle");
+                setTimeout(() => {
+                    popup.classList.remove("opacity-100", "translate-middle");
+                }, 2000);
+            } else {
+                alert(result.message || "Thêm vào giỏ hàng thất bại.");
+            }
+        })
+        .catch(function (error) {
+            console.error("Lỗi fetch:", error);
+            alert("Có lỗi khi thêm vào giỏ hàng.");
+        });
 });
 
-function scrollSuggestProducts(direction) {
-    const container = document.querySelector('.suggest-products-scroll');
-    container.style.scrollBehavior = 'smooth';
-    const scrollAmount = 300; // chỉnh khoảng cách cuộn
-    container.scrollLeft += direction * scrollAmount;
-}
+// let popup = document.querySelector(".notice-add-to-cart");
+// popup.classList.add("show"); // Hiện popup
 
-
-
-
-document.querySelector(".add-to-cart").addEventListener("click", function() {
-    let popup = document.querySelector(".notice-add-to-cart");
-    popup.classList.add("show"); // Hiện popup
-
-    // Ẩn popup sau 2 giây (tùy chỉnh thời gian)
-    setTimeout(() => {
-        popup.classList.remove("show");
-    }, 2000);
-});
+// // Ẩn popup sau 2 giây (tùy chỉnh thời gian)
+// setTimeout(() => {
+//     popup.classList.remove("show");
+// }, 2000);
+// });
 
 let isLoading = false; // Biến kiểm tra trạng thái tải
 
 // Ajax phân trang
 function loadReviews(page = 1, rating = 'all') {
-    if(isLoading) return;
+    if (isLoading) return;
     isLoading = true;
 
     const productId = document.querySelector('.review-list').dataset.productId;
@@ -118,61 +261,61 @@ function loadReviews(page = 1, rating = 'all') {
 
 }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        loadReviews();
-        
-        document.addEventListener('keydown', function(e) {
-            if(e.key === 'Enter' && e.target.classList.contains('pag')) {
-                e.preventDefault();
-                let page = parseInt(e.target.value) || 1;
-                loadReviews(page);
+document.addEventListener("DOMContentLoaded", function () {
+    loadReviews();
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && e.target.classList.contains('pag')) {
+            e.preventDefault();
+            let page = parseInt(e.target.value) || 1;
+            loadReviews(page);
+        }
+    });
+
+
+    document.addEventListener("click", function (e) {
+        e.stopImmediatePropagation();
+
+        let rating = 'all';
+
+
+        // Sự kiện của nút tăng giảm phân trang
+        if (e.target.classList.contains("btn-prev")) {
+            let page = document.querySelector('.pag');
+            let i = parseInt(page.value);
+            if (i > 1) {
+                page.value = i - 1;
+                loadReviews(i - 1, rating);
             }
-        });
-        
-        
-        document.addEventListener("click", function(e) {
-            e.stopImmediatePropagation();
+        }
 
-            let rating = 'all';
-            
-            
-            // Sự kiện của nút tăng giảm phân trang
-            if (e.target.classList.contains("btn-prev")) {
-                let page = document.querySelector('.pag');
-                let i = parseInt(page.value);
-                if (i > 1) {
-                    page.value = i - 1;
-                    loadReviews(i - 1, rating);
-                }
+        if (e.target.classList.contains("btn-next")) {
+            let page = document.querySelector('.pag');
+            let i = parseInt(page.value);
+            let max_pag = parseInt(document.querySelector('.max-pag').textContent);
+            if (i < max_pag) {
+                page.value = i + 1;
+                loadReviews(i + 1, rating);
             }
-        
-            if (e.target.classList.contains("btn-next")) {
-                let page = document.querySelector('.pag');
-                let i = parseInt(page.value);
-                let max_pag = parseInt(document.querySelector('.max-pag').textContent);
-                if (i < max_pag) {
-                    page.value = i + 1;
-                    loadReviews(i + 1, rating);
-                }
-            }
+        }
 
-            // Sự kiện của nút đánh giá theo sao
-            if(e.target.classList.contains('btn-star')) {
-                // Xóa active của các lựa chọn khác
-                document.querySelectorAll('.btn-star').forEach(option => option.classList.remove('active'));
+        // Sự kiện của nút đánh giá theo sao
+        if (e.target.classList.contains('btn-star')) {
+            // Xóa active của các lựa chọn khác
+            document.querySelectorAll('.btn-star').forEach(option => option.classList.remove('active'));
 
-                // Thêm active vào item vừa click
-                e.target.classList.add('active');
+            // Thêm active vào item vừa click
+            e.target.classList.add('active');
 
-                let selectRating = e.target.getAttribute('data-rating');
-                loadReviews(1, selectRating);
-            }
-        });
+            let selectRating = e.target.getAttribute('data-rating');
+            loadReviews(1, selectRating);
+        }
+    });
 
-    
+
 });
 
-document.querySelector('.suggest-products-scroll').addEventListener('click', function(e) {
+document.querySelector('.suggest-products-scroll').addEventListener('click', function (e) {
     const productItem = e.target.closest('.product-item');
     if (productItem && this.contains(productItem)) {
         const productId = productItem.getAttribute('data-id');
@@ -192,17 +335,17 @@ document.querySelectorAll('.color-option').forEach(colorEl => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ color_id: colorId, product_id: productId })
         })
-        .then(res => res.json())
-        .then(data => { 
-            const sizeContainer = document.querySelector('.size-option').parentElement;
-            sizeContainer.innerHTML = '';
-            data.forEach(size => {
-                const sizeDiv = document.createElement('div');
-                sizeDiv.className = 'size-option border py-2 px-3';
-                sizeDiv.textContent = size.size_name;
-                sizeContainer.appendChild(sizeDiv);
-            });
-        })
-        .catch(err => console.error('Lỗi khi tải size:', err));
+            .then(res => res.json())
+            .then(data => {
+                const sizeContainer = document.querySelector('.size-option').parentElement;
+                sizeContainer.innerHTML = '';
+                data.forEach(size => {
+                    const sizeDiv = document.createElement('div');
+                    sizeDiv.className = 'size-option border py-2 px-3';
+                    sizeDiv.textContent = size.size_name;
+                    sizeContainer.appendChild(sizeDiv);
+                });
+            })
+            .catch(err => console.error('Lỗi khi tải size:', err));
     });
 });

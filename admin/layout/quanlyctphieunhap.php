@@ -55,7 +55,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                     <h5>Lọc CTPN</h5>
                                 </div>
                                 <div class="">
-                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" >X</button>
+                                    <button class="btn btn-outline-secondary btn-sm border-0" id="tatFormLoc" type="button">X</button>
                                 </div>  
                             </div>
                             <label for="txtIDctpn" class="mt-2">Mã CTPN : </label>
@@ -78,13 +78,6 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 </div>
                             </div>
 
-                            <label for="txtTrangThai" class="mt-2">Trạng thái</label>
-                            <select name="txtTrangThai" id="txtTrangThai" class="form-select">
-                                <option value="">Chọn trạng thái</option>
-                                <option value="0">Đã xác nhận</option>
-                                <option value="1">Chờ xác nhận</option>
-                            </select>
-
                             <div class="d-flex justify-content-center gap-2 pt-3">
                                 <button class="btn btn-primary" style="width:70px;" type="submit">Lọc</button>
                                 <button class="btn btn-danger"  style="width:70px;" type="reset">Reset</button>
@@ -102,7 +95,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 Danh sách chi tiết phiếu nhập
                             </p>
                         </div>
-                    <table class="table table-secondary table-striped table-sm">
+                    <table class="table border-start border-end table-striped table-sm">
                         <thead>
                             <tr class="text-center">
                                 <th class="bg-secondary text-white hienthiid">ID CTPN</th>

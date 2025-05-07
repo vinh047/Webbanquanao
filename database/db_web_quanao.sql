@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2025 at 04:23 PM
+-- Generation Time: Apr 28, 2025 at 06:14 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -64,11 +64,12 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`category_id`, `name`) VALUES
 (1, 'Áo thun'),
-(2, 'Quần'),
+(2, 'Quần short'),
 (3, 'Áo Sơ Mi'),
 (4, 'Áo Polo'),
 (5, 'Áo Khoác'),
-(6, 'Quần lót');
+(6, 'Quần lót'),
+(7, 'Phụ kiện');
 
 -- --------------------------------------------------------
 
@@ -142,7 +143,7 @@ CREATE TABLE `importreceipt_details` (
   `variant_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) DEFAULT 0,
   `unit_price` decimal(12,2) NOT NULL DEFAULT 0.00,
   `total_price` decimal(14,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
@@ -939,7 +940,7 @@ ALTER TABLE `cart_details`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `colors`

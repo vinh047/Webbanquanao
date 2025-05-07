@@ -7,7 +7,7 @@ $conn = $db->getConnection();
 $locRaw = locPhieuNhap($conn);
 $loc = $locRaw ?: "";
 // Tổng sản phẩm
-$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt $loc", []);
+$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt im $loc", []);
 $totalItems = $total[0]['total'];
 
 // Lấy trang hiện tại
@@ -18,10 +18,22 @@ $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
 // Truy vấn sản phẩm theo trang
-$data = $db->select("SELECT *
-                    FROM importreceipt $loc
-                    ORDER BY ImportReceipt_id ASC
-                    LIMIT $limit OFFSET $offset",[]);
+$data = $db->select("SELECT 
+    im.ImportReceipt_id,
+    im.created_at,
+    im.status,
+    im.supplier_id,
+    im.user_id,
+    im.total_price,
+    s.name AS ncc_name,
+    u.username AS nv_name
+FROM importreceipt im
+JOIN supplier s ON im.supplier_id = s.supplier_id 
+JOIN users u ON im.user_id = u.user_id
+$loc
+ORDER BY im.ImportReceipt_id ASC
+LIMIT $limit OFFSET $offset", []);
+
 
 ob_start();
 foreach ($data as $row) {
@@ -31,25 +43,29 @@ foreach ($data as $row) {
     $gia = number_format($row['total_price'], 0, ',', '.');
     $ngaylap = $row['created_at'];
     $hideBtn = $row['status'] == 0 ? 'display:none;' : '';
+    $hideGap = $row['status'] ==0 ? 'gap-0' : 'gap-3';
+    $tennv = $row['nv_name'];
+    $tenncc = $row['ncc_name'];
     echo "
     <tr class='text-center'>
         <td class='hienthiid'>$idpn</td>
-        <td class='hienthiid'>$idnv</td>
-        <td class='hienthiid'>$idncc</td>
-        <td class='hienthigia'>$gia VNĐ</td>
+        <td class='hienthigia'>$tennv</td>
+        <td class='tensp'>$tenncc</td>
+        <td class='tensp'>$gia VNĐ</td>
         <td class='tensp'>$ngaylap</td>
         <td class='tensp'>
             " . ($row['status'] == 1
-                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
+                ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6 text-dark' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
                 : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "
         </td>
         <td>
-            <div class='d-flex justify-content-center gap-3'>
+            <div class='d-flex justify-content-center $hideGap'>
                 <div>
 <button class='btn btn-success btn-sua'
     data-idpn='$idpn'
     data-idnv='$idnv'
     data-idncc='$idncc'
+    data-tennv='$tennv'
     data-gia='{$row['total_price']}'
     data-ngaylap='$ngaylap'
     style='width:90px; $hideBtn'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
@@ -59,7 +75,7 @@ foreach ($data as $row) {
     data-idpn='$idpn'
     style='width:90px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
                 </div>
-                <div>                    <button class='btn btn-info btn-xemchitietPN' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
+                <div>                    <button class='btn btn-info btn-xemchitietPN text-white' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
 </div>
             </div>
         </td>

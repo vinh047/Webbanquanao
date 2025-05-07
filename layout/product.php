@@ -213,7 +213,9 @@ input[type=number] {
                 </span>
               </a>
             </div>
-                                                                
+           
+
+                                         
             <!-- Giỏ hàng ảo -->
            <!-- Giỏ hàng ảo -->
 <div id="mini-cart" class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column" style="width: 300px; height: 100vh; display: none; z-index: 9999;">
@@ -228,6 +230,13 @@ input[type=number] {
     <button id="close-mini-cart" class="btn btn-outline-secondary w-100">Đóng</button>
   </div>
 </div>
+<div id="noticeAddToCart" class="notice-add-to-cart position-fixed top-50 start-50 translate-middle d-flex flex-column justify-content-center align-items-center p-4 rounded w-auto opacity-0" 
+     style="background-color: rgba(0, 0, 0, 0.8); transition: opacity 0.5s ease; z-index: 1050;">
+    <i id="noticeIcon" class="fa-solid fa-circle-check fa-3x mb-3" style="color: #ffffff;"></i>
+    <span id="noticeText" class="text-white text-center fw-bold" style="font-size: 18px;">Đã thêm vào giỏ hàng</span>
+</div>
+
+
 
 
 
@@ -261,15 +270,11 @@ input[type=number] {
 
 
 
-    <!-- footer -->
-
-    <div id="noticeAddToCart" class="notice-add-to-cart position-fixed top-50 start-50 translate-middle d-flex flex-column justify-content-center align-items-center p-4 rounded w-auto opacity-0" style="background-color: rgba(0, 0, 0, 0.8); transition: opacity 0.5s ease;">
-             <i class="fa-solid fa-circle-check fa-2x mb-2" style="color: #ffffff;"></i>
-             <span class="text-white text-center" id="noticeText">Đã thêm vào giỏ hàng</span>
-        </div>                                                
+    <!-- footer -->                                                
         <script src="./assets/js/ajaxLoc_phantrang.js"></script>   
         <script src="./assets/js/addToCart.js"></script>
-        <script src="./assets/js/mini_cart.js"></script>     
+        <script src="./assets/js/mini_cart.js"></script>    
+        <script src="./assets/js/product_color_size.js"></script> 
         <script src="./assets/js/xulyFIlter.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>

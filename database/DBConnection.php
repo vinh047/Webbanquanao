@@ -50,6 +50,14 @@ class DBConnect {
         return $stmt->fetch();
     }
 
+    // Thêm vô DBConnect.php
+public function count($sql, $params = []) {
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+    return (int)$stmt->fetchColumn();
+}
+
+
     // Hàm tiện dụng: INSERT, UPDATE, DELETE
     public function execute($sql, $params = []) {
         $stmt = $this->pdo->prepare($sql);

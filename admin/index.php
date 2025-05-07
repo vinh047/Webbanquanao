@@ -15,6 +15,9 @@ require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 </head>
 <body>
 <section class="d-flex position-relative">
@@ -22,7 +25,27 @@ require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout 
 if (session_status() == PHP_SESSION_NONE) {
     session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
 }
+// Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
+$user_id = $_SESSION['user_id'] ?? null;
+$role_id = $_SESSION['role_id'] ?? null;
 
+if ($user_id) {
+    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
+    require_once(__DIR__ . '/../database/DBConnection.php');
+    $db = DBConnect::getInstance();
+    
+    // Truy vấn để lấy tên người dùng dựa trên user_id
+    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
+    
+    if ($stmt) {
+        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
+    } else {
+        $username = "Không tìm thấy người dùng";
+    }
+} else {
+    // Nếu không có user_id trong session, người dùng chưa đăng nhập
+    $username = "Chưa đăng nhập";
+}
 $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 ?>
 
@@ -33,30 +56,38 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 
     <ul class="nav flex-column">
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phieunhap' ? 'active' : '' ?>" href="index.php?page=phieunhap">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phieunhap' ? 'active' : '' ?>" href="index.php?page=phieunhap&pageadmin=1">
                 <i class="fa-solid fa-file-import"></i> <span>Phiếu nhập</span>
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap&pageadmin=1">
                 <i class="fa-solid fa-list"></i> <span>Chi tiết phiếu nhập</span>
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'sanpham' ? 'active' : '' ?>" href="index.php?page=sanpham">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'sanpham' ? 'active' : '' ?>" href="index.php?page=sanpham&pageadmin=1">
                 <i class="fa-solid fa-box-open"></i> <span>Sản phẩm</span>
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'bienthe' ? 'active' : '' ?>" href="index.php?page=bienthe">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'bienthe' ? 'active' : '' ?>" href="index.php?page=bienthe&pageadmin=1">
                 <i class="fa-solid fa-cubes"></i> <span>Biến thể sản phẩm</span>
             </a>
         </li>
+
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'nhacungcap' ? 'active' : '' ?>" href="index.php?page=nhacungcap&pageadmin=1">
+                <i class="fas fa-truck"></i> <span>Nhà cung cấp</span>
+            </a>
+        </li>
+
         <li class="nav-item mb-2">
             <a class="nav-link text-white d-flex align-items-center gap-2" href="index.php?action=logout">
                 <i class="fa-solid fa-sign-out"></i> <span>Đăng xuất</span>
             </a>
         </li>
+        
 
     </ul>
 </nav>
@@ -64,10 +95,10 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 
 
 
-    <div class="quanlysp container-md">
+    <div class="quanlysp flex-fill me-3">
         <div class="infouser row p-2" style="background-color: #f8f9fa;">
             <div class="col-md text-end">
-                <p class="mb-0 fs-3"><i class="fa-solid fa-user"></i></p>
+                <p class="mb-0 fs-5">Xin chào, <i><?= htmlspecialchars($username) ?></i></p>
             </div>
         </div>
 <?php
@@ -88,6 +119,8 @@ if(isset($_GET['page']))
         case 'bienthe':
             include '../admin/layout/quanlybienthe.php';
             break;
+        case 'nhacungcap':
+            include '../admin/layout/quanlynhacungcap.php';
     }
 }
 ?>
@@ -95,6 +128,19 @@ if(isset($_GET['page']))
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <!-- Đạt thêm tắt khi close tab -->
+<<<<<<< HEAD
 <script src="Admin-form/Login_Form/Logout/auto_logout.js"></script> 
+=======
+ <!-- Nhúng jQuery trước tất cả -->
+<!-- ✅ JQUERY PHẢI ĐƯỢC NHÚNG TRƯỚC -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 CSS + JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="auto_logout.js"></script> 
+>>>>>>> e40e1eed05504ad47479b2a93eed064f33d3931f
 </body>
 </html>

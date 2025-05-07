@@ -68,7 +68,7 @@ foreach ($data as $row) {
             data-idct='$id_ct'
             style='width:90px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
     " : "") . "
-    <button class='btn btn-info btn-xemchitiet'
+    <button class='btn btn-info btn-xemchitiet text-white'
         data-idct='$id_ct'
         style='width:100px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
 </div>
