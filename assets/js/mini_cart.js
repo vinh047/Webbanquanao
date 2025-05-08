@@ -12,7 +12,7 @@ function renderMiniCart() {
         const div = document.createElement("div");
         div.className = "d-flex align-items-center mb-2 border-bottom pb-2";
         div.innerHTML = `
-  <img src="${item.image || './assets/img/sanpham/sp1.jpg'}"
+  <img src="${item.image || '/assets/img/sanpham/10f24dja002-d-grey-ao-khoac-jean-nam-5-jpg-kyn2.jpg'}"
        style="width: 50px; height: 50px; object-fit: cover;" class="me-2 rounded">
   <div class="flex-grow-1">
       <p class="mb-0 small fw-bold">${item.name}</p>

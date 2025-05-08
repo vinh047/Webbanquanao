@@ -17,6 +17,11 @@
 <?php
 require_once '../database/DBConnection.php';
 $db = DBConnect::getInstance();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$user_id = $_SESSION['user_id'] ?? null;
+
 
 $product_id = isset($_GET['product_id']) ? (int)$_GET['product_id'] : '';
 
@@ -459,6 +464,7 @@ function getColorById($color_id)
     <?php include 'footer.php' ?>
 
 
+    <script>const user_id = <?= $user_id ? json_encode($user_id) : 'null' ?></script>
     <script src="../assets/js/product_detail.js"></script>
     <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 
