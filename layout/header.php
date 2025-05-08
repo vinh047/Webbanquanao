@@ -1,8 +1,16 @@
-
 <?php
 session_start();
-require_once __DIR__ . '/../database/DBConnection.php';
 
+// Khi user click Đăng xuất
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    // Hủy session
+    session_unset();
+    session_destroy();
+    // Chuyển về trang chủ
+    header('Location: /index.php');
+    exit;
+}
+require_once __DIR__ . '/../database/DBConnection.php';
 // Kết nối DB
 $db = DBConnect::getInstance();
 
@@ -11,135 +19,161 @@ $categories = $db->select('SELECT * FROM categories', []);
 
 // Build menu chính
 $menu = [
-    ['label' => 'ÁO',        'subs' => []],
-    ['label' => 'QUẦN',      'subs' => []],
-    ['label' => 'PHỤ KIỆN',  'subs' => []],
+	['label' => 'ÁO',        'subs' => []],
+	['label' => 'QUẦN',      'subs' => []],
+	['label' => 'PHỤ KIỆN',  'subs' => []],
 ];
 foreach ($categories as $cat) {
-    $nameLower = mb_strtolower($cat['name'], 'UTF-8');
-    $item = [
-        'id'    => $cat['category_id'],
-        'label' => $cat['name'],
-    ];
-    if (strpos($nameLower, 'áo') !== false) {
-        $menu[0]['subs'][] = $item;
-    } elseif (strpos($nameLower, 'quần') !== false) {
-        $menu[1]['subs'][] = $item;
-    } elseif (strpos($nameLower, 'phụ kiện') !== false) {
-        $menu[2]['subs'][] = $item;
-    }
+	$nameLower = mb_strtolower($cat['name'], 'UTF-8');
+	$item = [
+		'id'    => $cat['category_id'],
+		'label' => $cat['name'],
+	];
+	if (strpos($nameLower, 'áo') !== false) {
+		$menu[0]['subs'][] = $item;
+	} elseif (strpos($nameLower, 'quần') !== false) {
+		$menu[1]['subs'][] = $item;
+	} elseif (strpos($nameLower, 'phụ kiện') !== false) {
+		$menu[2]['subs'][] = $item;
+	}
 }
 
 // Khởi tạo $user luôn tồn tại
 $user = null;
 if (!empty($_SESSION['user_id'])) {
-    // Lấy thông tin user (bạn có thể thay đổi SELECT cho phù hợp)
-    $user = $db->selectOne(
-        'SELECT user_id, username FROM users WHERE user_id = ?',
-        [$_SESSION['user_id']]
-    );
+	// Lấy thông tin user (bạn có thể thay đổi SELECT cho phù hợp)
+	$user = $db->selectOne(
+		'SELECT user_id, username FROM users WHERE user_id = ?',
+		[$_SESSION['user_id']]
+	);
 }
 ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 <header class="header">
 
-    <button class="menu-toggle">
-        <i class="fa-solid fa-bars"></i>
-    </button>
+	<button class="menu-toggle">
+		<i class="fa-solid fa-bars"></i>
+	</button>
 
-    <div class="logo_header">
-        <a href="/index.php">
-            <!-- Dùng đường dẫn tuyệt đối -->
-            <img src="/assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
-        </a>
-    </div>
+	<div class="logo_header">
+		<a href="/index.php">
+			<!-- Dùng đường dẫn tuyệt đối -->
+			<img src="/assets/img/logo_favicon/logo.png" alt="SAGKUTO Logo">
+		</a>
+	</div>
 
-    <nav class="menu_header">
-        <button class="menu-close">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+	<nav class="menu_header">
+		<button class="menu-close">
+			<i class="fa-solid fa-xmark"></i>
+		</button>
 
-        <ul class="mb-0">
-            <?php foreach ($menu as $item): ?>
-                <li>
-                    <span class="menu-title">
-                        <?= htmlspecialchars($item['label'], ENT_QUOTES) ?>
-                        <?php if (!empty($item['subs'])): ?>
-                            <i class="fa-solid fa-chevron-down"></i>
-                        <?php endif; ?>
-                    </span>
-                    <?php if (!empty($item['subs'])): ?>
-                        <ul class="submenu">
-                            <?php foreach ($item['subs'] as $sub): ?>
-                                <li>
-                                    <a href="/index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $sub['id'] ?>">
-                                        <?= htmlspecialchars($sub['label'], ENT_QUOTES) ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+		<ul class="mb-0">
+			<?php foreach ($menu as $item): ?>
+				<li>
+					<span class="menu-title">
+						<?= htmlspecialchars($item['label'], ENT_QUOTES) ?>
+						<?php if (!empty($item['subs'])): ?>
+							<i class="fa-solid fa-chevron-down"></i>
+						<?php endif; ?>
+					</span>
+					<?php if (!empty($item['subs'])): ?>
+						<ul class="submenu">
+							<?php foreach ($item['subs'] as $sub): ?>
+								<li>
+									<a href="/index.php?page=sanpham&pageproduct=1&selectTheloai=<?= $sub['id'] ?>">
+										<?= htmlspecialchars($sub['label'], ENT_QUOTES) ?>
+									</a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 
-    </nav>
+	</nav>
 
-    <div class="icon-group">
-        <a href="/search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
-        <a href="<?= $user
-                        ? '/tai-khoan.php'
-                        : '/User-form/Login_Form/Login_Form.php'
-                    ?>" class="icon account-link">
-            <i class="fa-solid fa-user"></i>
-            <span>
-                <?= htmlspecialchars($user['username'] ?? 'Tài khoản', ENT_QUOTES) ?>
-            </span>
-        </a>
-        <div class="position-relative" style="margin-top: 10px;">
-            <a href="javascript:void(0);" id="toggle-cart" title="Giỏ hàng" class="text-dark">
-                <span class="material-symbols-outlined" style="font-size: 27px;">
-                    shopping_cart
-                </span>
-                <!-- Badge hiển thị số lượng -->
-                <span id="cart-count-badge"
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    style="font-size: 12px;">
-                    0
-                </span>
-            </a>
-        </div>
+	<div class="icon-group">
+		<!-- Search icon -->
+		<a href="/search.html" class="icon">
+			<i class="fa-solid fa-magnifying-glass"></i>
+		</a>
 
-        <!-- Giỏ hàng ảo -->
-        <div id="mini-cart" class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column" style="width: 300px; height: 100vh; display: none; z-index: 9999;">
-            <h6 class="mb-3">Sản phẩm trong giỏ (<span id="cart-item-count">0</span>)</h6>
+		<?php if ($user): ?>
+			<!-- Logged in: only show user icon that toggles the dropdown -->
+			<a href="javascript:void(0)" class="icon account-link" id="account-link">
+				<i class="fa-solid fa-user"></i>
+			</a>
+			<div class="user-menu" id="user-menu">
+				<p class="greeting">
+					Xin chào <?= htmlspecialchars($user['username'], ENT_QUOTES) ?>!
+				</p>
+				<ul class="user-menu-list">
+					<li><a href="/info-user.php">Thông tin tài khoản</a></li>
+					<li><a href="/my_orders.php">Đơn hàng của bạn</a></li>
+					<li><a href="?action=logout">Đăng xuất</a></li>
+				</ul>
+			</div>
+		<?php else: ?>
+			<!-- Not logged in: icon + "Đăng nhập" -->
+			<a href="/User-form/Login_Form/Login_Form.php" class="icon account-link">
+				<i class="fa-solid fa-user"></i>
+				<span style="font-size: 16px;">Đăng nhập</span>
+			</a>
+		<?php endif; ?>
 
-            <!-- Danh sách sản phẩm -->
-            <div id="mini-cart-items" class="flex-grow-1 overflow-auto"></div>
+		<!-- Cart toggle -->
+		<div class="position-relative" style="margin-top: 10px;">
+			<a href="javascript:void(0);" id="toggle-cart" title="Giỏ hàng" class="text-dark">
+				<span class="material-symbols-outlined" style="font-size: 27px;">
+					shopping_cart
+				</span>
+				<span id="cart-count-badge"
+					class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+					style="font-size: 12px;">
+					0
+				</span>
+			</a>
+		</div>
 
-            <!-- Footer cố định -->
-            <div id="mini-cart-footer" class="mt-3">
-                <a href="/index.php?page=giohang" class="btn btn-dark w-100 mb-2">Xem giỏ hàng</a>
-                <button id="close-mini-cart" class="btn btn-outline-secondary w-100">Đóng</button>
-            </div>
-        </div>
-        <div id="noticeAddToCart" class="notice-add-to-cart position-fixed top-50 start-50 translate-middle d-flex flex-column justify-content-center align-items-center p-4 rounded w-auto opacity-0"
-            style="background-color: rgba(0, 0, 0, 0.8); transition: opacity 0.5s ease; z-index: 1050; pointer-events: none;">
-            <i id="noticeIcon" class="fa-solid fa-circle-check fa-3x mb-3" style="color: #ffffff;"></i>
-            <span id="noticeText" class="text-white text-center fw-bold" style="font-size: 18px;">Đã thêm vào giỏ hàng</span>
-        </div>
-    </div>
+		<!-- Mini cart sidebar -->
+		<div id="mini-cart"
+			class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column"
+			style="width: 300px; height: 100vh; z-index: 9999; display: none;">
+			<h6 class="mb-3">
+				Sản phẩm trong giỏ (<span id="cart-item-count">0</span>)
+			</h6>
+			<div id="mini-cart-items" class="flex-grow-1 overflow-auto"></div>
+			<div id="mini-cart-footer" class="mt-3">
+				<a href="/index.php?page=giohang" class="btn btn-dark w-100 mb-2">
+					Xem giỏ hàng
+				</a>
+				<button id="close-mini-cart" class="btn btn-outline-secondary w-100">
+					Đóng
+				</button>
+			</div>
+		</div>
+
+		<!-- Add-to-cart notification -->
+		<div id="noticeAddToCart"
+			class="notice-add-to-cart position-fixed top-50 start-50 translate-middle
+                d-flex flex-column justify-content-center align-items-center p-4
+                rounded w-auto opacity-0"
+			style="background-color: rgba(0, 0, 0, 0.8);
+                transition: opacity 0.5s ease;
+                z-index: 1050;
+                pointer-events: none;">
+			<i id="noticeIcon" class="fa-solid fa-circle-check fa-3x mb-3" style="color: #fff;"></i>
+			<span id="noticeText" class="text-white text-center fw-bold" style="font-size: 18px;">
+				Đã thêm vào giỏ hàng
+			</span>
+		</div>
+	</div>
+
 
 
 
 </header>
 
+<script src="../assets/js/header.js"></script>
 <script src="../assets/js/mini_cart.js"></script>
-<script>
-    document.querySelector('.menu-toggle').addEventListener('click', () => {
-        document.querySelector('.menu_header').classList.toggle('active');
-    });
-    document.querySelector('.menu-close').addEventListener('click', () => {
-        document.querySelector('.menu_header').classList.remove('active');
-    });
-</script>

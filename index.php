@@ -68,6 +68,16 @@
                         include('./layout/pay.php');
                     }
                     break;
+                case 'taikhoan':
+                    {
+                        include('./layout/info_user.php');
+                    }
+                    break;
+                case 'donhang':
+                    {
+                        include('./layout/my_orders.php');
+                    }
+                    break;
                 // default:
                 //     include('./layout/notfound.php');
                 //     break;
