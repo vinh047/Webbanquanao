@@ -1,0 +1,87 @@
+/* info_user.css: styling for Thông tin tài khoản page */
+
+/* Container and layout */
+.container.my-5 > .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Sidebar (aside) */
+aside.col-md-3 {
+  max-width: 260px;
+}
+aside.col-md-3 .list-group {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Sidebar items: bordered box and active state */
+aside.col-md-3 .list-group-item {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background-color: #fff;
+  color: #333;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+aside.col-md-3 .list-group-item .fa-solid {
+  margin-right: 8px;
+}
+aside.col-md-3 .list-group-item:not(.active):hover {
+  background-color: #f8f9fa;
+  border-color: #ccc;
+  color: #000;
+}
+aside.col-md-3 .list-group-item.active {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+}
+aside.col-md-3 .list-group-item.active i {
+  color: #fff;
+}
+
+/* Main content (section) styling with border box */
+section.col-md-9 {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+section.col-md-9 h2 {
+  margin-bottom: 24px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #212529;
+}
+section.col-md-9 dl.row dt {
+  font-weight: 500;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+section.col-md-9 dl.row dd {
+  margin-bottom: 16px;
+  color: #212529;
+}
+section.col-md-9 .btn-outline-primary {
+  border-radius: 24px;
+  padding: 8px 24px;
+  font-weight: 500;
+  margin-top: 16px;
+}
+
+/* Responsive: stack sidebar above content on smaller screens */
+@media (max-width: 768px) {
+  aside.col-md-3,
+  section.col-md-9 {
+    max-width: 100%;
+  }
+}

@@ -3,12 +3,12 @@ session_start();
 
 // Khi user click Đăng xuất
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-    // Hủy session
-    session_unset();
-    session_destroy();
-    // Chuyển về trang chủ
-    header('Location: /index.php');
-    exit;
+	// Hủy session
+	session_unset();
+	session_destroy();
+	// Chuyển về trang chủ
+	header('Location: /index.php');
+	exit;
 }
 require_once __DIR__ . '/../database/DBConnection.php';
 // Kết nối DB
@@ -100,27 +100,18 @@ if (!empty($_SESSION['user_id'])) {
 		</a>
 
 		<?php if ($user): ?>
-			<!-- Logged in: only show user icon that toggles the dropdown -->
-			<a href="javascript:void(0)" class="icon account-link" id="account-link">
+			<!-- Khi click icon user sẽ redirect thẳng tới info_user.php -->
+			<a href="/index.php?page=taikhoan" class="icon account-link">
 				<i class="fa-solid fa-user"></i>
+				<span><?= htmlspecialchars($user['name'], ENT_QUOTES) ?></span>
 			</a>
-			<div class="user-menu" id="user-menu">
-				<p class="greeting">
-					Xin chào <?= htmlspecialchars($user['name'], ENT_QUOTES) ?>!
-				</p>
-				<ul class="user-menu-list">
-					<li><a href="/info-user.php">Thông tin tài khoản</a></li>
-					<li><a href="/my_orders.php">Đơn hàng của bạn</a></li>
-					<li><a href="?action=logout">Đăng xuất</a></li>
-				</ul>
-			</div>
 		<?php else: ?>
-			<!-- Not logged in: icon + "Đăng nhập" -->
 			<a href="/User-form/Login_Form/Login_Form.php" class="icon account-link">
 				<i class="fa-solid fa-user"></i>
-				<span style="font-size: 16px;">Đăng nhập</span>
+				<span>Đăng nhập</span>
 			</a>
 		<?php endif; ?>
+
 
 		<!-- Cart toggle -->
 		<div class="position-relative" style="margin-top: 10px;">
