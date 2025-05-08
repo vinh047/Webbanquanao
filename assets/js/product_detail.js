@@ -330,7 +330,7 @@ document.querySelectorAll('.color-option').forEach(colorEl => {
         const colorId = this.dataset.colorId;
         const productId = document.body.dataset.productId;
 
-        fetch('../ajax/get_sizes_by_color.php', {
+        fetch('../ajax/get_sizes_by_color_product_detail.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ color_id: colorId, product_id: productId })
