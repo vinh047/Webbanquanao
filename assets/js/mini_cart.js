@@ -1,4 +1,3 @@
-console.log(">> File mini_cart.js đã được load");
 function renderMiniCart() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const itemsContainer = document.getElementById("mini-cart-items");
@@ -13,9 +12,8 @@ function renderMiniCart() {
         const div = document.createElement("div");
         div.className = "d-flex align-items-center mb-2 border-bottom pb-2";
         div.innerHTML = `
-        <img src="${item.image && item.image.trim() !== '' ? item.image : '/assets/img/sanpham/default.jpg'}"
-     style="width: 50px; height: 50px; object-fit: cover;" class="me-2 rounded">
-
+  <img src="${item.image || './assets/img/sanpham/sp1.jpg'}"
+       style="width: 50px; height: 50px; object-fit: cover;" class="me-2 rounded">
   <div class="flex-grow-1">
       <p class="mb-0 small fw-bold">${item.name}</p>
       <p class="mb-0 text-muted small">${item.color || '(không màu)'} - ${item.size || '(không size)'}</p>
@@ -41,6 +39,13 @@ function renderMiniCart() {
 
     if (countBadge) countBadge.textContent = totalQty;
     if (itemCount) itemCount.textContent = totalQty;
+}
+
+function removeMiniCartItem(index) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderMiniCart();
 }
 document.addEventListener("DOMContentLoaded", () => {
     const toggleBtn = document.getElementById("toggle-cart");
@@ -76,32 +81,4 @@ function changeMiniCartQty(index, delta) {
 
     localStorage.setItem("cart", JSON.stringify(cart));
     renderMiniCart();
-    updateCartCount();
-    syncCartToServer(); 
 }
-function removeMiniCartItem(index) {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    renderMiniCart();
-    updateCartCount();
-    syncCartToServer(); 
-}
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const countBadge = document.getElementById("cart-count-badge");
-    let totalQty = 0;
-    cart.forEach(item => {
-        totalQty += item.quantity;
-    });
-    if (countBadge) {
-        countBadge.textContent = totalQty;
-    }
-}
-
-window.updateCartCount = updateCartCount;
-window.renderMiniCart = renderMiniCart;
-window.changeMiniCartQty = changeMiniCartQty;
-window.removeMiniCartItem = removeMiniCartItem;
-
-

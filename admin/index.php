@@ -36,16 +36,16 @@ if ($user_id) {
     $db = DBConnect::getInstance();
     
     // Truy vấn để lấy tên người dùng dựa trên user_id
-    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
+    $stmt = $db->select("SELECT name FROM users WHERE user_id = ?", [$user_id]);
     
     if ($stmt) {
-        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
+        $name = $stmt[0]['name']; // Gán tên người dùng vào biến
     } else {
-        $username = "Không tìm thấy người dùng";
+        $name = "Không tìm thấy người dùng";
     }
 } else {
     // Nếu không có user_id trong session, người dùng chưa đăng nhập
-    $username = "Chưa đăng nhập";
+    $name = "Chưa đăng nhập";
 }
 $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 ?>
@@ -99,7 +99,7 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
     <div class="quanlysp flex-fill me-3">
         <div class="infouser row p-2" style="background-color: #f8f9fa;">
             <div class="col-md text-end">
-                <p class="mb-0 fs-5">Xin chào, <i><?= htmlspecialchars($username) ?></i></p>
+                <p class="mb-0 fs-5">Xin chào, <i><?= htmlspecialchars($name) ?></i></p>
             </div>
         </div>
 <?php

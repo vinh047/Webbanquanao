@@ -6,8 +6,8 @@ function loadForm() {
     form.innerHTML = `
       <h2 class="text-center text-black">Đăng ký tài khoản</h2>
       <div class="mb-3">
-        <label class="text-black">Username</label>
-        <input type="text" name="username" class="form-control border-dark" placeholder="Nhập Username">
+        <label class="text-black">Họ và tên</label>
+        <input type="text" name="name" class="form-control border-dark" placeholder="Nhập họ và tên">
       </div>
       <div class="mb-3">
         <label class="text-black">Email</label>

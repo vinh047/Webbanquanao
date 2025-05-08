@@ -26,14 +26,14 @@
 
 
     if($rating !== 'all') {
-        $reviews = $db->select("SELECT r.*, u.username FROM reviews r
+        $reviews = $db->select("SELECT r.*, u.name FROM reviews r
                                 JOIN users u ON u.user_id = r.user_id
                                 WHERE product_id = ? AND r.rating = ?
                                 ORDER BY r.created_at DESC 
                                 LIMIT $limit OFFSET $offset", [$product_id, $rating]);
     }
     else {
-        $reviews = $db->select("SELECT r.*, u.username FROM reviews r
+        $reviews = $db->select("SELECT r.*, u.name FROM reviews r
                                 JOIN users u ON u.user_id = r.user_id
                                 WHERE product_id = ? 
                                 ORDER BY r.created_at DESC 
@@ -46,7 +46,7 @@
     foreach($reviews as $r): ?>
         <div class="mt-3 px-4 border-bottom">
                                 
-            <div class="fw-semibold fs-6"><?= $r['username'] ?></div>
+            <div class="fw-semibold fs-6"><?= $r['uname'] ?></div>
             <div class="ms-1 mt-1" style="font-size: 12px;">
                 <?php for($i = 1; $i <= 5; $i++) {
                     if($i <= $r['rating'])
