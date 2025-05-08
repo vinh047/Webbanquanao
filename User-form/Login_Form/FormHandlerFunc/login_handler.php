@@ -1,21 +1,21 @@
 <?php
 // Xử lý đăng ký tài khoản
 function handleDangKy($conn) {
-    $username = trim($_POST['username'] ?? '');
+    $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['pswd'] ?? '';
     $sdt = trim($_POST['sdt'] ?? '');
 
-    if (!$username || !$email || !$password || !$sdt) {
+    if (!$name || !$email || !$password || !$sdt) {
         echo json_encode(["status" => "MISSING_FIELDS"]);
         return;
     }
-    $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
+    $stmt = $conn->prepare("SELECT user_id FROM users WHERE name = ?");
+    $stmt->bind_param("s", $name);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-        echo json_encode(["status" => "USERNAME_EXISTS"]);
+        echo json_encode(["status" => "UNAME_EXISTS"]);
         return;
     }
 
@@ -50,9 +50,9 @@ function handleDangKy($conn) {
     $status = 1; // Trạng thái hoạt động
 
     // Thêm người dùng mới vào cơ sở dữ liệu
-    $stmt = $conn->prepare("INSERT INTO users (user_id, username, email, password, phone, role_id, status)
+    $stmt = $conn->prepare("INSERT INTO users (user_id, name, email, password, phone, role_id, status)
                             VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssii", $next_id, $username, $email, $hashed, $sdt, $role_id, $status);
+    $stmt->bind_param("issssii", $next_id, $name, $email, $hashed, $sdt, $role_id, $status);
 
     if ($stmt->execute()) {
         echo json_encode([
@@ -99,7 +99,5 @@ function handleDangNhap($conn) {
     }
 }
 // Xử lý đăng ký tài khoản
-
-
 
 ?>

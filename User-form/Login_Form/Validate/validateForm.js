@@ -13,7 +13,7 @@ function validateForm() {
     }
   });
 
-  const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
+  const nameRegex = /^[\p{L}]+(?: [\p{L}]+)+$/u;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
   const phoneRegex = /^0\d{9}$/;
@@ -34,20 +34,20 @@ function validateForm() {
   }
 
   if (trangthai === "dangky") {
-    const usernameField = form.querySelector('[name="username"]');
+    const nameField = form.querySelector('[name="name"]');
     const emailField = form.querySelector('[name="email"]');
     const passwordField = form.querySelector('[name="pswd"]');
     const passwordConfirmField = form.querySelector('[name="pswd-confirm"]');
     const phoneField = form.querySelector('[name="sdt"]');
 
-    const username = usernameField.value.trim();
+    const name = nameField.value.trim();
     const email = emailField.value.trim();
     const password = passwordField.value.trim();
     const passwordConfirm = passwordConfirmField.value.trim();
     const sdt = phoneField.value.trim();
 
-    if (!username) showError(usernameField, "Vui lòng nhập tên người dùng");
-    else if (!usernameRegex.test(username)) showError(usernameField, "Tên người dùng phải từ 4–20 ký tự, không chứa ký tự đặc biệt");
+    if (!name) showError(nameField, "Vui lòng nhập tên người dùng");
+    else if (!nameRegex.test(name)) showError(nameField, "Tên người dùng phải từ 4–20 ký tự, không chứa ký tự đặc biệt");
 
     if (!email) showError(emailField, "Vui lòng nhập email");
     else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");

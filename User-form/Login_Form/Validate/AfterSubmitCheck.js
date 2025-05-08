@@ -40,8 +40,8 @@ async function submitForm(e) {
         const url = new URL(window.location.href);
         url.searchParams.set("trangthai", "nhapotp");
         window.location.href = url.href;
-    } else if (responseData.status === "USERNAME_EXISTS") {
-      addError(e.target.querySelector('[name="username"]'), "Username đã tồn tại.");
+    } else if (responseData.status === "NAME_EXISTS") {
+      addError(e.target.querySelector('[name="name"]'), "name đã tồn tại.");
     } else if (responseData.status === "EMAIL_EXISTS") {
       addError(e.target.querySelector('[name="email"]'), "Email đã tồn tại.");
     } else if (responseData.status === "PHONE_EXISTS") {
@@ -51,13 +51,13 @@ async function submitForm(e) {
     } else if (responseData.status === "NO_ACCOUNT") {
       addError(e.target.querySelector('[name="email"]'), "Tài khoản không tồn tại.");
     } else if (responseData.status === "MISSING_FIELDS") {
-      addError(e.target.querySelector('[name="username"]'), "Vui lòng điền đầy đủ thông tin.");
+      addError(e.target.querySelector('[name="name"]'), "Vui lòng điền đầy đủ thông tin.");
     } else if (responseData.status === "MISSING_EMAIL") {
       addError(e.target.querySelector('[name="email"]'), "Vui lòng nhập email.");
     } else {
-      addError(e.target.querySelector('[name="username"]'), "Đã xảy ra lỗi không xác định.");
+      addError(e.target.querySelector('[name="name"]'), "Đã xảy ra lỗi không xác định.");
     }
   } catch (err) {
-    addError(e.target.querySelector('[name="username"]'), "Lỗi máy chủ hoặc kết nối.");
+    addError(e.target.querySelector('[name="uname"]'), "Lỗi máy chủ hoặc kết nối.");
   }
 }

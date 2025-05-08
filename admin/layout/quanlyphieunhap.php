@@ -48,16 +48,16 @@ if ($user_id) {
     $db = DBConnect::getInstance();
     
     // Truy vấn để lấy tên người dùng dựa trên user_id
-    $stmt = $db->select("SELECT username FROM users WHERE user_id = ?", [$user_id]);
+    $stmt = $db->select("SELECT name FROM users WHERE user_id = ?", [$user_id]);
     
     if ($stmt) {
-        $username = $stmt[0]['username']; // Gán tên người dùng vào biến
+        $name = $stmt[0]['name']; // Gán tên người dùng vào biến
     } else {
-        $username = "Không tìm thấy người dùng";
+        $name = "Không tìm thấy người dùng";
     }
 } else {
     // Nếu không có user_id trong session, người dùng chưa đăng nhập
-    $username = "Chưa đăng nhập";
+    $name = "Chưa đăng nhập";
 }
 
 if ($role_id) {
@@ -126,7 +126,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <!-- Mã nhân viên -->
             <div class="col-md-2 me-auto">
               <label class="form-label">Tên nhân viên</label>
-              <input type="text" name="username_display" id="username_display" value="<?= htmlspecialchars($username) ?>" readonly class="form-control bg-light">
+              <input type="text" name="name_display" id="name_display" value="<?= htmlspecialchars($uname) ?>" readonly class="form-control bg-light">
               <input type="hidden" name="user_id" id="user_id" value="<?= htmlspecialchars($user_id) ?>">
             </div>
 
@@ -211,7 +211,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                             <select name="txtIDnv" id="txtIDnv" class="form-select">
                                 <option value="">Chọn nhân viên</option>
                                 <?php foreach($nhanvien as $n): ?>
-                                <option value="<?=$n['user_id']?>"><?=$n['username']?></option>
+                                <option value="<?=$n['user_id']?>"><?=$n['name']?></option>
                                 <?php endforeach ?>
                             </select>
 

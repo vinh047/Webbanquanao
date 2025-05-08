@@ -26,7 +26,7 @@ $data = $db->select("SELECT
     im.user_id,
     im.total_price,
     s.name AS ncc_name,
-    u.username AS nv_name
+    u.name AS nv_name
 FROM importreceipt im
 JOIN supplier s ON im.supplier_id = s.supplier_id 
 JOIN users u ON im.user_id = u.user_id
