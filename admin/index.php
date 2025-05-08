@@ -1,6 +1,6 @@
 
 <?php
-require_once 'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
+require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
 
 ?> 
 
@@ -130,7 +130,7 @@ if(isset($_GET['page']))
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <!-- Đạt thêm tắt khi close tab -->
 <<<<<<< HEAD
-<script src="Admin-form/Login_Form/Logout/auto_logout.js"></script> 
+
 =======
  <!-- Nhúng jQuery trước tất cả -->
 <!-- ✅ JQUERY PHẢI ĐƯỢC NHÚNG TRƯỚC -->
@@ -140,7 +140,7 @@ if(isset($_GET['page']))
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script src="Admin-form/Login_Form/Logout/auto_logout.js"></script> 
 
 >>>>>>> e40e1eed05504ad47479b2a93eed064f33d3931f
 </body>

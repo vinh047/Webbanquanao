@@ -1,16 +1,11 @@
 // auto_logout.js
 
-// Khi trang được load lại (F5 hoặc quay lại bằng nút Back) → đánh dấu không logout
+// Khi quay lại từ bfcache, Ctrl+Shift+T hoặc Back/Forward → ép reload để PHP kiểm tra lại session
 window.addEventListener("pageshow", function (event) {
-    sessionStorage.setItem("stayActive", "true");
-});
+    const navType = performance.getEntriesByType("navigation")[0]?.type;
 
-// Khi unload (trước khi đóng hoặc reload)
-window.addEventListener("beforeunload", function () {
-    const shouldLogout = sessionStorage.getItem("stayActive") !== "true";
-    if (shouldLogout) {
-        navigator.sendBeacon('/admin/index.php?action=logout_on_close');
+    if (event.persisted || navType === "back_forward") {
+        console.log("Reloading from bfcache or back navigation");
+        window.location.reload();
     }
-    // Reset lại cờ
-    sessionStorage.setItem("stayActive", "false");
 });
