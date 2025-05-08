@@ -1,6 +1,7 @@
 (function() {
     document.body.addEventListener("click", function (e) {
         if (e.target.classList.contains("color-thumb")) {
+            console.log('debug')
             const img = e.target;
             const productId = img.dataset.productId;
             const colorId = img.dataset.colorId;
@@ -33,18 +34,3 @@
         }
     });
 })();
-// Gán class 'selected' cho màu
-document.querySelectorAll('.color-option').forEach(el => {
-    el.addEventListener('click', function () {
-        document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-    });
-});
-
-// Gán class 'selected' cho size
-document.querySelectorAll('.size-option').forEach(el => {
-    el.addEventListener('click', function () {
-        document.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
-        this.classList.add('selected');
-    });
-});

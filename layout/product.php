@@ -88,7 +88,7 @@
                                     </div>
                                     <p class="mb-2">Màu : </p>
                                     <div class="px-2">
-                                        <div class="row gap-3 justify-content-center">
+                                        <div class="filter-wrap row gap-3 justify-content-center">
                                             <?php foreach ($product_color as $dl):  ?>
 
 
