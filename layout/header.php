@@ -45,7 +45,7 @@ $user = null;
 if (!empty($_SESSION['user_id'])) {
 	// Lấy thông tin user (bạn có thể thay đổi SELECT cho phù hợp)
 	$user = $db->selectOne(
-		'SELECT user_id, username FROM users WHERE user_id = ?',
+		'SELECT user_id, name FROM users WHERE user_id = ?',
 		[$_SESSION['user_id']]
 	);
 }
@@ -108,7 +108,7 @@ if (!empty($_SESSION['user_id'])) {
 			</a>
 			<div class="user-menu" id="user-menu">
 				<p class="greeting">
-					Xin chào <?= htmlspecialchars($user['username'], ENT_QUOTES) ?>!
+					Xin chào <?= htmlspecialchars($user['name'], ENT_QUOTES) ?>!
 				</p>
 				<ul class="user-menu-list">
 					<li><a href="/info-user.php">Thông tin tài khoản</a></li>
