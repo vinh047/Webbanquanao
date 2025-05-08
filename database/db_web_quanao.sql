@@ -764,7 +764,6 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -773,10 +772,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `name`, `password`, `email`, `phone`, `address`, `role_id`, `status`) VALUES
-(1, 'admin', 'adminpass', 'admin@example.com', '0900000000', 'TP.HCM', 2, 1),
-(2, 'khach1', 'khachpass', 'khach1@example.com', '0900000001', 'Q1, TP.HCM', 1, 1),
-(3, 'staff1', 'staffpass', 'staff1@example.com', '0900000002', 'Q3, TP.HCM', 4, 1);
+INSERT INTO `users` (`user_id`, `name`, `password`, `email`, `phone`, `role_id`, `status`) VALUES
+(1, 'admin', 'adminpass', 'admin@example.com', '0900000000', 2, 1),
+(2, 'khach1', 'khachpass', 'khach1@example.com', '0900000001', 1, 1),
+(3, 'staff1', 'staffpass', 'staff1@example.com', '0900000002', 4, 1);
 
 --
 -- Indexes for dumped tables
@@ -1126,3 +1125,24 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE `user_addresses` (
+  `address_id`     INT(11)       NOT NULL AUTO_INCREMENT,
+  `user_id`        INT(11)       NOT NULL,
+  `address_detail` VARCHAR(255)  NOT NULL COMMENT 'Số nhà, tên đường…',
+  `ward`           VARCHAR(100)  NOT NULL COMMENT 'Phường / Xã',
+  `district`       VARCHAR(100)  NOT NULL COMMENT 'Quận / Huyện',
+  `province`       VARCHAR(100)  NOT NULL COMMENT 'Tỉnh / Thành phố',
+  `is_default`     TINYINT(1)    NOT NULL DEFAULT 0 COMMENT '1 = mặc định',
+  `created_at`     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`     DATETIME      NOT NULL 
+                     DEFAULT CURRENT_TIMESTAMP 
+                     ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`address_id`),
+  KEY `idx_user` (`user_id`),
+  CONSTRAINT `fk_useraddr_user`
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;

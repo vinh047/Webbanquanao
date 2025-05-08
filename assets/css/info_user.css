@@ -71,12 +71,28 @@ section.col-md-9 dl.row dd {
   margin-bottom: 16px;
   color: #212529;
 }
+/* --- nút CẬP NHẬT nhỏ, pill-shaped --- */
 section.col-md-9 .btn-outline-primary {
-  border-radius: 24px;
-  padding: 8px 24px;
-  font-weight: 500;
-  margin-top: 16px;
+  display: inline-block;       /* để giữ vừa size nội dung */
+  padding: 0.5rem 1.2rem;      /* cao 8px, ngang 19px */
+  border-width: 2px;           /* viền dày hơn */
+  border-radius: 30px;         /* bo tròn hẳn thành pill */
+  font-size: 0.875rem;         /* chữ hơi nhỏ hơn */
+  font-weight: 500;            /* hơi đậm */
+  letter-spacing: 0.5px;       /* thoáng chữ */
+  margin: 0.75rem 0;           /* cách trên/dưới */
+  color: #000;                 /* đổi màu viền/chữ nếu cần */
+  background-color: transparent;
+  transition: background-color 0.2s, color 0.2s;
 }
+
+section.col-md-9 .btn-outline-primary:hover {
+  background-color: #000;      /* khi hover đổi nền */
+  color: #fff;                 /* và chữ trắng */
+  text-decoration: none;
+}
+
+
 
 /* Responsive: stack sidebar above content on smaller screens */
 @media (max-width: 768px) {

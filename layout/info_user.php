@@ -1,67 +1,154 @@
 <?php
-echo '<link rel="stylesheet" href="/assets/css/info_user.css">';
-echo '<script src="/assets/js/info_user.js" defer></script>';
-?>
+// info_user.php
 
-<?php
-// 1) Kiểm tra đã login chưa (header.php đã chạy session_start())
+// 1) Kiểm tra đã login
 if (empty($_SESSION['user_id'])) {
-    header('Location: /User-form/Login_Form/Login_Form.php');
-    exit;
+  header('Location: /User-form/Login_Form/Login_Form.php');
+  exit;
 }
 
 // 2) Lấy chi tiết thông tin user
 $userDetail = $db->selectOne(
-    'SELECT name, email, phone, address
-     FROM users
-     WHERE user_id = ?',
-    [ $_SESSION['user_id'] ]
+  'SELECT name, email, phone
+       FROM users
+       WHERE user_id = ?',
+  [$_SESSION['user_id']]
 );
 ?>
 
+
 <div class="container my-5">
   <div class="row">
-    <!-- Sidebar trái -->
+    <!-- Sidebar -->
     <aside class="col-md-3 mb-4">
       <nav class="list-group">
-      <a href="/index.php?page=taikhoan"
-           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <span><i class="fa-solid fa-user"></i></i> Thông tin tài khoản</span>
+        <a href="#"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+          data-bs-toggle="modal"
+          data-bs-target="#modalEditProfile">
+          <span><i class="fa-solid fa-user me-2"></i>Thông tin tài khoản</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
         <a href="/index.php?page=donhang"
-           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <span><i class="fa-solid fa-clock-rotate-left me-2"></i> Lịch sử đơn hàng</span>
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-clock-rotate-left me-2"></i>Lịch sử đơn hàng</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+        <a href="/index.php?page=address_list"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-location-dot me-2"></i>Danh sách địa chỉ</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
         <a href="/index.php?action=logout"
-           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <span><i class="fa-solid fa-power-off me-2"></i> Đăng xuất</span>
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
       </nav>
     </aside>
 
-    <!-- Nội dung chính bên phải -->
+    <!-- Main content -->
     <section class="col-md-9">
       <h2>Thông tin tài khoản</h2>
       <dl class="row mb-4">
         <dt class="col-sm-4">Họ và tên</dt>
         <dd class="col-sm-8"><?= htmlspecialchars($userDetail['name'], ENT_QUOTES) ?></dd>
 
+        <dt class="col-sm-4">Số điện thoại</dt>
+        <dd class="col-sm-8"><?= htmlspecialchars($userDetail['phone'], ENT_QUOTES) ?></dd>
+      </dl>
+      <a href="#"
+        class="btn btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#modalEditProfile">
+        Cập nhật thông tin
+      </a>
+
+      <hr class="my-5">
+
+      <h2>Thông tin đăng nhập</h2>
+      <dl class="row mb-4">
         <dt class="col-sm-4">Email</dt>
         <dd class="col-sm-8"><?= htmlspecialchars($userDetail['email'], ENT_QUOTES) ?></dd>
 
-        <dt class="col-sm-4">Số điện thoại</dt>
-        <dd class="col-sm-8"><?= htmlspecialchars($userDetail['phone'], ENT_QUOTES) ?></dd>
-
-        <dt class="col-sm-4">Địa chỉ</dt>
-        <dd class="col-sm-8"><?= htmlspecialchars($userDetail['address'], ENT_QUOTES) ?></dd>
+        <dt class="col-sm-4">Mật khẩu</dt>
+        <dd class="col-sm-8">*****************</dd>
       </dl>
-
-      <a href="/index.php?page=edit_profile" class="btn btn-outline-primary">
-        Cập nhật thông tin
+      <a href="#"
+        class="btn btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#modalChangePassword">
+        Thay đổi mật khẩu
       </a>
     </section>
   </div>
 </div>
+
+<!-- Modal: Edit Profile -->
+<div class="modal fade" id="modalEditProfile" tabindex="-1" aria-labelledby="modalEditProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="modalEditProfileLabel">Chỉnh sửa thông tin tài khoản</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditProfile">
+          <div class="mb-3">
+            <label for="editName" class="form-label">Họ tên của bạn</label>
+            <input type="text" id="editName" name="name" class="form-control"
+              value="<?= htmlspecialchars($userDetail['name'], ENT_QUOTES) ?>">
+          </div>
+          <!-- TODO: thêm các trường khác: ngày sinh, giới tính, phone, chiều cao, cân nặng… -->
+        </form>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="submit" form="formEditProfile" class="btn btn-primary">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Change Password -->
+<div class="modal fade" id="modalChangePassword" tabindex="-1" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="modalChangePasswordLabel">Thay đổi mật khẩu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formChangePassword">
+          <div class="mb-3">
+            <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
+            <div class="input-group">
+              <input type="password" id="oldPassword" name="old_password" class="form-control">
+              <span class="input-group-text"><i class="fa-regular fa-eye-slash"></i></span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+            <div class="input-group">
+              <input type="password" id="newPassword" name="new_password" class="form-control">
+              <span class="input-group-text"><i class="fa-regular fa-eye-slash"></i></span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
+            <div class="input-group">
+              <input type="password" id="confirmPassword" name="confirm_password" class="form-control">
+              <span class="input-group-text"><i class="fa-regular fa-eye-slash"></i></span>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="submit" form="formChangePassword" class="btn btn-primary">Lưu mật khẩu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/info_user.js" defer></script>
