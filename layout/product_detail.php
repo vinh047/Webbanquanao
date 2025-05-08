@@ -11,8 +11,6 @@
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/fonts/font.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 
 </head>
 
@@ -116,19 +114,6 @@ function getColorById($color_id)
                             <?= $product['name']; ?>
                         </p>
     
-                    </div>
-                    <div class="position-relative" style="margin-top: 10px;">
-                        <a href="javascript:void(0);" id="toggle-cart" title="Giỏ hàng" class="text-dark">
-                            <span class="material-symbols-outlined" style="font-size: 34px;">
-                                shopping_cart
-                            </span>
-                            <!-- Badge hiển thị số lượng -->
-                            <span id="cart-count-badge"
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                style="font-size: 12px;">
-                                0
-                            </span>
-                        </a>
                     </div>
                 </div>
 
@@ -475,6 +460,8 @@ function getColorById($color_id)
 
 
     <script src="../assets/js/product_detail.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

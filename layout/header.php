@@ -40,6 +40,7 @@ if (!empty($_SESSION['user_id'])) {
     );
 }
 ?>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 <header class="header">
 
     <button class="menu-toggle">
@@ -87,18 +88,53 @@ if (!empty($_SESSION['user_id'])) {
     <div class="icon-group">
         <a href="/search.html" class="icon"><i class="fa-solid fa-magnifying-glass"></i></a>
         <a href="<?= $user
-            ? '/tai-khoan.php'
-            : '/User-form/Login_Form/Login_Form.php'
-        ?>" class="icon account-link">
+                        ? '/tai-khoan.php'
+                        : '/User-form/Login_Form/Login_Form.php'
+                    ?>" class="icon account-link">
             <i class="fa-solid fa-user"></i>
             <span>
                 <?= htmlspecialchars($user['username'] ?? 'Tài khoản', ENT_QUOTES) ?>
             </span>
         </a>
+        <div class="position-relative" style="margin-top: 10px;">
+            <a href="javascript:void(0);" id="toggle-cart" title="Giỏ hàng" class="text-dark">
+                <span class="material-symbols-outlined" style="font-size: 27px;">
+                    shopping_cart
+                </span>
+                <!-- Badge hiển thị số lượng -->
+                <span id="cart-count-badge"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="font-size: 12px;">
+                    0
+                </span>
+            </a>
+        </div>
+
+        <!-- Giỏ hàng ảo -->
+        <div id="mini-cart" class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column" style="width: 300px; height: 100vh; display: none; z-index: 9999;">
+            <h6 class="mb-3">Sản phẩm trong giỏ (<span id="cart-item-count">0</span>)</h6>
+
+            <!-- Danh sách sản phẩm -->
+            <div id="mini-cart-items" class="flex-grow-1 overflow-auto"></div>
+
+            <!-- Footer cố định -->
+            <div id="mini-cart-footer" class="mt-3">
+                <a href="/index.php?page=giohang" class="btn btn-dark w-100 mb-2">Xem giỏ hàng</a>
+                <button id="close-mini-cart" class="btn btn-outline-secondary w-100">Đóng</button>
+            </div>
+        </div>
+        <div id="noticeAddToCart" class="notice-add-to-cart position-fixed top-50 start-50 translate-middle d-flex flex-column justify-content-center align-items-center p-4 rounded w-auto opacity-0"
+            style="background-color: rgba(0, 0, 0, 0.8); transition: opacity 0.5s ease; z-index: 1050; pointer-events: none;">
+            <i id="noticeIcon" class="fa-solid fa-circle-check fa-3x mb-3" style="color: #ffffff;"></i>
+            <span id="noticeText" class="text-white text-center fw-bold" style="font-size: 18px;">Đã thêm vào giỏ hàng</span>
+        </div>
     </div>
+
+
 
 </header>
 
+<script src="../assets/js/mini_cart.js"></script>
 <script>
     document.querySelector('.menu-toggle').addEventListener('click', () => {
         document.querySelector('.menu_header').classList.toggle('active');
