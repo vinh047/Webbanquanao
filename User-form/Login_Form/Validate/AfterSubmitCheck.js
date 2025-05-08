@@ -5,6 +5,7 @@ async function submitForm(e) {
   if (!isValid) return;
 
   const formData = new FormData(e.target);
+  const trangthai = new URLSearchParams(window.location.search).get("trangthai") || "";
 
   try {
     const response = await fetch("/User-form/Login_Form/userdb_func.php", {
@@ -12,10 +13,15 @@ async function submitForm(e) {
       body: formData
     });
 
+    if (!response.ok) {
+      throw new Error("Lỗi HTTP: " + response.status);
+    }
+
     const responseData = await response.json();
     console.log("TRANGTHAI = ", trangthai);
     console.log("RESPONSE = ", responseData);
 
+    // Reset lỗi cũ
     e.target.querySelectorAll(".form-control").forEach(input => {
       input.classList.remove("is-invalid", "border-danger");
       input.classList.add("border-dark");
@@ -26,6 +32,7 @@ async function submitForm(e) {
       }
     });
 
+    // ✅ Đăng nhập hoặc đăng ký thành công
     if (responseData.status === "LOGIN_SUCCESS" || responseData.status === "REGISTER_SUCCESS") {
       const role = responseData.role;
 
@@ -41,55 +48,60 @@ async function submitForm(e) {
         } catch (err) {
           console.error("❌ syncCartAfterLogin failed:", err);
         }
-      
-        // ✅ Redirect duy nhất ở đây, sau khi mọi thứ xong
+
+        // Redirect sau khi đồng bộ
         setTimeout(() => {
           window.location.href = location.origin + "/index.php";
         }, 100);
-      
         return;
       }
-<<<<<<< HEAD
-      
-      
 
       if ([2, 3, 4].includes(role)) {
         alert("Tài khoản đã bị khóa");
         return;
       }
 
-      return; 
+      return;
     }
 
-    // Các lỗi khác:
-    if (responseData.status === "USERNAME_EXISTS") {
-      addError(e.target.querySelector('[name="username"]'), "Username đã tồn tại.");
-=======
-    
-    } else if (trangthai === "quenmatkhau" && responseData.status === "FORGOT_SUCCESS") {
-        alert("Đã gửi OTP đến email. Vui lòng nhập mã OTP.");
-        const url = new URL(window.location.href);
-        url.searchParams.set("trangthai", "nhapotp");
-        window.location.href = url.href;
-    } else if (responseData.status === "NAME_EXISTS") {
-      addError(e.target.querySelector('[name="name"]'), "name đã tồn tại.");
->>>>>>> 9598f250de264b08041c5e04aea3375b952c9b37
-    } else if (responseData.status === "EMAIL_EXISTS") {
-      addError(e.target.querySelector('[name="email"]'), "Email đã tồn tại.");
-    } else if (responseData.status === "PHONE_EXISTS") {
-      addError(e.target.querySelector('[name="sdt"]'), "Số điện thoại đã tồn tại.");
-    } else if (responseData.status === "INVALID_PASSWORD") {
-      addError(e.target.querySelector('[name="pswd"]'), "Mật khẩu không hợp lệ.");
-    } else if (responseData.status === "NO_ACCOUNT") {
-      addError(e.target.querySelector('[name="email"]'), "Tài khoản không tồn tại.");
-    } else if (responseData.status === "MISSING_FIELDS") {
-      addError(e.target.querySelector('[name="name"]'), "Vui lòng điền đầy đủ thông tin.");
-    } else if (responseData.status === "MISSING_EMAIL") {
-      addError(e.target.querySelector('[name="email"]'), "Vui lòng nhập email.");
-    } else {
-      addError(e.target.querySelector('[name="name"]'), "Đã xảy ra lỗi không xác định.");
+    // ✅ Quên mật khẩu → gửi OTP
+    if (trangthai === "quenmatkhau" && responseData.status === "FORGOT_SUCCESS") {
+      alert("Đã gửi OTP đến email. Vui lòng nhập mã OTP.");
+      const url = new URL(window.location.href);
+      url.searchParams.set("trangthai", "nhapotp");
+      window.location.href = url.href;
+      return;
+    }
+
+    // ✅ Xử lý lỗi cụ thể
+    switch (responseData.status) {
+      case "NAME_EXISTS":
+        addError(e.target.querySelector('[name="name"]'), "Tên đã tồn tại.");
+        break;
+      case "EMAIL_EXISTS":
+        addError(e.target.querySelector('[name="email"]'), "Email đã tồn tại.");
+        break;
+      case "PHONE_EXISTS":
+        addError(e.target.querySelector('[name="sdt"]'), "Số điện thoại đã tồn tại.");
+        break;
+      case "INVALID_PASSWORD":
+        addError(e.target.querySelector('[name="pswd"]'), "Mật khẩu không hợp lệ.");
+        break;
+      case "NO_ACCOUNT":
+        addError(e.target.querySelector('[name="email"]'), "Tài khoản không tồn tại.");
+        break;
+      case "MISSING_FIELDS":
+        addError(e.target.querySelector('[name="name"]'), "Vui lòng điền đầy đủ thông tin.");
+        break;
+      case "MISSING_EMAIL":
+        addError(e.target.querySelector('[name="email"]'), "Vui lòng nhập email.");
+        break;
+      default:
+        addError(e.target.querySelector('[name="name"]'), "Đã xảy ra lỗi không xác định.");
+        break;
     }
   } catch (err) {
+    console.error("Lỗi kết nối:", err);
     addError(e.target.querySelector('[name="uname"]'), "Lỗi máy chủ hoặc kết nối.");
   }
 }

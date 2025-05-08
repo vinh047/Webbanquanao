@@ -1,1 +1,1 @@
-[{"id":"3","variant_id":"4","quantity":1,"name":"Áo sơ mi nam tay dài vải Nano Non Iron fitted","color":"Navy","size":"XL","price":540000},{"id":"2","variant_id":"3","quantity":10,"name":"Áo polo nam phối màu tay và cổ form fitted","color":"Trắng","size":"XL","price":490000},{"id":"1","variant_id":"5","quantity":4,"name":"Áo polo nam dệt kim tay ngắn form regular","color":"Navy","size":"X","price":540000}]
+[{"id":"2","variant_id":"3","quantity":1,"name":"Áo polo nam phối màu tay và cổ form fitted","color":"Trắng","size":"XL","price":490000}]
