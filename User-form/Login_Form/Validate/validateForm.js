@@ -100,6 +100,7 @@ function validateForm() {
 }
 
 function addError(input, message) {
+  if (!input) return; // ✅ Bỏ qua nếu input không tồn tại
   input.classList.remove("border-dark");
   input.classList.add("is-invalid", "border-danger");
 

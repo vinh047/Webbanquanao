@@ -111,7 +111,7 @@ if (!empty($_SESSION['user_id'])) {
 				<ul class="user-menu-list">
 					<li><a href="/info-user.php">Thông tin tài khoản</a></li>
 					<li><a href="/my_orders.php">Đơn hàng của bạn</a></li>
-					<li><a href="?action=logout">Đăng xuất</a></li>
+					<li><a href="?action=logout" onclick="localStorage.removeItem('cart')">Đăng xuất</a></li>
 				</ul>
 			</div>
 		<?php else: ?>

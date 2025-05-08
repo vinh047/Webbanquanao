@@ -40,28 +40,35 @@ document.addEventListener('click', function (e) {
 
 const selectedColors = [];
 const selectedSizes = [];
-
-// Xử lý chọn màu
+// ✅ Xử lý chọn nhiều màu
 document.querySelectorAll('.color-option').forEach((item, index) => {
   item.addEventListener('click', function () {
-      document.querySelectorAll('.color-option').forEach(el => el.classList.remove('border-3', 'border-dark', 'selected'));
-      item.classList.add('border-3', 'border-dark', 'selected');
+    const checkbox = document.querySelectorAll('.color-checkbox')[index];
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
 
-      const checkboxes = document.querySelectorAll('.color-checkbox');
-      checkboxes.forEach(cb => cb.checked = false);
-      if (checkboxes[index]) checkboxes[index].checked = true;
+      if (checkbox.checked) {
+        item.classList.add('border-3', 'border-dark', 'selected');
+      } else {
+        item.classList.remove('border-3', 'border-dark', 'selected');
+      }
+    }
   });
 });
 
-// Xử lý chọn size
+// ✅ Xử lý chọn nhiều size
 document.querySelectorAll('.size-option').forEach((item, index) => {
   item.addEventListener('click', function () {
-      document.querySelectorAll('.size-option').forEach(el => el.classList.remove('border-3', 'border-dark', 'selected'));
-      item.classList.add('border-3', 'border-dark', 'selected');
+    const checkbox = document.querySelectorAll('.size-checkbox')[index];
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
 
-      const checkboxes = document.querySelectorAll('.size-checkbox');
-      checkboxes.forEach(cb => cb.checked = false);
-      if (checkboxes[index]) checkboxes[index].checked = true;
+      if (checkbox.checked) {
+        item.classList.add('border-3', 'border-dark', 'selected');
+      } else {
+        item.classList.remove('border-3', 'border-dark', 'selected');
+      }
+    }
   });
 });
 

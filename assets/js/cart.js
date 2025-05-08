@@ -30,7 +30,7 @@ function renderCart() {
       <div class="flex-grow-1">
         <h6>${item.name}</h6>
         <p class="mb-1">Color: ${item.color || 'đen'} &nbsp;&nbsp;&nbsp; Size: ${item.size || 'L'}</p>
-        <p class="fw-bold text-danger mb-1">${item.price.toLocaleString()}₫</p>
+        <p class="fw-bold text-danger mb-1">${Math.round(Number(item.price)).toLocaleString('vi-VN')}₫</p>
         <div class="input-group input-group-sm" style="width: 100px;">
           <button class="btn btn-outline-secondary" onclick="updateQty(${index}, -1)">-</button>
           <input type="text" class="form-control text-center" value="${item.quantity}" readonly>
@@ -45,7 +45,8 @@ function renderCart() {
     cartItems.appendChild(div);
   });
 
-  totalPriceEl.textContent = total.toLocaleString() + "₫";
+  totalPriceEl.textContent = Math.round(total).toLocaleString('vi-VN') + "₫";
+
 }
 
 // Cập nhật số lượng

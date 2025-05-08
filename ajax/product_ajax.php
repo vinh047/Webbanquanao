@@ -223,7 +223,8 @@ if ($pagination->totalPages > 1) {
                 return;
             }
 
-            const variantImage = selectedColor.getAttribute('data-image');
+            const variantImageFull = selectedColor.getAttribute('data-image');
+            const variantImage = variantImageFull.split('/').pop(); // 👉 chỉ lấy tên file ảnh: abc.jpg
             const sizeId = selectedSize.getAttribute('data-size-id');
             const colorName = selectedColor.getAttribute('title') || 'Màu';
             const sizeName = selectedSize.getAttribute('data-size-name') || 'Size';
