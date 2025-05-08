@@ -46,8 +46,8 @@ function validateForm() {
     const passwordConfirm = passwordConfirmField.value.trim();
     const sdt = phoneField.value.trim();
 
-    if (!name) showError(nameField, "Vui lòng nhập tên người dùng");
-    else if (!nameRegex.test(name)) showError(nameField, "Tên người dùng phải từ 4–20 ký tự, không chứa ký tự đặc biệt");
+    if (!name) showError(nameField, "Vui lòng nhập họ và tên");
+    else if (!nameRegex.test(name)) showError(nameField, "Vui lòng nhập thông tin hợp lệ (Họ và tên)");
 
     if (!email) showError(emailField, "Vui lòng nhập email");
     else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");

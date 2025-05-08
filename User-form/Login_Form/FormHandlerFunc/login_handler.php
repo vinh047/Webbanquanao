@@ -10,14 +10,6 @@ function handleDangKy($conn) {
         echo json_encode(["status" => "MISSING_FIELDS"]);
         return;
     }
-    $stmt = $conn->prepare("SELECT user_id FROM users WHERE name = ?");
-    $stmt->bind_param("s", $name);
-    $stmt->execute();
-    $stmt->store_result();
-    if ($stmt->num_rows > 0) {
-        echo json_encode(["status" => "UNAME_EXISTS"]);
-        return;
-    }
 
     // Kiểm tra email đã tồn tại
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ?");
@@ -28,6 +20,7 @@ function handleDangKy($conn) {
         echo json_encode(["status" => "EMAIL_EXISTS"]);
         return;
     }
+    //kiểm tra số điện thoại đã tồn tại
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE phone = ?");
     $stmt->bind_param("s", $sdt);
     $stmt->execute();
