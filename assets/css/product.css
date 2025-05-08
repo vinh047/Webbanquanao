@@ -79,11 +79,38 @@
     transition: opacity 0.5s ease, transform 0.5s ease;
     pointer-events: none;
 }
-.color-thumb.selected {
-    outline: 2px solid #333;        /* viền đen */
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3); /* bóng mờ */
-    border-color: black;            /* tùy chọn: đổi màu viền */
+.color-thumb {
+    border: none !important; /* Xóa viền đen */
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 4px;
+    margin-right: 4px;
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    cursor: pointer;
+    background-color: #fff;
+    box-sizing: border-box;
 }
+.color-option,
+.size-option {
+    border: none !important;
+}
+
+
+/* Khi được chọn → chỉ hiện outline xanh */
+.color-thumb.selected {
+    outline: 3px solid #0d6efd !important;
+    outline-offset: 2px;
+}
+
+/* RESET TOÀN BỘ THẺ IMG (nếu cần) */
+.color-thumb img {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .size-thumb.selected {
     border: 2px solid #000 !important;
 }

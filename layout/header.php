@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Khi user click Đăng xuất
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {

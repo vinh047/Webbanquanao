@@ -30,10 +30,41 @@ async function submitForm(e) {
       const role = responseData.role;
 
       if (role === 1) {
-        window.location.replace("../../index.php");
-      } else if ([2, 3, 4].includes(role)) {
-        alert("Tài khoản đã bị khóa");
+        try {
+          console.log("🟡 Trước khi syncCartAfterLogin()");
+          if (typeof window.syncCartAfterLogin === "function") {
+            await window.syncCartAfterLogin();
+            renderMiniCart();
+            updateCartCount();
+          }
+          console.log("✅ Sau khi syncCartAfterLogin()");
+        } catch (err) {
+          console.error("❌ syncCartAfterLogin failed:", err);
+        }
+      
+        // ✅ Redirect duy nhất ở đây, sau khi mọi thứ xong
+        setTimeout(() => {
+          window.location.href = location.origin + "/index.php";
+        }, 100);
+      
+        return;
       }
+<<<<<<< HEAD
+      
+      
+
+      if ([2, 3, 4].includes(role)) {
+        alert("Tài khoản đã bị khóa");
+        return;
+      }
+
+      return; 
+    }
+
+    // Các lỗi khác:
+    if (responseData.status === "USERNAME_EXISTS") {
+      addError(e.target.querySelector('[name="username"]'), "Username đã tồn tại.");
+=======
     
     } else if (trangthai === "quenmatkhau" && responseData.status === "FORGOT_SUCCESS") {
         alert("Đã gửi OTP đến email. Vui lòng nhập mã OTP.");
@@ -42,6 +73,7 @@ async function submitForm(e) {
         window.location.href = url.href;
     } else if (responseData.status === "NAME_EXISTS") {
       addError(e.target.querySelector('[name="name"]'), "name đã tồn tại.");
+>>>>>>> 9598f250de264b08041c5e04aea3375b952c9b37
     } else if (responseData.status === "EMAIL_EXISTS") {
       addError(e.target.querySelector('[name="email"]'), "Email đã tồn tại.");
     } else if (responseData.status === "PHONE_EXISTS") {

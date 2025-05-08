@@ -82,4 +82,3 @@ function changeMiniCartQty(index, delta) {
     localStorage.setItem("cart", JSON.stringify(cart));
     renderMiniCart();
 }
-
