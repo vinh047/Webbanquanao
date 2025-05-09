@@ -16,6 +16,8 @@ $userDetail = $db->selectOne(
 );
 ?>
 
+<link rel="stylesheet" href="/assets/css/info_user.css">
+
 
 <div class="container my-5">
   <div class="row">
@@ -31,7 +33,12 @@ $userDetail = $db->selectOne(
         </a>
         <a href="/index.php?page=donhang"
           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <span><i class="fa-solid fa-clock-rotate-left me-2"></i>Lịch sử đơn hàng</span>
+          <span><i class="fa-solid fa-receipt me-2"></i> Đơn hàng của bạn</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+        <a href="/index.php?page=lichsumuahang"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-clock-rotate-left me-2"> Lịch sử mua hàng</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
         <a href="/index.php?page=address_list"
@@ -85,7 +92,7 @@ $userDetail = $db->selectOne(
 </div>
 
 <!-- Modal: Edit Profile -->
-<div class="modal fade" id="modalEditProfile" tabindex="-1" aria-labelledby="modalEditProfileLabel" aria-hidden="true">
+<div class="modal fade" id="modalEditProfile" tabindex="-1" aria-labelledby="modalEditProfileLabel" role="dialog" aria-modal="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-0">
@@ -93,13 +100,28 @@ $userDetail = $db->selectOne(
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>
       <div class="modal-body">
-        <form id="formEditProfile">
+        <form id="formEditProfile" novalidate>
           <div class="mb-3">
             <label for="editName" class="form-label">Họ tên của bạn</label>
-            <input type="text" id="editName" name="name" class="form-control"
+            <input
+              type="text"
+              id="editName"
+              name="name"
+              class="form-control"
               value="<?= htmlspecialchars($userDetail['name'], ENT_QUOTES) ?>">
+            <div class="invalid-feedback"></div>
           </div>
-          <!-- TODO: thêm các trường khác: ngày sinh, giới tính, phone, chiều cao, cân nặng… -->
+
+          <div class="mb-3">
+            <label for="editPhone" class="form-label">Số điện thoại của bạn</label>
+            <input
+              type="text"
+              id="editPhone"
+              name="phone"
+              class="form-control"
+              value="<?= htmlspecialchars($userDetail['phone'], ENT_QUOTES) ?>">
+            <div class="invalid-feedback"></div>
+          </div>
         </form>
       </div>
       <div class="modal-footer border-0">
@@ -110,8 +132,9 @@ $userDetail = $db->selectOne(
   </div>
 </div>
 
+
 <!-- Modal: Change Password -->
-<div class="modal fade" id="modalChangePassword" tabindex="-1" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
+<div class="modal fade" id="modalChangePassword" tabindex="-1" aria-labelledby="modalChangePasswordLabel" role="dialog" aria-modal="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-0">
@@ -119,26 +142,53 @@ $userDetail = $db->selectOne(
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>
       <div class="modal-body">
-        <form id="formChangePassword">
+        <form id="formChangePassword" novalidate>
           <div class="mb-3">
             <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
-            <div class="input-group">
-              <input type="password" id="oldPassword" name="old_password" class="form-control">
-              <span class="input-group-text"><i class="fa-regular fa-eye-slash"></i></span>
+            <div class="input-group has-validation">
+              <input
+                type="password"
+                id="oldPassword"
+                name="old_password"
+                class="form-control"
+                aria-describedby="oldPasswordFeedback"
+                required>
+              <span class="input-group-text">
+                <i class="fa-regular fa-eye-slash"></i>
+              </span>
+              <div id="oldPasswordFeedback" class="invalid-feedback"></div>
             </div>
           </div>
           <div class="mb-3">
             <label for="newPassword" class="form-label">Mật khẩu mới</label>
-            <div class="input-group">
-              <input type="password" id="newPassword" name="new_password" class="form-control">
-              <span class="input-group-text"><i class="fa-regular fa-eye-slash"></i></span>
+            <div class="input-group has-validation">
+              <input
+                type="password"
+                id="newPassword"
+                name="new_password"
+                class="form-control"
+                aria-describedby="newPasswordFeedback"
+                required>
+              <span class="input-group-text">
+                <i class="fa-regular fa-eye-slash"></i>
+              </span>
+              <div id="newPasswordFeedback" class="invalid-feedback"></div>
             </div>
           </div>
           <div class="mb-3">
             <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
-            <div class="input-group">
-              <input type="password" id="confirmPassword" name="confirm_password" class="form-control">
-              <span class="input-group-text"><i class="fa-regular fa-eye-slash"></i></span>
+            <div class="input-group has-validation">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirm_password"
+                class="form-control"
+                aria-describedby="confirmPasswordFeedback"
+                required>
+              <span class="input-group-text">
+                <i class="fa-regular fa-eye-slash"></i>
+              </span>
+              <div id="confirmPasswordFeedback" class="invalid-feedback"></div>
             </div>
           </div>
         </form>
@@ -151,4 +201,5 @@ $userDetail = $db->selectOne(
   </div>
 </div>
 
-<script src="/assets/js/info_user.js" defer></script>
+
+<!-- <script src="/assets/js/info_user.js" defer></script> -->
