@@ -30,6 +30,7 @@ function handleDangNhap($conn) {
 
     echo json_encode([
         'status' => 'LOGIN_SUCCESS',
-        'role' => (int)$user['role_id']
+        'role' => (int)$user['role_id'],
+        'online' => (int)$user['status']
     ]);
 }

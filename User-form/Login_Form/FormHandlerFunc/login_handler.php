@@ -67,7 +67,7 @@ function handleDangNhap($conn) {
         return;
     }
 
-    $stmt = $conn->prepare("SELECT user_id, password, role_id FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT user_id, password, role_id, status FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -82,7 +82,8 @@ function handleDangNhap($conn) {
             // Trả về dữ liệu JSON
             echo json_encode([
                 'status' => 'LOGIN_SUCCESS',
-                'role' => $user['role_id']
+                'role' => $user['role_id'],
+                'online' => (int)$user['status'] // = 0 thì bị khóa, = 1 thì đang hoạt động
             ]);
         } else {
             echo json_encode(["status" => "INVALID_PASSWORD"]);

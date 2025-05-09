@@ -28,16 +28,17 @@ async function submitForm(e) {
     // Xử lý kết quả đăng nhập
     if (responseData.status === "LOGIN_SUCCESS") {
       const role = responseData.role;
+      const online = responseData.online;
       console.log("Logged in with role:", role);
 
-      if (role === 1) {
+      if (role === 1 ||   online === 0) {
         // User thường → chặn đăng nhập admin
         addError(e.target.querySelector('[name="email"]'), "Tài khoản không có quyền truy cập trang quản trị.");
         return;
       }
 
       // Admin, nhân viên, v.v.
-      if (role === 2 || role === 3 || role === 4) {
+      if (role === 2 || role === 3 || role === 4 && online === 1) {
         window.location.replace("../../../admin/index.php");
         return;
       }

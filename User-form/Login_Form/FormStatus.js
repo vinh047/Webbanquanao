@@ -53,12 +53,19 @@ function loadForm() {
   } else if (trangthai === "nhapotp") {
     form.innerHTML = `
       <h2 class="text-center text-black">Nhập mã OTP</h2>
-      <p class="text-center text-black">Vui lòng nhập mã OTP đã gửi đến email của bạn và đặt lại mật khẩu.</p>
-  
+      <p class="text-center text-black">Vui lòng nhập mã OTP đã gửi đến email của bạn.</p>
+
       <div class="mb-3">
         <label class="text-black">Mã OTP</label>
         <input type="text" name="otp" class="form-control border-dark" placeholder="Nhập mã OTP">
       </div>
+      <hr>
+      <button type="submit" class="btn btn-warning w-100">Xác nhận OTP</button>
+    `;
+  } else if (trangthai === "resetpswd") {
+    form.innerHTML = `
+      <h2 class="text-center text-black">Đặt lại mật khẩu</h2>
+      <p class="text-center text-black">Vui lòng nhập mật khẩu mới cho tài khoản của bạn.</p>
       <div class="mb-3">
         <label class="text-black">Mật khẩu mới</label>
         <input type="password" name="new_password" class="form-control border-dark" placeholder="Nhập mật khẩu mới">
@@ -68,7 +75,7 @@ function loadForm() {
         <input type="password" name="confirm_password" class="form-control border-dark" placeholder="Nhập lại mật khẩu">
       </div>
       <hr>
-      <button type="submit" class="btn btn-success w-100">Xác nhận</button>
+      <button type="submit" class="btn btn-success w-100">Đặt lại mật khẩu</button>
     `;
   
   } else {

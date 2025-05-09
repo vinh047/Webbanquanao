@@ -35,8 +35,7 @@ $trangthai = $_GET['trangthai'] ?? 'dangnhap';
   </script>
 
   <!-- Script -->
-  <script src="/assets/js/addToCart.js"></script>
-  <script src="/assets/js/mini_cart.js"></script>
+
   <script src="FormStatus.js"></script>
   <script src="Validate/AfterSubmitCheck.js"></script>
   <script src="Validate/validateForm.js"></script>

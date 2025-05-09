@@ -1,6 +1,6 @@
 async function submitForm(e) {
   e.preventDefault();
-
+  
   const isValid = validateForm();
   if (!isValid) return;
 
@@ -16,11 +16,14 @@ async function submitForm(e) {
     if (!response.ok) {
       throw new Error("Lỗi HTTP: " + response.status);
     }
+    const rawText = await response.text();
+    console.log("Raw response text:", rawText);
+    const responseData = JSON.parse(rawText);
 
-    const responseData = await response.json();
     console.log("TRANGTHAI = ", trangthai);
     console.log("RESPONSE = ", responseData);
-
+;
+  
     // Reset lỗi cũ
     e.target.querySelectorAll(".form-control").forEach(input => {
       input.classList.remove("is-invalid", "border-danger");
@@ -35,8 +38,11 @@ async function submitForm(e) {
     // ✅ Đăng nhập hoặc đăng ký thành công
     if (responseData.status === "LOGIN_SUCCESS" || responseData.status === "REGISTER_SUCCESS") {
       const role = responseData.role;
+      const online = responseData.online;
 
-      if (role === 1) {
+    
+
+      if (role === 1 && online === 1) {
         try {
           console.log("🟡 Trước khi syncCartAfterLogin()");
           if (typeof window.syncCartAfterLogin === "function") {
@@ -56,7 +62,7 @@ async function submitForm(e) {
         return;
       }
 
-      if ([2, 3, 4].includes(role)) {
+      if ([2, 3, 4].includes(role)  ||  online === 0 ) {
         alert("Tài khoản đã bị khóa");
         return;
       }
@@ -70,6 +76,24 @@ async function submitForm(e) {
       const url = new URL(window.location.href);
       url.searchParams.set("trangthai", "nhapotp");
       window.location.href = url.href;
+      return;
+    }
+    
+    if (trangthai === "nhapotp" && responseData.status === "OTP_SUCCESS") {
+      alert("Xác thực OTP thành công. Vui lòng đặt lại mật khẩu.");
+      const url = new URL(window.location.href);
+      url.searchParams.set("trangthai", "resetpswd");
+      window.location.href = url.href;
+      return;
+    }
+    
+    if (trangthai === "resetpswd" && responseData.status === "RESET_SUCCESS") {
+      alert("Đặt lại mật khẩu thành công! Mời bạn đăng nhập.");
+      window.location.href = "?trangthai=dangnhap";
+      return;
+    }
+    if (trangthai === "resetpswd" && responseData.status === "SAME_AS_OLD_PASSWORD") {
+      addError(e.target.querySelector('[name="new_password"]'), "Mật khẩu mới không được trùng với mật khẩu cũ.");
       return;
     }
 
@@ -96,12 +120,15 @@ async function submitForm(e) {
       case "MISSING_EMAIL":
         addError(e.target.querySelector('[name="email"]'), "Vui lòng nhập email.");
         break;
+      case "INVALID_OTP":
+        addError(e.target.querySelector('[name="otp"]'), "Mã OTP không đúng hoặc đã hết hạn.");
+        break;
+          
       default:
         addError(e.target.querySelector('[name="name"]'), "Đã xảy ra lỗi không xác định.");
         break;
     }
   } catch (err) {
-    console.error("Lỗi kết nối:", err);
-    addError(e.target.querySelector('[name="uname"]'), "Lỗi máy chủ hoặc kết nối.");
+    addError(e.target.querySelector('[name="name"]'), "Lỗi máy chủ hoặc kết nối.");
   }
 }

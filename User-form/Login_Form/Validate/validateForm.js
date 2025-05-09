@@ -60,8 +60,7 @@ function validateForm() {
 
     if (!sdt) showError(phoneField, "Vui lòng nhập số điện thoại");
     else if (!phoneRegex.test(sdt)) showError(phoneField, "Số điện thoại không hợp lệ");
-  } 
-  else if (trangthai === "dangnhap") {
+  } else if (trangthai === "dangnhap") {
     const emailField = form.querySelector('[name="email"]');
     const passwordField = form.querySelector('[name="pswd"]');
 
@@ -72,8 +71,7 @@ function validateForm() {
     else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");
 
     if (!password) showError(passwordField, "Vui lòng nhập mật khẩu");
-  } 
-  else if (trangthai === "quenmatkhau") {
+  } else if (trangthai === "quenmatkhau") {
     const emailField = form.querySelector('[name="email"]');
     const email = emailField.value.trim();
 
@@ -81,26 +79,30 @@ function validateForm() {
     else if (!emailRegex.test(email)) showError(emailField, "Email không hợp lệ");
   } else if (trangthai === "nhapotp") {
     const otpField = form.querySelector('[name="otp"]');
+    const otp = otpField.value.trim();
+
+    if (!otp) showError(otpField, "Vui lòng nhập mã OTP");
+  } else if (trangthai === "resetpswd") {
     const passField = form.querySelector('[name="new_password"]');
     const confirmField = form.querySelector('[name="confirm_password"]');
-  
-    const otp = otpField.value.trim();
+
     const pass = passField.value.trim();
     const confirm = confirmField.value.trim();
-  
-    if (!otp) showError(otpField, "Vui lòng nhập mã OTP");
+
     if (!pass) showError(passField, "Vui lòng nhập mật khẩu mới");
     if (!confirm) showError(confirmField, "Vui lòng nhập lại mật khẩu");
-    else if (pass !== confirm) showError(confirmField, "Mật khẩu không khớp");
+    else if (!passwordRegex.test(pass))
+      showError(passField, "Mật khẩu cần ≥8 ký tự, gồm số, chữ hoa, thường, ký tự đặc biệt");
+    else if (pass !== confirm)
+      showError(confirmField, "Mật khẩu không khớp");
   }
-  
 
   if (firstInvalidField) firstInvalidField.focus();
   return isValid;
 }
 
 function addError(input, message) {
-  if (!input) return; // ✅ Bỏ qua nếu input không tồn tại
+  if (!input) return;
   input.classList.remove("border-dark");
   input.classList.add("is-invalid", "border-danger");
 
