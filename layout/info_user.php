@@ -33,7 +33,12 @@ $userDetail = $db->selectOne(
         </a>
         <a href="/index.php?page=donhang"
           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <span><i class="fa-solid fa-clock-rotate-left me-2"></i>Lịch sử đơn hàng</span>
+          <span><i class="fa-solid fa-receipt me-2"></i> Đơn hàng của bạn</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+        <a href="/index.php?page=lichsumuahang"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-clock-rotate-left me-2"> Lịch sử mua hàng</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
         <a href="/index.php?page=address_list"

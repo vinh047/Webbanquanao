@@ -52,6 +52,9 @@
                 case 'donhang':
                     include('./layout/my_orders.php');
                     break;
+                case 'lichsumuahang':
+                    include('./layout/history_orders.php');
+                    break;
                 case 'error':
                     include('./layout/error404.php');
                     break;
