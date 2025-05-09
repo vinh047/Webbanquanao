@@ -1,4 +1,3 @@
-
 <?php
 
     echo '<!DOCTYPE html>
@@ -7,38 +6,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <title>sagkuto</title>
-    <link rel="icon" type="./Images/png" href="./assets/img/logo_favicon/favicon.png">
+    <link rel="icon" type="image/png" href="./assets/img/logo_favicon/favicon.png">
     <link rel="stylesheet" href="./assets/css/header.css">
     <link rel="stylesheet" href="./assets/css/slide.css">
     <link rel="stylesheet" href="./assets/css/footer.css">
     <link rel="stylesheet" href="./assets/fonts/font.css">
-    
 </head>
-<body>'
-;
-?>
-
-<?php
+<body>
+';
 
     include("./layout/header.php");
 
-?>
-
-<?php
-
-
-    if(isset($_GET['page']))
-    {
+    // Nội dung động
+    if (isset($_GET['page'])) {
         $page = $_GET['page'];
-        if(is_numeric($page))
-        {
+        if (is_numeric($page)) {
             include('./layout/product.php');
-        }else 
-        {
-            switch($page)
-            {
+        } else {
+            switch ($page) {
                 case 'ao':
                 case 'quan':
                 case 'aopolo':
@@ -53,56 +40,33 @@
                         include('./layout/product.php');
                     }
                     break;
-                case 'error':
-                    {
-                        include('./layout/error404.php');
-                    }
-                    break;
                 case 'giohang':
-                    {
-                        include('./layout/cart.php');
-                    }
+                    include('./layout/cart.php');
                     break;
                 case 'pay':
-                    {
-                        include('./layout/pay.php');
-                    }
+                    include('./layout/pay.php');
                     break;
                 case 'taikhoan':
-                    {
-                        include('./layout/info_user.php');
-                    }
+                    include('./layout/info_user.php');
                     break;
                 case 'donhang':
-                    {
-                        include('./layout/my_orders.php');
-                    }
+                    include('./layout/my_orders.php');
                     break;
-                // default:
-                //     include('./layout/notfound.php');
-                //     break;
+                case 'error':
+                    include('./layout/error404.php');
+                    break;
             }
-            
         }
-    }else
-    {
+    } else {
         include('./layout/home.php');
     }
 
-
-
-
+    include("./layout/footer.php");
 ?>
 
-
-
-
-
-
-
-
-<?php
-
-        include("./layout/footer.php");
-
-?>
+<!-- Local Bootstrap JS -->
+<script src="/assets/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+<!-- Info User Script -->
+<script src="/assets/js/info_user.js" defer></script>
+</body>
+</html>

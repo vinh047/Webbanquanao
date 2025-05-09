@@ -1,6 +1,7 @@
 /* info_user.css: styling for Thông tin tài khoản page */
 
 /* Container and layout */
+
 .container.my-5 > .row {
   display: flex;
   flex-wrap: wrap;
