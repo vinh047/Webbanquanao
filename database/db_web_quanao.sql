@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 10:14 AM
+-- Generation Time: May 10, 2025 at 12:51 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -364,20 +364,21 @@ INSERT INTO `payment_method` (`payment_method_id`, `name`, `is_deleted`) VALUES
 
 CREATE TABLE `permissions` (
   `permission_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
+  `name` varchar(100) NOT NULL,
+  `is_deleted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `permissions`
 --
 
-INSERT INTO `permissions` (`permission_id`, `name`) VALUES
-(1, 'Quản lý sản phẩm'),
-(2, 'Quản lý đơn hàng'),
-(3, 'Quản lý người dùng'),
-(4, 'Quản lý đơn nhập'),
-(5, 'Xem báo cáo'),
-(6, 'Quản lý quyền');
+INSERT INTO `permissions` (`permission_id`, `name`, `is_deleted`) VALUES
+(1, 'Quản lý sản phẩm', 0),
+(2, 'Quản lý đơn hàng', 0),
+(3, 'Quản lý người dùng', 0),
+(4, 'Quản lý đơn nhập', 0),
+(5, 'Xem báo cáo', 0),
+(6, 'Quản lý quyền', 0);
 
 -- --------------------------------------------------------
 
@@ -630,18 +631,19 @@ CREATE TABLE `reviews` (
 
 CREATE TABLE `roles` (
   `role_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
+  `name` varchar(100) NOT NULL,
+  `is_deleted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `roles`
 --
 
-INSERT INTO `roles` (`role_id`, `name`) VALUES
-(1, 'user'),
-(2, 'admin'),
-(3, 'manager'),
-(4, 'staff');
+INSERT INTO `roles` (`role_id`, `name`, `is_deleted`) VALUES
+(1, 'user', 0),
+(2, 'admin', 0),
+(3, 'manager', 0),
+(4, 'staff', 0);
 
 -- --------------------------------------------------------
 
