@@ -45,7 +45,7 @@ LIMIT $limit OFFSET $offset
 
 // Thêm đoạn lấy thông tin phiếu nhập:
 $stmtInfo = $pdo->prepare("
-    SELECT i.total_price AS tong_giatri, s.name AS supplier_name, u.uname AS user_name,
+    SELECT i.total_price AS tong_giatri, s.name AS supplier_name, u.name AS user_name,
            (SELECT SUM(quantity) FROM importreceipt_details WHERE importreceipt_id = ?) AS tong_soluong
     FROM importreceipt i
     JOIN supplier s ON i.supplier_id = s.supplier_id

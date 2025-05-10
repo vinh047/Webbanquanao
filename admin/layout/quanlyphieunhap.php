@@ -126,7 +126,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <!-- Mã nhân viên -->
             <div class="col-md-2 me-auto">
               <label class="form-label">Tên nhân viên</label>
-              <input type="text" name="name_display" id="name_display" value="<?= htmlspecialchars($uname) ?>" readonly class="form-control bg-light">
+              <input type="text" name="name_display" id="name_display" value="<?= htmlspecialchars($name) ?>" readonly class="form-control bg-light">
               <input type="hidden" name="user_id" id="user_id" value="<?= htmlspecialchars($user_id) ?>">
             </div>
 

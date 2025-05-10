@@ -30,7 +30,6 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
         $user_id = $_SESSION['user_id'] ?? null;
         $role_id = $_SESSION['role_id'] ?? null;
 
-<<<<<<< HEAD
 if ($user_id) {
     // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
     require_once(__DIR__ . '../../database/DBConnection.php');
@@ -50,27 +49,6 @@ if ($user_id) {
 }
 $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
 ?>
-=======
-        if ($user_id) {
-            // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
-            require_once(__DIR__ . '/../database/DBConnection.php');
-            $db = DBConnect::getInstance();
->>>>>>> 7e603b32fd7747ad653eda566ff3d24ee1e6402d
-
-            // Truy vấn để lấy tên người dùng dựa trên user_id
-            $stmt = $db->select("SELECT name FROM users WHERE user_id = ?", [$user_id]);
-
-            if ($stmt) {
-                $name = $stmt[0]['name']; // Gán tên người dùng vào biến
-            } else {
-                $name = "Không tìm thấy người dùng";
-            }
-        } else {
-            // Nếu không có user_id trong session, người dùng chưa đăng nhập
-            $name = "Chưa đăng nhập";
-        }
-        $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
-        ?>
 
         <nav class="nav-left text-white p-3">
             <div class="text-center mb-4">

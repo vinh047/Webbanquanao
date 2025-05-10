@@ -1217,19 +1217,24 @@ function xemChiTiet()
                 const currentPage = data.pagination?.current || 1;
                 const totalPages = data.pagination?.total || 1;
     
-                data.data.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${(currentPage - 1) * 8 + index + 1}</td>
-                        <td>${item.product_name}</td>
-                        <td>${item.size_name}</td>
-                        <td>${item.color_name}</td>
-                        <td>${Number(item.unit_price).toLocaleString('vi-VN')}</td>
-                        <td>${item.quantity}</td>
-                        <td>${item.stock}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
+if (Array.isArray(data.data)) {
+    data.data.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${(currentPage - 1) * 8 + index + 1}</td>
+            <td>${item.product_name}</td>
+            <td>${item.size_name}</td>
+            <td>${item.color_name}</td>
+            <td>${Number(item.unit_price).toLocaleString('vi-VN')}</td>
+            <td>${item.quantity}</td>
+            <td>${item.stock}</td>
+        `;
+        tbody.appendChild(row);
+    });
+} else {
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Không có dữ liệu chi tiết phiếu nhập</td></tr>`;
+}
+
     
                 const info = data.info;
                 if (info) {
