@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/header.php';
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Xử lý đăng xuất...
@@ -160,7 +160,7 @@ $userDetail = $db->selectOne(
                 aria-describedby="oldPasswordFeedback"
                 required>
               <span class="input-group-text">
-                <i class="fa-regular fa-eye-slash"></i>
+                <i class="fa-solid fa-eye-slash"></i>
               </span>
               <div id="oldPasswordFeedback" class="invalid-feedback"></div>
             </div>
@@ -176,7 +176,7 @@ $userDetail = $db->selectOne(
                 aria-describedby="newPasswordFeedback"
                 required>
               <span class="input-group-text">
-                <i class="fa-regular fa-eye-slash"></i>
+                <i class="fa-solid fa-eye-slash"></i>
               </span>
               <div id="newPasswordFeedback" class="invalid-feedback"></div>
             </div>
@@ -192,7 +192,7 @@ $userDetail = $db->selectOne(
                 aria-describedby="confirmPasswordFeedback"
                 required>
               <span class="input-group-text">
-                <i class="fa-regular fa-eye-slash"></i>
+                <i class="fa-solid fa-eye-slash"></i>
               </span>
               <div id="confirmPasswordFeedback" class="invalid-feedback"></div>
             </div>
@@ -207,15 +207,36 @@ $userDetail = $db->selectOne(
   </div>
 </div>
 
+<script>
+  document.querySelectorAll('.input-group-text').forEach(span => {
+    span.style.cursor = 'pointer';
+    span.addEventListener('click', () => {
+      // tìm input trong cùng input-group
+      const input = span.closest('.input-group').querySelector('input');
+      const icon  = span.querySelector('i');
+      if (!input || !icon) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      }
+    });
+  });
+</script>
+
+
 <script src="/assets/js/addToCart.js" defer></script>
 <script src="/assets/js/cart.js" defer></script>
-<script src="/assets/js/header.js"    defer></script>
+<script src="/assets/js/header.js" defer></script>
 <script src="/assets/js/info_user.js" defer></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof syncCartAfterLogin === 'function') {
-    syncCartAfterLogin();
-  }
-});
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof syncCartAfterLogin === 'function') {
+      syncCartAfterLogin();
+    }
+  });
 </script>

@@ -37,19 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
     toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
   }
 
-  // Toggle password visibility
-  document.querySelectorAll('.input-group-text i').forEach(icon => {
-    icon.style.cursor = 'pointer';
-    icon.addEventListener('click', () => {
-      const input = icon.closest('.input-group').querySelector('input');
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      } else {
-        input.type = 'password';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      }
-    });
+  // Reset form khi mở modal đổi mật khẩu
+  const modalChangePassword = document.getElementById('modalChangePassword');
+  modalChangePassword.addEventListener('show.bs.modal', () => {
+    const form = document.getElementById('formChangePassword');
+    form.reset();
+
+    // Xoá class lỗi và nội dung feedback
+    form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    form.querySelectorAll('.invalid-feedback').forEach(el => (el.textContent = ''));
   });
 
   // Edit Profile form validation and submission
@@ -85,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Name: at least 2 words
     if (!/^[\p{L}]+(?: [\p{L}]+)+$/u.test(name)) {
       nameField.classList.add('is-invalid');
       nameField.nextElementSibling.textContent = 'Họ và tên phải gồm ít nhất hai từ';
@@ -93,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Phone: starts 0 + 9 digits
     if (!/^0\d{9}$/.test(phone)) {
       phoneField.classList.add('is-invalid');
       phoneField.nextElementSibling.textContent = 'Số điện thoại phải 10 chữ số, bắt đầu 0';
@@ -101,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Submit data via AJAX
     try {
       const res = await fetch('/ajax/update_profile.php', {
         method: 'POST',
@@ -121,11 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Change Password form submission with client-side validation
+  // Change Password form validation + AJAX
   const formPass = document.getElementById('formChangePassword');
   formPass.setAttribute('novalidate', '');
-
-  // Lắng nghe submit
   formPass.addEventListener('submit', async e => {
     e.preventDefault();
     const oldFld = document.getElementById('oldPassword');
@@ -135,13 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const newPw = newFld.value.trim();
     const confPw = confFld.value.trim();
 
-    // Reset invalid
     [oldFld, newFld, confFld].forEach(f => {
       f.classList.remove('is-invalid');
       f.nextElementSibling.textContent = '';
     });
 
-    // Required
     if (!oldPw) {
       oldFld.classList.add('is-invalid');
       oldFld.nextElementSibling.textContent = 'Vui lòng nhập mật khẩu cũ';
@@ -161,18 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Match
     if (newPw !== confPw) {
-      const confirmField = document.getElementById('confirmPassword');
-      confirmField.classList.add('is-invalid');
-      document.getElementById('confirmPasswordFeedback').textContent =
-        'Mật khẩu xác nhận không khớp';
-      confirmField.focus();
+      confFld.classList.add('is-invalid');
+      document.getElementById('confirmPasswordFeedback').textContent = 'Mật khẩu xác nhận không khớp';
+      confFld.focus();
       return;
     }
 
-
-    // Strength
     const pwdRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
     if (!pwdRe.test(newPw)) {
       newFld.classList.add('is-invalid');
@@ -182,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Gửi AJAX
     try {
       const res = await fetch('/ajax/change_password.php', {
         method: 'POST',
@@ -191,11 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const result = await res.json();
       if (result.success) {
-        bootstrap.Modal.getInstance(document.getElementById('modalChangePassword')).hide();
+        bootstrap.Modal.getInstance(modalChangePassword).hide();
         formPass.reset();
-        // Có thể show toast success ở đây nếu muốn
+        showToast('Đổi mật khẩu thành công');
       } else {
-        // Lỗi server: toast vẫn ok
         showToast(result.message || 'Đổi mật khẩu thất bại');
       }
     } catch (err) {
@@ -203,5 +185,4 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Lỗi kết nối');
     }
   });
-
 });
