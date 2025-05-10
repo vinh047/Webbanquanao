@@ -7,8 +7,9 @@ const orderItemsEl = document.getElementById("order-items");
 cart.forEach(item => {
   const div = document.createElement("div");
   div.className = "d-flex border-bottom py-2 align-items-center";
-  div.innerHTML = `
-    <img src="${item.image || './assets/img/sanpham/sp1.jpg'}" class="me-2 rounded" style="width: 60px; height: 60px; object-fit: cover;">
+  const imagePath = item.image?.includes('/') ? item.image : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
+div.innerHTML = `
+  <img src="${imagePath}" class="me-2 rounded" style="width: 60px; height: 60px; object-fit: cover;">
     <div class="flex-grow-1">
       <p class="mb-0 fw-bold">${item.name}</p>
       <small>${item.color || 'Màu'} - ${item.size || 'Size'}</small>

@@ -67,7 +67,145 @@ function setupMiniCartToggle() {
 document.addEventListener("DOMContentLoaded", () => {
   setupMiniCartToggle();
   renderMiniCart();
+
+  // Tự động render nếu đang ở trang giỏ hàng
+  if (window.location.href.includes("page=giohang")) {
+    renderCartPage();
+  }
+
+  document.addEventListener("click", function (e) {
+    const miniCart = document.getElementById("mini-cart");
+    const toggleBtn = document.getElementById("toggle-cart");
+    if (!miniCart || !toggleBtn) return;
+
+    const clickedInsideCart = miniCart.contains(e.target);
+    const clickedToggleBtn  = toggleBtn.contains(e.target);
+
+    if (!clickedInsideCart && !clickedToggleBtn) {
+      miniCart.classList.add("d-none");
+    }
+  });
 });
+
+function renderCartPage() {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartContainer = document.getElementById("cart-items");
+  const totalPriceEl = document.getElementById("total-price");
+
+  if (!cartContainer || !totalPriceEl) return;
+
+  cartContainer.innerHTML = "";
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = `
+      <div class="text-center text-muted py-5">
+        <i class="fa fa-shopping-cart fa-2x mb-3"></i>
+        <p class="mb-0 fw-bold fs-5">Giỏ hàng của bạn đang trống</p>
+      </div>
+    `;
+    totalPriceEl.textContent = "0₫";
+    return;
+  }
+
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+
+    const div = document.createElement("div");
+    div.className = "d-flex gap-3 border-bottom py-3 align-items-center";
+
+    const imagePath = item.image?.includes('/') ? item.image : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
+div.innerHTML = `
+  <img src="${imagePath}" alt="" width="100" height="100" class="rounded" style="object-fit:cover;">
+      <div class="flex-grow-1">
+        <h6 class="fw-bold mb-1">${item.name}</h6>
+        <p class="mb-1 small">Color : ${item.color || '(không màu)'}</p>
+        <p class="mb-1 small">Size : ${item.size || '(không size)'}</p>
+        <p class="fw-semibold text-danger">${item.price.toLocaleString()}₫</p>
+        <div class="d-inline-flex align-items-center border rounded px-2 py-1">
+          <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeCartQty(${index}, -1)">-</button>
+          <span class="mx-3">${item.quantity}</span>
+          <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeCartQty(${index}, 1)">+</button>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeCartItem(${index})">
+        <i class="fa fa-trash"></i>
+      </button>
+    `;
+    cartContainer.appendChild(div);
+  });
+
+  totalPriceEl.textContent = total.toLocaleString() + "₫";
+}
+
+
+async function changeCartQty(index, delta) {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const item = cart[index];
+  if (!item) return;
+
+  // Nếu tăng thì kiểm tra tồn kho trước
+  if (delta > 0) {
+    const res = await fetch('ajax/check_stock.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ variant_id: item.variant_id })
+    });
+
+    const data = await res.json();
+    if (!data.success || item.quantity + 1 > data.stock) {
+      alert(`Chỉ còn ${data.stock} sản phẩm trong kho.`);
+      return;
+    }
+  }
+
+  const isRemoving = delta < 0 && item.quantity === 1;
+  const action = isRemoving ? 'remove' : (delta > 0 ? 'increase' : 'decrease');
+
+  fetch('ajax/update_cart.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, variant_id: item.variant_id })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      if (isRemoving || item.quantity + delta < 1) {
+        cart.splice(index, 1);
+      } else {
+        item.quantity += delta;
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCartPage();
+      renderMiniCart();
+    }
+  });
+}
+
+
+function removeCartItem(index) {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const item = cart[index];
+  if (!item) return;
+
+  fetch('ajax/update_cart.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'remove', variant_id: item.variant_id })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCartPage();
+      renderMiniCart();
+    }
+  });
+}
+
 
 // ✓ Gán global
 window.renderMiniCart = renderMiniCart;

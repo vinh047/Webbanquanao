@@ -1,11 +1,13 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../database/DBConnection.php';
+header('Content-Type: application/json');
 $db = DBConnect::getInstance();
 
-header('Content-Type: application/json');
-
-// Ghi log đầu vào (tùy chọn để debug)
+// Ghi log đầu vào để debug nếu cần
 $raw_input = file_get_contents("php://input");
 file_put_contents("log_cart.txt", $raw_input);
 
@@ -27,55 +29,55 @@ if (!is_array($data)) {
 try {
     // 1. Lấy hoặc tạo giỏ hàng
     $cart = $db->selectOne("SELECT * FROM cart WHERE user_id = ?", [$user_id]);
-    if (!$cart) {
-        $db->execute("INSERT INTO cart(user_id, created_at) VALUES (?, NOW())", [$user_id]);
-        $cart_id = $db->lastInsertId();
-    } else {
+    if ($cart) {
         $cart_id = $cart['cart_id'];
+    } else {
+        $db->execute("INSERT INTO cart (user_id, created_at) VALUES (?, NOW())", [$user_id]);
+        $cart_id = $db->lastInsertId();
     }
 
     // 2. Lấy danh sách variant_id từ client
-    $variantIdsFromClient = array_map(function ($item) {
-        return (int)($item['variant_id'] ?? 0);
-    }, $data);
-    $variantIdsFromClient = array_filter($variantIdsFromClient);
+    $variantIdsFromClient = array_filter(array_map(function ($item) {
+        return isset($item['variant_id']) ? (int)$item['variant_id'] : 0;
+    }, $data));
 
-    // 3. Xoá các bản ghi không còn tồn tại trong localStorage
+    // 3. Xóa sản phẩm không còn trong localStorage
     if (count($variantIdsFromClient) > 0) {
         $placeholders = implode(',', array_fill(0, count($variantIdsFromClient), '?'));
         $params = array_merge([$cart_id], $variantIdsFromClient);
-        $sql = "DELETE FROM cart_details WHERE cart_id = ? AND variant_id NOT IN ($placeholders)";
-        $db->execute($sql, $params);
+        $db->execute("DELETE FROM cart_details WHERE cart_id = ? AND variant_id NOT IN ($placeholders)", $params);
     } else {
-        // Nếu localStorage rỗng, xóa toàn bộ giỏ hàng
+        // Nếu giỏ trống → xoá hết
         $db->execute("DELETE FROM cart_details WHERE cart_id = ?", [$cart_id]);
     }
 
-    // 4. Duyệt từng sản phẩm để thêm hoặc cập nhật
+    // 4. Cập nhật hoặc thêm từng sản phẩm
     foreach ($data as $item) {
-        $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
+        $product_id = (int)($item['product_id'] ?? 0);
         $variant_id = (int)($item['variant_id'] ?? 0);
         $quantity = (int)($item['quantity'] ?? 0);
 
         if ($product_id <= 0 || $variant_id <= 0 || $quantity <= 0) {
-            continue; // Bỏ qua dữ liệu không hợp lệ
+            continue;
         }
 
-        $existing = $db->selectOne(
-            "SELECT * FROM cart_details WHERE cart_id = ? AND variant_id = ?",
-            [$cart_id, $variant_id]
-        );
+        // Kiểm tra tồn kho
+        $stockRow = $db->selectOne("SELECT stock FROM product_variants WHERE variant_id = ?", [$variant_id]);
+        $stock = isset($stockRow['stock']) ? (int)$stockRow['stock'] : 0;
+
+        if ($stock < $quantity) {
+            // Có thể log thêm chi tiết nếu cần
+            continue;
+        }
+
+        // Kiểm tra xem sản phẩm đã có trong cart chưa
+        $existing = $db->selectOne("SELECT cart_detail_id FROM cart_details WHERE cart_id = ? AND variant_id = ?", [$cart_id, $variant_id]);
 
         if ($existing) {
-            // Cập nhật số lượng mới
-            $db->execute(
-                "UPDATE cart_details SET quantity = ? WHERE cart_detail_id = ?",
-                [$quantity, $existing['cart_detail_id']]
-            );
+            $db->execute("UPDATE cart_details SET quantity = ? WHERE cart_detail_id = ?", [$quantity, $existing['cart_detail_id']]);
         } else {
-            // Thêm mới vào giỏ hàng
             $db->execute(
-                "INSERT INTO cart_details(cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)",
+                "INSERT INTO cart_details (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)",
                 [$cart_id, $product_id, $variant_id, $quantity]
             );
         }
@@ -84,6 +86,7 @@ try {
     echo json_encode(['success' => true, 'message' => 'Đồng bộ thành công']);
 } catch (Exception $e) {
     http_response_code(500);
+    file_put_contents("log_cart_error.txt", $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => 'Lỗi server: ' . $e->getMessage()

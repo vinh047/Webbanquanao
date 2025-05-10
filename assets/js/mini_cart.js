@@ -37,22 +37,71 @@ div.innerHTML = `
       if (itemCount) itemCount.textContent = totalQty;
     }
   
-    function changeMiniCartQty(index, delta) {
+    async function changeMiniCartQty(index, delta) {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const item = cart[index];
       if (!item) return;
-      item.quantity += delta;
-      if (item.quantity < 1) cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderMiniCart();
+    
+      // Nếu tăng thì kiểm tra tồn kho
+      if (delta > 0) {
+        const res = await fetch('ajax/check_stock.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ variant_id: item.variant_id })
+        });
+    
+        const data = await res.json();
+        if (!data.success || item.quantity + 1 > data.stock) {
+          alert(`Chỉ còn ${data.stock} sản phẩm trong kho.`);
+          return;
+        }
+      }
+    
+      const isRemoving = delta < 0 && item.quantity === 1;
+      const action = isRemoving ? 'remove' : (delta > 0 ? 'increase' : 'decrease');
+    
+      fetch('ajax/update_cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, variant_id: item.variant_id })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          if (isRemoving || item.quantity + delta < 1) {
+            cart.splice(index, 1);
+          } else {
+            item.quantity += delta;
+          }
+          localStorage.setItem("cart", JSON.stringify(cart));
+          renderMiniCart();
+          renderCartPage?.();
+        }
+      });
     }
-  
+    
     function removeMiniCartItem(index) {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderMiniCart();
+      const item = cart[index];
+      if (!item) return;
+    
+      fetch('/ajax/update_cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'remove', variant_id: item.variant_id })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          cart.splice(index, 1);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          renderMiniCart();
+        } else {
+          console.error('Lỗi xoá DB:', data.message);
+        }
+      });
     }
+    
   
     function setupToggle() {
       const toggleBtn = document.getElementById("toggle-cart");
