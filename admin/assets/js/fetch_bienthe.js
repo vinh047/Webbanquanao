@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchBienThe();
     xuLyLoc();
     suaBienThe();
+    resetFormLoc();
 });
 function phanQuyen()
 {
@@ -384,8 +385,27 @@ function xuLyLoc() {
     }
 
     fetchBienThe(currentPage); // Load theo filter trên URL
-}
 
+    $(document).ready(function () {
+        $('#cbSizeLoc').select2({
+            dropdownParent: $('.filter-loc'), // đặt parent là vùng lọc để tránh bị che
+            width: '100%'
+        });
+                $('#cbMauLoc').select2({
+            dropdownParent: $('.filter-loc'), // đặt parent là vùng lọc để tránh bị che
+            width: '100%'
+        });
+    });
+}
+function resetFormLoc()
+{
+        document.getElementById('formLoc').addEventListener('reset', function () {
+        setTimeout(() => {
+            $('#cbSizeLoc').val('').trigger('change'); // reset Select2 nhà cung cấp
+           $('#cbMauLoc').val('').trigger('change'); // reset Select2 nhà cung cấp
+        }, 0);
+    });
+}
 
 function suaBienThe(){}
 formSua.addEventListener("submit", async function (e) {
@@ -516,7 +536,9 @@ formSua.addEventListener("submit", async function (e) {
         if (!dataID.exists) return showError("Mã sản phẩm không tồn tại!");
 
         // 🧠 Kiểm tra biến thể đã tồn tại chưa
-        const urlBT = `./ajax/checkBT.php?product_id=${idsp}&size_id=${size}&color_id=${mau}&image=${encodeURIComponent(tenAnh)}&current_id=${idBienThe}`;
+        // const urlBT = `./ajax/checkBT.php?product_id=${idsp}&size_id=${size}&color_id=${mau}&image=${encodeURIComponent(tenAnh)}&current_id=${idBienThe}`;
+        const urlBT = `./ajax/checkBT.php?product_id=${idsp}&size_id=${size}&color_id=${mau}&current_id=${idBienThe}`;
+
         const resBT = await fetch(urlBT);
         const dataBT = await resBT.json();
 

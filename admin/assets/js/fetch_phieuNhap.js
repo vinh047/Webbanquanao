@@ -27,8 +27,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
         cleanModalBackdropChonBienThe();
-    
+    resetFormLoc();
 });
+
+function resetFormLoc()
+{
+        document.getElementById('formLoc').addEventListener('reset', function () {
+        setTimeout(() => {
+            $('#txtIDncc').val('').trigger('change'); // reset Select2 nhà cung cấp
+            $('#txtIDnv').val('').trigger('change');  // nếu nhân viên cũng dùng select2
+        }, 0);
+    });
+}
 function tbThanhCong(mess)
 {
     const tbTC = document.querySelector('.thongbaoXoaThanhCong');
@@ -124,6 +134,10 @@ function xuLyLoc()
 
     $(document).ready(function () {
         $('#txtIDncc').select2({
+            dropdownParent: $('.filter-loc'), // đặt parent là vùng lọc để tránh bị che
+            width: '100%'
+        });
+                $('#txtIDnv').select2({
             dropdownParent: $('.filter-loc'), // đặt parent là vùng lọc để tránh bị che
             width: '100%'
         });
@@ -895,11 +909,35 @@ function guiFormPhieuNhap() {
 
         productBlocks.forEach((block) => {
             const product_id = block.querySelector(`[name^="products"][name*="[product_id]"]`)?.value;
-            const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value;
-            const unit_price = raw_price.replace(/\./g, '').replace(',', '.');
+const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value || '';
+const unit_price = raw_price.replace(/\./g, '').replace(',', '.');
+
+// ❌ Giá nhập không hợp lệ (NaN hoặc < 0)
+if (!unit_price || isNaN(unit_price) || Number(unit_price) <= 0) {
+    isValid = false;
+    if (!firstErrorRow) {
+        errorType = 'invalid_price';
+        firstErrorRow = block;
+    }
+    errorRows.push(block);
+    return;
+}
+
             const color_id = block.querySelector(`[name^="products"][name*="[color_id]"]`)?.value;
             const size_id = block.querySelector(`[name^="products"][name*="[size_id]"]`)?.value;
             const quantity = block.querySelector(`[name^="products"][name*="[quantity]"]`)?.value;
+
+// ❌ Số lượng không hợp lệ (không phải số hoặc <= 0)
+if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+    isValid = false;
+    if (!firstErrorRow) {
+        errorType = 'invalid_quantity';
+        firstErrorRow = block;
+    }
+    errorRows.push(block);
+    return;
+}
+
             const variantDisplay = block.querySelector('.variant-display');
 
             // ❌ Thiếu trường bắt buộc
@@ -954,16 +992,23 @@ function guiFormPhieuNhap() {
             let title = 'Lỗi dữ liệu';
             let text = 'Hệ thống sẽ cuộn đến dòng đầu tiên lỗi và đánh dấu các dòng sai.';
 
-            if (errorType === 'missing') {
-                title = 'Thiếu thông tin';
-                text = 'Vui lòng điền đầy đủ tất cả các trường bắt buộc.';
-            } else if (errorType === 'variant') {
-                title = 'Thiếu biến thể';
-                text = 'Bạn chưa chọn biến thể cho một sản phẩm.';
-            } else if (errorType === 'price') {
-                title = 'Sai lệch giá nhập';
-                text = 'Có mã sản phẩm trùng nhưng giá nhập khác nhau.';
-            }
+if (errorType === 'missing') {
+    title = 'Thiếu thông tin';
+    text = 'Vui lòng điền đầy đủ tất cả các trường bắt buộc.';
+} else if (errorType === 'variant') {
+    title = 'Thiếu biến thể';
+    text = 'Bạn chưa chọn biến thể cho một sản phẩm.';
+} else if (errorType === 'price') {
+    title = 'Sai lệch giá nhập';
+    text = 'Có mã sản phẩm trùng nhưng giá nhập khác nhau.';
+} else if (errorType === 'invalid_price') {
+    title = 'Giá không hợp lệ';
+    text = 'Giá nhập không hợp lệ. Vui lòng nhập số hợp lệ lớn hơn 0.';
+} else if (errorType === 'invalid_quantity') {
+    title = 'Số lượng không hợp lệ';
+    text = 'Số lượng nhập phải là số và lớn hơn 0.';
+}
+
 
             Swal.fire({
                 icon: 'warning',
@@ -1222,6 +1267,7 @@ if (Array.isArray(data.data)) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${(currentPage - 1) * 8 + index + 1}</td>
+            <td>${item.variant_id}</td>
             <td>${item.product_name}</td>
             <td>${item.size_name}</td>
             <td>${item.color_name}</td>
@@ -1321,12 +1367,202 @@ if (Array.isArray(data.data)) {
 
 // Xóa phiếu nhập + chi tiết phiếu nhập
 function xoaPhieuNhap(){};
-document.addEventListener('click', function(e) {
+// document.addEventListener('click', function(e) {
+//     if (e.target.classList.contains('btn-xoa')) {
+//         const idpn = e.target.dataset.idpn;
+//         document.getElementById('btnXacNhanXoaPN').dataset.idpn = idpn;
+
+//         fetch(`./ajax/getCTPhieuNhap.php?idpn=${idpn}`)
+//         .then(res => res.json())
+//         .then(data => {
+//             if (data.success) {
+//                 const tbody = document.getElementById('body-xoa-ctpn');
+//                 tbody.innerHTML = '';
+
+//                 data.details.forEach(item => {
+//                     const tr = document.createElement('tr');
+//                     tr.innerHTML = `
+//                         <td class="text-center">${item.importreceipt_details_id}</td>
+//                         <td class="text-center">${item.product_id}</td>
+//                         <td class="text-center">${item.variant_id}</td>
+//                         <td class="text-center">${item.quantity}</td>
+//                         <td class="text-center">
+//                             <button class="btn btn-sm btn-danger btn-xoa-ctpn" data-idctpn="${item.importreceipt_details_id}">Xóa</button>
+//                         </td>
+//                     `;
+//                     tbody.appendChild(tr);
+                    
+//                 });
+
+//                 // const anhien = document.getElementById('anhienxoa');
+//                 // if (data.details.length === 0) {
+//                 //     anhien.style.display = 'inline-block';
+//                 // } else {
+//                 //     anhien.style.display = 'none';
+//                 // }
+
+//                 const modal = new bootstrap.Modal(document.getElementById('modalXoaChiTietPN'));
+//                 document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+// document.body.classList.remove('modal-open');
+// document.body.style = '';
+//                 modal.show();
+//             }
+//         });
+//     }
+
+//     if (e.target.classList.contains('btn-xoa-ctpn')) {
+//         const idctpn = e.target.dataset.idctpn;
+//         showConfirmBox('Bạn có chắc chắn muốn xóa chi tiết này?', function() {
+//             fetch('./ajax/deleteCTphieunhap.php', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/x-www-form-urlencoded'
+//                 },
+//                 body: `idctpn=${idctpn}`
+//             })
+//             .then(res => res.json())
+//             .then(data => {
+//                 if (data.success) {
+//                     e.target.closest('tr').remove();
+//                     loadPhieuNhap(currentPage);
+//                     const tbXoaTC = document.querySelector('.thongbaoXoaThanhCong');
+//                     tbXoaTC.style.display = 'block';
+//                     tbXoaTC.classList.add('show');
+//                     setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+
+//                     const remainingRows = document.querySelectorAll('#body-xoa-ctpn tr').length;
+//                     const anhien = document.getElementById('anhienxoa');
+//                     if (remainingRows === 0) {
+//                         anhien.style.display = 'inline-block';
+//                     }
+//                 } else {
+//                     const tbXoaTB = document.querySelector('.thongbaoXoaKhongThanhCong');
+//                     tbXoaTB.style.display = 'block';
+//                     tbXoaTB.classList.add('show');
+//                     setTimeout(() => tbXoaTB.classList.remove('show'), 2000);                
+//                 }
+//             });
+//         });
+//     }
+
+//     if (e.target.id === 'btnXacNhanXoaPN') {
+//         const idpn = e.target.dataset.idpn;
+//         showConfirmBox('Bạn có chắc chắn muốn xóa Phiếu nhập?', function() {
+//             fetch('./ajax/deletePhieuNhap.php', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/x-www-form-urlencoded'
+//                 },
+//                 body: `id=${idpn}`
+//             })
+//             .then(res => res.json())
+//             .then(data => {
+//                 if (data.success) {
+//                     const tbXoaTC = document.querySelector('.thongbaoXoaPNthanhcong');
+//                     tbXoaTC.style.display = 'block';
+//                     tbXoaTC.classList.add('show');
+//                     setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+
+//                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaChiTietPN'));
+//                     modal.hide();
+//                     loadPhieuNhap(currentPage);
+//                 } else {
+//                     const tbXoaTC = document.querySelector('.thongbaoXoaPNKhongThanhCong');
+//                     tbXoaTC.style.display = 'block';
+//                     tbXoaTC.classList.add('show');
+//                     setTimeout(() => tbXoaTC.classList.remove('show'), 2000);                }
+//             });
+//         });
+//     }
+// });
+
+document.addEventListener('click', function (e) {
+    // 1. Khi click nút xoá phiếu nhập
     if (e.target.classList.contains('btn-xoa')) {
         const idpn = e.target.dataset.idpn;
         document.getElementById('btnXacNhanXoaPN').dataset.idpn = idpn;
 
-        fetch(`./ajax/getCTPhieuNhap.php?idpn=${idpn}`)
+        fetchChiTietXoa(idpn, 1); // gọi lần đầu với trang 1
+
+        const modal = new bootstrap.Modal(document.getElementById('modalXoaChiTietPN'));
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style = '';
+        modal.show();
+    }
+
+    // 2. Xoá từng chi tiết
+    if (e.target.classList.contains('btn-xoa-ctpn')) {
+        const idctpn = e.target.dataset.idctpn;
+        showConfirmBox('Bạn có chắc chắn muốn xóa chi tiết này?', function () {
+            fetch('./ajax/deleteCTphieunhap.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `idctpn=${idctpn}`
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        e.target.closest('tr').remove();
+                        loadPhieuNhap(currentPage);
+                        const tbXoaTC = document.querySelector('.thongbaoXoaThanhCong');
+                        tbXoaTC.style.display = 'block';
+                        tbXoaTC.classList.add('show');
+                        setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+
+                        const remainingRows = document.querySelectorAll('#body-xoa-ctpn tr').length;
+                        const anhien = document.getElementById('anhienxoa');
+                        if (remainingRows === 0) {
+                            anhien.style.display = 'inline-block';
+                        }
+                    } else {
+                        const tbXoaTB = document.querySelector('.thongbaoXoaKhongThanhCong');
+                        tbXoaTB.style.display = 'block';
+                        tbXoaTB.classList.add('show');
+                        setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                    }
+                });
+        });
+    }
+
+    // 3. Xác nhận xoá toàn bộ phiếu nhập
+    if (e.target.id === 'btnXacNhanXoaPN') {
+        const idpn = e.target.dataset.idpn;
+        showConfirmBox('Bạn có chắc chắn muốn xóa Phiếu nhập?', function () {
+            fetch('./ajax/deletePhieuNhap.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `id=${idpn}`
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const tbXoaTC = document.querySelector('.thongbaoXoaPNthanhcong');
+                        tbXoaTC.style.display = 'block';
+                        tbXoaTC.classList.add('show');
+                        setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaChiTietPN'));
+                        modal.hide();
+                        loadPhieuNhap(currentPage);
+                    } else {
+                        const tbXoaTC = document.querySelector('.thongbaoXoaPNKhongThanhCong');
+                        tbXoaTC.style.display = 'block';
+                        tbXoaTC.classList.add('show');
+                        setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                    }
+                });
+        });
+    }
+});
+
+// ✅ Hàm fetch chi tiết phiếu nhập có phân trang
+function fetchChiTietXoa(idpn, page = 1) {
+    fetch(`./ajax/getCTPhieuNhap.php?idpn=${idpn}&page=${page}`)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
@@ -1337,7 +1573,7 @@ document.addEventListener('click', function(e) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="text-center">${item.importreceipt_details_id}</td>
-                        <td class="text-center">${item.product_id}</td>
+                        <td class="text-center">${item.product_id} - ${item.product_name}</td>
                         <td class="text-center">${item.variant_id}</td>
                         <td class="text-center">${item.quantity}</td>
                         <td class="text-center">
@@ -1347,87 +1583,63 @@ document.addEventListener('click', function(e) {
                     tbody.appendChild(tr);
                 });
 
-                // const anhien = document.getElementById('anhienxoa');
-                // if (data.details.length === 0) {
-                //     anhien.style.display = 'inline-block';
-                // } else {
-                //     anhien.style.display = 'none';
-                // }
-
-                const modal = new bootstrap.Modal(document.getElementById('modalXoaChiTietPN'));
-                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-document.body.classList.remove('modal-open');
-document.body.style = '';
-                modal.show();
+                renderPaginationXoaCT(idpn, data.pagination);
             }
         });
-    }
+}
 
-    if (e.target.classList.contains('btn-xoa-ctpn')) {
-        const idctpn = e.target.dataset.idctpn;
-        showConfirmBox('Bạn có chắc chắn muốn xóa chi tiết này?', function() {
-            fetch('./ajax/deleteCTphieunhap.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `idctpn=${idctpn}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    e.target.closest('tr').remove();
-                    loadPhieuNhap(currentPage);
-                    const tbXoaTC = document.querySelector('.thongbaoXoaThanhCong');
-                    tbXoaTC.style.display = 'block';
-                    tbXoaTC.classList.add('show');
-                    setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+// ✅ Hàm render phân trang
+function renderPaginationXoaCT(idpn, pagination) {
+    const wrap = document.getElementById('phantrang-xoa-ctpn');
+    if (!pagination || !wrap) return;
 
-                    const remainingRows = document.querySelectorAll('#body-xoa-ctpn tr').length;
-                    const anhien = document.getElementById('anhienxoa');
-                    if (remainingRows === 0) {
-                        anhien.style.display = 'inline-block';
-                    }
-                } else {
-                    const tbXoaTB = document.querySelector('.thongbaoXoaKhongThanhCong');
-                    tbXoaTB.style.display = 'block';
-                    tbXoaTB.classList.add('show');
-                    setTimeout(() => tbXoaTB.classList.remove('show'), 2000);                
-                }
-            });
-        });
-    }
+    const current = pagination.current;
+    const total = pagination.total;
+    wrap.innerHTML = '';
 
-    if (e.target.id === 'btnXacNhanXoaPN') {
-        const idpn = e.target.dataset.idpn;
-        showConfirmBox('Bạn có chắc chắn muốn xóa Phiếu nhập?', function() {
-            fetch('./ajax/deletePhieuNhap.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `id=${idpn}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const tbXoaTC = document.querySelector('.thongbaoXoaPNthanhcong');
-                    tbXoaTC.style.display = 'block';
-                    tbXoaTC.classList.add('show');
-                    setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+    if (total <= 1) return;
 
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaChiTietPN'));
-                    modal.hide();
-                    loadPhieuNhap(currentPage);
-                } else {
-                    const tbXoaTC = document.querySelector('.thongbaoXoaPNKhongThanhCong');
-                    tbXoaTC.style.display = 'block';
-                    tbXoaTC.classList.add('show');
-                    setTimeout(() => tbXoaTC.classList.remove('show'), 2000);                }
-            });
-        });
-    }
-});
+    const btnPrev = document.createElement('button');
+    btnPrev.innerHTML = '<i class="fa fa-chevron-left text-dark"></i>';
+    btnPrev.className = "btn btn-outline-secondary";
+    btnPrev.disabled = current === 1;
+
+    const inputPage = document.createElement("input");
+    inputPage.type = "number";
+    inputPage.min = 1;
+    inputPage.max = total;
+    inputPage.value = current;
+    inputPage.style.width = "60px";
+    inputPage.className = "form-control d-inline-block text-center mx-2";
+
+    const spanTotal = document.createElement("span");
+    spanTotal.innerHTML = `/ ${total}`;
+    spanTotal.classList.add("mt-2", "me-2");
+
+    const btnNext = document.createElement("button");
+    btnNext.innerHTML = '<i class="fa fa-chevron-right text-dark"></i>';
+    btnNext.className = "btn btn-outline-secondary";
+    btnNext.disabled = current === total;
+
+    btnPrev.onclick = () => fetchChiTietXoa(idpn, current - 1);
+    btnNext.onclick = () => fetchChiTietXoa(idpn, current + 1);
+
+    inputPage.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            let val = parseInt(this.value);
+            if (isNaN(val)) return;
+            if (val < 1) val = 1;
+            if (val > total) val = total;
+            fetchChiTietXoa(idpn, val);
+        }
+    });
+
+    wrap.appendChild(btnPrev);
+    wrap.appendChild(inputPage);
+    wrap.appendChild(spanTotal);
+    wrap.appendChild(btnNext);
+}
+
 
 // Hàm hiển thị Confirm Box
 function showConfirmBox(message, callback) {

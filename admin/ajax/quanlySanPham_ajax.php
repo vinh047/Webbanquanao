@@ -57,10 +57,10 @@ foreach ($data as $row) {
     echo "
         <tr class='text-center'>
             <td class='hienthiid'>$id</td>
-            <td class='tensp'>$ten</td>
-            <td class='hienthiloai'>$loai</td>
-            <td class='mota'>$mota</td>
-            <td class='hienthigia'>$giaban VNĐ</td>
+            <td class='tensp giaodienmb'>$ten</td>
+            <td class='hienthiloai giaodienmb'>$loai</td>
+            <td class='mota giaodienmb'>$mota</td>
+            <td class='hienthigia giaodienmb'>$giaban VNĐ</td>
             <td>
                 <div class='d-flex justify-content-center gap-3'>
                 <div>

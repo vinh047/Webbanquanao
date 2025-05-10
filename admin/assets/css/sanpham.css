@@ -498,4 +498,12 @@ button:active {
     border: 2px solid red !important;
   }
   
-  
+  .giaodienmb {
+    display: table-cell; /* Hiển thị mặc định */
+}
+
+@media (max-width: 699px) {
+    .giaodienmb {
+        display: none !important;
+    }
+}

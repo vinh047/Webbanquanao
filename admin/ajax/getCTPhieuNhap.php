@@ -21,7 +21,7 @@ try {
         exit;
     }
 
-    $totalResult = $db->selectOne("SELECT COUNT(*) AS total FROM importreceipt_details WHERE importreceipt_id = ?", [$idpn]);
+    $totalResult = $db->selectOne("SELECT COUNT(*) AS total FROM importreceipt_details WHERE importreceipt_id = ? AND is_deleted = 0", [$idpn]);
     $totalDetails = intval($totalResult['total'] ?? 0);
     
 
@@ -34,7 +34,7 @@ try {
             d.quantity
          FROM importreceipt_details d
          JOIN products p ON d.product_id = p.product_id
-         WHERE d.importreceipt_id = ?
+         WHERE d.importreceipt_id = ?  AND d.is_deleted = 0
          LIMIT $perPage OFFSET $offset",
         [$idpn]
     );

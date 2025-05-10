@@ -16,7 +16,7 @@ if (!$idpn) {
 
 try {
     // Đếm tổng chi tiết để phân trang
-    $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM importreceipt_details WHERE importreceipt_id = ?");
+    $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM importreceipt_details WHERE importreceipt_id = ? AND is_deleted = 0");
     $stmtCount->execute([$idpn]);
     $totalItems = (int)$stmtCount->fetchColumn();
     $totalPages = ceil($totalItems / $limit);
@@ -36,7 +36,7 @@ JOIN product_variants v ON d.variant_id = v.variant_id
 JOIN products p ON v.product_id = p.product_id  -- ✅ sửa ở đây
 JOIN colors c ON v.color_id = c.color_id
 JOIN sizes s ON v.size_id = s.size_id
-WHERE d.importreceipt_id = ?
+WHERE d.importreceipt_id = ? AND d.is_deleted = 0
 LIMIT $limit OFFSET $offset
 
     ");

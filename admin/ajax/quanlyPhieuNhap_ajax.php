@@ -49,10 +49,10 @@ foreach ($data as $row) {
     echo "
     <tr class='text-center'>
         <td class='hienthiid'>$idpn</td>
-        <td class='hienthigia'>$tennv</td>
-        <td class='tensp'>$tenncc</td>
-        <td class='tensp'>$gia VNĐ</td>
-        <td class='tensp'>$ngaylap</td>
+        <td class='hienthigia giaodienmb'>$tennv</td>
+        <td class='tensp giaodienmb'>$tenncc</td>
+        <td class='tensp giaodienmb'>$gia VNĐ</td>
+        <td class='tensp giaodienmb'>$ngaylap</td>
         <td class='tensp'>
             " . ($row['status'] == 1
                 ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6 text-dark' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"

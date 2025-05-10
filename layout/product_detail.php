@@ -29,16 +29,22 @@ $product = $db->selectOne("SELECT * FROM products WHERE product_id = ?", [$produ
 
 $category = $db->selectOne("SELECT * FROM categories WHERE category_id = ?", [$product['category_id']]);
 
-$product_variants = $db->select("SELECT p.* , s.name as size_name
-    FROM product_variants p
-    JOIN sizes s on s.size_id = p.size_id
-    WHERE product_id = ? AND stock > 0 AND is_deleted = 0", [$product['product_id']]);
+// $product_variants = $db->select("SELECT p.* , s.name as size_name
+//     FROM product_variants p
+//     JOIN sizes s on s.size_id = p.size_id
+//     WHERE product_id = ? AND stock > 0 AND is_deleted = 0", [$product['product_id']]);
 
+// $product_variants = $db->select("SELECT p.* , s.name as size_name
+//     FROM product_variants p
+//     JOIN sizes s on s.size_id = p.size_id
+//     WHERE product_id = ? AND stock > 0 AND is_deleted = 0
+//     GROUP BY p.size_id", [$product['product_id']]);
 $product_variants = $db->select("SELECT p.* , s.name as size_name
     FROM product_variants p
-    JOIN sizes s on s.size_id = p.size_id
-    WHERE product_id = ? AND stock > 0 AND is_deleted = 0
+    JOIN sizes s ON s.size_id = p.size_id
+    WHERE p.product_id = ? AND p.stock > 0 AND p.is_deleted = 0
     GROUP BY p.size_id", [$product['product_id']]);
+
 
 $distinct_colors = $db->select("
         SELECT * FROM product_variants WHERE product_id = ? AND stock > 0 AND is_deleted = 0 GROUP BY color_id", [$product['product_id']]);

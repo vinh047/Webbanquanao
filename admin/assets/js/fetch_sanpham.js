@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.show();
         });
     }
-
+    resetFormLoc();
 });
 
 function getPhanQuyen()
@@ -392,8 +392,23 @@ function locsanpham() {
             fetchSanPham(currentPage);
         });
     }
-}
 
+        $(document).ready(function () {
+        $('#cbTheLoai').select2({
+            dropdownParent: $('.filter-loc'), // đặt parent là vùng lọc để tránh bị che
+            width: '100%'
+        });
+    });
+}
+function resetFormLoc()
+{
+        document.getElementById('formLoc').addEventListener('reset', function () {
+        setTimeout(() => {
+            $('#cbTheLoai').val('').trigger('change'); // reset Select2 nhà cung cấp
+           
+        }, 0);
+    });
+}
     
 function showError(mess)
 {
