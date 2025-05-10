@@ -53,7 +53,7 @@ try {
 
     // 4. Duyệt từng sản phẩm để thêm hoặc cập nhật
     foreach ($data as $item) {
-        $product_id = (int)($item['id'] ?? 0);
+        $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
         $variant_id = (int)($item['variant_id'] ?? 0);
         $quantity = (int)($item['quantity'] ?? 0);
 

@@ -208,35 +208,8 @@ if ($pagination->totalPages > 1) {
         }
 
         // 📌 Khi thêm vào giỏ
-        if (e.target.closest('.add-to-cart-btn')) {
-            const btn = e.target.closest('.add-to-cart-btn');
-            const productId = btn.getAttribute('data-product-id');
-            const productName = btn.getAttribute('data-product-name');
-            const productPrice = btn.getAttribute('data-product-price');
-            const productContainer = btn.closest('.border.rounded-1');
+        document.body.addEventListener('click', handleAddToCartClick);
 
-            const selectedColor = productContainer.querySelector('.color-thumb.selected');
-            const selectedSize = productContainer.querySelector('.size-thumb.selected');
-
-            if (!selectedColor || !selectedSize) {
-                alert('Vui lòng chọn màu và size trước khi thêm vào giỏ hàng!');
-                return;
-            }
-
-            const variantImageFull = selectedColor.getAttribute('data-image');
-            const variantImage = variantImageFull.split('/').pop(); // 👉 chỉ lấy tên file ảnh: abc.jpg
-            const sizeId = selectedSize.getAttribute('data-size-id');
-            const colorName = selectedColor.getAttribute('title') || 'Màu';
-            const sizeName = selectedSize.getAttribute('data-size-name') || 'Size';
-
-
-            console.log("✅ Add to cart:", {
-                productId, productName, productPrice,
-                variantImage, sizeId, colorName, sizeName
-            });
-            addToCart(productId, productName, productPrice, variantImage, sizeId, colorName, sizeName);
-
-        }
     });
 })();
 </script>

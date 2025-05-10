@@ -1,1 +1,1 @@
-[{"id":"8","variant_id":"3","quantity":1,"name":"Áo sơ mi oxford nam tay dài fitted - Smartshirt","color":"Trắng","size":"XL","price":471000},{"id":"3","variant_id":"5","quantity":1,"name":"Áo sơ mi nam tay dài vải Nano Non Iron fitted","color":"Navy","size":"X","price":540000}]
+[{"product_id":"5","name":"Quần short nỉ nam cotton có hình thêu relax","price":546000,"quantity":2,"image":"10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg","variant_id":"19","color":"Rượu vang","size":"S"}]
