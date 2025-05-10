@@ -1,17 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Highlight active menu item in sidebar
+  // --- Highlight menu đang chọn ---
   const params = new URLSearchParams(window.location.search);
   const currentPage = params.get('page') || 'taikhoan';
   document.querySelectorAll('aside .list-group-item').forEach(item => {
     if (
-      item.getAttribute('href').includes(`page=${currentPage}`) ||
+      item.getAttribute('href')?.includes(`page=${currentPage}`) ||
       (currentPage === 'taikhoan' && item.textContent.includes('Thông tin tài khoản'))
     ) {
       item.classList.add('active');
     }
   });
 
-  // Utility: show toast for server-side messages
+  // --- Reset form đổi mật khẩu khi mở modal ---
+  const modalChange = document.getElementById('modalChangePassword');
+  modalChange?.addEventListener('show.bs.modal', () => {
+    const form = document.getElementById('formChangePassword');
+    form?.reset();
+    form?.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    form?.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+
+    document.querySelectorAll('#formChangePassword .input-group-text').forEach(span => {
+      const icon = span.querySelector('i');
+      const input = span.closest('.input-group').querySelector('input');
+  
+      span.style.cursor = 'pointer';
+      span.onclick = () => {
+        if (!input || !icon) return;
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.replace('fa-eye-slash', 'fa-eye');
+        } else {
+          input.type = 'password';
+          icon.classList.replace('fa-eye', 'fa-eye-slash');
+        }
+      };
+    });
+  });
+
+  // --- Show toast ---
   function showToast(message) {
     let container = document.getElementById('toastContainer');
     if (!container) {
@@ -23,8 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastEl = document.createElement('div');
     toastEl.className = 'toast align-items-center text-white bg-primary border-0';
     toastEl.setAttribute('role', 'alert');
-    toastEl.setAttribute('aria-live', 'assertive');
-    toastEl.setAttribute('aria-atomic', 'true');
     toastEl.innerHTML = `
       <div class="d-flex">
         <div class="toast-body">${message}</div>
@@ -32,66 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
     container.appendChild(toastEl);
-    const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
-    toast.show();
+    new bootstrap.Toast(toastEl, { delay: 3000 }).show();
     toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
   }
 
-  // Reset form khi mở modal đổi mật khẩu
-  const modalChangePassword = document.getElementById('modalChangePassword');
-  modalChangePassword.addEventListener('show.bs.modal', () => {
-    const form = document.getElementById('formChangePassword');
-    form.reset();
-
-    // Xoá class lỗi và nội dung feedback
-    form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-    form.querySelectorAll('.invalid-feedback').forEach(el => (el.textContent = ''));
-  });
-
-  // Edit Profile form validation and submission
+  // --- Cập nhật thông tin cá nhân ---
   const formEdit = document.getElementById('formEditProfile');
-  formEdit.setAttribute('novalidate', '');
-  formEdit.addEventListener('submit', async e => {
+  formEdit?.addEventListener('submit', async e => {
     e.preventDefault();
-    const nameField = document.getElementById('editName');
-    const phoneField = document.getElementById('editPhone');
+    const nameField = formEdit.querySelector('#editName');
+    const phoneField = formEdit.querySelector('#editPhone');
     const name = nameField.value.trim();
     const phone = phoneField.value.trim();
 
-    // Reset previous validation
-    [nameField, phoneField].forEach(field => {
-      field.classList.remove('is-invalid');
-      const feedback = field.nextElementSibling;
-      if (feedback && feedback.classList.contains('invalid-feedback')) {
-        feedback.textContent = '';
-      }
+    [nameField, phoneField].forEach(f => {
+      f.classList.remove('is-invalid');
+      f.nextElementSibling.textContent = '';
     });
 
-    // Required checks
     if (!name) {
       nameField.classList.add('is-invalid');
       nameField.nextElementSibling.textContent = 'Họ và tên không được để trống';
-      nameField.focus();
       return;
     }
-    if (!phone) {
-      phoneField.classList.add('is-invalid');
-      phoneField.nextElementSibling.textContent = 'Số điện thoại không được để trống';
-      phoneField.focus();
-      return;
-    }
-
     if (!/^[\p{L}]+(?: [\p{L}]+)+$/u.test(name)) {
       nameField.classList.add('is-invalid');
       nameField.nextElementSibling.textContent = 'Họ và tên phải gồm ít nhất hai từ';
-      nameField.focus();
       return;
     }
-
     if (!/^0\d{9}$/.test(phone)) {
       phoneField.classList.add('is-invalid');
-      phoneField.nextElementSibling.textContent = 'Số điện thoại phải 10 chữ số, bắt đầu 0';
-      phoneField.focus();
+      phoneField.nextElementSibling.textContent = 'Số điện thoại không hợp lệ';
       return;
     }
 
@@ -110,18 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error(err);
-      showToast('Lỗi kết nối');
+      showToast('Lỗi kết nối máy chủ');
     }
   });
 
-  // Change Password form validation + AJAX
+  // --- Xử lý đổi mật khẩu ---
   const formPass = document.getElementById('formChangePassword');
-  formPass.setAttribute('novalidate', '');
-  formPass.addEventListener('submit', async e => {
+  formPass?.addEventListener('submit', async e => {
     e.preventDefault();
-    const oldFld = document.getElementById('oldPassword');
-    const newFld = document.getElementById('newPassword');
-    const confFld = document.getElementById('confirmPassword');
+    const oldFld = formPass.querySelector('#oldPassword');
+    const newFld = formPass.querySelector('#newPassword');
+    const confFld = formPass.querySelector('#confirmPassword');
+
     const oldPw = oldFld.value.trim();
     const newPw = newFld.value.trim();
     const confPw = confFld.value.trim();
@@ -134,35 +129,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!oldPw) {
       oldFld.classList.add('is-invalid');
       oldFld.nextElementSibling.textContent = 'Vui lòng nhập mật khẩu cũ';
-      oldFld.focus();
       return;
     }
+
     if (!newPw) {
       newFld.classList.add('is-invalid');
       newFld.nextElementSibling.textContent = 'Vui lòng nhập mật khẩu mới';
-      newFld.focus();
-      return;
-    }
-    if (!confPw) {
-      confFld.classList.add('is-invalid');
-      confFld.nextElementSibling.textContent = 'Vui lòng xác nhận mật khẩu mới';
-      confFld.focus();
       return;
     }
 
     if (newPw !== confPw) {
       confFld.classList.add('is-invalid');
-      document.getElementById('confirmPasswordFeedback').textContent = 'Mật khẩu xác nhận không khớp';
-      confFld.focus();
+      confFld.nextElementSibling.textContent = 'Mật khẩu xác nhận không khớp';
       return;
     }
 
-    const pwdRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
-    if (!pwdRe.test(newPw)) {
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(newPw)) {
       newFld.classList.add('is-invalid');
       newFld.nextElementSibling.textContent =
         'Mật khẩu phải ≥8 ký tự, có hoa, thường, số & ký tự đặc biệt';
-      newFld.focus();
       return;
     }
 
@@ -174,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const result = await res.json();
       if (result.success) {
-        bootstrap.Modal.getInstance(modalChangePassword).hide();
+        bootstrap.Modal.getInstance(document.getElementById('modalChangePassword')).hide();
         formPass.reset();
         showToast('Đổi mật khẩu thành công');
       } else {
@@ -182,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error(err);
-      showToast('Lỗi kết nối');
+      showToast('Lỗi máy chủ khi đổi mật khẩu');
     }
   });
 });

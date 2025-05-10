@@ -1,5 +1,4 @@
 <?php
-
 echo '<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +13,10 @@ echo '<!DOCTYPE html>
     <link rel="stylesheet" href="./assets/css/footer.css">
     <link rel="stylesheet" href="./assets/fonts/font.css">
 </head>
-<body>
-';
+<body>';
 
 include("./layout/header.php");
 
-// Nội dung động
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
     if (is_numeric($page)) {
@@ -47,21 +44,14 @@ if (isset($_GET['page'])) {
                 include('./layout/pay.php');
                 break;
             case 'taikhoan':
-                include('./layout/info_user.php');
-                break;
             case 'danhsachdiachi':
-                include('./layout/address_list.php');
-                break;
             case 'donhang':
-                include('./layout/my_orders.php');
-                break;
             case 'lichsumuahang':
-                include('./layout/history_orders.php');
+                include('./layout/info_user.php');
                 break;
             case 'error':
                 include('./layout/error404.php');
                 break;
-            
         }
     }
 } else {
@@ -71,13 +61,10 @@ if (isset($_GET['page'])) {
 include("./layout/footer.php");
 ?>
 
-<!-- Local Bootstrap JS -->
 <script src="/assets/bootstrap/js/bootstrap.bundle.min.js" defer></script>
-<!-- Info User Script -->
 <script src="/assets/js/addToCart.js" defer></script>
 <script src="/assets/js/cart.js"      defer></script>
 <script src="/assets/js/header.js"    defer></script>
 <script src="/assets/js/info_user.js" defer></script>
 </body>
-
 </html>
