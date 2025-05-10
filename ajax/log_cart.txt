@@ -1,1 +1,1 @@
-[{"id":"8","variant_id":"3","quantity":1,"name":"Áo sơ mi oxford nam tay dài fitted - Smartshirt","color":"Trắng","size":"XL","price":471000}]
+[{"id":2,"variant_id":2,"quantity":1,"name":"Áo polo nam phối màu tay và cổ form fitted","color":"Trắng","size":"L","price":490000}]
