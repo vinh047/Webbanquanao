@@ -765,7 +765,7 @@ CREATE TABLE `users` (
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
-  `status` tinyint(4) DEFAULT 1
+  `status` tinyint(4) DEFAULT 1,
   `otp` varchar(6) DEFAULT NULL,
   `otp_expired_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
