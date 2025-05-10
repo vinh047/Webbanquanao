@@ -1,23 +1,29 @@
 <?php
-// info_user.php
+require_once __DIR__ . '/header.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// 1) Kiểm tra đã login
+// Xử lý đăng xuất...
+// (giữ nguyên logic logout ở logout.php nếu bạn đã tách riêng)
+
+require_once __DIR__ . '/../database/DBConnection.php';
+$db = DBConnect::getInstance();
+
+// Kiểm tra đã đăng nhập
 if (empty($_SESSION['user_id'])) {
   header('Location: /User-form/Login_Form/Login_Form.php');
   exit;
 }
 
-// 2) Lấy chi tiết thông tin user
+// Lấy thông tin user
 $userDetail = $db->selectOne(
-  'SELECT name, email, phone
-       FROM users
-       WHERE user_id = ?',
+  'SELECT name, email, phone FROM users WHERE user_id = ?',
   [$_SESSION['user_id']]
 );
 ?>
 
 <link rel="stylesheet" href="/assets/css/info_user.css">
-
 
 <div class="container my-5">
   <div class="row">
@@ -46,7 +52,7 @@ $userDetail = $db->selectOne(
           <span><i class="fa-solid fa-location-dot me-2"></i>Danh sách địa chỉ</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
-        <a href="/index.php?action=logout"
+        <a href="/User-form/Login_Form/logout.php"
           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
           <span><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</span>
           <i class="fa-solid fa-chevron-right"></i>
@@ -201,5 +207,15 @@ $userDetail = $db->selectOne(
   </div>
 </div>
 
+<script src="/assets/js/addToCart.js" defer></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/header.js"    defer></script>
+<script src="/assets/js/info_user.js" defer></script>
 
-<!-- <script src="/assets/js/info_user.js" defer></script> -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof syncCartAfterLogin === 'function') {
+    syncCartAfterLogin();
+  }
+});
+</script>

@@ -3,15 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Khi user click Đăng xuất
-if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-	// Hủy session
-	session_unset();
-	session_destroy();
-	// Chuyển về trang chủ
-	header('Location: /index.php');
-	exit;
-}
 require_once __DIR__ . '/../database/DBConnection.php';
 // Kết nối DB
 $db = DBConnect::getInstance();
@@ -168,5 +159,18 @@ if (!empty($_SESSION['user_id'])) {
 
 </header>
 
-<script src="../assets/js/header.js"></script>
-<script src="../assets/js/mini_cart.js"></script>
+<!-- Các script quản lý giỏ hàng và menu -->
+<script src="/assets/js/addToCart.js"    defer></script>
+<script src="/assets/js/cart.js"         defer></script>
+<script src="/assets/js/mini_cart.js"    defer></script>
+<script src="/assets/js/header.js"       defer></script>
+
+<?php if (!empty($_SESSION['user_id'])): ?>
+<script defer>
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof syncCartAfterLogin === 'function') {
+    syncCartAfterLogin();
+  }
+});
+</script>
+<?php endif; ?>
