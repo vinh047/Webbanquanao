@@ -111,9 +111,18 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
             <?php
             if (isset($_GET['page'])) {
                 $page = $_GET['page'];
-                $subpage = $_GET['subpage'] ?? ($_SESSION['last_subpage'] ?? 'mau'); // mặc định là 'mau'
-                if ($page === 'thuoctinh') {
-                    $_SESSION['last_subpage'] = $subpage; // ghi nhớ lần truy cập cuối
+                $subpage = $_GET['subpage'] ?? null;
+
+                // Nếu người dùng chỉ vào trang thuộc tính chính (không có subpage), thì xóa session subpage
+                if ($page === 'thuoctinh' && !$subpage && isset($_SESSION['last_subpage'])) {
+                    unset($_SESSION['last_subpage']);
+                }
+
+                // Ưu tiên lấy subpage từ URL, nếu không có thì lấy từ session
+                $subpage = $subpage ?? ($_SESSION['last_subpage'] ?? null);
+
+                if ($page === 'thuoctinh' && $subpage) {
+                    $_SESSION['last_subpage'] = $subpage;
                 }
 
                 switch ($page) {
@@ -137,12 +146,12 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                             case 'mausac':
                                 include '../admin/layout/mau_sac.php';
                                 break;
-                            // case 'size':
-                            //     include '../admin/layout/size.php';
-                            //     break;
-                            // case 'theloai':
-                            //     include '../admin/layout/the_loai.php';
-                            //     break;
+                            case 'size':
+                                include '../admin/layout/size.php';
+                                break;
+                            case 'theloai':
+                                include '../admin/layout/the_loai.php';
+                                break;
                             case 'phuongthucthanhtoan':
                                 include '../admin/layout/phuong_thuc_thanh_toan.php';
                                 break;

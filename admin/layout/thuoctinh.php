@@ -51,7 +51,7 @@
 
         <!-- Thể loại -->
         <div class="col-md-6">
-            <a href="the_loai.php" class="text-decoration-none text-dark">
+            <a href="index.php?page=thuoctinh&subpage=theloai&pageadmin=1" class="text-decoration-none text-dark">
                 <div class="card shadow card-box p-4">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-tags icon me-3"></i>
@@ -66,7 +66,7 @@
 
         <!-- Size -->
         <div class="col-md-6">
-            <a href="size.php" class="text-decoration-none text-dark">
+            <a href="index.php?page=thuoctinh&subpage=size&pageadmin=1" class="text-decoration-none text-dark">
                 <div class="card shadow card-box p-4">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-ruler-combined icon me-3"></i>
