@@ -49,6 +49,9 @@
                 case 'taikhoan':
                     include('./layout/info_user.php');
                     break;
+                case 'danhsachdiachi':
+                    include('./layout/address_list.php');
+                    break;    
                 case 'donhang':
                     include('./layout/my_orders.php');
                     break;
