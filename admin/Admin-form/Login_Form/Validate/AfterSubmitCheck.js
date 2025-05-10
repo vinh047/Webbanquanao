@@ -39,7 +39,7 @@ async function submitForm(e) {
 
       // Admin, nhân viên, v.v.
       if (role === 2 || role === 3 || role === 4 && online === 1) {
-        window.location.replace("../../../admin/index.php");
+        window.location.replace("../../../admin/index.php?page=phieunhap&pageadmin=1");
         return;
       }
 

@@ -45,7 +45,7 @@ async function submitForm(e) {
         return;
       }
     
-      if (trangthai === "dangnhap" && responseData.status === "LOGIN_SUCCESS") {
+      if (  responseData.status === "LOGIN_SUCCESS") {
         if (role === 1 && online === 1) {
           try {
             console.log("🟡 Trước khi syncCartAfterLogin()");
