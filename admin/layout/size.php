@@ -34,9 +34,9 @@
     <table class="table table-bordered align-middle text-center">
         <thead class="table-light">
             <tr>
-                <th>ID</th>
-                <th>Size</th>
-                <th>Chức năng</th>
+                <th style="width: 25%;">ID</th>
+                <th style="width: 35%;">Size</th>
+                <th style="width: 40%;">Chức năng</th>
             </tr>
         </thead>
         <tbody class="size-wrap">

@@ -17,7 +17,7 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
     <link rel="stylesheet" href="./assets/css/sanpham.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
- <link rel="stylesheet" href="../assets/fonts/font.css">
+    <link rel="stylesheet" href="../assets/fonts/font.css">
 </head>
 
 <body>
@@ -30,25 +30,25 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
         $user_id = $_SESSION['user_id'] ?? null;
         $role_id = $_SESSION['role_id'] ?? null;
 
-if ($user_id) {
-    // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
-    require_once(__DIR__ . '../../database/DBConnection.php');
-    $db = DBConnect::getInstance();
-    
-    // Truy vấn để lấy tên người dùng dựa trên user_id
-    $stmt = $db->select("SELECT name FROM users WHERE user_id = ?", [$user_id]);
-    
-    if ($stmt) {
-        $name = $stmt[0]['name']; // Gán tên người dùng vào biến
-    } else {
-        $name = "Không tìm thấy người dùng";
-    }
-} else {
-    // Nếu không có user_id trong session, người dùng chưa đăng nhập
-    $name = "Chưa đăng nhập";
-}
-$currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
-?>
+        if ($user_id) {
+            // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
+            require_once(__DIR__ . '../../database/DBConnection.php');
+            $db = DBConnect::getInstance();
+
+            // Truy vấn để lấy tên người dùng dựa trên user_id
+            $stmt = $db->select("SELECT name FROM users WHERE user_id = ?", [$user_id]);
+
+            if ($stmt) {
+                $name = $stmt[0]['name']; // Gán tên người dùng vào biến
+            } else {
+                $name = "Không tìm thấy người dùng";
+            }
+        } else {
+            // Nếu không có user_id trong session, người dùng chưa đăng nhập
+            $name = "Chưa đăng nhập";
+        }
+        $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
+        ?>
 
         <nav class="nav-left text-white p-3">
             <div class="text-center mb-4">
@@ -88,6 +88,13 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
                         <i class="fas fa-sliders-h"></i> <span>Thuộc tính</span>
                     </a>
                 </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phanquyen' ? 'active' : '' ?>" href="index.php?page=phanquyen&pageadmin=1">
+                        <i class="fas fa-user-shield"></i> <span>Phân quyền</span>
+                    </a>
+                </li>
+
 
                 <li class="nav-item mb-2">
                     <a class="nav-link text-white d-flex align-items-center gap-2" href="index.php?action=logout">
@@ -158,6 +165,9 @@ $currentPage = $_GET['page'] ?? ''; // lấy trang hiện tại
                             default:
                                 include '../admin/layout/thuoctinh.php';
                         }
+                        break;
+                    case 'phanquyen':
+                        include '../admin/layout/phan_quyen.php';
                         break;
                 }
             }
