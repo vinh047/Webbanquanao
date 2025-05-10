@@ -129,9 +129,7 @@ if(isset($_GET['page']))
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <!-- Đạt thêm tắt khi close tab -->
-<<<<<<< HEAD
 
-=======
  <!-- Nhúng jQuery trước tất cả -->
 <!-- ✅ JQUERY PHẢI ĐƯỢC NHÚNG TRƯỚC -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -142,6 +140,6 @@ if(isset($_GET['page']))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="Admin-form/Login_Form/Logout/auto_logout.js"></script> 
 
->>>>>>> e40e1eed05504ad47479b2a93eed064f33d3931f
+
 </body>
 </html>
