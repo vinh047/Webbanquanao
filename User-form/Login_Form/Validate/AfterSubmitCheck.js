@@ -39,32 +39,38 @@ async function submitForm(e) {
     if (responseData.status === "LOGIN_SUCCESS" || responseData.status === "REGISTER_SUCCESS") {
       const role = responseData.role;
       const online = responseData.online;
-
-    
-
-      if (role === 1 && online === 1) {
-        try {
-          console.log("🟡 Trước khi syncCartAfterLogin()");
-          if (typeof window.syncCartAfterLogin === "function") {
-            await window.syncCartAfterLogin();
-            renderMiniCart();
-            updateCartCount();
-          }
-          console.log("✅ Sau khi syncCartAfterLogin()");
-        } catch (err) {
-          console.error("❌ syncCartAfterLogin failed:", err);
-        }
-
-        // Redirect sau khi đồng bộ
-        setTimeout(() => {
-          window.location.href = location.origin + "/index.php";
-        }, 100);
+      if (trangthai === "dangky" && responseData.status === "REGISTER_SUCCESS") {
+        alert("Đăng ký thành công! Mời bạn đăng nhập.");
+        window.location.href = "?trangthai=dangnhap";
         return;
       }
+    
+      if (  responseData.status === "LOGIN_SUCCESS") {
+        if (role === 1 && online === 1) {
+          try {
+            console.log("🟡 Trước khi syncCartAfterLogin()");
+            if (typeof window.syncCartAfterLogin === "function") {
+              await window.syncCartAfterLogin();
+              renderMiniCart();
+              updateCartCount();
+            }
+            console.log("✅ Sau khi syncCartAfterLogin()");
+          } catch (err) {
+            console.error("❌ syncCartAfterLogin failed:", err);
+          }
 
-      if ([2, 3, 4].includes(role)  ||  online === 0 ) {
-        alert("Tài khoản đã bị khóa");
-        return;
+          // Redirect sau khi đồng bộ
+          setTimeout(() => {
+            alert("Đăng nhập thành công")
+            window.location.href = location.origin + "/index.php";
+          }, 100);
+          return;
+        }
+
+        if ([2, 3, 4].includes(role)  ||  online === 0 ) {
+          alert("Tài khoản đã bị khóa");
+          return;
+        }
       }
 
       return;
