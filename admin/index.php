@@ -32,7 +32,7 @@ $role_id = $_SESSION['role_id'] ?? null;
 
 if ($user_id) {
     // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
-    require_once(__DIR__ . '/../database/DBConnection.php');
+    require_once(__DIR__ . '../../database/DBConnection.php');
     $db = DBConnect::getInstance();
     
     // Truy vấn để lấy tên người dùng dựa trên user_id
