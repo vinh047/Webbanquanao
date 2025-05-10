@@ -1,3 +1,4 @@
+// Kiểm tra tồn kho trước khi thêm vào giỏ
 async function checkStockBeforeAdd(variant_id, quantity) {
     try {
         const res = await fetch('ajax/check_stock.php', {
@@ -30,11 +31,11 @@ async function checkStockBeforeAdd(variant_id, quantity) {
     }
 }
 
+// Thêm sản phẩm vào giỏ
 async function addToCart(id, name, price, image, variant_id, color = '', size = '') {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let existingItem = cart.find(item => item.id === id && item.variant_id === variant_id);
-
-    let newQuantity = existingItem ? existingItem.quantity + 1 : 1;
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingItem = cart.find(item => item.id === id && item.variant_id === variant_id);
+    const newQuantity = existingItem ? existingItem.quantity + 1 : 1;
 
     const ok = await checkStockBeforeAdd(variant_id, newQuantity);
     if (!ok) return;
@@ -44,32 +45,30 @@ async function addToCart(id, name, price, image, variant_id, color = '', size = 
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-      
-
-cart.push({
-  id,
-  name,
-  price,
-  quantity: 1,
-  image: finalImage,
-  variant_id,
-  color: color && color.trim() !== "" ? color : "(không màu)",
-  size: size && size.trim() !== "" ? size : "(không size)"
-});
-        
+        cart.push({
+            id,
+            name,
+            price,
+            quantity: 1,
+            image: finalImage,
+            variant_id,
+            color: color?.trim() || "(không màu)",
+            size: size?.trim() || "(không size)"
+        });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    renderMiniCart();
+
+    // Bọc để tránh lỗi khi renderMiniCart chưa sẵn sàng
+    if (typeof renderMiniCart === "function") renderMiniCart();
     updateCartCount();
     showAddToCartNotice(name);
     syncCartToServer();
 }
 
-window.addToCart = addToCart;
-
+// Cập nhật số lượng trong mini cart
 function changeMiniCartQty(index, delta) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (!cart[index]) return;
 
     cart[index].quantity += delta;
@@ -78,23 +77,22 @@ function changeMiniCartQty(index, delta) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    renderMiniCart();
+    if (typeof renderMiniCart === "function") renderMiniCart();
     updateCartCount();
     syncCartToServer();
 }
-window.changeMiniCartQty = changeMiniCartQty;
 
+// Xóa sản phẩm khỏi mini cart
 function removeMiniCartItem(index) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.splice(index, 1);
-
     localStorage.setItem("cart", JSON.stringify(cart));
-    renderMiniCart();
+    if (typeof renderMiniCart === "function") renderMiniCart();
     updateCartCount();
     syncCartToServer();
 }
-window.removeMiniCartItem = removeMiniCartItem;
 
+// Hiển thị thông báo
 function showNotification(message, type = 'success') {
     const notice = document.getElementById('noticeAddToCart');
     const icon = document.getElementById('noticeIcon');
@@ -111,7 +109,6 @@ function showNotification(message, type = 'success') {
     if (type === 'warning') icon.classList.add('fa-triangle-exclamation');
 
     icon.style.color = '#fff';
-
     notice.classList.remove('opacity-0');
     notice.classList.add('opacity-100');
 
@@ -125,16 +122,15 @@ function showAddToCartNotice(productName) {
     showNotification('Đã thêm vào giỏ hàng!', 'success');
 }
 
+// Cập nhật số lượng ở icon giỏ hàng
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const countBadge = document.getElementById("cart-count-badge");
-    let totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
-    if (countBadge) {
-        countBadge.textContent = totalQty;
-    }
+    const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (countBadge) countBadge.textContent = totalQty;
 }
-window.updateCartCount = updateCartCount;
 
+// Đồng bộ giỏ hàng với server
 async function syncCartToServer() {
     try {
         const cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -156,8 +152,8 @@ async function syncCartToServer() {
         console.error("❌ Lỗi syncCartToServer:", err);
     }
 }
-window.syncCartToServer = syncCartToServer;
 
+// Sau khi đăng nhập, đồng bộ lại giỏ hàng
 async function syncCartAfterLogin() {
     try {
         const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -182,21 +178,20 @@ async function syncCartAfterLogin() {
 
         if (result.success && Array.isArray(result.data)) {
             localStorage.setItem("cart", JSON.stringify(result.data));
-            renderMiniCart();
+            if (typeof renderMiniCart === "function") renderMiniCart();
             updateCartCount();
         }
     } catch (err) {
         console.error("❌ syncCartAfterLogin lỗi:", err);
     }
 }
-// Cuối file mini_cart.js (hoặc addToCart.js nếu gộp):
+
+// Gán global để các file khác gọi được
 window.addToCart = addToCart;
 window.changeMiniCartQty = changeMiniCartQty;
 window.removeMiniCartItem = removeMiniCartItem;
 window.updateCartCount = updateCartCount;
-console.log(">> Hàm syncCartToServer đã khai báo");
 window.syncCartToServer = syncCartToServer;
 window.syncCartAfterLogin = syncCartAfterLogin;
-window.renderMiniCart = renderMiniCart; // thêm dòng này
 
-document.addEventListener("DOMContentLoaded", updateCartCount);
+// ✅ Gán sau cùng, đảm bảo

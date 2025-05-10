@@ -4,6 +4,11 @@ function renderCart() {
   const cartItems = document.getElementById("cart-items");
   const totalPriceEl = document.getElementById("total-price");
 
+  if (!cartItems || !totalPriceEl) {
+    console.warn("Không tìm thấy phần tử hiển thị giỏ hàng.");
+    return;
+  }
+
   cartItems.innerHTML = ""; // Xóa nội dung cũ
 
   if (cart.length === 0) {
@@ -26,7 +31,9 @@ function renderCart() {
     div.className = "d-flex border-bottom py-3 align-items-center";
 
     div.innerHTML = `
-      <img src="${item.image || './assets/img/sanpham/sp1.jpg'}" class="me-3 rounded" style="width: 100px; height: 100px; object-fit: cover;">
+      <img src="${item.image || '/assets/img/sanpham/sp1.jpg'}" 
+           class="me-3 rounded" 
+           style="width: 100px; height: 100px; object-fit: cover;">
       <div class="flex-grow-1">
         <h6>${item.name}</h6>
         <p class="mb-1">Color: ${item.color || 'đen'} &nbsp;&nbsp;&nbsp; Size: ${item.size || 'L'}</p>
@@ -46,17 +53,17 @@ function renderCart() {
   });
 
   totalPriceEl.textContent = Math.round(total).toLocaleString('vi-VN') + "₫";
-
 }
 
-// Cập nhật số lượng
+// Cập nhật số lượng sản phẩm
 function updateQty(index, delta) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  if (!cart[index]) return;
+  const item = cart[index];
+  if (!item) return;
 
-  cart[index].quantity += delta;
+  item.quantity += delta;
 
-  if (cart[index].quantity <= 0) {
+  if (item.quantity <= 0) {
     cart.splice(index, 1);
   }
 
@@ -64,10 +71,9 @@ function updateQty(index, delta) {
   renderCart();
 }
 
-// Xoá sản phẩm
+// Xoá sản phẩm khỏi giỏ
 function removeItem(index) {
-  const confirmDelete = confirm("Bạn có chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng?");
-  if (!confirmDelete) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng?")) return;
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.splice(index, 1);
@@ -75,5 +81,10 @@ function removeItem(index) {
   renderCart();
 }
 
-// Gọi hàm khi trang load
+// Gọi renderCart khi trang đã sẵn sàng
 document.addEventListener("DOMContentLoaded", renderCart);
+
+// Gán global để dùng được bên ngoài nếu cần
+window.renderCart = renderCart;
+window.updateQty = updateQty;
+window.removeItem = removeItem;
