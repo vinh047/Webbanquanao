@@ -1,6 +1,6 @@
 <?php
 
-    echo '<!DOCTYPE html>
+echo '<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,62 +17,67 @@
 <body>
 ';
 
-    include("./layout/header.php");
+include("./layout/header.php");
 
-    // Nội dung động
-    if (isset($_GET['page'])) {
-        $page = $_GET['page'];
-        if (is_numeric($page)) {
-            include('./layout/product.php');
-        } else {
-            switch ($page) {
-                case 'ao':
-                case 'quan':
-                case 'aopolo':
-                case 'aosomi':
-                case 'aokhoac':
-                    include('./layout/phanloai.php');
-                    break;
-                case 'sanpham':
-                    if (isset($_GET['phanloai'])) {
-                        include('./layout/phanloai.php');
-                    } else {
-                        include('./layout/product.php');
-                    }
-                    break;
-                case 'giohang':
-                    include('./layout/cart.php');
-                    break;
-                case 'pay':
-                    include('./layout/pay.php');
-                    break;
-                case 'taikhoan':
-                    include('./layout/info_user.php');
-                    break;
-                case 'danhsachdiachi':
-                    include('./layout/address_list.php');
-                    break;    
-                case 'donhang':
-                    include('./layout/my_orders.php');
-                    break;
-                case 'lichsumuahang':
-                    include('./layout/history_orders.php');
-                    break;
-                case 'error':
-                    include('./layout/error404.php');
-                    break;
-            }
-        }
+// Nội dung động
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    if (is_numeric($page)) {
+        include('./layout/product.php');
     } else {
-        include('./layout/home.php');
+        switch ($page) {
+            case 'ao':
+            case 'quan':
+            case 'aopolo':
+            case 'aosomi':
+            case 'aokhoac':
+                include('./layout/phanloai.php');
+                break;
+            case 'sanpham':
+                if (isset($_GET['phanloai'])) {
+                    include('./layout/phanloai.php');
+                } else {
+                    include('./layout/product.php');
+                }
+                break;
+            case 'giohang':
+                include('./layout/cart.php');
+                break;
+            case 'pay':
+                include('./layout/pay.php');
+                break;
+            case 'taikhoan':
+                include('./layout/info_user.php');
+                break;
+            case 'danhsachdiachi':
+                include('./layout/address_list.php');
+                break;
+            case 'donhang':
+                include('./layout/my_orders.php');
+                break;
+            case 'lichsumuahang':
+                include('./layout/history_orders.php');
+                break;
+            case 'error':
+                include('./layout/error404.php');
+                break;
+            
+        }
     }
+} else {
+    include('./layout/home.php');
+}
 
-    include("./layout/footer.php");
+include("./layout/footer.php");
 ?>
 
 <!-- Local Bootstrap JS -->
 <script src="/assets/bootstrap/js/bootstrap.bundle.min.js" defer></script>
 <!-- Info User Script -->
+<script src="/assets/js/addToCart.js" defer></script>
+<script src="/assets/js/cart.js"      defer></script>
+<script src="/assets/js/header.js"    defer></script>
 <script src="/assets/js/info_user.js" defer></script>
 </body>
+
 </html>
