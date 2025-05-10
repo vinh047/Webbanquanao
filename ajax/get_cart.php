@@ -25,7 +25,8 @@ try {
         p.name,
         cl.name AS color,
         s.name AS size,
-        p.price
+        p.price,
+        v.image -- Lấy ảnh từ bảng product_variants
     FROM cart_details d
     JOIN cart c ON d.cart_id = c.cart_id
     JOIN products p ON d.product_id = p.product_id
@@ -34,6 +35,7 @@ try {
     JOIN sizes s ON v.size_id = s.size_id
     WHERE c.user_id = ?
 ";
+
 
 
 
