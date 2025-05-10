@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 12:51 PM
+-- Generation Time: May 10, 2025 at 05:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -640,10 +640,10 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`role_id`, `name`, `is_deleted`) VALUES
-(1, 'user', 0),
-(2, 'admin', 0),
-(3, 'manager', 0),
-(4, 'staff', 0);
+(1, 'Khách hàng', 0),
+(2, 'Admin', 0),
+(3, 'Quản lý', 0),
+(4, 'Nhân viên', 0);
 
 -- --------------------------------------------------------
 
