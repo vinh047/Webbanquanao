@@ -8,18 +8,18 @@
 
     <!-- Tiêu đề căn giữa -->
     <h4 class="mx-auto mb-0 text-center text-primary fw-semibold text-uppercase fs-4 border-bottom border-2 pb-2" style="max-width: fit-content;">
-        <i class="fas fa-tags me-2"></i> Quản lý thể loại
+        <i class="fas fa-ruler-combined me-2"></i> Quản lý size
     </h4>
 </div>
 
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemTheLoai">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemSize">
         <i class="fa-solid fa-plus"></i> Thêm
     </button>
 
     <div class="mx-auto w-25">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Tìm kiếm thể loại" id="searchCategory">
+            <input type="text" class="form-control" placeholder="Tìm kiếm size" id="searchSize">
             <button class="btn btn-secondary" style="pointer-events: none;">
                 <i class="fa-solid fa-search"></i>
             </button>
@@ -35,28 +35,28 @@
         <thead class="table-light">
             <tr>
                 <th>ID</th>
-                <th>Tên thể loại</th>
+                <th>Size</th>
                 <th>Chức năng</th>
             </tr>
         </thead>
-        <tbody class="category-wrap">
+        <tbody class="size-wrap">
         </tbody>
     </table>
     <div class="pagination-wrap"></div>
 </div>
 
-<!-- Modal Thêm Thể Loại -->
-<div class="modal fade" id="modalThemTheLoai" tabindex="-1" aria-labelledby="modalThemTheLoaiLabel" aria-hidden="true">
+<!-- Modal Thêm Size -->
+<div class="modal fade" id="modalThemSize" tabindex="-1" aria-labelledby="modalThemSizeLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form id="formThemTheLoai" class="modal-content">
+        <form id="formThemSize" class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalThemTheLoaiLabel">Thêm thể loại</h5>
+                <h5 class="modal-title" id="modalThemSizeLabel">Thêm size</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="tenTheLoai" class="form-label">Tên thể loại</label>
-                    <input type="text" class="form-control" id="tenTheLoai" name="category_name" required>
+                    <label for="tenSize" class="form-label">Tên size</label>
+                    <input type="text" class="form-control" id="tenSize" name="size_name" required>
                 </div>
             </div>
             <div class="modal-footer">
@@ -67,24 +67,23 @@
     </div>
 </div>
 
-
-<!-- Modal Sửa Thể Loại -->
-<div class="modal fade" id="modalSuaTheLoai" tabindex="-1" aria-labelledby="modalSuaTheLoaiLabel" aria-hidden="true">
+<!-- Modal Sửa Size -->
+<div class="modal fade" id="modalSuaSize" tabindex="-1" aria-labelledby="modalSuaSizeLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form id="formSuaTheLoai" class="modal-content">
+        <form id="formSuaSize" class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="modalSuaTheLoaiLabel">Sửa thể loại</h5>
+                <h5 class="modal-title" id="modalSuaSizeLabel">Sửa size</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="idTheLoaiSua" class="form-label">ID</label>
-                    <input type="text" class="form-control" id="idTheLoaiSua" name="category_id" readonly>
+                    <label for="idSizeSua" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="idSizeSua" name="size_id" readonly>
                 </div>
 
                 <div class="mb-3">
-                    <label for="tenTheLoaiSua" class="form-label">Tên thể loại</label>
-                    <input type="text" class="form-control" id="tenTheLoaiSua" name="category_name" required>
+                    <label for="tenSizeSua" class="form-label">Tên size</label>
+                    <input type="text" class="form-control" id="tenSizeSua" name="size_name" required>
                 </div>
             </div>
             <div class="modal-footer">
@@ -95,22 +94,23 @@
     </div>
 </div>
 
-<!-- Modal Xóa Thể Loại -->
-<div class="modal fade" id="modalXoaTheLoai" tabindex="-1" aria-labelledby="modalXoaTheLoaiLabel" aria-hidden="true">
+
+<!-- Modal Xóa Size -->
+<div class="modal fade" id="modalXoaSize" tabindex="-1" aria-labelledby="modalXoaSizeLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form id="formXoaTheLoai" class="modal-content">
+        <form id="formXoaSize" class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="modalXoaTheLoaiLabel">Xóa thể loại</h5>
+                <h5 class="modal-title" id="modalXoaSizeLabel">Xóa size</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="maTheLoaiXoa" class="form-label">ID</label>
-                    <input type="text" class="form-control" id="maTheLoaiXoa" name="category_id" readonly>
+                    <label for="maSizeXoa" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="maSizeXoa" name="size_id" readonly>
                 </div>
                 <div class="mb-3">
-                    <label for="tenTheLoaiXoa" class="form-label">Tên thể loại</label>
-                    <input type="text" class="form-control" id="tenTheLoaiXoa" name="category_name" readonly>
+                    <label for="tenSizeXoa" class="form-label">Tên size</label>
+                    <input type="text" class="form-control" id="tenSizeXoa" name="size_name" readonly>
                 </div>
             </div>
             <div class="modal-footer">
@@ -125,25 +125,25 @@
 <script>
     let currentFilterParams = '';
 
-    function loadCategories(page = 1, params = "") {
-        const categoryWrap = document.querySelector('.category-wrap');
+    function loadSizes(page = 1, params = "") {
+        const sizeWrap = document.querySelector('.size-wrap');
         const paginationWrap = document.querySelector('.pagination-wrap');
-        fetch('ajax/load_categories.php?page=' + page + params)
+        fetch('ajax/load_sizes.php?page=' + page + params)
             .then(res => res.json())
             .then(data => {
-                categoryWrap.innerHTML = data.categoryHtml || '';
+                sizeWrap.innerHTML = data.sizeHtml || '';
                 paginationWrap.innerHTML = data.pagination || '';
                 phantrang();
             })
     }
-    loadCategories(1);
+    loadSizes(1);
 
     function phantrang() {
         document.querySelectorAll(".page-link-custom").forEach(btn => {
             btn.addEventListener("click", function(e) {
                 e.preventDefault();
                 currentPage = parseInt(this.dataset.page);
-                loadCategories(currentPage);
+                loadSizes(currentPage);
             });
         });
         const input = document.getElementById("pageInput");
@@ -159,7 +159,7 @@
 
                     if (page >= 1 && page <= max) {
                         currentPage = page;
-                        loadCategories(page, currentFilterParams);
+                        loadSizes(page, currentFilterParams);
                     }
                 }
             });
@@ -167,48 +167,40 @@
     }
 
     // Xử lý tìm kiểm tên 
-    document.querySelector('#searchCategory').addEventListener('input', function() {
+    document.querySelector('#searchSize').addEventListener('input', function() {
         const keyword = this.value.trim();
         currentFilterParams = keyword ? `&search_name=${encodeURIComponent(keyword)}` : '';
-        loadCategories(1, currentFilterParams);
+        loadSizes(1, currentFilterParams);
     });
 
-
-    // Thêmm thể loại
-    document.getElementById("formThemTheLoai").addEventListener("submit", function(e) {
+    // Thêm size
+    document.getElementById("formThemSize").addEventListener("submit", function(e) {
         e.preventDefault();
 
         const form = e.target;
-        const name = form.category_name.value.trim();
+        const name = form.size_name.value.trim();
 
-        // Kiểm tra rỗng
         if (!name) {
-            alert("Vui lòng nhập đầy đủ thông tin.");
+            alert("Vui lòng nhập tên size.");
             return;
         }
 
         const formData = new FormData(form);
 
-        fetch('ajax/add_category.php', {
+        fetch('ajax/add_size.php', {
                 method: 'POST',
                 body: formData
             })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Đóng modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemTheLoai'));
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemSize'));
                     modal.hide();
-
-                    // Reset form
                     form.reset();
-
                     alert(data.message);
-
-                    // Reload danh sách nhà cung cấp
-                    loadCategories(1, currentFilterParams);
+                    loadSizes(1, currentFilterParams);
                 } else {
-                    alert(data.message || "Đã xảy ra lỗi khi thêm màu.");
+                    alert(data.message || "Đã xảy ra lỗi khi thêm size.");
                 }
             })
             .catch(error => {
@@ -217,42 +209,36 @@
             });
     });
 
-    // Sửa thể loại
-    document.querySelector('.category-wrap').addEventListener('click', function(e) {
-        const btn = e.target.closest('.btn-edit-category');
+    // Mở modal sửa size
+    document.querySelector('.size-wrap').addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-edit-size');
         if (!btn) return;
 
-        // Lấy dữ liệu từ thuộc tính data-*
-        const categoryId = btn.dataset.id;
+        const sizeId = btn.dataset.id;
         const name = btn.dataset.name;
 
-        // Gán vào modal sửa
-        document.getElementById('idTheLoaiSua').value = categoryId || '';
-        document.getElementById('tenTheLoaiSua').value = name || '';
+        document.getElementById('idSizeSua').value = sizeId || '';
+        document.getElementById('tenSizeSua').value = name || '';
     });
 
-    // Xử lý submit form sửa
-    document.getElementById('formSuaTheLoai').addEventListener('submit', function(e) {
+    // Submit sửa size
+    document.getElementById('formSuaSize').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const form = e.target;
         const formData = new FormData(form);
 
-        fetch('ajax/update_category.php', {
+        fetch('ajax/update_size.php', {
                 method: 'POST',
                 body: formData
             })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Đóng modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalSuaTheLoai'));
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalSuaSize'));
                     modal.hide();
-
                     alert(data.message);
-
-                    // Reload lại danh sách
-                    loadCategories(1, currentFilterParams);
+                    loadSizes(1, currentFilterParams);
                 } else {
                     alert(data.message || "Đã xảy ra lỗi khi cập nhật.");
                 }
@@ -263,44 +249,40 @@
             });
     });
 
-    // Xóa thể loại
-    document.querySelector('.category-wrap').addEventListener('click', (e) => {
-        if (e.target.closest('.btn-delete-category')) {
-            const button = e.target.closest('.btn-delete-category');
+    // Mở modal xóa size
+    document.querySelector('.size-wrap').addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-delete-size');
+        if (!btn) return;
 
-            const id = button.dataset.id;
-            const name = button.dataset.name;
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
 
-            document.getElementById('maTheLoaiXoa').value = id || '';
-            document.getElementById('tenTheLoaiXoa').value = name || '';
-
-        }
+        document.getElementById('maSizeXoa').value = id || '';
+        document.getElementById('tenSizeXoa').value = name || '';
     });
 
-    document.getElementById('formXoaTheLoai').addEventListener('submit', function(e) {
+    // Submit xoá size
+    document.getElementById('formXoaSize').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const category_id = document.querySelector('#maTheLoaiXoa').value;
+        const size_id = document.getElementById('maSizeXoa').value;
         const formData = new FormData();
-        formData.append('category_id', category_id);
+        formData.append('size_id', size_id);
 
-        fetch('ajax/delete_category.php', {
+        fetch('ajax/delete_size.php', {
                 method: 'POST',
                 body: formData
             })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Đóng modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaTheLoai'));
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaSize'));
                     modal.hide();
-
                     alert(data.message);
-
-                    loadCategories(1, currentFilterParams);
+                    loadSizes(1, currentFilterParams);
                 } else {
                     alert(data.message);
                 }
-            })
+            });
     });
 </script>
