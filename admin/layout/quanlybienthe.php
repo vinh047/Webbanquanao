@@ -67,14 +67,14 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                             <label for="txtIDSP" class="pt-2">Mã SP : </label>
                             <input type="text" name="txtIDSP" id="txtIDSP" class="form-control form-control-sm">
                             <label for="cbSizeLoc" class="pt-2">Size : </label>
-                            <select name="cbSizeLoc" id="cbSizeLoc" class="form-select">
+                            <select name="cbSizeLoc" id="cbSizeLoc" class="form-select select2">
                                 <option value="">Chọn size : </option>
                                 <?php foreach($size as $s): ?>
                                 <option value="<?=$s['size_id']?>"><?=$s['name']?></option>
                                 <?php endforeach ?>
                             </select>
                             <label for="cbMauLoc" class="pt-2">Màu : </label>
-                            <select name="cbMauLoc" id="cbMauLoc" class="form-select">
+                            <select name="cbMauLoc" id="cbMauLoc" class="form-select select2">
                                 <option value="">Chọn màu : </option>
                                 <?php foreach($color as $c): ?>
                                 <option value="<?=$c['color_id']?>"><?=$c['name']?></option>
@@ -280,7 +280,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="cbSizeSua" class="form-label">Size:</label>
-              <select name="cbSizeSua" id="cbSizeSua" class="form-select">
+              <select name="cbSizeSua" id="cbSizeSua" class="form-select" disabled>
                 <option value="">Chọn size sản phẩm</option>
                 <?php foreach($size as $s): ?>
                 <option value="<?= $s['size_id'] ?>"><?= $s['name'] ?></option>
@@ -290,7 +290,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 
             <div class="col-md-6 mb-3">
               <label for="cbMauSua" class="form-label">Màu:</label>
-              <select name="cbMauSua" id="cbMauSua" class="form-select">
+              <select name="cbMauSua" id="cbMauSua" class="form-select" disabled>
                 <option value="">Chọn màu sản phẩm</option>
                 <?php foreach($color as $cl): ?>
                 <option value="<?= $cl['color_id'] ?>"><?= $cl['name'] ?></option>

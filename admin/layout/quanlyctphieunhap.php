@@ -100,10 +100,10 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                             <tr class="text-center">
                                 <th class="bg-secondary text-white hienthiid">ID CTPN</th>
                                 <th class="bg-secondary text-white hienthiid">ID PN</th>
-                                <th class="bg-secondary text-white hienthiid">ID SP</th>
                                 <th class="bg-secondary text-white hienthiid">ID BT</th>
-                                <th class="bg-secondary text-white tensp">Ngày lập</th>
-                                <th class="bg-secondary text-white tensp">Trạng thái</th>
+                                <th class="bg-secondary text-white tensp giaodienmb">Tên SP</th>
+                                <th class="bg-secondary text-white tensp giaodienmb">Ngày lập</th>
+                                <th class="bg-secondary text-white hienthigia giaodienmb">Trạng thái</th>
                                 <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                             </tr>
                         </thead>

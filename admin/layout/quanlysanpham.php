@@ -74,7 +74,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                             <label for="txtTensp" class="mt-2">Tên sản phẩm</label>
                             <input type="text" name="txtTensp" id="txtTensp" class="form-control form-control-sm">
                             <label for="cbTheLoai" class="mt-2">Thể loại : </label>
-                            <select name="cbTheLoai" id="cbTheLoai" class="form-select">
+                            <select name="cbTheLoai" id="cbTheLoai" class="form-select select2">
                                 <option value="">Chọn thể loại</option>
                                 <?php foreach($categories as $theloai): ?>
                                 <option value="<?=$theloai['category_id']?>"><?=$theloai['name']?></option>
@@ -155,11 +155,11 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                     <thead>
                         <tr class="text-center">
                             <th class="bg-secondary text-white hienthiid">ID</th>
-                            <th class="bg-secondary text-white tensp">Tên sản phẩm</th>
-                            <th class="bg-secondary text-white hienthiloai">Loại</th>
-                            <th class="bg-secondary text-white mota">Mô tả Sản phẩm</th>
+                            <th class="bg-secondary text-white tensp giaodienmb">Tên sản phẩm</th>
+                            <th class="bg-secondary text-white hienthiloai giaodienmb">Loại</th>
+                            <th class="bg-secondary text-white mota giaodienmb">Mô tả Sản phẩm</th>
                             <!-- <th class="bg-secondary text-white hienthigia">Giá nhập</th> -->
-                            <th class="bg-secondary text-white hienthigia">Giá bán</th>
+                            <th class="bg-secondary text-white hienthigia giaodienmb">Giá bán</th>
                             <th class="bg-secondary text-white hienthibtn">Xử lý</th>
                         </tr>
                     </thead>

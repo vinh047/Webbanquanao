@@ -5,10 +5,11 @@ require_once('functionLoc.php');
 $db = DBConnect::getInstance();
 $conn = $db->getConnection();
 $locRaw = locCTPN($conn);
-$loc = $locRaw ?: "";
+// $loc = $locRaw ?: "";
+$loc = $locRaw ? "$locRaw AND d.is_deleted = 0" : "WHERE d.is_deleted = 0";
 
 // Tổng số chi tiết phiếu nhập
-$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt_details $loc", []);
+$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt_details d $loc", []);
 $totalItems = $total[0]['total'];
 
 // Trang hiện tại
@@ -19,12 +20,22 @@ $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
 // Truy vấn dữ liệu chi tiết phiếu nhập (tính luôn total_price)
+// $data = $db->select("
+// SELECT 
+//     importreceipt_details_id, importreceipt_id, product_id, variant_id, quantity, created_at, status
+// FROM importreceipt_details
+// $loc
+// ORDER BY importreceipt_details_id ASC
+// LIMIT $limit OFFSET $offset
+// ", []);
 $data = $db->select("
 SELECT 
-    importreceipt_details_id, importreceipt_id, product_id, variant_id, quantity, created_at, status
-FROM importreceipt_details
+    d.importreceipt_details_id, d.importreceipt_id, d.product_id, d.variant_id, d.quantity, d.created_at, d.status,
+    p.name AS product_name
+FROM importreceipt_details d
+JOIN products p ON d.product_id = p.product_id
 $loc
-ORDER BY importreceipt_details_id ASC
+ORDER BY d.importreceipt_details_id ASC
 LIMIT $limit OFFSET $offset
 ", []);
 
@@ -37,6 +48,7 @@ foreach ($data as $row) {
     $quantity = $row['quantity'];
     $ngaylap = $row['created_at'];
     $hideBtn = $row['status'] == 0 ? 'style="display:none;"' : '';
+    $product_name = $row['product_name'];
 
 
 
@@ -44,10 +56,10 @@ foreach ($data as $row) {
         <tr class='text-center'>
             <td class='hienthiid'>$id_ct</td>
             <td class='hienthiid'>$id_pn</td>
-            <td class='hienthiid'>$id_sp</td>
             <td class='hienthiid'>$variant_id</td>
-            <td class='tensp'>$ngaylap</td>
-<td class='tensp'>
+            <td class='tensp giaodienmb'>$product_name</td>
+            <td class='tensp giaodienmb'>$ngaylap</td>
+<td class='hienthigia giaodienmb'>
     " . ($row['status'] == 1 ? "
         <button class='btn btn-warning btn-sm btn-toggle-status fs-6 rounded-4' data-idct='$id_ct'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>
     " : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "

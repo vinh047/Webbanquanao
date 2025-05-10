@@ -71,47 +71,47 @@ function locCTPN($connection)
     if(!empty($_POST['txtIDctpn']))
     {
         $idctpn = (int)$_POST['txtIDctpn'];
-        $where[] = "importreceipt_details.importreceipt_details_id = $idctpn";
+        $where[] = "d.importreceipt_details_id = $idctpn";
     }
 
     if(!empty($_POST['txtIDpn']))
     {
         $idpn = (int)$_POST['txtIDpn'];
-        $where[] = "importreceipt_details.importreceipt_id = $idpn";
+        $where[] = "d.importreceipt_id = $idpn";
     }
 
     if(!empty($_POST['txtIDsp']))
     {
         $idsp = (int)$_POST['txtIDsp'];
-        $where[] = "importreceipt_details.product_id = $idsp";
+        $where[] = "d.product_id = $idsp";
     }
 
     if(!empty($_POST['txtIDbt']))
     {
         $idbt = (int)$_POST['txtIDbt'];
-        $where[] = "importreceipt_details.variant_id = $idbt";
+        $where[] = "d.variant_id = $idbt";
     }
 
     if(!empty($_POST['dateNhap']))
     {
         $ngaybd = $_POST['dateNhap'];
-        $where[] = "DATE(importreceipt_details.created_at) >= '$ngaybd'";
+        $where[] = "DATE(d.created_at) >= '$ngaybd'";
     }
 
     if(!empty($_POST['dateKT']))
     {
         $ngaykt = $_POST['dateKT'];
-        $where[] = "DATE(importreceipt_details.created_at) <= '$ngaykt'";
+        $where[] = "DATE(d.created_at) <= '$ngaykt'";
     }
 
     if (isset($_POST['txtTrangThai']) && $_POST['txtTrangThai'] !== '') {
         $status = (int)$_POST['txtTrangThai'];
-        $where[] = "importreceipt_details.status = $status";
+        $where[] = "d.status = $status";
     }
 
     return (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
-
 }
+
 
 function locPhieuNhap($connection)
 {

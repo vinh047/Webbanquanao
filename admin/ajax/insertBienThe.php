@@ -41,10 +41,10 @@ try {
         $targetPath = $uploadDir . $originalName;
     
         // ✅ Kiểm tra biến thể đã tồn tại (sau khi có $originalName)
-        $stmtCheck = $conn->prepare("SELECT variant_id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ? AND image = ?");
-        $stmtCheck->execute([$product_id, $color_id, $size_id, $originalName]);
+        $stmtCheck = $conn->prepare("SELECT variant_id FROM product_variants WHERE product_id = ? AND color_id = ? AND size_id = ?");
+        $stmtCheck->execute([$product_id, $color_id, $size_id]);
         if ($stmtCheck->fetch()) {
-            throw new Exception("Biến thể (màu + size + ảnh) đã tồn tại trong hệ thống!");
+            throw new Exception("Biến thể (màu + size) đã tồn tại trong hệ thống!");
         }
     
         // ✅ Nếu ảnh chưa có trong thư mục thì mới move vào

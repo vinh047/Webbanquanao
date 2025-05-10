@@ -188,7 +188,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <section class="pb-4 pt-2">
                 <div class="boloc ms-5 position-relative">
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc phiếu nhập"></i> <span class="fs-5">Lọc danh sách CTPN</span> </span>
-                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="z-index : 2000;border:1px solid black;">
+                    <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="z-index : 2000;border:1px solid black;max-width:300px;">
                         <form action="" method="POST" id="formLoc">
                         <div class="d-flex">
                                 <div class="me-auto">
@@ -208,7 +208,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <?php endforeach ?>
                             </select>
                             <label for="txtIDnv" class="mt-2">Nhân viên : </label>
-                            <select name="txtIDnv" id="txtIDnv" class="form-select">
+                            <select name="txtIDnv" id="txtIDnv" class="form-select select2">
                                 <option value="">Chọn nhân viên</option>
                                 <?php foreach($nhanvien as $n): ?>
                                 <option value="<?=$n['user_id']?>"><?=$n['name']?></option>
@@ -252,10 +252,10 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                         <thead>
                             <tr class="text-center">
                                 <th class="bg-secondary text-white hienthiid">ID PN</th>
-                                <th class="bg-secondary text-white hienthigia">Tên NV</th>
-                                <th class="bg-secondary text-white tensp">Tên NCC</th>
-                                <th class="bg-secondary text-white tensp">Tổng tiền</th>
-                                <th class="bg-secondary text-white tensp">Ngày lập</th>
+                                <th class="bg-secondary text-white hienthigia giaodienmb">Tên NV</th>
+                                <th class="bg-secondary text-white tensp giaodienmb">Tên NCC</th>
+                                <th class="bg-secondary text-white tensp giaodienmb">Tổng tiền</th>
+                                <th class="bg-secondary text-white tensp giaodienmb">Ngày lập</th>
                                 <th class="bg-secondary text-white tensp">Trạng thái</th>
                                 <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
                             </tr>
@@ -512,6 +512,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
           <thead>
             <tr>
               <th>#</th>
+              <th>ID BT</th>
               <th>Sản phẩm</th>
               <th>Size</th>
               <th>Màu</th>
@@ -558,6 +559,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <!-- Render JS -->
           </tbody>
         </table>
+        <div id="phantrang-xoa-ctpn" class="d-flex justify-content-center mt-3"></div>
       </div>
       <div class="modal-footer" id="anhienxoa">
         <button id="btnXacNhanXoaPN" class="btn btn-danger">Xác nhận xóa Phiếu nhập</button>
