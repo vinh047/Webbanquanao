@@ -123,7 +123,7 @@ if (!empty($_SESSION['user_id'])) {
 		<!-- Mini cart sidebar -->
 		<div id="mini-cart"
 			class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column"
-			style="width: 300px; height: 100vh; z-index: 9999; display: none;">
+			style="width: 300px; height: 100vh; z-index: 9999;">
 			<h6 class="mb-3">
 				Sản phẩm trong giỏ (<span id="cart-item-count">0</span>)
 			</h6>

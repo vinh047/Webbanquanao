@@ -1,1 +1,1 @@
-[{"id":"8","variant_id":"3","quantity":1,"name":"Áo sơ mi oxford nam tay dài fitted - Smartshirt","color":"Trắng","size":"XL","price":471000},{"id":"3","variant_id":"5","quantity":1,"name":"Áo sơ mi nam tay dài vải Nano Non Iron fitted","color":"Navy","size":"X","price":540000}]
+[{"id":"8","variant_id":"3","quantity":2,"name":"Áo sơ mi oxford nam tay dài fitted - Smartshirt","color":"Trắng","size":"XL","price":471000},{"id":"6","variant_id":"5","quantity":1,"name":"Áo thun tay ngắn nam S.café in.Boxy","color":"Navy","size":"X","price":569000}]
