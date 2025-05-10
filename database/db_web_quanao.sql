@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2025 at 12:09 PM
+-- Generation Time: May 10, 2025 at 05:18 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -55,21 +55,22 @@ CREATE TABLE `cart_details` (
 
 CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
+  `name` varchar(100) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`category_id`, `name`) VALUES
-(1, 'Áo thun'),
-(2, 'Quần short'),
-(3, 'Áo Sơ Mi'),
-(4, 'Áo Polo'),
-(5, 'Áo Khoác'),
-(6, 'Quần lót'),
-(7, 'Phụ kiện');
+INSERT INTO `categories` (`category_id`, `name`, `is_deleted`) VALUES
+(1, 'Áo thun', 0),
+(2, 'Quần short', 0),
+(3, 'Áo Sơ Mi', 0),
+(4, 'Áo Polo', 0),
+(5, 'Áo Khoác', 0),
+(6, 'Quần lót', 0),
+(7, 'Phụ kiện', 0);
 
 -- --------------------------------------------------------
 
@@ -80,28 +81,29 @@ INSERT INTO `categories` (`category_id`, `name`) VALUES
 CREATE TABLE `colors` (
   `color_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `hex_code` varchar(7) NOT NULL
+  `hex_code` varchar(7) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `colors`
 --
 
-INSERT INTO `colors` (`color_id`, `name`, `hex_code`) VALUES
-(1, 'Đen', '#282A2B'),
-(2, 'Be', '#DBD1BC'),
-(3, 'Nâu', '#90713B'),
-(4, 'Xám nhạt', '#9FA9A9'),
-(5, 'Hồng nhạt', '#D07771'),
-(6, 'Xanh rêu', '#95987B'),
-(7, 'Xanh biển đậm', '#4F5C7C'),
-(8, 'Trắng', '#F5F1E6'),
-(9, 'Đỏ', '#A5051D'),
-(10, 'Olive', '#59564F'),
-(11, 'Xanh biển nhạt', '#387EA0'),
-(12, 'Navy', '#3C4252'),
-(13, 'Rượu vang', '#391D2B'),
-(14, 'Be đậm', '#B58F6C');
+INSERT INTO `colors` (`color_id`, `name`, `hex_code`, `is_deleted`) VALUES
+(1, 'Đen', '#282A2B', 0),
+(2, 'Be', '#DBD1BC', 0),
+(3, 'Nâu', '#90713B', 0),
+(4, 'Xám nhạt', '#9FA9A9', 0),
+(5, 'Hồng nhạt', '#D07771', 0),
+(6, 'Xanh rêu', '#95987B', 0),
+(7, 'Xanh biển đậm', '#4F5C7C', 0),
+(8, 'Trắng', '#F5F1E6', 0),
+(9, 'Đỏ', '#A5051D', 0),
+(10, 'Olive', '#59564F', 0),
+(11, 'Xanh biển nhạt', '#387EA0', 0),
+(12, 'Navy', '#3C4252', 0),
+(13, 'Rượu vang', '#391D2B', 0),
+(14, 'Be đậm', '#B58F6C', 0);
 
 -- --------------------------------------------------------
 
@@ -340,17 +342,18 @@ CREATE TABLE `order_details` (
 
 CREATE TABLE `payment_method` (
   `payment_method_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
+  `name` varchar(100) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `payment_method`
 --
 
-INSERT INTO `payment_method` (`payment_method_id`, `name`) VALUES
-(1, 'Thanh toán khi nhận hàng (COD)'),
-(2, 'Chuyển khoản ngân hàng'),
-(3, 'Thanh toán qua ví Momo');
+INSERT INTO `payment_method` (`payment_method_id`, `name`, `is_deleted`) VALUES
+(1, 'Thanh toán khi nhận hàng (COD)', 0),
+(2, 'Chuyển khoản ngân hàng', 0),
+(3, 'Thanh toán qua ví Momo', 0);
 
 -- --------------------------------------------------------
 
@@ -697,20 +700,21 @@ INSERT INTO `role_permission_details` (`role_permission_detail_id`, `role_id`, `
 
 CREATE TABLE `sizes` (
   `size_id` int(11) NOT NULL,
-  `name` varchar(10) NOT NULL
+  `name` varchar(10) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
 
 --
 -- Dumping data for table `sizes`
 --
 
-INSERT INTO `sizes` (`size_id`, `name`) VALUES
-(6, '2XL'),
-(3, 'L'),
-(2, 'M'),
-(1, 'S'),
-(4, 'X'),
-(5, 'XL');
+INSERT INTO `sizes` (`size_id`, `name`, `is_deleted`) VALUES
+(1, 'S', 0),
+(2, 'M', 0),
+(3, 'L', 0),
+(4, 'X', 0),
+(5, 'XL', 0),
+(6, '2XL', 0);
 
 -- --------------------------------------------------------
 
@@ -774,10 +778,28 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `name`, `password`, `email`, `phone`, `role_id`, `status`) VALUES
-(1, 'admin', 'adminpass', 'admin@example.com', '0900000000', 2, 1),
-(2, 'khach1', 'khachpass', 'khach1@example.com', '0900000001', 1, 1),
-(3, 'staff1', 'staffpass', 'staff1@example.com', '0900000002', 4, 1);
+INSERT INTO `users` (`user_id`, `name`, `password`, `email`, `phone`, `role_id`, `status`, `otp`, `otp_expired_at`) VALUES
+(1, 'admin', 'adminpass', 'admin@example.com', '0900000000', 2, 1, NULL, NULL),
+(2, 'khach1', 'khachpass', 'khach1@example.com', '0900000001', 1, 1, NULL, NULL),
+(3, 'staff1', 'staffpass', 'staff1@example.com', '0900000002', 4, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_addresses`
+--
+
+CREATE TABLE `user_addresses` (
+  `address_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `address_detail` varchar(255) NOT NULL COMMENT 'Số nhà, tên đường…',
+  `ward` varchar(100) NOT NULL COMMENT 'Phường / Xã',
+  `district` varchar(100) NOT NULL COMMENT 'Quận / Huyện',
+  `province` varchar(100) NOT NULL COMMENT 'Tỉnh / Thành phố',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 = mặc định',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -923,6 +945,13 @@ ALTER TABLE `users`
   ADD KEY `role_id` (`role_id`);
 
 --
+-- Indexes for table `user_addresses`
+--
+ALTER TABLE `user_addresses`
+  ADD PRIMARY KEY (`address_id`),
+  ADD KEY `idx_user` (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1041,6 +1070,12 @@ ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
+-- AUTO_INCREMENT for table `user_addresses`
+--
+ALTER TABLE `user_addresses`
+  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -1122,29 +1157,14 @@ ALTER TABLE `role_permission_details`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+
+--
+-- Constraints for table `user_addresses`
+--
+ALTER TABLE `user_addresses`
+  ADD CONSTRAINT `fk_useraddr_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-CREATE TABLE `user_addresses` (
-  `address_id`     INT(11)       NOT NULL AUTO_INCREMENT,
-  `user_id`        INT(11)       NOT NULL,
-  `address_detail` VARCHAR(255)  NOT NULL COMMENT 'Số nhà, tên đường…',
-  `ward`           VARCHAR(100)  NOT NULL COMMENT 'Phường / Xã',
-  `district`       VARCHAR(100)  NOT NULL COMMENT 'Quận / Huyện',
-  `province`       VARCHAR(100)  NOT NULL COMMENT 'Tỉnh / Thành phố',
-  `is_default`     TINYINT(1)    NOT NULL DEFAULT 0 COMMENT '1 = mặc định',
-  `created_at`     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at`     DATETIME      NOT NULL 
-                     DEFAULT CURRENT_TIMESTAMP 
-                     ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`address_id`),
-  KEY `idx_user` (`user_id`),
-  CONSTRAINT `fk_useraddr_user`
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
-    ON DELETE CASCADE
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
