@@ -1,1 +1,3 @@
-[{"id":2,"variant_id":2,"quantity":1,"name":"Áo polo nam phối màu tay và cổ form fitted","color":"Trắng","size":"L","price":490000},{"product_id":"2","name":"Áo polo nam phối màu tay và cổ form fitted","price":637000,"quantity":1,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg","variant_id":"6","color":"Xanh biển đậm","size":"M"},{"product_id":"6","name":"Áo thun tay ngắn nam S.café in.Boxy","price":739700,"quantity":1,"image":"10s25tss048-matcha-latte-1-jpg-6tuh.jpg","variant_id":"26","color":"Xanh rêu","size":"L"}]
+
+[{"id":"1","variant_id":"1","quantity":14,"name":"Áo polo nam dệt kim tay ngắn form regular","color_id":"8","size":"X","price":540000,"image":"10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg"}]
+
