@@ -23,10 +23,10 @@ try {
         d.variant_id,
         d.quantity,
         p.name,
-        cl.name AS color,
+        v.color_id,
         s.name AS size,
         p.price,
-        v.image -- Lấy ảnh từ bảng product_variants
+        v.image 
     FROM cart_details d
     JOIN cart c ON d.cart_id = c.cart_id
     JOIN products p ON d.product_id = p.product_id

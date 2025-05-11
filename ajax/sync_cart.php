@@ -41,15 +41,6 @@ try {
         return isset($item['variant_id']) ? (int)$item['variant_id'] : 0;
     }, $data));
 
-    // 3. Xóa sản phẩm không còn trong localStorage
-    if (count($variantIdsFromClient) > 0) {
-        $placeholders = implode(',', array_fill(0, count($variantIdsFromClient), '?'));
-        $params = array_merge([$cart_id], $variantIdsFromClient);
-        $db->execute("DELETE FROM cart_details WHERE cart_id = ? AND variant_id NOT IN ($placeholders)", $params);
-    } else {
-        // Nếu giỏ trống → xoá hết
-        $db->execute("DELETE FROM cart_details WHERE cart_id = ?", [$cart_id]);
-    }
 
     // 4. Cập nhật hoặc thêm từng sản phẩm
     foreach ($data as $item) {

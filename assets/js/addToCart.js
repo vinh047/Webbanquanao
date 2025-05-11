@@ -32,7 +32,7 @@ async function checkStockBeforeAdd(variant_id, quantity) {
 }
 
 // Thêm sản phẩm vào giỏ
-async function addToCart(product_id, name, price, image, variant_id, color = '', size = '') {
+async function addToCart(product_id, name, price, image, variant_id, color_id = 0, size = '') {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const existingItem = cart.find(item => item.product_id === product_id && item.variant_id === variant_id);
     const newQuantity = existingItem ? existingItem.quantity + 1 : 1;
@@ -52,7 +52,7 @@ async function addToCart(product_id, name, price, image, variant_id, color = '',
             quantity: 1,
             image: finalImage,
             variant_id,
-            color: color?.trim() || "(không màu)",
+            color_id: parseInt(color_id) || 0,
             size: size?.trim() || "(không size)"
         });
     }
@@ -62,7 +62,8 @@ async function addToCart(product_id, name, price, image, variant_id, color = '',
     if (typeof renderMiniCart === "function") renderMiniCart();
     updateCartCount();
     showAddToCartNotice(name);
-    syncCartToServer();
+    syncCartToServer(); 
+
 }
 
 // Xử lý click "Thêm vào giỏ"
@@ -86,7 +87,7 @@ function handleAddToCartClick(e) {
     const variantImageFull = selectedColor.getAttribute('data-image');
     const variantImage = variantImageFull.split('/').pop();
     const variantId = selectedSize.getAttribute('data-variant-id');
-    const colorName = selectedColor.getAttribute('title') || '(không màu)';
+    const colorId = selectedColor.getAttribute('data-color-id');
     const sizeName = selectedSize.getAttribute('data-size-name') || '(không size)';
 
     if (!variantId) {
@@ -94,7 +95,7 @@ function handleAddToCartClick(e) {
         return;
     }
 
-    addToCart(productId, productName, productPrice, variantImage, variantId, colorName, sizeName);
+    addToCart(productId, productName, productPrice, variantImage, variantId, colorId, sizeName);
 }
 
 // Cập nhật số lượng mini cart
