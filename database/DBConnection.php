@@ -92,4 +92,17 @@ class DBConnect
         $sql = "UPDATE `$table` SET $setClause WHERE $whereClause";
         return $this->execute($sql, array_merge(array_values($data), $whereParams));
     }
+
+    public function getEnumValues($table, $column)
+    {
+        $stmt = $this->pdo->query("SHOW COLUMNS FROM `$table` WHERE Field = '$column'");
+        $row = $stmt->fetch();
+        if (!$row || strpos($row['Type'], 'enum') === false) return [];
+
+        $enumStr = $row['Type']; // enum('A','B','C')
+        $enumStr = str_replace(["enum(", ")"], "", $enumStr);
+        $enumStr = str_getcsv($enumStr, ",", "'"); // tách chuỗi an toàn
+
+        return $enumStr;
+    }
 }

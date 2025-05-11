@@ -129,15 +129,20 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
 
 
 <script>
-    function toggleDeleteRoleButton() {
+    function toggleRoleControls() {
         const selectedId = document.getElementById('roleSelect').value;
         const deleteWrapper = document.getElementById('deleteRoleWrapper');
+        const btnEdit = document.getElementById('btnEdit');
 
+        // Nếu là Admin (role_id = 2) → ẩn các nút
         if (selectedId === "2") {
             deleteWrapper.classList.add('d-none');
+            btnEdit.classList.add('d-none');
         } else {
             deleteWrapper.classList.remove('d-none');
+            btnEdit.classList.remove('d-none');
         }
+
     }
 
     function loadPermissions() {
@@ -152,7 +157,7 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
                 if (!btnEdit.classList.contains('d-none')) {
                     formPermission.classList.add('readonly-permission');
                 }
-                toggleDeleteRoleButton();
+                toggleRoleControls();
             })
     }
     loadPermissions();
