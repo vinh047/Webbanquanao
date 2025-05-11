@@ -16,11 +16,22 @@
         const div = document.createElement("div");
         div.className = "d-flex align-items-center mb-2 border-bottom pb-2";
         const imagePath = item.image?.includes('/') ? item.image : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
-div.innerHTML = `
-  <img src="${imagePath}" style="width:50px;height:50px;object-fit:cover;" class="me-2 rounded">
+      
+        // ✅ xử lý màu
+        const colorData = COLOR_MAP?.[item.color_id] || {};
+        const colorName = colorData.name || '(không màu)';
+        const colorHex = colorData.hex || '#ccc';
+      
+        div.innerHTML = `
+          <img src="${imagePath}" style="width:50px;height:50px;object-fit:cover;" class="me-2 rounded">
           <div class="flex-grow-1">
             <p class="mb-0 small fw-bold">${item.name}</p>
-            <p class="mb-0 text-muted small">${item.color || '(không màu)'} - ${item.size || '(không size)'}</p>
+            <p class="mb-0 text-muted small">
+              <span class="me-1 d-inline-block rounded-circle" 
+                    style="width:12px; height:12px; background-color:${colorHex}; border:1px solid #aaa;">
+              </span>
+              ${colorName} - ${item.size || '(không size)'}
+            </p>
             <div class="d-flex align-items-center mt-1">
               <span class="small me-2">SL:</span>
               <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeMiniCartQty(${index}, -1)"><i class="fa fa-minus"></i></button>
@@ -32,53 +43,58 @@ div.innerHTML = `
         `;
         itemsContainer.appendChild(div);
       });
+      
   
       if (countBadge) countBadge.textContent = totalQty;
       if (itemCount) itemCount.textContent = totalQty;
     }
   
     async function changeMiniCartQty(index, delta) {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cart = JSON.parse(localStorage.getItem("cart") || []);
       const item = cart[index];
       if (!item) return;
     
-      // Nếu tăng thì kiểm tra tồn kho
-      if (delta > 0) {
-        const res = await fetch('ajax/check_stock.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ variant_id: item.variant_id })
-        });
+      const res = await fetch('/ajax/check_login.php');
+      const check = await res.json();
     
-        const data = await res.json();
-        if (!data.success || item.quantity + 1 > data.stock) {
-          alert(`Chỉ còn ${data.stock} sản phẩm trong kho.`);
-          return;
+      if (!check.loggedIn) {
+        // ✅ Chỉ sửa local nếu chưa đăng nhập
+        if (delta > 0) {
+          item.quantity += 1;
+        } else {
+          if (item.quantity <= 1) {
+            cart.splice(index, 1);
+          } else {
+            item.quantity -= 1;
+          }
         }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderMiniCart();
+        return;
       }
     
+      // ✅ Nếu đăng nhập thì gửi request lên server
       const isRemoving = delta < 0 && item.quantity === 1;
       const action = isRemoving ? 'remove' : (delta > 0 ? 'increase' : 'decrease');
     
-      fetch('ajax/update_cart.php', {
+      const response = await fetch('/ajax/update_cart.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, variant_id: item.variant_id })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          if (isRemoving || item.quantity + delta < 1) {
-            cart.splice(index, 1);
-          } else {
-            item.quantity += delta;
-          }
-          localStorage.setItem("cart", JSON.stringify(cart));
-          renderMiniCart();
-          renderCartPage?.();
-        }
       });
+    
+      const data = await response.json();
+      if (data.success) {
+        if (isRemoving || item.quantity + delta < 1) {
+          cart.splice(index, 1);
+        } else {
+          item.quantity += delta;
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderMiniCart();
+      }
     }
+    
     
     function removeMiniCartItem(index) {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];

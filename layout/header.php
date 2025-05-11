@@ -160,6 +160,7 @@ if (!empty($_SESSION['user_id'])) {
 </header>
 
 <!-- Các script quản lý giỏ hàng và menu -->
+<script src="/ajax/generate_color_map.php"></script>
 <script src="/assets/js/addToCart.js"    defer></script>
 <script src="/assets/js/cart.js"         defer></script>
 <script src="/assets/js/mini_cart.js"    defer></script>

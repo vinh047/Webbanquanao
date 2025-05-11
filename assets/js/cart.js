@@ -17,7 +17,7 @@ function renderMiniCart() {
       <img src="${item.image || '/assets/img/sanpham/sp1.jpg'}" style="width:50px; height:50px; object-fit:cover;" class="me-2 rounded">
       <div class="flex-grow-1">
         <p class="mb-0 small fw-bold">${item.name}</p>
-        <p class="mb-0 text-muted small">${item.color || '(không màu)'} - ${item.size || '(không size)'}</p>
+        <p class="mb-0 text-muted small">${COLOR_MAP?.[item.color_id]?.name || '(không màu)'} - ${item.size || '(không size)'}</p>
         <div class="d-flex align-items-center mt-1">
           <span class="small me-2">SL:</span>
           <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeMiniCartQty(${index}, -1)"><i class="fa fa-minus"></i></button>
@@ -121,7 +121,7 @@ div.innerHTML = `
   <img src="${imagePath}" alt="" width="100" height="100" class="rounded" style="object-fit:cover;">
       <div class="flex-grow-1">
         <h6 class="fw-bold mb-1">${item.name}</h6>
-        <p class="mb-1 small">Color : ${item.color || '(không màu)'}</p>
+        <p class="mb-1 small">Color : ${COLOR_MAP?.[item.color_id]?.name || '(không màu)'}</p>
         <p class="mb-1 small">Size : ${item.size || '(không size)'}</p>
         <p class="fw-semibold text-danger">${item.price.toLocaleString()}₫</p>
         <div class="d-inline-flex align-items-center border rounded px-2 py-1">
