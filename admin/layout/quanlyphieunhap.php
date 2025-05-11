@@ -616,6 +616,12 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
               Lưu biến thể thành công    
             </p>
         </div>
+
+        <div class="thongbaoXacNhanThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">   
+              Xác nhận phiếu nhập thành công
+            </p>
+        </div>
 <div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">       
                 Bạn không có quyền thực hiện chức năng này

@@ -184,6 +184,13 @@ function xemChiTiet()
               .then(res => res.text())
               .then(text => {
                 try {
+                            if (!permissions.includes('read')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
                   const data = JSON.parse(text);
                   renderChiTietBienThe(data);
                   const modalElement = document.getElementById('modalChiTietBienThe');
@@ -239,6 +246,13 @@ function hienthisuaBienThe()
             imgPreview.src = "../../assets/img/sanpham/" + anh;
             imgPreview.style.display = "block";
     
+                    if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
             // ✅ Mở modal Bootstrap
             const modalSuaBienThe = new bootstrap.Modal(document.getElementById('modalSuaBienThe'));
             modalSuaBienThe.show();
@@ -249,6 +263,13 @@ function xoaBienThe()
 {
     document.querySelectorAll(".btn-xoa").forEach(btn => {
         btn.addEventListener("click", function () {
+                if (!permissions.includes('delete')) {
+                    const tBquyen = document.querySelector('.thongBaoQuyen');
+                    tBquyen.style.display = 'block';
+                    tBquyen.classList.add('show');
+                    setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                    return; 
+                }
             const id = this.dataset.id; // Lấy ID của sản phẩm
             const popup = document.querySelector(".thongBaoXoa"); // Popup xóa
             const overlay = document.querySelector(".overlay"); // Overlay đen mờ
@@ -259,16 +280,6 @@ function xoaBienThe()
 
             // Xử lý khi nhấn nút "Có"
             popup.querySelector(".btn-danger").onclick = function () {
-                    if (!permissions.includes('delete')) {
-                    const tBquyen = document.querySelector('.thongBaoQuyen');
-                    tBquyen.style.display = 'block';
-                    tBquyen.classList.add('show');
-                    popup.style.display = "none";
-                    document.querySelector(".overlay").style.display = "none";
-
-                    setTimeout(() => tBquyen.classList.remove('show'), 2000);
-                    return; 
-                }
                 // Gửi yêu cầu xóa sản phẩm qua AJAX
                 fetch("./ajax/deleteBienThe.php", {
                     method: "POST",
@@ -410,177 +421,64 @@ function resetFormLoc()
 function suaBienThe(){}
 formSua.addEventListener("submit", async function (e) {
     e.preventDefault();
-    console.log("Đã submit form!");
 
-    const idsp = document.getElementById("txtMaSua").value.trim();
-    const img = document.getElementById("fileAnhSua").value;
-    const size = document.getElementById("cbSizeSua").value.trim();
-    const mau = document.getElementById("cbMauSua").value;
-    const sl = document.getElementById("txtSlSua").value.trim();
-    const idBienThe = document.getElementById("txtMaBt").value; // 👈 mã biến thể (ẩn)
-    // Lấy tên ảnh hiện tại trong thẻ <div id="tenFileAnhSua">
-    const tenAnh = document.getElementById("tenFileAnhSua").textContent.trim();
-    
-    if (!permissions.includes('update')) {
-        const tBquyen = document.querySelector('.thongBaoQuyen');
-        tBquyen.style.display = 'block';
-        tBquyen.classList.add('show');
-        setTimeout(() => tBquyen.classList.remove('show'), 2000);
-        document.querySelector('.formSua').style.display = 'none';
-        document.querySelector('.overlay').style.display = 'none';
-        return; 
-    }
+    const idBienThe = document.getElementById("txtMaBt").value;
+    const file = document.getElementById("fileAnhSua").files[0];
 
-    if (!idsp) {
-        loi.textContent = "Không được để trống ID sản phẩm";
+    if (!file) {
+        loi.textContent = "Vui lòng chọn ảnh mới!";
         thongbao.style.display = 'block';
         thongbao.classList.add('show');
         setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("txtMaSua").focus();
         return;
     }
 
-    if(isNaN(idsp))
-    {
-        loi.textContent = "ID sản phẩm phải ở dạng số";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("txtMaSua").focus();
-        return;  
+    const formData = new FormData();
+    formData.append("txtMaBt", idBienThe);
+    formData.append("fileAnhSua", file);
+
+    // ✅ Debug kiểm tra kỹ dữ liệu
+    for (const [key, value] of formData.entries()) {
+        console.log(key, ':', value);
     }
 
-    if(idsp < 0)
-    {
-        loi.textContent = "ID sản phẩm phải lớn hơn 0";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("txtMaSua").focus();
-        return;  
-    }
-
-    const file = document.getElementById("fileAnhSua").files[0]; 
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif']; 
-    if (file && !validImageTypes.includes(file.type)) {
-        loi.textContent = "Tệp được chọn không phải là ảnh (chỉ chấp nhận .jpg, .png, .gif)";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("fileAnhSua").focus();
-        return;
-    }
-
-    if(!size)
-    {
-        loi.textContent = "Không được để trống size";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("cbSizeSua").focus();
-        return;
-    }
-
-    if(!sl){
-        loi.textContent = "Không được để trống số lượng";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("txtSlSua").focus();
-        return; 
-    }
-
-    if(isNaN(sl))
-    {
-        loi.textContent = "Số lượng phải ở dạng số";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("txtSlSua").focus();
-        return;  
-    }
-
-    if(sl < 0)
-    {
-        loi.textContent = "Số lượng phải lớn hơn 0";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("txtSlSua").focus();
-        return;  
-    }
-
-    if(!mau)
-    {
-        loi.textContent = "Không được để trống màu";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        document.getElementById("cbMauSua").focus();
-        return;  
-    }
-// // ✅ Debug dữ liệu đang gửi đi
-// console.log("DỮ LIỆU GỬI ĐI:");
-// console.log("ID biến thể:", idBienThe);
-// console.log("ID sản phẩm:", idsp);
-// console.log("Size:", size);
-// console.log("Màu:", mau);
-// console.log("Số lượng:", sl);
-// console.log("Tên ảnh hiện tại:", tenAnh);
-// console.log("Ảnh mới:", file ? file.name : "(Không có file mới)");
-
-    // Kiểm tra mã sản phẩm trước khi cập nhật
     try {
-        const resID = await fetch(`./ajax/checkID.php?product_id=${idsp}`);
-        const dataID = await resID.json();
-        if (!dataID.exists) return showError("Mã sản phẩm không tồn tại!");
-
-        // 🧠 Kiểm tra biến thể đã tồn tại chưa
-        // const urlBT = `./ajax/checkBT.php?product_id=${idsp}&size_id=${size}&color_id=${mau}&image=${encodeURIComponent(tenAnh)}&current_id=${idBienThe}`;
-        const urlBT = `./ajax/checkBT.php?product_id=${idsp}&size_id=${size}&color_id=${mau}&current_id=${idBienThe}`;
-
-        const resBT = await fetch(urlBT);
-        const dataBT = await resBT.json();
-
-        if (dataBT.exists) return showError("Đã tồn tại biến thể này rồi!");
-
-        // ✅ Tiến hành gửi form
-        const formData = new FormData(formSua);
         const resUpdate = await fetch("./ajax/updateBienThe.php", {
             method: "POST",
             body: formData
         });
         const result = await resUpdate.json();
+        console.log(result);
 
         if (result.success) {
             const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
+            tbUpdate.textContent = result.message;
             tbUpdate.style.display = "block";
             tbUpdate.classList.add("show");
             setTimeout(() => tbUpdate.classList.remove('show'), 2000);
-                        // ✅ Ẩn modal sau khi cập nhật thành công
-        const modalElement = document.getElementById('modalSuaBienThe');
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (modalInstance) {
-            modalInstance.hide();
-        }
-            adjustPageIfLastItem();
+
+            const modalElement = document.getElementById('modalSuaBienThe');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) modalInstance.hide();
+
             fetchBienThe(currentPage);
         } else {
-            alert(result.message || "Lỗi cập nhật");
+            loi.textContent = result.message;
+            thongbao.style.display = 'block';
+            thongbao.classList.add('show');
+            setTimeout(() => thongbao.classList.remove('show'), 2000);
         }
 
     } catch (err) {
-        console.error("Lỗi mạng hoặc máy chủ:", err);
-        showError("Lỗi kết nối tới máy chủ!");
-    }
-    function showError(message) {
-        loi.textContent = message; // ⚠️ Đây là dòng bạn thiếu!
+        console.error("Lỗi:", err);
+        loi.textContent = "Lỗi kết nối tới máy chủ!";
         thongbao.style.display = 'block';
         thongbao.classList.add('show');
         setTimeout(() => thongbao.classList.remove('show'), 2000);
     }
-    
 });
+
+
 document.getElementById("fileAnhSua").addEventListener("change", function () {
     const file = this.files[0];
     const imgPreview = document.querySelector("#hienthianhSua img");

@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnThemSanPhamMoi = document.getElementById('btnThemSanPhamMoi');
     if (btnThemSanPhamMoi) {
         btnThemSanPhamMoi.addEventListener('click', function () {
+                    if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
             const modalElement = document.getElementById('modalNhapSanPham');
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
@@ -226,6 +233,13 @@ function chitietsanpham()
             .then(text => {
             //   console.log("Raw response:", text); // ← kiểm tra HTML lỗi gì
               try {
+            if (!permissions.includes('read')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
                 const data = JSON.parse(text);
                 renderChiTietSanPham(data); // vẫn dùng hàm cũ nếu đúng JSON
                 const modalElement = document.getElementById('modalChiTietSP');
@@ -252,6 +266,14 @@ function hienthisua() {
 
     document.querySelectorAll(".btn-sua").forEach(btn => {
         btn.addEventListener("click", function () {
+            if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
+
             const id = this.dataset.id;
             const ten = this.dataset.ten;
             const mota = this.dataset.mota;
@@ -284,7 +306,16 @@ function xoasanpham()
 {
                 // Xử lý nút Xóa
                 document.querySelectorAll(".btn-xoa").forEach(btn => {
+                    
                     btn.addEventListener("click", function () {
+        if (!permissions.includes('delete')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
+
                         const id = this.dataset.id;
                         const popup = document.querySelector(".thongBaoXoa");
                         popup.style.display = "block";
@@ -299,16 +330,6 @@ function xoasanpham()
                         };
     
                         btnCo.onclick = () => {
-                            if (!permissions.includes('delete')) {
-                                const tBquyen = document.querySelector('.thongBaoQuyen');
-                                tBquyen.style.display = 'block';
-                                tBquyen.classList.add('show');
-                                popup.style.display = "none";
-                                document.querySelector(".overlay").style.display = "none";
-    
-                                setTimeout(() => tBquyen.classList.remove('show'), 2000);
-                                return; 
-                            }
                             fetch("./ajax/deleteSanPham.php", {
                                 method: "POST",
                                 headers: {
@@ -551,14 +572,6 @@ function suasanpham()
         const tbLoi = document.querySelector(".thongbaoLoi");
         const loiTB = tbLoi.querySelector("p");
         let loi = "";
-
-        if (!permissions.includes('update')) {
-            const tBquyen = document.querySelector('.thongBaoQuyen');
-            tBquyen.style.display = 'block';
-            tBquyen.classList.add('show');
-            setTimeout(() => tBquyen.classList.remove('show'), 2000);
-            return; 
-        }
 
 
 

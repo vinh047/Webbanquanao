@@ -195,6 +195,14 @@ function xemChiTiet()
       
               document.getElementById('ctbt_ngay').textContent = info.created_at;
       
+
+            if (!permissions.includes('read')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
               const modal = new bootstrap.Modal(document.getElementById('modalChiTietBienThe'));
               modal.show();
             } else {

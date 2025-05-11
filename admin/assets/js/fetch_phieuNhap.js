@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnThemSanPhamMoi = document.getElementById('btnThemSanPhamMoi');
         if (btnThemSanPhamMoi) {
             btnThemSanPhamMoi.addEventListener('click', function () {
+                        if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
                 const modalElement = document.getElementById('modalNhapSanPham');
                 const modal = new bootstrap.Modal(modalElement);
                 modal.show();
@@ -164,6 +171,13 @@ function capNhatLaiDropdownTenSanPham(id, name) {
     }
 }
 document.getElementById('btnMoModalBienThe').addEventListener('click', () => {
+            if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
     const modal = new bootstrap.Modal(document.getElementById('modalThemBienThe'));
     modal.show();
     $('#modalThemBienThe').on('shown.bs.modal', function () {
@@ -569,6 +583,13 @@ function generateOptions(list, valueKey, labelKey) {
 function xuLyThemPhieuNhap()
 {
     document.getElementById('create_pn').addEventListener('click', function () {
+                if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
         const modal = new bootstrap.Modal(document.getElementById('modalCreatePN'));
         modal.show();
         $('#modalCreatePN').on('shown.bs.modal', function () {
@@ -1199,9 +1220,17 @@ function xacNhanCho()
                                 // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
                                 document.querySelectorAll('.btn-toggle-status').forEach(btn => {
                     
+                                    
+
                                     btn.addEventListener('click', function () {
                                         const id = this.dataset.idpn;
-                                        
+                                                if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
                                         // Lưu ID vào nút xác nhận
                                         document.getElementById('btnXacNhan').dataset.idpn = id;
                                 
@@ -1213,15 +1242,6 @@ function xacNhanCho()
                             // Khi người dùng ấn nút Xác nhận trong popup
             document.getElementById('btnXacNhan').addEventListener('click', async function () {
                 const id = this.dataset.idpn;
-                if (!permissions.includes('update')) {
-                    const tBquyen = document.querySelector('.thongBaoQuyen');
-                    tBquyen.style.display = 'block';
-                    tBquyen.classList.add('show');
-                    document.getElementById('xacNhanCho').style.display = 'none';
-                    document.querySelector('.overlay').style.display = 'none';
-                    setTimeout(() => tBquyen.classList.remove('show'), 2000);
-                    return; 
-                }
                 try {
                     const res = await fetch('./ajax/moDongPN.php', {
                         method: 'POST',
@@ -1238,7 +1258,10 @@ function xacNhanCho()
                     if (data.success) {
                         document.getElementById('xacNhanCho').style.display = 'none';
                         document.querySelector('.overlay').style.display = 'none';
-
+                                    const tbxacnhantc = document.querySelector('.thongbaoXacNhanThanhCong');
+                                    tbxacnhantc.style.display = 'block';
+                                    tbxacnhantc.classList.add('show');
+                                    setTimeout(() => tbxacnhantc.classList.remove('show'), 2000);
                         loadPhieuNhap(currentPage);
                     } else {
                         alert("Đóng thất bại: " + data.message);
@@ -1345,6 +1368,13 @@ if (Array.isArray(data.data)) {
                         const existingModal = bootstrap.Modal.getInstance(modalElement);
             
                         if (!existingModal) {
+                                    if (!permissions.includes('read')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
                             const modal = new bootstrap.Modal(modalElement);
                             modal.show();
                         } else {
@@ -1479,6 +1509,15 @@ function xoaPhieuNhap(){};
 document.addEventListener('click', function (e) {
     // 1. Khi click nút xoá phiếu nhập
     if (e.target.classList.contains('btn-xoa')) {
+
+                if (!permissions.includes('delete')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
+
         const idpn = e.target.dataset.idpn;
         document.getElementById('btnXacNhanXoaPN').dataset.idpn = idpn;
 
@@ -1721,7 +1760,13 @@ document.addEventListener('click', function (e) {
 document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
 document.body.classList.remove('modal-open');
 document.body.style = '';
-
+        if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
         modal.show();
         $(document).ready(function () {
             $('#modalSuaPhieuNhap').on('shown.bs.modal', function () {
@@ -1738,13 +1783,6 @@ document.body.style = '';
 // Hàm cập nhật chi tiết phiếu nhập
 
 document.getElementById('btn_sua_pn').addEventListener('click', function () {
-    if (!permissions.includes('update')) {
-        const tBquyen = document.querySelector('.thongBaoQuyen');
-        tBquyen.style.display = 'block';
-        tBquyen.classList.add('show');
-        setTimeout(() => tBquyen.classList.remove('show'), 2000);
-        return; 
-    }
     const formElement = document.getElementById('formSuaPN');
     const formData = new FormData(formElement);
 
