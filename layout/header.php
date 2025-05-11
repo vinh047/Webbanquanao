@@ -33,13 +33,22 @@ foreach ($categories as $cat) {
 
 // Khởi tạo $user luôn tồn tại
 $user = null;
+
 if (!empty($_SESSION['user_id'])) {
-	// Lấy thông tin user (bạn có thể thay đổi SELECT cho phù hợp)
-	$user = $db->selectOne(
-		'SELECT user_id, name FROM users WHERE user_id = ?',
-		[$_SESSION['user_id']]
-	);
+    // Lấy thông tin user và vai trò
+    $user = $db->selectOne(
+        'SELECT user_id, name, role_id FROM users WHERE user_id = ?',
+        [$_SESSION['user_id']]
+    );
+
+    // Nếu role_id không phải là 1 (admin), huỷ session
+    if (!$user || !isset($user['role_id']) || $user['role_id'] != 1) {
+        session_unset();     // Xoá toàn bộ biến session
+        session_destroy();   // Huỷ phiên đăng nhập
+        $user = null;        // Đặt lại user để tránh dùng sai
+    }
 }
+
 ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 <header class="header">
