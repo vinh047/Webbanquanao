@@ -12,8 +12,6 @@ $offset = ($page - 1) * $limit;
 $whereClauses = [];
 $params = [];
 
-$whereClauses[] = 'is_deleted = 0';
-
 $search_name = $_GET['search_name'] ?? '';
 if (!empty($search_name)) {
     $whereClauses[] = 'name LIKE ?';
@@ -27,42 +25,45 @@ if (!empty($search_name)) {
 // Gộp điều kiện WHERE
 $whereSql = count($whereClauses) > 0 ? 'WHERE ' . implode(' AND ', $whereClauses) : '';
 
-$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM supplier $whereSql LIMIT $limit OFFSET $offset";
-$suppliers = $db->select($sql, $params);
+$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM orders $whereSql LIMIT $limit OFFSET $offset";
+$orders = $db->select($sql, $params);
 
 $totalQuery = "SELECT FOUND_ROWS()";
 $totalResult = $db->select($totalQuery);
-$totalSupplier = $totalResult[0]['FOUND_ROWS()'];
+$totalorder = $totalResult[0]['FOUND_ROWS()'];
 
 // Tổng số trang
-$totalPages = ceil($totalSupplier / $limit);
+$totalPages = ceil($totalorder / $limit);
 
 // Khởi tạo phân trang
-$pagination = new Pagination($totalSupplier, $limit, $page);
+$pagination = new Pagination($totalorder, $limit, $page);
 
 ob_start();
-foreach ($suppliers as $supplier): ?>
+foreach ($orders as $order): 
+$user = $db->selectOne('SELECT * FROM users WHERE user_id = ?', [$order['user_id']]);
+$payment_method = $db->selectOne('SELECT * FROM payment_method WHERE payment_method_id = ?', [$order['payment_method_id']]);
+$staff = $db->selectOne('SELECT * FROM users WHERE user_id = ?', [$order['staff_id']]);
+?>
     <tr>
-        <td><?= $supplier['supplier_id'] ?></td>
-        <td><?= $supplier['name'] ?></td>
-        <td><?= $supplier['email'] ?></td>
-        <td><?= $supplier['address'] ?></td>
+        <td><?= $order['order_id'] ?></td>
+        <td><?= $user['name'] ?></td>
+        <td><?= $order['status'] ?></td>
+        <td><?= $order['total_price'] ?></td>
+        <td><?= $order['shipping_address'] ?></td>
+        <td><?= $order['note'] ?></td>
+        <td><?= $order['created_at'] ?></td>
+        <td><?= $payment_method['name'] ?></td>
+        <td><?= $staff['name'] ?></td>
         <td>
-            <button class="btn btn-success mx-1 btn-edit-supplier"
-                data-id="<?= $supplier['supplier_id'] ?>"
-                data-name="<?= $supplier['name'] ?>"
-                data-email="<?= $supplier['email'] ?>"
-                data-address="<?= $supplier['address'] ?>"
+            <button class="btn btn-success mx-1 btn-edit-order"
+                
                 data-bs-toggle="modal"
                 data-bs-target="#modalSuaNCC">
                 <i class="fa-regular fa-pen-to-square"></i>
                 Sửa
             </button>
-            <button class="btn btn-danger btn-delete-supplier mx-1"
-                data-supplier-id="<?= $supplier['supplier_id'] ?>"
-                data-name="<?= $supplier['name'] ?>"
-                data-email="<?= $supplier['email'] ?>"
-                data-address="<?= $supplier['address'] ?>"
+            <button class="btn btn-danger btn-delete-order mx-1"
+                
                 data-bs-toggle="modal"
                 data-bs-target="#modalXoaNCC">
                 <i class="fas fa-trash"></i>
@@ -72,7 +73,7 @@ foreach ($suppliers as $supplier): ?>
     </tr>
 <?php endforeach;
 
-$supplierHtml = ob_get_clean();
+$orderHtml = ob_get_clean();
 
 $paginationHtml = null;
 
@@ -83,7 +84,7 @@ if ($totalPages > 1) {
 }
 
 $data = [
-    'supplierHtml' => $supplierHtml,
+    'orderHtml' => $orderHtml,
     'pagination' => $paginationHtml
 ];
 

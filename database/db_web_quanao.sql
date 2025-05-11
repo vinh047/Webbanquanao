@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 05:54 PM
+-- Generation Time: May 11, 2025 at 11:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -310,7 +310,7 @@ INSERT INTO `importreceipt_details` (`importreceipt_details_id`, `importreceipt_
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
+  `status` enum('Chờ xác nhận','Đã thanh toán, chờ giao hàng','Đang giao hàng','Giao thành công','Đã huỷ') DEFAULT 'Chờ xác nhận',
   `total_price` decimal(12,2) DEFAULT NULL,
   `shipping_address` varchar(255) DEFAULT NULL,
   `note` text DEFAULT NULL,

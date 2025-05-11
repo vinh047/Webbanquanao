@@ -95,6 +95,12 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                     </a>
                 </li>
 
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'donhang' ? 'active' : '' ?>" href="index.php?page=donhang&pageadmin=1">
+                        <i class="fa fa-cart-plus"></i> <span>Đơn hàng</span>
+                    </a>
+                </li>
+
 
                 <li class="nav-item mb-2">
                     <a class="nav-link text-white d-flex align-items-center gap-2" href="index.php?action=logout">
@@ -168,6 +174,9 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                         break;
                     case 'phanquyen':
                         include '../admin/layout/phan_quyen.php';
+                        break;
+                    case 'donhang':
+                        include '../admin/layout/don_hang.php';
                         break;
                 }
             }
