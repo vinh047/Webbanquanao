@@ -18,20 +18,32 @@ function validateForm() {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
   const phoneRegex = /^0\d{9}$/;
 
+
   function showError(field, message) {
     field.classList.remove("border-dark");
     field.classList.add("is-invalid", "border-danger");
-
+  
+    const group = field.closest(".input-group");
+    const container = group || field;
+  
+    // Xoá feedback cũ nếu có
+    const next = container.nextElementSibling;
+    if (next && next.classList.contains("invalid-feedback")) {
+      next.remove();
+    }
+  
     const feedback = document.createElement("div");
     feedback.className = "invalid-feedback d-block text-danger";
     feedback.textContent = message;
-    field.insertAdjacentElement("afterend", feedback);
+  
+    container.insertAdjacentElement("afterend", feedback);
+  
     isValid = false;
-
     if (!firstInvalidField) {
       firstInvalidField = field;
     }
   }
+  
 
   if (trangthai === "dangky") {
     const nameField = form.querySelector('[name="name"]');
@@ -103,11 +115,20 @@ function validateForm() {
 
 function addError(input, message) {
   if (!input) return;
+
   input.classList.remove("border-dark");
   input.classList.add("is-invalid", "border-danger");
+
+  const group = input.closest(".input-group");
+  const container = group || input;
+  const next = container.nextElementSibling;
+  if (next && next.classList.contains("invalid-feedback")) {
+    next.remove();
+  }
 
   const feedback = document.createElement("div");
   feedback.className = "invalid-feedback d-block text-danger";
   feedback.textContent = message;
-  input.insertAdjacentElement("afterend", feedback);
+  container.insertAdjacentElement("afterend", feedback);
 }
+

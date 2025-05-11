@@ -13,14 +13,27 @@ function loadForm() {
         <label class="text-black">Email</label>
         <input type="email" name="email" class="form-control border-dark" placeholder="Nhập email">
       </div>
+          
       <div class="mb-3">
         <label class="text-black">Mật khẩu</label>
-        <input type="password" name="pswd" class="form-control border-dark" placeholder="Nhập mật khẩu">
+        <div class="input-group">
+          <input type="password" name="pswd" class="form-control border-dark" placeholder="Nhập mật khẩu">
+          <span class="input-group-text toggle-password" style="cursor:pointer">
+            <i class="fa-solid fa-eye-slash"></i>
+          </span>
+        </div>
       </div>
       <div class="mb-3">
         <label for="pswd-confirm" class="form-label text-black">Xác nhận mật khẩu</label>
-        <input type="password" class="form-control border-dark" id="pswd-confirm" name="pswd-confirm" placeholder="Nhập lại mật khẩu">
+        <div class="input-group">
+          <input type="password" class="form-control border-dark" id="pswd-confirm" name="pswd-confirm" placeholder="Nhập lại mật khẩu">
+          <span class="input-group-text toggle-password" style="cursor:pointer">
+            <i class="fa-solid fa-eye-slash"></i>
+          </span>
+        </div>
       </div>
+
+
       <div class="mb-3">
         <label class="text-black">Số điện thoại</label>
         <input type="tel" name="sdt" class="form-control border-dark" placeholder="Nhập số điện thoại">
@@ -87,10 +100,19 @@ function loadForm() {
         <label for="email" class="form-label text-black">Email</label>
         <input type="email" class="form-control border-dark" id="email" name="email" placeholder="Nhập email">
       </div>
+
+   
       <div class="mb-3">
         <label for="pswd" class="form-label text-black">Mật khẩu</label>
-        <input type="password" class="form-control border-dark" id="pswd" name="pswd" placeholder="Nhập mật khẩu">
+        <div class="input-group">
+          <input type="password" class="form-control border-dark" id="pswd" name="pswd" placeholder="Nhập mật khẩu">
+          <span class="input-group-text toggle-password" style="cursor:pointer">
+            <i class="fa-solid fa-eye-slash"></i>
+          </span>
+        </div>
       </div>
+
+   
       <hr>
       <div class="text-center pb-2">
         <button type="submit" class="btn btn-primary w-75">Đăng nhập</button>

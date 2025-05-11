@@ -40,5 +40,6 @@ $trangthai = $_GET['trangthai'] ?? 'dangnhap';
   <script src="Validate/AfterSubmitCheck.js"></script>
   <script src="Validate/validateForm.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="toggle_password\toggle_password.js"></script>
 </body>
 </html>
