@@ -182,13 +182,10 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                     case 'phanquyen':
                         include '../admin/layout/phan_quyen.php';
                         break;
-<<<<<<< Updated upstream
                     case 'donhang':
                         include '../admin/layout/don_hang.php';
-=======
                     case 'thongke':
                         include '../admin/layout/thongke.php';
->>>>>>> Stashed changes
                         break;
                 }
             }
