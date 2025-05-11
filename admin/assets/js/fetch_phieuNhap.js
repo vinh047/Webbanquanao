@@ -405,6 +405,9 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     });
 });
 
+
+
+
   
   document.querySelector('#modalThemBienThe .btn-danger').addEventListener('click', function () {
     // 1. Reset select sản phẩm
@@ -416,19 +419,6 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     // 3. Reset lại form ảnh và inputs
     document.getElementById('formBienThe').reset();
   
-    // // (Tuỳ chọn) 4. Tự thêm lại 1 dòng trống
-    // const container = document.getElementById('variant-container');
-    // const wrapper = document.createElement('div');
-    // wrapper.innerHTML = createVariantRow(0); // hoặc variantIndex++ nếu bạn dùng biến đếm
-    // container.appendChild(wrapper);
-  
-    // Kích hoạt lại Select2 trong dòng vừa thêm
-    // wrapper.querySelectorAll('.select2').forEach(select => {
-    //   $(select).select2({
-    //     width: '100%',
-    //     dropdownParent: $('#modalThemBienThe')
-    //   });
-    // });
   });
   
 
