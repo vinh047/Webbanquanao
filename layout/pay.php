@@ -1,3 +1,20 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once './database/DBConnection.php';
+$db = DBConnect::getInstance();
+
+$user_id = $_SESSION['user_id'] ?? null;
+$user = ['name'=>'','phone'=>'','email'=>''];
+$user_addresses = [];
+if ($user_id) {
+    $user = $db->selectOne("SELECT name, phone, email FROM users WHERE user_id = ?", [$user_id]);
+    $user_addresses = $db->select(
+        "SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_default DESC, updated_at DESC",
+        [$user_id]
+    );
+}
+$payment_methods = $db->select("SELECT * FROM payment_method", []);
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,21 +24,15 @@
   <link rel="stylesheet" href="./assets/css/pay.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/fonts/font.css">
-  <link rel="stylesheet" href="./assets/css/pay.css">
   <link rel="stylesheet" href="./assets/css/footer.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-  <?php
-    require_once './database/DBConnection.php';
-    $db = DBConnect::getInstance();
-    $payment_methods = $db->select("SELECT * FROM payment_method", []);
-  ?>
 </head>
 <body>
   <div class="container-md mt-3">
     <div class="border rounded py-2 px-4 d-flex align-items-center">
       <div class="me-auto">
         <p class="mb-0">
-          <a href="index.php" class="text-decoration-none link-primary aHover">Trang chủ</a>
+          <a href="index.php" class="text-decoration-none link-primary">Trang chủ</a>
           <span class="mx-2"><i class="fa-solid fa-angle-right"></i></span>
           <span class="text-dark">Thanh toán</span>
         </p>
@@ -31,50 +42,86 @@
 
   <div class="container my-5">
     <div class="row">
-      <!-- Thong tin giao hang -->
       <div class="col-lg-4 mb-4">
         <h5>Thông tin giao hàng</h5>
         <form id="shipping-form" novalidate>
-          <div class="row g-2">
-            <div class="col-6">
-              <input type="text" class="form-control" id="ho" placeholder="Họ" required>
-              <div class="invalid-feedback">Họ là bắt buộc</div>
-            </div>
-            <div class="col-6">
-              <input type="text" class="form-control" id="ten" placeholder="Tên" required>
-              <div class="invalid-feedback">Tên là bắt buộc</div>
-            </div>
+          <!-- Họ và tên -->
+          <div class="mb-2">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên" required
+                   value="<?= htmlspecialchars($user['name'] ?? '') ?>">
+            <div class="invalid-feedback">Họ và tên là bắt buộc</div>
           </div>
-          <input type="tel" class="form-control mt-2" id="sdt" placeholder="Số điện thoại" required>
-          <div class="invalid-feedback" id="phone-feedback"></div>
-          <input type="email" class="form-control mt-2" id="email" placeholder="Email" required>
-          <div class="invalid-feedback" id="email-feedback"></div>
+          <!-- Số điện thoại -->
+          <div class="mb-2">
+            <input type="tel" class="form-control" id="sdt" name="phone" placeholder="Số điện thoại" required
+                   value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+            <div class="invalid-feedback">Số điện thoại là bắt buộc</div>
+          </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required
+                   value="<?= htmlspecialchars($user['email'] ?? '') ?>">
+            <div class="invalid-feedback">Email là bắt buộc</div>
+          </div>
 
-          <div class="row g-2 mt-2">
-            <div class="col-md-4">
-              <select id="province" class="form-select" required>
-                <option selected disabled>Tỉnh/TP</option>
-              </select>
-              <div class="invalid-feedback">Tỉnh/Thành phố là bắt buộc</div>
+          <!-- Chọn kiểu nhập địa chỉ -->
+          <div class="mb-3 d-flex">
+            <div class="form-check me-4">
+              <input class="form-check-input" type="radio" name="address_option" id="addr_saved" value="saved" checked>
+              <label class="form-check-label" for="addr_saved">Chọn địa chỉ đã lưu</label>
             </div>
-            <div class="col-md-4">
-              <select id="district" class="form-select" required>
-                <option selected disabled>Quận/Huyện</option>
-              </select>
-              <div class="invalid-feedback">Quận/Huyện là bắt buộc</div>
-            </div>
-            <div class="col-md-4">
-              <select id="ward" class="form-select" required>
-                <option selected disabled>Phường/Xã</option>
-              </select>
-              <div class="invalid-feedback">Phường/Xã là bắt buộc</div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="address_option" id="addr_new" value="new">
+              <label class="form-check-label" for="addr_new">Nhập địa chỉ mới</label>
             </div>
           </div>
-          <input type="text" class="form-control mt-2" id="specific-address" placeholder="Địa chỉ cụ thể (Tùy chọn)">
+
+          <!-- Phần chọn địa chỉ đã lưu -->
+          <div id="saved-container" class="mb-3">
+            <select id="saved-address" class="form-select">
+              <option selected disabled>Chọn địa chỉ đã lưu</option>
+              <?php foreach ($user_addresses as $addr): ?>
+                <?php
+                  $full = $addr['address_detail'] . ', ' . $addr['ward'] . ', ' . $addr['district'] . ', ' . $addr['province'];
+                ?>
+                <option value="<?= $addr['address_id'] ?>" <?= $addr['is_default'] ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($full) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <div class="invalid-feedback">Chọn địa chỉ đã lưu</div>
+          </div>
+
+          <!-- Phần nhập địa chỉ mới (ẩn mặc định) -->
+          <div id="new-container" class="mb-3" style="display:none;">
+            <div class="row g-2 mb-2">
+              <div class="col-md-4">
+                <select id="province" class="form-select" required>
+                  <option selected disabled>Tỉnh/TP</option>
+                </select>
+                <div class="invalid-feedback">Tỉnh/TP là bắt buộc</div>
+              </div>
+              <div class="col-md-4">
+                <select id="district" class="form-select" required>
+                  <option selected disabled>Quận/Huyện</option>
+                </select>
+                <div class="invalid-feedback">Quận/Huyện là bắt buộc</div>
+              </div>
+              <div class="col-md-4">
+                <select id="ward" class="form-select" required>
+                  <option selected disabled>Phường/Xã</option>
+                </select>
+                <div class="invalid-feedback">Phường/Xã là bắt buộc</div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <input type="text" class="form-control" id="specific-address" placeholder="Địa chỉ cụ thể (Tùy chọn)">
+            </div>
+          </div>
         </form>
       </div>
 
-      <!-- Mua online & phuong thuc -->
+      <!-- Mua online & Phương thức thanh toán -->
       <div class="col-lg-4 mb-4">
         <h5>Mua online</h5>
         <div class="border p-3 mb-3 rounded">
@@ -88,7 +135,7 @@
         <div class="border p-3 rounded">
           <?php foreach ($payment_methods as $method): ?>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="payment_method" id="pm<?= $method['payment_method_id'] ?>" value="<?= $method['payment_method_id'] ?>" <?= $method['payment_method_id'] == 1 ? 'checked' : '' ?> required>
+              <input class="form-check-input" type="radio" name="payment_method" id="pm<?= $method['payment_method_id'] ?>" value="<?= $method['payment_method_id'] ?>" <?= $method['payment_method_id']==1? 'checked':'' ?> required>
               <label class="form-check-label" for="pm<?= $method['payment_method_id'] ?>">
                 <?= htmlspecialchars($method['name']) ?>
               </label>
@@ -103,7 +150,7 @@
         </div>
       </div>
 
-      <!-- Don hang -->
+      <!-- Đơn hàng -->
       <div class="col-lg-4 order-summary">
         <h5>Đơn hàng</h5>
         <div id="order-items"></div>
@@ -119,6 +166,11 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Tạo biến JS dùng cho pay.js -->
+  <script>
+    window.savedAddresses = <?= json_encode($user_addresses, JSON_UNESCAPED_UNICODE) ?>;
+    window.currentUser = <?= json_encode($user, JSON_UNESCAPED_UNICODE) ?>;
+  </script>
   <script src="../assets/js/pay.js"></script>
 </body>
 </html>
