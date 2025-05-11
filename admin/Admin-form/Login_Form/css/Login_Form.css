@@ -19,3 +19,7 @@ body, html {
 }
 /* Vùng nền chứa icon động */
 
+input::-ms-reveal
+{
+   display: none;
+}

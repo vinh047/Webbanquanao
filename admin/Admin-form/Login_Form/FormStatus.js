@@ -16,10 +16,17 @@ function loadForm() {
         <label for="email" class="form-label text-black">Email</label>
         <input type="email" class="form-control border-dark" id="email" name="email" placeholder="Nhập email">
       </div>
+
       <div class="mb-3">
         <label for="pswd" class="form-label text-black">Mật khẩu</label>
-        <input type="password" class="form-control border-dark" id="pswd" name="pswd" placeholder="Nhập mật khẩu">
+        <div class="input-group">
+          <input type="password" class="form-control border-dark" id="pswd" name="pswd" placeholder="Nhập mật khẩu">
+          <span class="input-group-text toggle-password" style="cursor:pointer">
+            <i class="fa-solid fa-eye-slash"></i>
+          </span>
+        </div>
       </div>
+
       <div class="form-check mb-3">
         <label for="remember" class="form-check-label text-black">Ghi nhớ đăng nhập</label>
         <input type="checkbox" class="form-check-input" id="remember" name="remember">
