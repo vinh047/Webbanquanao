@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     locctPhieuNhap();
 });
 
+
 function phanQuyen()
 {
     if (permissionsElement && permissionsElement.getAttribute('data-permissions')) {
@@ -43,6 +44,7 @@ function phanQuyen()
     } else {
         console.log('Không có dữ liệu permissions hợp lệ');
     }
+
 }
 function adjustPageIfLastItem() {
     const btnCount = document.querySelectorAll(".btn-sua").length;

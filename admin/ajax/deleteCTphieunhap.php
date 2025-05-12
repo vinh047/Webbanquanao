@@ -29,8 +29,8 @@ try {
         $quantity = $ct['quantity'];
 
         // 2. Trừ tồn kho
-        $stmt2 = $pdo->prepare("UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?");
-        $stmt2->execute([$quantity, $variant_id]);
+        // $stmt2 = $pdo->prepare("UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?");
+        // $stmt2->execute([$quantity, $variant_id]);
 
         // 3. Xoá chi tiết phiếu nhập
         $stmt3 = $pdo->prepare("DELETE FROM importreceipt_details WHERE importreceipt_details_id = ?");

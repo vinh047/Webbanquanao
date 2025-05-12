@@ -4,6 +4,22 @@ require_once(__DIR__ . '/../../layout/phantrang.php');
 require_once('functionLoc.php');
 $db = DBConnect::getInstance();
 $connection = $db->getConnection();
+
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+//Lấy id nhân viên
+$permissions = $_SESSION['permissions'] ?? [];
+
+$hasReadPermission = in_array('read', $permissions);
+$hasWritePermission = in_array('write', $permissions);
+$hasDeletePermission = in_array('delete', $permissions);
+
+// Kiểm tra nếu có bất kỳ quyền nào
+$hasAnyActionPermission = $hasReadPermission || $hasWritePermission || $hasDeletePermission;
+
+
 // Lọc
 $locRaw = locBienThe($connection);
 $loc = "WHERE product_variants.is_deleted = 0";
@@ -71,28 +87,49 @@ foreach ($data as $row) {
             <td class='hienthisize'>$size</td>
             <td class='hienthigia'>$soluong</td>
             <td class='hienthimau'>$mau</td>
-            <td class=''>
-                    <div class='d-flex justify-content-center gap-3'>
-                    <div>
-                    <button class='btn btn-success btn-sm btn-sua fs-6' 
-                    data-idct='$idctpn'
-                    data-idvr='$idvr'
-                    data-idsp='$idsp'
-                    data-anh='$anh'
-                    data-size='$id_size'
-                    data-soluong='$soluong'
-                    data-mau='$id_mau'
-                    data-tensp='$tensp'
-                    style='width:90px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
-                    </div>
-                    <div>
-                    <button class='btn btn-danger btn-sm btn-xoa fs-6' data-id='$idvr' style='width:90px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
-                    </div>
-                    <div>
-                    <button class='btn btn-info text-white btn-sm btn-xemchitietPN fs-6' data-id='$idvr' style='width:92px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-eye'></i> Chi tiết</button>
-                    </div>
-                    </div>
-            </td>
+" . ($hasAnyActionPermission ? "
+<td>
+    <div class='d-flex justify-content-center gap-3'>
+        " . ($hasWritePermission ? "
+        <div>
+            <button class='btn btn-success btn-sm btn-sua fs-6' 
+                data-idct='$idctpn'
+                data-idvr='$idvr'
+                data-idsp='$idsp'
+                data-anh='$anh'
+                data-size='$id_size'
+                data-soluong='$soluong'
+                data-mau='$id_mau'
+                data-tensp='$tensp'
+                style='width:90px;padding:6px 12px 6px 12px;'>
+                <i class='fa-regular fa-pen-to-square'></i> Sửa
+            </button>
+        </div>
+        " : "") . "
+
+        " . ($hasDeletePermission ? "
+        <div>
+            <button class='btn btn-danger btn-sm btn-xoa fs-6' 
+                data-id='$idvr' 
+                style='width:90px;padding:6px 12px 6px 12px;'>
+                <i class='fa-regular fa-trash-can'></i> Xóa
+            </button>
+        </div>
+        " : "") . "
+
+        " . ($hasReadPermission ? "
+        <div>
+            <button class='btn btn-info text-white btn-sm btn-xemchitietPN fs-6' 
+                data-id='$idvr' 
+                style='width:92px;padding:6px 12px 6px 12px;'>
+                <i class='fa-regular fa-eye'></i> Chi tiết
+            </button>
+        </div>
+        " : "") . "
+    </div>
+</td>
+" : "") . "
+
         </tr>
     ";
 }

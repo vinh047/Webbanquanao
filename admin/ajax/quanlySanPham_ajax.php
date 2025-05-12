@@ -5,6 +5,19 @@ require_once('functionLoc.php');
 $db = DBConnect::getInstance();
 $connection = $db->getConnection();
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+//Lấy id nhân viên
+$permissions = $_SESSION['permissions'] ?? [];
+
+$hasReadPermission = in_array('read', $permissions);
+$hasWritePermission = in_array('write', $permissions);
+$hasDeletePermission = in_array('delete', $permissions);
+
+// Kiểm tra nếu có bất kỳ quyền nào
+$hasAnyActionPermission = $hasReadPermission || $hasWritePermission || $hasDeletePermission;
+
 $locRaw = locSanPham($connection);
 $loc = $locRaw ?: ""; // dùng luôn WHERE nếu có, không tự thêm AND
 // Tổng sản phẩm
@@ -61,25 +74,43 @@ foreach ($data as $row) {
             <td class='hienthiloai giaodienmb'>$loai</td>
             <td class='mota giaodienmb'>$mota</td>
             <td class='hienthigia giaodienmb'>$giaban VNĐ</td>
-            <td>
-                <div class='d-flex justify-content-center gap-3'>
-                <div>
-                <button class='btn btn-success btn-sua'
+" . ($hasAnyActionPermission ? "
+<td>
+    <div class='d-flex justify-content-center gap-3'>
+        " . ($hasWritePermission ? "
+        <div>
+            <button class='btn btn-success btn-sua'
                 data-id='$id'
                 data-ten=\"$ten\"
                 data-mota=\"$mota\"
                 data-gia='{$row['gianhap']}'
                 data-giaban='{$row['price_sale']}'
                 data-pttg = \"$pttg\"
-                data-loaiid='{$row['category_id']}' style='width:90px;'><i class='fa-regular fa-pen-to-square'></i> Sửa</button></div>
-                <div>
-                <button class='btn btn-danger btn-xoa' data-id='$id' style='width:90px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
-                </div>
-                <div>
-                <button class='btn btn-info text-white btn-xemchitietPN' data-idpn='$id' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
-                </div>
-                </div>
-            </td>
+                data-loaiid='{$row['category_id']}' style='width:90px;'>
+                <i class='fa-regular fa-pen-to-square'></i> Sửa
+            </button>
+        </div>
+        " : "") . "
+
+        " . ($hasDeletePermission ? "
+        <div>
+            <button class='btn btn-danger btn-xoa' data-id='$id' style='width:90px;'>
+                <i class='fa-regular fa-trash-can'></i> Xóa
+            </button>
+        </div>
+        " : "") . "
+
+        " . ($hasReadPermission ? "
+        <div>
+            <button class='btn btn-info text-white btn-xemchitietPN' data-idpn='$id' style='width:90px;margin-left:1px;'>
+                <i class='fa-regular fa-eye'></i> chi tiết
+            </button>
+        </div>
+        " : "") . "
+    </div>
+</td>
+" : "") . "
+
         </tr>
     ";
 }
