@@ -52,12 +52,12 @@ function locSanPham($connection)
 
     if (isset($_POST['txtGiaMin']) && $_POST['txtGiaMin'] !== '') {
         $tienMin = (int)$_POST['txtGiaMin'];
-        $where[] = "p.price >= $tienMin";
+        $where[] = "p.price_sale >= $tienMin";
     }
 
     if (isset($_POST['txtGiaMax']) && $_POST['txtGiaMax'] !== '') {
         $tienMax = (int)$_POST['txtGiaMax'];
-        $where[] = "p.price <= $tienMax";
+        $where[] = "p.price_sale <= $tienMax";
     }
 
     return (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";

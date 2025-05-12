@@ -37,6 +37,20 @@ document.addEventListener('DOMContentLoaded', function () {
     resetFormLoc();
 });
 
+
+function anBtnXuLy() {
+    if (!permissions.includes('write')) {
+        const btnThemPN = document.getElementById('create_pn');
+        const btnThemSP = document.getElementById('btnThemSanPhamMoi');
+        const btnThemBT = document.getElementById('btnMoModalBienThe');
+
+        if (btnThemPN) btnThemPN.style.display = 'none';
+        if (btnThemSP) btnThemSP.style.display = 'none';
+        if (btnThemBT) btnThemBT.style.display = 'none';
+    }
+}
+
+
 function resetFormLoc()
 {
         document.getElementById('formLoc').addEventListener('reset', function () {
@@ -1126,6 +1140,7 @@ function loadPhieuNhap(page = 1) {
         xemChiTiet();
         xoaPhieuNhap();
         suaPhieuNhap();
+        anBtnXuLy();
     })
     .catch(error => {
         console.error('Lỗi khi tải phiếu nhập:', error);
@@ -1199,69 +1214,144 @@ function phantrang() {
 //                 });
 //             } 
 // }
-function xacNhanCho()
-{
-                // Khi người dùng ấn nút Hủy
-                document.getElementById('btnHuy').addEventListener('click', function () {
-                    document.getElementById('xacNhanCho').style.display = 'none';
-                    document.querySelector('.overlay').style.display = 'none';
+// function xacNhanCho()
+// {
+//                 // Khi người dùng ấn nút Hủy
+//                 document.getElementById('btnHuy').addEventListener('click', function () {
+//                     document.getElementById('xacNhanCho').style.display = 'none';
+//                     document.querySelector('.overlay').style.display = 'none';
     
-                });
-                                // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
-                                document.querySelectorAll('.btn-toggle-status').forEach(btn => {
+//                 });
+//                                 // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
+//                                 document.querySelectorAll('.btn-toggle-status').forEach(btn => {
                     
                                     
 
-                                    btn.addEventListener('click', function () {
-                                        const id = this.dataset.idpn;
-                                                if (!permissions.includes('write')) {
-            const tBquyen = document.querySelector('.thongBaoQuyen');
-            tBquyen.style.display = 'block';
-            tBquyen.classList.add('show');
-            setTimeout(() => tBquyen.classList.remove('show'), 2000);
-            return; 
-        }
-                                        // Lưu ID vào nút xác nhận
-                                        document.getElementById('btnXacNhan').dataset.idpn = id;
+//                                     btn.addEventListener('click', function () {
+//                                         const id = this.dataset.idpn;
+//                                                 if (!permissions.includes('write')) {
+//             const tBquyen = document.querySelector('.thongBaoQuyen');
+//             tBquyen.style.display = 'block';
+//             tBquyen.classList.add('show');
+//             setTimeout(() => tBquyen.classList.remove('show'), 2000);
+//             return; 
+//         }
+//         console.log('[DEBUG] Đang chuẩn bị xác nhận phiếu nhập ID =', id); // ✅ DEBUG
+//                                         // Lưu ID vào nút xác nhận
+//                                         document.getElementById('btnXacNhan').dataset.idpn = id;
                                 
-                                        // Hiện thông báo xác nhận tùy biến
-                                        document.getElementById('xacNhanCho').style.display = 'block';
-                                        document.querySelector('.overlay').style.display = 'block';
-                                    });
-                                });
-                            // Khi người dùng ấn nút Xác nhận trong popup
-            document.getElementById('btnXacNhan').addEventListener('click', async function () {
-                const id = this.dataset.idpn;
-                try {
-                    const res = await fetch('./ajax/moDongPN.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: `id=${id}&status=0`
-                    });
+//                                         // Hiện thông báo xác nhận tùy biến
+//                                         document.getElementById('xacNhanCho').style.display = 'block';
+//                                         document.querySelector('.overlay').style.display = 'block';
+//                                     });
+//                                 });
+//                             // Khi người dùng ấn nút Xác nhận trong popup
+//             document.getElementById('btnXacNhan').addEventListener('click', async function () {
+//                 const id = this.dataset.idpn;
+//                 try {
+//                     console.log('[DEBUG] Đang gửi xác nhận với ID =', id); // ✅ DEBUG
+//                     const res = await fetch('./ajax/moDongPN.php', {
+//                         method: 'POST',
+//                         headers: {
+//                             'Content-Type': 'application/x-www-form-urlencoded'
+//                         },
+//                         body: `id=${id}&status=0`
+//                     });
             
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+//                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
             
-                    const data = await res.json();
+//                     const data = await res.json();
             
-                    if (data.success) {
-                        document.getElementById('xacNhanCho').style.display = 'none';
-                        document.querySelector('.overlay').style.display = 'none';
-                                    const tbxacnhantc = document.querySelector('.thongbaoXacNhanThanhCong');
-                                    tbxacnhantc.style.display = 'block';
-                                    tbxacnhantc.classList.add('show');
-                                    setTimeout(() => tbxacnhantc.classList.remove('show'), 2000);
-                        loadPhieuNhap(currentPage);
-                    } else {
-                        alert("Đóng thất bại: " + data.message);
-                    }
-                } catch (err) {
-                    alert("Lỗi máy chủ!");
-                    console.error('Lỗi:', err);
-                }
+//                     if (data.success) {
+//                         document.getElementById('xacNhanCho').style.display = 'none';
+//                         document.querySelector('.overlay').style.display = 'none';
+//                                     const tbxacnhantc = document.querySelector('.thongbaoXacNhanThanhCong');
+//                                     tbxacnhantc.style.display = 'block';
+//                                     tbxacnhantc.classList.add('show');
+//                                     setTimeout(() => tbxacnhantc.classList.remove('show'), 2000);
+//                         loadPhieuNhap(currentPage);
+//                     } else {
+//                         alert("Đóng thất bại: " + data.message);
+//                     }
+//                 } catch (err) {
+//                     alert("Lỗi máy chủ!");
+//                     console.error('Lỗi:', err);
+//                 }
+//             });
+// }
+function xacNhanCho() {
+    // Khi người dùng ấn nút Hủy
+    document.getElementById('btnHuy').addEventListener('click', function () {
+        document.getElementById('xacNhanCho').style.display = 'none';
+        document.querySelector('.overlay').style.display = 'none';
+    });
+
+    // Gán sự kiện đổi trạng thái "Mở" → "Đã đóng"
+    document.querySelectorAll('.btn-toggle-status').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.dataset.idpn;
+
+            if (!permissions.includes('write')) {
+                const tBquyen = document.querySelector('.thongBaoQuyen');
+                tBquyen.style.display = 'block';
+                tBquyen.classList.add('show');
+                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                return;
+            }
+
+            console.log('[DEBUG] Đang chuẩn bị xác nhận phiếu nhập ID =', id); // ✅ DEBUG
+
+            // Lưu ID vào nút xác nhận
+            document.getElementById('btnXacNhan').dataset.idpn = id;
+
+            // Hiện thông báo xác nhận
+            document.getElementById('xacNhanCho').style.display = 'block';
+            document.querySelector('.overlay').style.display = 'block';
+        });
+    });
+
+    // Khi người dùng ấn nút Xác nhận trong popup
+    document.getElementById('btnXacNhan').addEventListener('click', async function () {
+        const id = this.dataset.idpn;
+        try {
+            console.log('[DEBUG] Đang gửi xác nhận với ID =', id); // ✅ DEBUG
+
+            const res = await fetch('./ajax/moDongPN.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `id=${id}&status=0`
             });
+
+            console.log('[DEBUG] Phản hồi HTTP:', res.status); // ✅ DEBUG
+
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const data = await res.json();
+            console.log('[DEBUG] Dữ liệu trả về từ moDongPN.php:', data); // ✅ DEBUG
+
+            if (data.success) {
+                document.getElementById('xacNhanCho').style.display = 'none';
+                document.querySelector('.overlay').style.display = 'none';
+
+                const tbxacnhantc = document.querySelector('.thongbaoXacNhanThanhCong');
+                tbxacnhantc.style.display = 'block';
+                tbxacnhantc.classList.add('show');
+                setTimeout(() => tbxacnhantc.classList.remove('show'), 2000);
+
+                loadPhieuNhap(currentPage);
+            } else {
+                alert("❌ Đóng thất bại: " + data.message);
+                console.warn('[DEBUG] Lý do thất bại:', data.message);
+            }
+        } catch (err) {
+            alert("❌ Lỗi máy chủ!");
+            console.error('[DEBUG] Lỗi fetch:', err);
+        }
+    });
 }
+
 function xemChiTiet()
 {
     document.addEventListener("click", function (e) {

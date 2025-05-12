@@ -8,6 +8,16 @@ $locRaw = locCTPN($conn);
 // $loc = $locRaw ?: "";
 $loc = $locRaw ? "$locRaw AND d.is_deleted = 0" : "WHERE d.is_deleted = 0";
 
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+//Lấy id nhân viên
+$permissions = $_SESSION['permissions'] ?? [];
+$hasActionPermission = in_array('read', $permissions);
+
+
+
 // Tổng số chi tiết phiếu nhập
 $total = $db->select("SELECT COUNT(*) AS total FROM importreceipt_details d $loc", []);
 $totalItems = $total[0]['total'];
@@ -65,7 +75,8 @@ foreach ($data as $row) {
     " : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "
 </td>
 
-            <td>
+" . ($hasActionPermission ? "
+<td>
 <div class='d-flex justify-content-center gap-3'>
     " . ($row['status'] == 1 ? "
         <button class='btn btn-success btn-sua'
@@ -84,8 +95,9 @@ foreach ($data as $row) {
         data-idct='$id_ct'
         style='width:100px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
 </div>
+</td>
+" : "") . "
 
-            </td>
         </tr>
     ";
 }

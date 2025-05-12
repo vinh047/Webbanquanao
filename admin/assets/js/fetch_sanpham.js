@@ -7,7 +7,7 @@ const tc = tbLoaiThanhCong.querySelector("p");
 const formLoc = document.getElementById("formLoc");
 let currentPage = 1;
 let permissions = [];
-
+let variantIndex = 0;
 document.addEventListener('DOMContentLoaded', function () {
     // Xử lý phân quyền người dùng
     getPhanQuyen();
@@ -78,6 +78,15 @@ function getPhanQuyen()
     }
 }
 
+function anBtnXuLy() {
+    if (!permissions.includes('write')) {
+        const btnThemPN = document.getElementById('btnThemSanPhamMoi');
+        const btnBT = document.getElementById('btnMoModalBienThe');
+        btnThemPN.style.display = 'none';
+btnBT.style.display = 'none';
+    }
+}
+
 function adjustPageIfLastItem() {
     const btnCount = document.querySelectorAll(".btn-sua").length;
     if (btnCount === 1 && currentPage > 1) {
@@ -101,6 +110,7 @@ function fetchSanPham(page = 1) {
             chitietsanpham();
             hienthisua();
             xoasanpham();
+            anBtnXuLy();
         });
 }
 
@@ -545,6 +555,13 @@ function themsanpham()
                 document.getElementById('txtMota').value = '';
                 document.getElementById('cbLoai').value = '';
                 document.getElementById('txtPT').value = '30%';
+
+                                // ✅ 4. Cập nhật dropdown trong modal biến thể
+                const selectBienThe = document.getElementById('id_sanpham');
+                if (selectBienThe) {
+                    const newOption = new Option(`${res.product_id} - ${res.name}`, res.product_id, false, false);
+                    $('#id_sanpham').append(newOption).trigger('change.select2');
+                }
                 } else {
                 alert("Thêm thất bại: " + res.message);
             }
@@ -770,5 +787,260 @@ function tudongtanggia()
         document.getElementById("txtGiaSua").addEventListener("input", tinhGiaBanTuDong);
         document.getElementById("txtPttg").addEventListener("input", tinhGiaBanTuDong);
 }
+function generateOptions(list, valueKey, labelKey) {
+    return list.reduce((html, item) => {
+        return html + `<option value="${item[valueKey]}">${item[valueKey]} - ${item[labelKey]}</option>`;
+    }, `<option value="">-- Chọn --</option>`);
+}
+document.getElementById('btnMoModalBienThe').addEventListener('click', () => {
+            if (!permissions.includes('write')) {
+            const tBquyen = document.querySelector('.thongBaoQuyen');
+            tBquyen.style.display = 'block';
+            tBquyen.classList.add('show');
+            setTimeout(() => tBquyen.classList.remove('show'), 2000);
+            return; 
+        }
+    const modal = new bootstrap.Modal(document.getElementById('modalThemBienThe'));
+    modal.show();
+    $('#modalThemBienThe').on('shown.bs.modal', function () {
+        $('#id_sanpham').select2({
+            width: '100%',
+            dropdownParent: $('#modalThemBienThe')
+        });
+    });
+  });
+  console.log('Size list:', sizeListFromPHP);
+console.log('Color list:', colorListFromPHP);
 
-    
+  function createVariantRow(index) {
+    const sizeOptions = generateOptions(sizeListFromPHP, 'size_id', 'name');
+    const colorOptions = generateOptions(colorListFromPHP, 'color_id', 'name');
+  
+    return `
+      <div class="variant-row border rounded p-3 my-1 bg-light">
+        <div class="row g-3 align-items-end"> <!-- ✅ align-items-end giúp canh đều đáy -->
+  
+          <!-- CỘT ẢNH: CHIA LẠI LAYOUT -->
+<div class="col-md-3 pb-0"> <!-- ✅ có sẵn pb-0 -->
+  <label class="form-label mb-1">Chọn ảnh</label>
+  <div class="d-flex align-items-center gap-2">
+    <input type="file" name="images[]" accept="image/*" class="form-control previewable" style="width: 70%;">
+    <img class="preview-img d-none img-thumbnail" style="height: 50px; width: 50px; object-fit: contain;">
+  </div>
+</div>
+
+  
+          <!-- CỘT MÀU -->
+          <div class="col-md-3">
+            <label class="form-label mb-1">Màu sắc</label>
+            <select name="colors[]" class="form-select select2">
+              ${colorOptions}
+            </select>
+          </div>
+  
+          <!-- CỘT SIZE -->
+          <div class="col-md-3 me-auto">
+            <label class="form-label mb-1">Kích thước</label>
+            <select name="sizes[]" class="form-select select2">
+              ${sizeOptions}
+            </select>
+          </div>
+  
+          <!-- CỘT NÚT -->
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-outline-danger btn-remove-variant w-100">
+              <i class="fa fa-trash me-1"></i> Xóa dòng
+            </button>
+          </div>
+  
+        </div>
+      </div>
+    `;
+  }
+  
+  
+  
+  // Thêm dòng khi nhấn btn
+document.getElementById('btnAddVariantRow').addEventListener('click', () => {
+    if (!permissions.includes('write')) {
+        const tBquyen = document.querySelector('.thongBaoQuyen');
+        tBquyen.style.display = 'block';
+        tBquyen.classList.add('show');
+        setTimeout(() => tBquyen.classList.remove('show'), 2000);
+        return; 
+    }
+    const container = document.getElementById('variant-container');
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = createVariantRow(variantIndex++);
+    container.appendChild(wrapper);
+    wrapper.querySelectorAll('.select2').forEach(el => $(el).select2({ dropdownParent: $('#modalThemBienThe'), width: '100%' }));
+  });
+  
+  // Xóa dòng
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-remove-variant')) {
+      e.target.closest('.variant-row').remove();
+    }
+  });
+  
+  
+  // Preview ảnh
+  document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('previewable')) {
+      const file = e.target.files[0];
+      const preview = e.target.closest('.d-flex').querySelector('.preview-img');
+  
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          preview.src = event.target.result;
+          preview.classList.remove('d-none');
+  
+          // ✅ Thêm padding cho các cột còn lại
+          const row = e.target.closest('.row');
+  
+          // Chọn cột màu, size, xóa (trừ ảnh)
+          const otherCols = row.querySelectorAll('.col-md-3:not(:first-child), .col-md-2');
+          otherCols.forEach(col => {
+            col.classList.add('pb-2'); // hoặc pb-3 nếu bạn muốn đẩy xuống
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+  
+  
+  function showModalThongBao(message) {
+    const modalBody = document.querySelector('#modalThongBao .modal-body');
+    modalBody.textContent = message;
+    const modal = new bootstrap.Modal(document.getElementById('modalThongBao'));
+    modal.show();
+  }
+  
+  // Gửi dữ liệu
+  document.getElementById('formBienThe').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const productId = document.getElementById('id_sanpham').value;
+    const rows = document.querySelectorAll('.variant-row');
+
+    if (rows.length === 0) {
+        return showError("Lưu biến thể thất bại");
+    }
+
+    const variantKeys = new Set();
+    let isValid = true;
+    let firstErrorRow = null;
+    const errorRows = [];
+
+    for (let row of rows) {
+        const color = row.querySelector('[name="colors[]"]').value;
+        const size = row.querySelector('[name="sizes[]"]').value;
+        const fileInput = row.querySelector('[name="images[]"]');
+        const file = fileInput?.files?.[0];
+
+        // ❌ Thiếu thông tin
+        if (!color || !size || !file) {
+            isValid = false;
+            if (!firstErrorRow) firstErrorRow = row;
+            errorRows.push(row);
+            continue;
+        }
+
+        const filename = file.name.trim().toLowerCase();
+        const key = `${productId}_${color}_${size}_${filename}`;
+
+        // ❌ Trùng hàng đợi
+        if (variantKeys.has(key)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Biến thể trùng',
+                text: 'Biến thể (màu, size, ảnh) đã tồn tại trong hàng đợi.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        variantKeys.add(key);
+    }
+
+    if (!isValid) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Thiếu thông tin',
+            text: 'Vui lòng nhập đầy đủ màu, size và ảnh cho tất cả các dòng.',
+            confirmButtonText: 'OK',
+            didClose: () => {
+                firstErrorRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                errorRows.forEach(row => {
+                    row.classList.add('row-error-highlight');
+                    setTimeout(() => {
+                        row.classList.remove('row-error-highlight');
+                    }, 3000);
+                });
+            }
+        });
+        return;
+    }
+
+    // ✅ Gửi lên server
+    const formData = new FormData(this);
+    fetch('./ajax/insertBienThe.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
+            tbTC.style.display = 'block';
+            tbTC.classList.add('show');
+            setTimeout(() => tbTC.classList.remove('show'), 2000);
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
+            if (modal) modal.hide();
+
+            // Xoá tất cả dòng
+            document.querySelectorAll('.variant-row').forEach(row => row.remove());
+
+            // Reset sản phẩm
+            const selectSanPham = document.getElementById('id_sanpham');
+            if (selectSanPham) {
+                $(selectSanPham).val(null).trigger('change');
+            }
+
+            // Cập nhật lại biến thể ở các dòng phiếu nhập
+            document.querySelectorAll('.product-row').forEach(row => {
+                const selectProduct = row.querySelector('[name*="[product_id]"]');
+                if (selectProduct && selectProduct.value == productId) {
+                    handleProductChange(selectProduct, row);
+                }
+            });
+
+            if (typeof reloadVariantsInPhieuNhap === 'function') reloadVariantsInPhieuNhap();
+        } else {
+            showModalThongBao(res.message || 'Đã tồn tại biến thể trong hệ thống.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Lỗi khi gửi dữ liệu!');
+    });
+});
+
+
+
+
+  
+  document.querySelector('#modalThemBienThe .btn-danger').addEventListener('click', function () {
+    // 1. Reset select sản phẩm
+    $('#id_sanpham').val(null).trigger('change');
+  
+    // 2. Xóa toàn bộ dòng biến thể
+    document.querySelectorAll('#variant-container .variant-row').forEach(row => row.remove());
+  
+    // 3. Reset lại form ảnh và inputs
+    document.getElementById('formBienThe').reset();
+  
+  });

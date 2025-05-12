@@ -78,6 +78,14 @@ if ($role_id) {
     $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
 }
 
+
+$permissions = $_SESSION['permissions'] ?? [];
+$hasReadPermission = in_array('read', $permissions);
+$hasWritePermission = in_array('write', $permissions);
+$hasDeletePermission = in_array('delete', $permissions);
+// ✅ Kiểm tra nếu KHÔNG có quyền nào
+$hasAnyActionPermission = $hasReadPermission || $hasWritePermission || $hasDeletePermission;
+
 // Truyền quyền vào thẻ HTML
 $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         $categories = $db->select("SELECT * FROM categories", []);
@@ -257,7 +265,9 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <th class="bg-secondary text-white tensp giaodienmb">Tổng tiền</th>
                                 <th class="bg-secondary text-white tensp giaodienmb">Ngày lập</th>
                                 <th class="bg-secondary text-white tensp">Trạng thái</th>
-                                <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
+<?php if ($hasAnyActionPermission): ?>
+    <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
+<?php endif; ?>
                             </tr>
                         </thead>
                         <tbody id="product-list">

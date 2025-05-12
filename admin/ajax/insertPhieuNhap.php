@@ -24,7 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = $db->getConnection();
         $conn->beginTransaction();
 
-        $stmt = $conn->prepare("INSERT INTO importreceipt (supplier_id, user_id, total_price) VALUES (?, ?, 0)");
+        // $stmt = $conn->prepare("INSERT INTO importreceipt (supplier_id, user_id, total_price) VALUES (?, ?, 0)");
+        $stmt = $conn->prepare("INSERT INTO importreceipt (supplier_id, user_id, total_price, status) VALUES (?, ?, 0, 1)");
+
         $stmt->execute([$supplier_id, $user_id]);
         $importreceipt_id = $conn->lastInsertId();
 
@@ -54,15 +56,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtVar->execute([$product_id, $color_id, $size_id]);
             $variant = $stmtVar->fetch();
         
-            if ($variant) {
-                $variant_id = $variant['variant_id'];
-                $stmtUpdateStock = $conn->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?");
-                $stmtUpdateStock->execute([$quantity, $variant_id]);
-            } else {
-                $stmtNewVar = $conn->prepare("INSERT INTO product_variants (product_id, color_id, size_id, stock) VALUES (?, ?, ?, ?)");
-                $stmtNewVar->execute([$product_id, $color_id, $size_id, $quantity]);
-                $variant_id = $conn->lastInsertId();
-            }
+            // if ($variant) {
+            //     $variant_id = $variant['variant_id'];
+            //     $stmtUpdateStock = $conn->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?");
+            //     $stmtUpdateStock->execute([$quantity, $variant_id]);
+            // } else {
+            //     $stmtNewVar = $conn->prepare("INSERT INTO product_variants (product_id, color_id, size_id, stock) VALUES (?, ?, ?, ?)");
+            //     $stmtNewVar->execute([$product_id, $color_id, $size_id, $quantity]);
+            //     $variant_id = $conn->lastInsertId();
+            // }
+            $variant_id = $variant['variant_id'] ?? null;
+
         
             // Lưu chi tiết phiếu nhập
             $stmtCT = $conn->prepare("INSERT INTO importreceipt_details (importreceipt_id, product_id, variant_id, quantity, unit_price, total_price) VALUES (?, ?, ?, ?, ?, ?)");
