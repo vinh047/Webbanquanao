@@ -13,8 +13,9 @@ function renderMiniCart() {
     totalQty += item.quantity;
     const div = document.createElement("div");
     div.className = "d-flex align-items-center mb-2 border-bottom pb-2";
+    const imagePath = item.image?.includes('/') ? item.image : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
     div.innerHTML = `
-      <img src="${item.image || '/assets/img/sanpham/sp1.jpg'}" style="width:50px; height:50px; object-fit:cover;" class="me-2 rounded">
+    <img src="${imagePath}"style="width:50px; height:50px; object-fit:cover;" class="me-2 rounded">
       <div class="flex-grow-1">
         <p class="mb-0 small fw-bold">${item.name}</p>
         <p class="mb-0 text-muted small">${COLOR_MAP?.[item.color_id]?.name || '(không màu)'} - ${item.size || '(không size)'}</p>

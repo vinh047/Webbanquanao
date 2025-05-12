@@ -1,1 +1,0 @@
-[{"id":"20","variant_id":"94","quantity":1,"name":"Quần lót nam organic cotton .Boxer","color_id":"8","size":"S","price":10000,"image":"10s25und001-white-jpg-um7a.jpg"},{"id":"20","variant_id":"1","quantity":1,"name":"Quần lót nam organic cotton .Boxer","color_id":"8","size":"X","price":10000,"image":"10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg"}]

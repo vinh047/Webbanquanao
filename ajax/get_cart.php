@@ -25,7 +25,7 @@ try {
         p.name,
         v.color_id,
         s.name AS size,
-        p.price,
+        p.price_sale AS price,
         v.image 
     FROM cart_details d
     JOIN cart c ON d.cart_id = c.cart_id

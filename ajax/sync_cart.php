@@ -41,6 +41,13 @@ try {
         return isset($item['variant_id']) ? (int)$item['variant_id'] : 0;
     }, $data));
 
+    // 3. Xóa các variant_id khóa trong cart khóa khác
+    if (!empty($variantIdsFromClient)) {
+        $placeholders = implode(',', array_fill(0, count($variantIdsFromClient), '?'));
+        $params = array_merge([$cart_id], $variantIdsFromClient);
+        $db->execute("DELETE FROM cart_details WHERE cart_id = ? AND variant_id NOT IN ($placeholders)", $params);
+    }
+    
 
     // 4. Cập nhật hoặc thêm từng sản phẩm
     foreach ($data as $item) {

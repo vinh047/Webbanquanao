@@ -34,7 +34,10 @@ async function checkStockBeforeAdd(variant_id, quantity) {
 // Thêm sản phẩm vào giỏ
 async function addToCart(product_id, name, price, image, variant_id, color_id = 0, size = '') {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingItem = cart.find(item => item.product_id === product_id && item.variant_id === variant_id);
+    const existingItem = cart.find(item =>
+        parseInt(item.product_id) === parseInt(product_id) &&
+        parseInt(item.variant_id) === parseInt(variant_id)
+    );    
     const newQuantity = existingItem ? existingItem.quantity + 1 : 1;
 
     const ok = await checkStockBeforeAdd(variant_id, newQuantity);
@@ -46,12 +49,12 @@ async function addToCart(product_id, name, price, image, variant_id, color_id = 
         existingItem.quantity += 1;
     } else {
         cart.push({
-            product_id,
+            product_id: parseInt(product_id),
             name,
             price: parseFloat(price),
             quantity: 1,
             image: finalImage,
-            variant_id,
+            variant_id: parseInt(variant_id),
             color_id: parseInt(color_id) || 0,
             size: size?.trim() || "(không size)"
         });
