@@ -1,7 +1,7 @@
 // assets/js/payment.js
 document.addEventListener('DOMContentLoaded', () => {
     // --- Bank QR Demo Integration ---
-    const MY_BANK = { BANK_ID: 'Vietcombank', ACCOUNT_NO: '1025574990' };
+    const MY_BANK = { BANK_ID: 'MBBank', ACCOUNT_NO: '0968937705' };
     const btnPay = document.getElementById('btnPay');
     const paidPriceEl = document.getElementById('paid_price');
     const qrSection = document.getElementById('qr-section');
@@ -88,6 +88,44 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="mb-3 h5">Vui lòng quét mã QR thanh toán</p>
             <img src="${qrUrl}" style="width:300px;height:100%;" alt="QR Code">
           </div>`;
+
+          let checkInterval;
+
+          setTimeout(() => {
+            checkInterval = setInterval(() => {
+              checkPaid(amount); // sẽ tự dừng khi thành công
+            }, 1000);
+          }, 30000);
+          
+
         });
     }
 });
+
+let is_success = false;
+let is_checking = false;
+
+async function checkPaid(price) {
+  if (is_success || is_checking) return;
+
+  is_checking = true; // chặn lần sau chạy chồng lên
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbw9Zscnz7v0EJcqa_HPfVgfBF2koyHOUPQEyUB2MPa2tU9938bqFyb3aOI6ZS9x36De2A/exec");
+    const data = await response.json();
+    const lastPaid = data.data[data.data.length - 1];
+    const lastPrice = lastPaid["Giá trị"];
+
+    if (lastPrice >= price) {
+      alert("Đã thanh toán thành công");
+      is_success = true;
+      clearInterval(checkInterval);
+    } else {
+      console.log("Chưa thanh toán đủ");
+    }
+  } catch (err) {
+    console.error("Lỗi kiểm tra thanh toán:", err);
+  } finally {
+    is_checking = false; // mở khóa lại
+  }
+}
+
