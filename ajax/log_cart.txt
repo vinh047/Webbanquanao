@@ -1,1 +1,1 @@
-[{"id":"2","variant_id":"8","quantity":1,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":"7","size":"L","price":490000,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg"}]
+[{"id":"1","variant_id":"1","quantity":14,"name":"Áo polo nam dệt kim tay ngắn form regular","color_id":"8","size":"X","price":540000,"image":"10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg"}]

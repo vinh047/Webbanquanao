@@ -26,7 +26,6 @@ if ($variant_id == null) {
     $stmt = $conn->prepare("
         SELECT pv.variant_id
         FROM product_variants pv
-        JOIN sizes s ON s.size_id = pv.size_id
         WHERE pv.product_id = ? AND pv.color_id = ? AND s.size_id = ? AND pv.is_deleted = 0
         LIMIT 1
     ");

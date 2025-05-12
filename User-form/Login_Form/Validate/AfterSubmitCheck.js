@@ -28,12 +28,15 @@ async function submitForm(e) {
     e.target.querySelectorAll(".form-control").forEach(input => {
       input.classList.remove("is-invalid", "border-danger");
       input.classList.add("border-dark");
-
-      const next = input.nextElementSibling;
+    
+      const group = input.closest(".input-group");
+      const container = group || input;
+      const next = container.nextElementSibling;
       if (next && next.classList.contains("invalid-feedback")) {
         next.remove();
       }
     });
+    
 
     // ✅ Đăng nhập hoặc đăng ký thành công
     if (responseData.status === "LOGIN_SUCCESS" || responseData.status === "REGISTER_SUCCESS") {

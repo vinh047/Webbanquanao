@@ -1,0 +1,16 @@
+Array
+(
+    [txtMaBt] => 1
+)
+Array
+(
+    [fileAnhSua] => Array
+        (
+            [name] => lock_icon.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\php3916.tmp
+            [error] => 0
+            [size] => 823
+        )
+
+)

@@ -233,7 +233,7 @@ document.querySelector(".buynow").addEventListener("click", function (e) {
 });
 
 
-
+// Thêm vào giỏ hàng
 document.querySelector(".add-to-cart").addEventListener("click", function () {
     const productId = document.body.dataset.productId;
     const quantity = parseInt(document.getElementById("count").value.trim());
@@ -248,7 +248,9 @@ document.querySelector(".add-to-cart").addEventListener("click", function () {
 
     const colorId = activeColor.dataset.colorId;
     const sizeId = activeSize.dataset.sizeId;
+    const sizeName = activeSize.textContent;
 
+    // Kiểm tra tồn kho còn đủ không
     fetch('../ajax/check_stock_variant.php', {
         method: 'POST',
         headers: {
@@ -275,15 +277,45 @@ document.querySelector(".add-to-cart").addEventListener("click", function () {
             alert("Có lỗi khi thêm vào giỏ hàng.");
         });
 
+    // nếu chưa đăng nhập thfi thêm vào localStorage
     if (user_id == null) {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+        let variant = null;
+
+        fetch('../ajax/get_variant_id.php', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                color_id: colorId,
+                size_id: sizeId
+            })
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (result) {
+                if (!result.success) {
+                    alert(result.message);
+                    return;
+                }
+                else {
+                    variant = data.message;
+                }
+            })
+            .catch(function (error) {
+                console.error("Lỗi fetch:", error);
+                alert("Có lỗi khi thêm vào giỏ hàng.");
+            });
         // Kiểm tra trùng sản phẩm
-        const index = cart.findIndex(item => item.productId === productId && item.colorId === colorId && item.sizeId === sizeId);
+        const index = cart.findIndex(item => item.variant_id === variant['variant_id']);
         if (index !== -1) {
             cart[index].quantity += quantity;
         } else {
-            cart.push({ productId, quantity, colorId, sizeId });
+            cart.push({ product_id: productId, quantity, color_id:colorId, size_id: sizeName, variant_id: variant_id, image: variant['image'], price: variant['price'], });
         }
 
         localStorage.setItem('cart', JSON.stringify(cart));

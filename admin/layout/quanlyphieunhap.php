@@ -98,7 +98,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 <button type="button" class="btn btn-secondary" id="btnThemSanPhamMoi">
     <i class="fa fa-plus"></i> Thêm SP mới
   </button>
-  <button id="btnMoModalBienThe" class="btn btn-warning">Thêm biến thể</button>
+  <button id="btnMoModalBienThe" class="btn btn-warning text-white"><i class="fa fa-plus"></i> Thêm biến thể</button>
         <!-- Modal Tạo Phiếu Nhập -->
 <div class="modal fade" id="modalCreatePN" tabindex="-1" aria-labelledby="modalCreatePNLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -614,6 +614,12 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 <div class="thongbaoThemBTThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
             <p class="mb-0 text-white">   
               Lưu biến thể thành công    
+            </p>
+        </div>
+
+        <div class="thongbaoXacNhanThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">   
+              Xác nhận phiếu nhập thành công
             </p>
         </div>
 <div class="thongBaoQuyen bg-danger me-3 mt-3 p-3 rounded-2">

@@ -75,7 +75,7 @@ foreach ($data as $row) {
     data-idpn='$idpn'
     style='width:90px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
                 </div>
-                <div>                    <button class='btn btn-info btn-xemchitietPN text-white' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
+                <div>                    <button class='btn btn-info text-white btn-xemchitietPN text-white' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
 </div>
             </div>
         </td>

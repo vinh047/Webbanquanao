@@ -17,5 +17,9 @@ body, html {
 .avatar img {
   border: 1px solid black;
 }
+input::-ms-reveal
+{
+   display: none;
+}
 /* Vùng nền chứa icon động */
 

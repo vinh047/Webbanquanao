@@ -89,7 +89,7 @@ foreach ($data as $row) {
                     <button class='btn btn-danger btn-sm btn-xoa fs-6' data-id='$idvr' style='width:90px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-trash-can'></i> Xóa</button>
                     </div>
                     <div>
-                    <button class='btn btn-info btn-sm btn-xemchitietPN fs-6' data-id='$idvr' style='width:92px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-eye'></i> Chi tiết</button>
+                    <button class='btn btn-info text-white btn-sm btn-xemchitietPN fs-6' data-id='$idvr' style='width:92px;padding:6px 12px 6px 12px;'><i class='fa-regular fa-eye'></i> Chi tiết</button>
                     </div>
                     </div>
             </td>

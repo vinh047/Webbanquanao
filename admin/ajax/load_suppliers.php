@@ -4,7 +4,6 @@ require_once '../../layout/phantrang.php';
 
 $db = DBConnect::getInstance();
 
-$db = DBConnect::getInstance();
 
 $limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

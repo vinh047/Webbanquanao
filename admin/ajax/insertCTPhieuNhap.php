@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Lưu chi tiết phiếu nhập
         $stmt3 = $pdo->prepare("
             INSERT INTO importreceipt_details 
-            (ImportReceipt_id, product_id, variant_id, quantity, import_price, total_price)
+            (ImportReceipt_id, product_id, variant_id, quantity, unit_price, total_price)
             VALUES (?, ?, ?, ?, ?, ?)
         ");
         $stmt3->execute([

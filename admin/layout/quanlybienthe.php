@@ -353,10 +353,10 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
           <thead>
             <tr>
               <th class="text-center">#</th>
-              <th class="text-center">Mã ctpn</th>
-              <th class="text-center">Mã pn</th>
-              <th class="text-center">Mã sp</th>
-              <th class="text-center">Mã bt</th>
+              <th class="text-center">ID ctpn</th>
+              <th class="text-center">ID pn</th>
+              <th class="text-center">ID sp</th>
+              <th class="text-center">ID bt</th>
               <th class="text-center">Số lượng nhập</th>
               <th class="text-center">Ngày nhập</th>
             </tr>
