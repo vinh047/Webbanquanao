@@ -1,9 +1,12 @@
+// pay.js
+
 document.addEventListener('DOMContentLoaded', () => {
   // --- Address option toggle ---
   const savedRadio = document.getElementById('addr_saved');
   const newRadio = document.getElementById('addr_new');
   const savedContainer = document.getElementById('saved-container');
   const newContainer = document.getElementById('new-container');
+
   function toggleAddress() {
     if (savedRadio.checked) {
       savedContainer.style.display = 'block';
@@ -13,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
       newContainer.style.display = 'block';
     }
   }
+
   savedRadio.addEventListener('change', toggleAddress);
   newRadio.addEventListener('change', toggleAddress);
   toggleAddress();
@@ -22,60 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailFld = document.getElementById('email');
     if (emailFld) emailFld.value = window.currentUser.email || '';
   }
-
-  // --- Cart & summary ---
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let subtotal = 0;
-  let discount = 0;
-  const shippingFee = 30000;
-  const orderItemsEl = document.getElementById('order-items');
-
-  cart.forEach(item => {
-    subtotal += item.price * item.quantity;
-    const div = document.createElement('div');
-    div.className = 'd-flex border-bottom py-2 align-items-center';
-    const imgSrc = item.image?.includes('/') ? item.image : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
-    div.innerHTML = `
-      <img src="${imgSrc}" class="me-2 rounded" style="width:60px;height:60px;object-fit:cover;">
-      <div class="flex-grow-1">
-        <p class="mb-0 fw-bold">${item.name}</p>
-        <small>${item.color || 'Màu'} - ${item.size || 'Size'}</small>
-        <div><small><strong>Số lượng: ${item.quantity}</strong></small></div>
-        <p class="text-danger fw-bold mb-0">${(item.price * item.quantity).toLocaleString()}đ</p>
-      </div>`;
-    orderItemsEl.appendChild(div);
-  });
-
-  document.getElementById('subtotal').textContent = subtotal.toLocaleString() + 'đ';
-  document.querySelector('.list-group-item:nth-child(2) span:nth-child(2)').textContent = shippingFee.toLocaleString() + 'đ';
-  document.getElementById('total').textContent = (subtotal + shippingFee - discount).toLocaleString() + 'đ';
-
-  // --- Voucher logic ---
-  const voucherInput = document.querySelector('.input-group input');
-  const applyVoucherBtn = document.querySelector('.input-group button');
-  applyVoucherBtn.addEventListener('click', () => {
-    const code = voucherInput.value.trim().toUpperCase();
-    if (code === 'HUYDEPTRAI') discount = subtotal * 0.1;
-    else if (code === 'MINHHUY') discount = shippingFee;
-    else { discount = 0; alert('Mã giảm giá không hợp lệ!'); }
-    document.querySelector('.list-group-item:nth-child(3) span:nth-child(2)').textContent = discount > 0 ? '-' + discount.toLocaleString() + 'đ' : '0đ';
-    document.getElementById('total').textContent = (subtotal + shippingFee - discount).toLocaleString() + 'đ';
-  });
-
-  // --- QR code section ---
-  const paymentContainer = document.querySelector('.border.p-3.rounded');
-  const qrSection = document.createElement('div');
-  qrSection.id = 'qr-section'; qrSection.className = 'mt-3';
-  paymentContainer.appendChild(qrSection);
-  paymentContainer.style.position = 'relative';
-  document.querySelectorAll("input[name='payment_method']").forEach(radio => {
-    radio.addEventListener('change', () => {
-      const id = Number(radio.value);
-      if (id === 2) qrSection.innerHTML = `<div class='text-center'><p>Quét mã QR ngân hàng</p><img src='./assets/img/pay/qr-bank.png' width='150'></div>`;
-      else if (id === 3) qrSection.innerHTML = `<div class='text-center'><p>Quét mã QR Momo</p><img src='./assets/img/pay/qr-momo.png' width='150'></div>`;
-      else qrSection.innerHTML = '';
-    });
-  });
 
   // --- Province/District/Ward for new address ---
   const provinceSelect = document.getElementById('province');
@@ -139,27 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
       province: newRadio.checked ? provinceSelect.value : null,
       district: newRadio.checked ? districtSelect.value : null,
       ward: newRadio.checked ? wardSelect.value : null,
-      address: newRadio.checked ? document.getElementById('specific-address').value.trim() : null,
-      cart, discount, shippingFee,
-      total: subtotal + shippingFee - discount,
-      payment_method: document.querySelector("input[name='payment_method']:checked").value
+      address: newRadio.checked ? document.getElementById('specific-address').value.trim() : null
     };
+    payload.payment_method = document.querySelector("input[name='payment_method']:checked").value;
 
-    fetch('../ajax/save_order.php', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-      if (res.success) {
-        alert('Đặt hàng thành công!');
-        localStorage.removeItem('cart');
-        window.location = 'index.php';
-      } else {
-        alert('Lỗi: ' + res.message);
-      }
-    });
+    // Gửi payload sang payment.js xử lý tiếp phần thanh toán
+    if (window.startPaymentProcess) {
+      window.startPaymentProcess(payload);
+    } else {
+      console.error('startPaymentProcess not found');
+    }
   };
-
 });

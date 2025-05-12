@@ -1,1 +1,1 @@
-[{"id":"2","variant_id":"7","quantity":1,"name":"Áo polo nam phối màu tay và cổ form fitted","color":"Be","size":"L","price":490000,"image":"10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg"}]
+[{"id":"2","variant_id":"8","quantity":1,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":"7","size":"L","price":490000,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg"}]
