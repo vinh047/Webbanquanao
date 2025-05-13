@@ -25,6 +25,7 @@ try {
     $stmt = $pdo->prepare("
 SELECT 
     p.name AS product_name,
+    p.product_id AS product_id,
     v.variant_id,
     c.name AS color_name,
     s.name AS size_name,

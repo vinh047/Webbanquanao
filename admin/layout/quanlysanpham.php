@@ -19,7 +19,7 @@ $dbInstance = DBConnect::getInstance();  // ✅ chỉ gọi 1 lần
 $conn = $dbInstance->getConnection();
 
 // ✅ Lấy danh sách cần dùng để truyền vào JS
-$productList = $conn->query("SELECT product_id, name FROM products")->fetchAll(PDO::FETCH_ASSOC);
+$productList = $conn->query("SELECT product_id, name FROM products WHERE is_deleted=0")->fetchAll(PDO::FETCH_ASSOC);
 $sizeList = $conn->query("SELECT size_id, name FROM sizes ORDER BY size_id ASC")->fetchAll(PDO::FETCH_ASSOC);
 $colorList = $conn->query("SELECT color_id, name FROM colors ORDER BY color_id ASC")->fetchAll(PDO::FETCH_ASSOC);
 
@@ -357,7 +357,7 @@ $product = $dbInstance->select("
 
       <div class="modal-body">
         <div class="mb-3">
-          <p><strong>Mã sản phẩm:</strong> <span id="idSP"></span></p>
+          <p><strong>ID sản phẩm:</strong> <span id="idSP"></span></p>
           <p><strong>Tên sản phẩm:</strong> <span id="tenNSP"></span></p>
           <p><strong>Loại sản phẩm:</strong> <span id="loaiSP"></span></p>
           <p><strong>Mô tả sản phẩm:</strong> <span id="motaSP"></span></p>
@@ -370,7 +370,7 @@ $product = $dbInstance->select("
           <thead>
             <tr class="text-center">
                 <th>#</th>
-              <th>Mã biến thể</th>
+              <th>ID biến thể</th>
               <th>Sản phẩm</th>
               <th>Size</th>
               <th>Màu</th>

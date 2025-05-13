@@ -169,7 +169,7 @@ function chitietsanpham()
               row.innerHTML = `
                 <td class="text-center">${(currentPage - 1) * 5 + index + 1}</td>
                 <td class="text-center">${item.variant_id}</td>
-                <td>${item.product_name}</td>
+                <td class="truncate-text" style="max-width:250px;">${item.product_name}</td>
                 <td class="text-center">${item.size}</td>
                 <td class="text-center">${item.color}</td>
                 <td class="text-center"><img src="../../assets/img/sanpham/${item.image}" style="height: 100px;"></td>
@@ -353,9 +353,10 @@ function xoasanpham()
                                     popup.style.display = "none";
                                     document.querySelector(".overlay").style.display = "none";
                                     if (data.success) {
-                                        const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
-                                        tbXoa.style.display = "block";
-                                        tbXoa.classList.add("show");
+                                        // const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
+                                        // tbXoa.style.display = "block";
+                                        // tbXoa.classList.add("show");
+                                        alert('Xóa sản phẩm thành công');
                                     
                                         setTimeout(() => tbXoa.classList.remove('show'), 2000);
     
@@ -366,12 +367,12 @@ function xoasanpham()
                                         adjustPageIfLastItem();
                                         fetchSanPham(currentPage);                                    }
                                     else {
-                                        const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
-                                        tbXoaTB.style.display = "block";
-                                        tbXoaTB.classList.add("show");      
-                                        setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
-                            
-                                    }
+                                        // const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
+                                        // tbXoaTB.style.display = "block";
+                                        // tbXoaTB.classList.add("show");      
+                                        // setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                                        alert('Xóa sản phẩm thất bại');
+                                    }   
                                 });
                         };
                     });
@@ -472,31 +473,41 @@ function themsanpham()
             if(!name)
             {
                 document.getElementById('txtTen').focus();
-                return showError("Không được để trống tên sản phẩm");
+                // return showError("Không được để trống tên sản phẩm");
+                alert('Không được để trống tên sản phẩm');
+                return;
             }
 
             if(regexCheck.test(name))
             {
                 document.getElementById('txtTen').focus();
-                return showError("Tên không được chứa các ký tự đặc biệt");
+                // return showError("Tên không được chứa các ký tự đặc biệt");
+                alert('Tên không được chứa các ký tự đặc biệt');
+                return;
             }
 
             if(!description)
             {
                 document.getElementById('txtMota').focus();
-                return showError("Không được để trống mô tả sản phẩm");
+                // return showError("Không được để trống mô tả sản phẩm");
+                alert('Không được để trống mô tả sản phẩm');
+                return;
             }
 
             if(regexCheck.test(description))
                 {
                     document.getElementById('txtMota').focus();
-                    return showError("Mô tả không được chứa các ký tự đặc biệt");
+                    // return showError("Mô tả không được chứa các ký tự đặc biệt");
+                    alert('Mô tả không được chứa các ký tự đặc biệt');
+                    return;
                 }
 
             if(!category_id)
             {
                 document.getElementById('cbLoai').focus();
-                return showError("Không được để trống loại sản phẩm");
+                // return showError("Không được để trống loại sản phẩm");
+                alert('Không được để trống loại sản phẩm');
+                return;
             }
             // if(!price)
             // {
@@ -512,18 +523,24 @@ function themsanpham()
             if(!ptgg)
             {
                 document.getElementById('txtPT').focus();
-                return showError("Không được để trống phần trăm tăng giá");
+                // return showError("Không được để trống phần trăm tăng giá");
+                alert('Không được để trống phần trăm tăng giá');
+                return;
             }
             const epPtgg = parseFloat(ptgg);
             if(epPtgg < 0 || epPtgg === 0 || isNaN(ptgg))
                 {
                     document.getElementById('txtPT').focus();
-                    return showError("Phần trăm tăng giá phải là số dương");
+                    // return showError("Phần trăm tăng giá phải là số dương");
+                    alert('Phần trăm tăng giá phải là số dương');
+                    return;
                 }
             if(epPtgg > 100)
             {
                 document.getElementById('txtPT').focus();
-                return showError("Không được vướt mức 100%");
+                // return showError("Không được vướt mức 100%");
+                alert('Không được vướt mức 100%');
+                return;
             }
     
         const data = new FormData();
@@ -542,10 +559,11 @@ function themsanpham()
             const res = JSON.parse(text);   // tự parse thủ công để dễ debug
         
             if (res.success) {
-                const TBsp = document.querySelector('.thongbaoThemSp');
-                TBsp.style.display = 'block';
-                TBsp.classList.add('show');
-                setTimeout(() => TBsp.classList.remove('show'), 2000);
+                // const TBsp = document.querySelector('.thongbaoThemSp');
+                // TBsp.style.display = 'block';
+                // TBsp.classList.add('show');
+                // setTimeout(() => TBsp.classList.remove('show'), 2000);
+                alert('Thêm sản phẩm thành công');
                 const modalElement = document.getElementById('modalNhapSanPham');
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 if (modalInstance) {
@@ -576,52 +594,44 @@ function themsanpham()
 
 function suasanpham()
 {
+
     formSua.addEventListener("submit", function (e) {
         e.preventDefault();
         const ten = document.getElementById("txtTenSua").value.trim();
         const mota = document.getElementById("txtMotaSua").value.trim();
         const cbLoai = document.getElementById("cbLoaiSua").value.trim();
-        const pttg = parseFloat(document.getElementById("txtPttg").value.trim());
+        // const pttg = parseFloat(document.getElementById("txtPttg").value.trim());
         const giaBanDau = parseFloat(document.getElementById("txtGiaSua").value.replace(/\./g, "").replace(",", "."));
-        const giaBanNe = parseFloat(document.getElementById("txtGiaBanSua").value.replace(/\./g, "").replace(",", "."));
+        const giaBanNe = document.getElementById("txtGiaBanSua").value.replace(/\./g, "").replace(",", ".");
         const gia = parseFloat(document.getElementById("txtGiaSua").value.replace(/\./g, "").replace(",", "."));
         const giaban = parseFloat(document.getElementById("txtGiaBanSua").value.replace(/\./g, "").replace(",", "."));
         const tbLoi = document.querySelector(".thongbaoLoi");
         const loiTB = tbLoi.querySelector("p");
         let loi = "";
+        const ptgg = document.getElementById('txtPttg').value.trim().replace('%', '');
 
 
 
         if(!ten)
         {
             loi = "Không được để trống tên sản phẩm";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            document.getElementById("txtTenSua").focus();
-
+            document.getElementById('txtTenSua').focus();
+            alert(loi);
             return;
         }
 
         if(!mota)
         {
             loi = "Không được để trống mô tả phẩm";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
             document.getElementById("txtMotaSua").focus();
+            alert(loi);
             return;
         }
 
         if(!cbLoai)
         {
             loi = "Không được để trống loại sản phẩm";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            alert(loi);
             document.getElementById("cbLoaiSua").focus();
             return;
         }
@@ -630,84 +640,54 @@ function suasanpham()
         if(!giaBanDau)
         {
             loi = "Không được để trống giá nhập";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
+            alert(loi);
             document.getElementById("txtGiaSua").focus();
             return;
         }
-
-        if(!pttg)
+        if(!ptgg)
         {
-            loi = "Không được để trống phần trăm tăng giá";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            document.getElementById("txtPttg").focus();
+            document.getElementById('txtPttg').focus();
+            // return showError("Không được để trống phần trăm tăng giá");
+            alert('Không được để trống phần trăm tăng giá');
             return;
         }
-        const epPtgg = parseFloat(pttg);
-        if(epPtgg > 100)
-        {
-            document.getElementById('txtPT').focus();
-            return showError("Không được vướt mức 100%");
-        }
-        if(isNaN(pttg))
-        {
-            loi = "Phần trăm tăng giá phải là số dương";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            document.getElementById("txtPttg").focus();
+        const epPtgg = parseFloat(ptgg);
+        if(epPtgg < 0 || epPtgg === 0 || isNaN(ptgg))
+            {
+                document.getElementById('txtPttg').focus();
+                // return showError("Phần trăm tăng giá phải là số dương");
+                alert('Phần trăm tăng giá phải là số dương');
+                return;
+            }
+            if(epPtgg > 100)
+                {
+                    document.getElementById('txtPttg').focus();
+                    // return showError("Không được vướt mức 100%");
+                    alert('Không được vướt mức 100%');
+                    return;
+                }
 
-            return;
-        }
+                //
+const giaBanStr = document.getElementById("txtGiaBanSua").value.trim();
+const regexSoDung = /^[0-9]+([.,][0-9]+)?$/;
 
-        if(pttg < 0)
-        {
-            loi = "Phần trăm tăng giá phải là số dương";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            document.getElementById("txtPttg").focus();
+if (!regexSoDung.test(giaBanStr)) {
+    alert("Giá bán không hợp lệ");
+    document.getElementById("txtGiaBanSua").focus();
+    return;
+}
 
-            return;
-        }
+const giaBanClean = giaBanStr.replace(/\./g, "").replace(",", ".");
+const epGiaBan = parseFloat(giaBanClean);
 
-        if(!giaBanNe)
-        {
-            loi = "Không được để trống giá bán";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            document.getElementById("txtGiaBanSua").focus();
-            return; 
-        }
+if (epGiaBan <= 0 || isNaN(epGiaBan)) {
+    alert("Giá bán phải là số dương");
+    document.getElementById("txtGiaBanSua").focus();
+    return;
+}
 
-        if(isNaN(giaBanDau)  || isNaN(giaBanNe))
-        {
-            loi = "Sai định dạng giá";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            return;  
-        }
 
-        if(giaBanDau <= 0 || giaBanNe <= 0)
-        {
-            loi = "GIá phải lớn hơn 0";
-            loiTB.textContent = loi;
-            tbLoi.style.display = 'block';
-            tbLoi.classList.add('show');
-            setTimeout(() => tbLoi.classList.remove('show'), 2000);
-            return; 
-        }
+
         // if (gia === null || giaban === null) return;
     
         const giaNhap = parseFloat(gia);
@@ -718,11 +698,11 @@ function suasanpham()
         // ✅ Nếu người dùng đã sửa giá bán & giá bán mới < giá nhập → cảnh báo
         if (giaBan !== giaBanCu && giaBan < giaNhap) {
             document.querySelector(".thongBaoGia").style.display = "block";
-            document.querySelector(".overlay").style.display = "block";
+            
     
             document.querySelector(".btn-xacnhan-gia").onclick = function () {
                 document.querySelector(".thongBaoGia").style.display = "none";
-                document.querySelector(".overlay").style.display = "none";
+                
                 sendCapNhatSanPham(giaNhap, giaBan);
             };
     
@@ -750,10 +730,11 @@ function sendCapNhatSanPham(gia, giaban) {
     .then(data => {
         if (data.success) {
 
-            const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
-            tbUpdate.style.display = "block";
-            tbUpdate.classList.add("show");
-            setTimeout(() => tbUpdate.classList.remove('show'), 2000);
+            // const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
+            // tbUpdate.style.display = "block";
+            // tbUpdate.classList.add("show");
+            // setTimeout(() => tbUpdate.classList.remove('show'), 2000);
+            alert('Sửa sản phẩm thành công');
             const modalElement = document.getElementById('modalSuaSanPham');
 const modalInstance = bootstrap.Modal.getInstance(modalElement);
 if (modalInstance) {
@@ -926,8 +907,8 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     const rows = document.querySelectorAll('.variant-row');
 
     if (rows.length === 0) {
-        return showError("Lưu biến thể thất bại");
-    }
+        alert('Không có danh sách để lưu biến thể');
+        return;    }
 
     const variantKeys = new Set();
     let isValid = true;
@@ -993,11 +974,12 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     .then(res => res.json())
     .then(res => {
         if (res.success) {
-            const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
-            tbTC.style.display = 'block';
-            tbTC.classList.add('show');
-            setTimeout(() => tbTC.classList.remove('show'), 2000);
-            
+            // const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
+            // tbTC.style.display = 'block';
+            // tbTC.classList.add('show');
+            // setTimeout(() => tbTC.classList.remove('show'), 2000);
+                        alert('Lưu biến thể thành công');
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
             if (modal) modal.hide();
 

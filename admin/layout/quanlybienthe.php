@@ -348,7 +348,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <img id="ctbt_image" src="" class="img-fluid rounded border" style="max-height: 280px; object-fit: contain;" alt="Ảnh sản phẩm">
           </div>
           <div class="col-md-8 fs-6">
-            <p style="font-size: 17px;"><strong>Mã biến thể:</strong> <span id="idbt_sp"></span></p>
+            <p style="font-size: 17px;"><strong>ID biến thể:</strong> <span id="idbt_sp"></span></p>
             <p style="font-size: 17px;"><strong>Sản phẩm:</strong> <span id="ctbt_tensp"></span></p>
             <p style="font-size: 17px;"><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
             <p style="font-size: 17px;"><strong>Size:</strong> <span id="ctbt_size"></span></p>

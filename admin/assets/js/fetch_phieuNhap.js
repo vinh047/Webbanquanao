@@ -316,7 +316,9 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     const rows = document.querySelectorAll('.variant-row');
 
     if (rows.length === 0) {
-        return showError("Lưu biến thể thất bại");
+        // return showError("Lưu biến thể thất bại");
+        alert('Không có danh sách để lưu biến thể');
+        return;
     }
 
     const variantKeys = new Set();
@@ -383,11 +385,11 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     .then(res => res.json())
     .then(res => {
         if (res.success) {
-            const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
-            tbTC.style.display = 'block';
-            tbTC.classList.add('show');
-            setTimeout(() => tbTC.classList.remove('show'), 2000);
-            
+            // const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
+            // tbTC.style.display = 'block';
+            // tbTC.classList.add('show');
+            // setTimeout(() => tbTC.classList.remove('show'), 2000);
+            alert('Lưu biến thể thành công');
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
             if (modal) modal.hide();
 
@@ -477,46 +479,62 @@ function luuSanPham()
         if(!name)
         {
             document.getElementById('txtTen').focus();
-            return showError("Tên không được để trống tên sản phẩm");
+            // return showError("Tên không được để trống tên sản phẩm");
+            alert('Tên không được để trống tên sản phẩm');
+            return;
         }
 
         if(regexCheck.test(name))
             {
                 document.getElementById('txtTen').focus();
-                return showError("Tên không được chứa các ký tự đặc biệt");
+                // return showError("Tên không được chứa các ký tự đặc biệt");
+                alert('Tên không được chứa các ký tự đặc biệt');
+                return;
             }
 
         if(!description)
         {
             document.getElementById('txtMota').focus();
-            return showError("Không được để trống mô tả sản phẩm");
+            // return showError("Không được để trống mô tả sản phẩm");
+            alert('Không được để trống mô tả sản phẩm');
+            return;
         }
 
         if(regexCheck.test(description))
             {
                 document.getElementById('txtMota').focus();
-                return showError("Mô tả không được chứa các ký tự đặc biệt");
+                // return showError("Mô tả không được chứa các ký tự đặc biệt");
+                alert('Mô tả không được chứa các ký tự đặc biệt');
+                return;
             }
         if(!category_id)
         {
             document.getElementById('cbLoai').focus();
-            return showError("Không được để trống loại sản phẩm");
+            // return showError("Không được để trống loại sản phẩm");
+            alert('Không được để trống loại sản phẩm');
+            return;
         }
         if(!ptgg)
         {
             document.getElementById('txtPT').focus();
-            return showError("Không được để trống phần trăm tăng giá");
+            // return showError("Không được để trống phần trăm tăng giá");
+            alert('Không được để trống phần trăm tăng giá');
+            return;
         }
         const epPtgg = parseFloat(ptgg);
         if(epPtgg < 0 || epPtgg === 0 || isNaN(ptgg))
             {
                 document.getElementById('txtPT').focus();
-                return showError("Phần trăm tăng giá phải là số dương");
+                // return showError("Phần trăm tăng giá phải là số dương");
+                alert('Phần trăm tăng giá phải là số dương');
+                return;
             }
             if(epPtgg > 100)
                 {
                     document.getElementById('txtPT').focus();
-                    return showError("Không được vướt mức 100%");
+                    // return showError("Không được vướt mức 100%");
+                    alert('Không được vướt mức 100%');
+                    return;
                 }
         const data = new FormData();
         data.append('name', name);
@@ -535,11 +553,11 @@ function luuSanPham()
         
             if (res.success) {
                 // 1. Hiện thông báo
-                const TBsp = document.querySelector('.thongbaoThemSp');
-                TBsp.style.display = 'block';
-                TBsp.classList.add('show');
-                setTimeout(() => TBsp.classList.remove('show'), 2000);
-            
+                // const TBsp = document.querySelector('.thongbaoThemSp');
+                // TBsp.style.display = 'block';
+                // TBsp.classList.add('show');
+                // setTimeout(() => TBsp.classList.remove('show'), 2000);
+                alert('Thêm sản phẩm thành công');
                 // 2. Đóng modal
                 const modalElement = document.getElementById('modalNhapSanPham');
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -675,7 +693,9 @@ document.addEventListener('click', async function (e) {
         const productId = row.querySelector('[name*="[product_id]"]').value;
 
         if (!productId) {
-            return showError("Vui lòng chọn sản phẩm trước");
+            // return showError("Vui lòng chọn sản phẩm trước");
+            alert('Vui lòng chọn sản phẩm trước');
+            return;
         }
 
         window._currentVariantIndex = index;  // lưu lại index toàn cục
@@ -851,7 +871,7 @@ function generateProductForm(index) {
 
   <div class="col-md-1">
     <label class="form-label">SL</label>
-    <input type="number" name="products[${index}][quantity]" class="form-control" min="1" placeholder="999">
+    <input type="text" name="products[${index}][quantity]" class="form-control" placeholder="999">
   </div>
 
   <div class="col-12 text-end pt-2">
@@ -932,85 +952,163 @@ function guiFormPhieuNhap() {
         let errorRows = [];
         let firstErrorRow = null;
 
-        productBlocks.forEach((block) => {
-            const product_id = block.querySelector(`[name^="products"][name*="[product_id]"]`)?.value;
-const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value || '';
-const unit_price = raw_price.replace(/\./g, '').replace(',', '.');
+//         productBlocks.forEach((block) => {
+//             const product_id = block.querySelector(`[name^="products"][name*="[product_id]"]`)?.value;
+// const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value || '';
+// const unit_price = raw_price.replace(/\./g, '').replace(',', '.');
 
-// ❌ Giá nhập không hợp lệ (NaN hoặc < 0)
-if (!unit_price || isNaN(unit_price) || Number(unit_price) <= 0) {
-    isValid = false;
-    if (!firstErrorRow) {
-        errorType = 'invalid_price';
-        firstErrorRow = block;
+// // ❌ Giá nhập không hợp lệ (NaN hoặc < 0)
+// if (!unit_price || isNaN(unit_price) || Number(unit_price) <= 0) {
+//     isValid = false;
+//     if (!firstErrorRow) {
+//         errorType = 'invalid_price';
+//         firstErrorRow = block;
+//     }
+//     errorRows.push(block);
+//     return;
+// }
+
+//             const color_id = block.querySelector(`[name^="products"][name*="[color_id]"]`)?.value;
+//             const size_id = block.querySelector(`[name^="products"][name*="[size_id]"]`)?.value;
+//             const quantity = block.querySelector(`[name^="products"][name*="[quantity]"]`)?.value;
+
+// // ❌ Số lượng không hợp lệ (không phải số hoặc <= 0)
+// if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
+//     isValid = false;
+//     if (!firstErrorRow) {
+//         errorType = 'invalid_quantity';
+//         firstErrorRow = block;
+//     }
+//     errorRows.push(block);
+//     return;
+// }
+
+//             const variantDisplay = block.querySelector('.variant-display');
+
+//             // ❌ Thiếu trường bắt buộc
+//             if (!product_id || !color_id || !size_id || !quantity || !unit_price) {
+//                 isValid = false;
+//                 if (!firstErrorRow) {
+//                     errorType = 'missing';
+//                     firstErrorRow = block;
+//                 }
+//                 errorRows.push(block);
+//                 return;
+//             }
+
+//             // ❌ Thiếu biến thể
+//             if (!variantDisplay || !variantDisplay.textContent.trim()) {
+//                 isValid = false;
+//                 if (!firstErrorRow) {
+//                     errorType = 'variant';
+//                     firstErrorRow = block;
+//                 }
+//                 errorRows.push(block);
+//                 return;
+//             }
+
+//             // ❌ Trùng mã sản phẩm nhưng giá khác nhau
+//             const existing = productList.find(p =>
+//                 p.product_id === product_id &&
+//                 p.unit_price !== unit_price
+//             );
+//             if (existing) {
+//                 isValid = false;
+//                 if (!firstErrorRow) {
+//                     errorType = 'price';
+//                     firstErrorRow = block;
+//                 }
+//                 errorRows.push(block);
+//                 return;
+//             }
+
+//             // ✅ Dòng hợp lệ
+//             productList.push({
+//                 product_id,
+//                 color_id,
+//                 size_id,
+//                 quantity,
+//                 unit_price
+//             });
+//         });
+productBlocks.forEach((block) => {
+    const product_id = block.querySelector(`[name^="products"][name*="[product_id]"]`)?.value;
+    const raw_price = block.querySelector(`[name^="products"][name*="[unit_price]"]`)?.value || '';
+    const unit_price = raw_price.replace(/\./g, '').replace(',', '.');
+    const color_id = block.querySelector(`[name^="products"][name*="[color_id]"]`)?.value;
+    const size_id = block.querySelector(`[name^="products"][name*="[size_id]"]`)?.value;
+    const quantity = block.querySelector(`[name^="products"][name*="[quantity]"]`)?.value;
+    const variantDisplay = block.querySelector('.variant-display');
+
+    // ✅ ƯU TIÊN: kiểm tra thiếu thông tin trước
+    if (!product_id || !color_id || !size_id || !quantity || !unit_price) {
+        isValid = false;
+        if (!firstErrorRow) {
+            errorType = 'missing';
+            firstErrorRow = block;
+        }
+        errorRows.push(block);
+        return;
     }
-    errorRows.push(block);
-    return;
-}
 
-            const color_id = block.querySelector(`[name^="products"][name*="[color_id]"]`)?.value;
-            const size_id = block.querySelector(`[name^="products"][name*="[size_id]"]`)?.value;
-            const quantity = block.querySelector(`[name^="products"][name*="[quantity]"]`)?.value;
-
-// ❌ Số lượng không hợp lệ (không phải số hoặc <= 0)
-if (!quantity || isNaN(quantity) || Number(quantity) <= 0) {
-    isValid = false;
-    if (!firstErrorRow) {
-        errorType = 'invalid_quantity';
-        firstErrorRow = block;
+    // ❌ Thiếu biến thể
+    if (!variantDisplay || !variantDisplay.textContent.trim()) {
+        isValid = false;
+        if (!firstErrorRow) {
+            errorType = 'variant';
+            firstErrorRow = block;
+        }
+        errorRows.push(block);
+        return;
     }
-    errorRows.push(block);
-    return;
-}
 
-            const variantDisplay = block.querySelector('.variant-display');
+    // ❌ Giá nhập không hợp lệ (NaN hoặc <= 0)
+    if (isNaN(unit_price) || Number(unit_price) <= 0) {
+        isValid = false;
+        if (!firstErrorRow) {
+            errorType = 'invalid_price';
+            firstErrorRow = block;
+        }
+        errorRows.push(block);
+        return;
+    }
 
-            // ❌ Thiếu trường bắt buộc
-            if (!product_id || !color_id || !size_id || !quantity || !unit_price) {
-                isValid = false;
-                if (!firstErrorRow) {
-                    errorType = 'missing';
-                    firstErrorRow = block;
-                }
-                errorRows.push(block);
-                return;
-            }
+    // ❌ Số lượng không hợp lệ
+    if (isNaN(quantity) || Number(quantity) <= 0) {
+        isValid = false;
+        if (!firstErrorRow) {
+            errorType = 'invalid_quantity';
+            firstErrorRow = block;
+        }
+        errorRows.push(block);
+        return;
+    }
 
-            // ❌ Thiếu biến thể
-            if (!variantDisplay || !variantDisplay.textContent.trim()) {
-                isValid = false;
-                if (!firstErrorRow) {
-                    errorType = 'variant';
-                    firstErrorRow = block;
-                }
-                errorRows.push(block);
-                return;
-            }
+    // ❌ Trùng mã sản phẩm nhưng giá khác nhau
+    const existing = productList.find(p =>
+        p.product_id === product_id &&
+        p.unit_price !== unit_price
+    );
+    if (existing) {
+        isValid = false;
+        if (!firstErrorRow) {
+            errorType = 'price';
+            firstErrorRow = block;
+        }
+        errorRows.push(block);
+        return;
+    }
 
-            // ❌ Trùng mã sản phẩm nhưng giá khác nhau
-            const existing = productList.find(p =>
-                p.product_id === product_id &&
-                p.unit_price !== unit_price
-            );
-            if (existing) {
-                isValid = false;
-                if (!firstErrorRow) {
-                    errorType = 'price';
-                    firstErrorRow = block;
-                }
-                errorRows.push(block);
-                return;
-            }
+    // ✅ Dòng hợp lệ
+    productList.push({
+        product_id,
+        color_id,
+        size_id,
+        quantity,
+        unit_price
+    });
+});
 
-            // ✅ Dòng hợp lệ
-            productList.push({
-                product_id,
-                color_id,
-                size_id,
-                quantity,
-                unit_price
-            });
-        });
 
         // Nếu có lỗi
         if (!isValid) {
@@ -1058,7 +1156,9 @@ if (errorType === 'missing') {
         }
 
         if (productList.length === 0) {
-            return showError("Lưu phiếu nhập thất bại");
+            // return showError("Lưu phiếu nhập thất bại");
+            alert('Không có danh sách để lưu phiếu nhập');
+            return;
         }
 
         formData.append('products', JSON.stringify(productList));
@@ -1070,10 +1170,11 @@ if (errorType === 'missing') {
             .then(res => res.json())
             .then(res => {
                 if (res.success) {
-                    const tbtcthem = document.querySelector('.thongbaoLuuThanhCong');
-                    tbtcthem.style.display = 'block';
-                    tbtcthem.classList.add('show');
-                    setTimeout(() => tbtcthem.classList.remove('show'), 2000);
+                    // const tbtcthem = document.querySelector('.thongbaoLuuThanhCong');
+                    // tbtcthem.style.display = 'block';
+                    // tbtcthem.classList.add('show');
+                    // setTimeout(() => tbtcthem.classList.remove('show'), 2000);
+                    alert('Lưu phiếu nhập thành công');
                     document.getElementById('formNhapPhieuNhap').reset();
                     document.getElementById('dynamic-product-forms').innerHTML = '';
                     bootstrap.Modal.getInstance(document.getElementById('modalCreatePN')).hide();
@@ -1279,6 +1380,7 @@ function phantrang() {
 //                 }
 //             });
 // }
+let daGanSuKienXacNhan = false;
 function xacNhanCho() {
     // Khi người dùng ấn nút Hủy
     document.getElementById('btnHuy').addEventListener('click', function () {
@@ -1292,10 +1394,7 @@ function xacNhanCho() {
             const id = this.dataset.idpn;
 
             if (!permissions.includes('write')) {
-                const tBquyen = document.querySelector('.thongBaoQuyen');
-                tBquyen.style.display = 'block';
-                tBquyen.classList.add('show');
-                setTimeout(() => tBquyen.classList.remove('show'), 2000);
+                alert('Bạn không có quyền thực hiện chức năng này');
                 return;
             }
 
@@ -1311,45 +1410,75 @@ function xacNhanCho() {
     });
 
     // Khi người dùng ấn nút Xác nhận trong popup
-    document.getElementById('btnXacNhan').addEventListener('click', async function () {
-        const id = this.dataset.idpn;
-        try {
-            console.log('[DEBUG] Đang gửi xác nhận với ID =', id); // ✅ DEBUG
+    // document.getElementById('btnXacNhan').addEventListener('click', async function () {
+    //     const id = this.dataset.idpn;
+    //     try {
+    //         console.log('[DEBUG] Đang gửi xác nhận với ID =', id); // ✅ DEBUG
 
-            const res = await fetch('./ajax/moDongPN.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `id=${id}&status=0`
-            });
+    //         const res = await fetch('./ajax/moDongPN.php', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded'
+    //             },
+    //             body: `id=${id}&status=0`
+    //         });
 
-            console.log('[DEBUG] Phản hồi HTTP:', res.status); // ✅ DEBUG
+    //         console.log('[DEBUG] Phản hồi HTTP:', res.status); // ✅ DEBUG
 
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    //         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-            const data = await res.json();
-            console.log('[DEBUG] Dữ liệu trả về từ moDongPN.php:', data); // ✅ DEBUG
+    //         const data = await res.json();
+    //         console.log('[DEBUG] Dữ liệu trả về từ moDongPN.php:', data); // ✅ DEBUG
 
-            if (data.success) {
-                document.getElementById('xacNhanCho').style.display = 'none';
-                document.querySelector('.overlay').style.display = 'none';
+    //         if (data.success) {
+    //             document.getElementById('xacNhanCho').style.display = 'none';
+    //             document.querySelector('.overlay').style.display = 'none';
 
-                const tbxacnhantc = document.querySelector('.thongbaoXacNhanThanhCong');
-                tbxacnhantc.style.display = 'block';
-                tbxacnhantc.classList.add('show');
-                setTimeout(() => tbxacnhantc.classList.remove('show'), 2000);
+    //             // const tbxacnhantc = document.querySelector('.thongbaoXacNhanThanhCong');
+    //             // tbxacnhantc.style.display = 'block';
+    //             // tbxacnhantc.classList.add('show');
+    //             // setTimeout(() => tbxacnhantc.classList.remove('show'), 2000);
+    //             alert('Xác nhận phiếu nhập thành công');
+                
+    //             loadPhieuNhap(currentPage);
+    //         } else {
+    //             alert("❌ Đóng thất bại: " + data.message);
+    //             console.warn('[DEBUG] Lý do thất bại:', data.message);
+    //         }
+    //     } catch (err) {
+    //         alert("❌ Lỗi máy chủ!");
+    //         console.error('[DEBUG] Lỗi fetch:', err);
+    //     }
+    // });
+        // 🔒 Chỉ gắn 1 lần duy nhất
+    if (!daGanSuKienXacNhan) {
+        daGanSuKienXacNhan = true;
+        document.getElementById('btnXacNhan').addEventListener('click', async function () {
+            const id = this.dataset.idpn;
+            try {
+                const res = await fetch('./ajax/moDongPN.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `id=${id}&status=0`
+                });
 
-                loadPhieuNhap(currentPage);
-            } else {
-                alert("❌ Đóng thất bại: " + data.message);
-                console.warn('[DEBUG] Lý do thất bại:', data.message);
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('xacNhanCho').style.display = 'none';
+                    document.querySelector('.overlay').style.display = 'none';
+                    alert('Xác nhận phiếu nhập thành công');
+                    loadPhieuNhap(currentPage);
+                } else {
+                    alert("❌ Đóng thất bại: " + data.message);
+                }
+            } catch (err) {
+                alert("❌ Lỗi máy chủ!");
+                console.error(err);
             }
-        } catch (err) {
-            alert("❌ Lỗi máy chủ!");
-            console.error('[DEBUG] Lỗi fetch:', err);
-        }
-    });
+        });
+    }
 }
 
 function xemChiTiet()
@@ -1369,14 +1498,14 @@ if (Array.isArray(data.data)) {
     data.data.forEach((item, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${(currentPage - 1) * 8 + index + 1}</td>
-            <td>${item.variant_id}</td>
-            <td>${item.product_name}</td>
-            <td>${item.size_name}</td>
-            <td>${item.color_name}</td>
-            <td>${Number(item.unit_price).toLocaleString('vi-VN')}</td>
-            <td>${item.quantity}</td>
-            <td>${item.stock}</td>
+            <td class="text-center">${(currentPage - 1) * 8 + index + 1}</td>
+            <td class="text-center">${item.variant_id}</td>
+            <td class="truncate-text" style="max-width: 250px;">${item.product_id} - ${item.product_name}</td>
+            <td class="text-center">${item.size_name}</td>
+            <td class="text-center">${item.color_name}</td>
+            <td class="text-center">${Number(item.unit_price).toLocaleString('vi-VN')}</td>
+            <td class="text-center">${item.quantity}</td>
+            <td class="text-center">${item.stock}</td>
         `;
         tbody.appendChild(row);
     });
@@ -1626,10 +1755,11 @@ document.addEventListener('click', function (e) {
                     if (data.success) {
                         e.target.closest('tr').remove();
                         loadPhieuNhap(currentPage);
-                        const tbXoaTC = document.querySelector('.thongbaoXoaThanhCong');
-                        tbXoaTC.style.display = 'block';
-                        tbXoaTC.classList.add('show');
-                        setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                        // const tbXoaTC = document.querySelector('.thongbaoXoaThanhCong');
+                        // tbXoaTC.style.display = 'block';
+                        // tbXoaTC.classList.add('show');
+                        // setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                        alert('Xóa chi tiết phiếu nhập thành công');
 
                         const remainingRows = document.querySelectorAll('#body-xoa-ctpn tr').length;
                         const anhien = document.getElementById('anhienxoa');
@@ -1637,10 +1767,11 @@ document.addEventListener('click', function (e) {
                             anhien.style.display = 'inline-block';
                         }
                     } else {
-                        const tbXoaTB = document.querySelector('.thongbaoXoaKhongThanhCong');
-                        tbXoaTB.style.display = 'block';
-                        tbXoaTB.classList.add('show');
-                        setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                        // const tbXoaTB = document.querySelector('.thongbaoXoaKhongThanhCong');
+                        // tbXoaTB.style.display = 'block';
+                        // tbXoaTB.classList.add('show');
+                        // setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                        alert('Xóa chi tiết phiếu nhập thất bại');
                     }
                 });
         });
@@ -1660,19 +1791,21 @@ document.addEventListener('click', function (e) {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        const tbXoaTC = document.querySelector('.thongbaoXoaPNthanhcong');
-                        tbXoaTC.style.display = 'block';
-                        tbXoaTC.classList.add('show');
-                        setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                        // const tbXoaTC = document.querySelector('.thongbaoXoaPNthanhcong');
+                        // tbXoaTC.style.display = 'block';
+                        // tbXoaTC.classList.add('show');
+                        // setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                        alert('Xóa phiếu nhập thành công');
 
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaChiTietPN'));
                         modal.hide();
                         loadPhieuNhap(currentPage);
                     } else {
-                        const tbXoaTC = document.querySelector('.thongbaoXoaPNKhongThanhCong');
-                        tbXoaTC.style.display = 'block';
-                        tbXoaTC.classList.add('show');
-                        setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                        // const tbXoaTC = document.querySelector('.thongbaoXoaPNKhongThanhCong');
+                        // tbXoaTC.style.display = 'block';
+                        // tbXoaTC.classList.add('show');
+                        // setTimeout(() => tbXoaTC.classList.remove('show'), 2000);
+                        alert('Xóa phiếu nhập thất bại');
                     }
                 });
         });
@@ -1840,13 +1973,6 @@ document.addEventListener('click', function (e) {
 document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
 document.body.classList.remove('modal-open');
 document.body.style = '';
-        if (!permissions.includes('write')) {
-            const tBquyen = document.querySelector('.thongBaoQuyen');
-            tBquyen.style.display = 'block';
-            tBquyen.classList.add('show');
-            setTimeout(() => tBquyen.classList.remove('show'), 2000);
-            return; 
-        }
         modal.show();
         $(document).ready(function () {
             $('#modalSuaPhieuNhap').on('shown.bs.modal', function () {
@@ -1895,19 +2021,21 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
         console.log("DEBUG SERVER:", data); // Xem phản hồi
 
         if (data.success) {
-            const tbTC = document.querySelector('.thongbaoUpdateThanhCong');
-            tbTC.style.display = 'block';
-            tbTC.classList.add('show');
-            setTimeout(() => tbTC.classList.remove('show'), 2000);
+            // const tbTC = document.querySelector('.thongbaoUpdateThanhCong');
+            // tbTC.style.display = 'block';
+            // tbTC.classList.add('show');
+            // setTimeout(() => tbTC.classList.remove('show'), 2000);
+            alert('Cập nhật thông tin phiếu nhập thành công');
 
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalSuaPhieuNhap'));
             modal.hide();
             loadPhieuNhap(currentPage);
         } else {
-            const TBtb = document.querySelector('.thongbaoUpdateKhongThanhCong');
-            TBtb.style.display = 'block';
-            TBtb.classList.add('show');
-            setTimeout(() => TBtb.classList.remove('show'), 2000);
+            // const TBtb = document.querySelector('.thongbaoUpdateKhongThanhCong');
+            // TBtb.style.display = 'block';
+            // TBtb.classList.add('show');
+            // setTimeout(() => TBtb.classList.remove('show'), 2000);
+            alert('Cập nhật thông tin thất bại');
         }
     })
     .catch(err => {
@@ -1954,18 +2082,35 @@ function fetchCTPhieuNhap(idpn, page = 1) {
             data.details.forEach(item => {
                 const tr = document.createElement('tr');
                 const quantityValue = cachedQuantities[item.variant_id] ?? item.quantity;
-                tr.innerHTML = `
-            <td>
-              <input type="hidden" name="detail_ids[]" class="detail_id" value="${item.importreceipt_details_id}">
-              <input type="text" class="form-control bg-light" value="${item.product_id} - ${item.product_name}" readonly>
-              <input type="hidden" name="product_ids[]" class="product_id" value="${item.product_id}">
-            </td>
-            <td>
-              <input type="text" name="variant_ids[]" class="form-control bg-light variant_id" value="${item.variant_id}" readonly>
-            </td>
-            <td>
-              <input type="number" name="quantities[]" class="form-control quantity" value="${quantityValue}" min="1" required>
-            </td>`;
+            //     tr.innerHTML = `
+            // <td>
+            //   <input type="hidden" name="detail_ids[]" class="detail_id" value="${item.importreceipt_details_id}">
+            //   <input type="text" class="form-control bg-light" value="${item.product_id} - ${item.product_name}" readonly>
+            //   <input type="hidden" name="product_ids[]" class="product_id" value="${item.product_id}">
+            // </td>
+            // <td>
+            //   <input type="text" name="variant_ids[]" class="form-control bg-light variant_id" value="${item.variant_id}" readonly>
+            // </td>
+            // <td>
+            //   <input type="number" name="quantities[]" class="form-control quantity" value="${quantityValue}" min="1" required>
+            // </td>`;
+tr.innerHTML = `
+<td>
+    <div class="suaphieunhap-text">${item.product_id} - ${item.product_name}</div>
+    <input type="hidden" name="detail_ids[]" class="detail_id" value="${item.importreceipt_details_id}">
+    <input type="hidden" name="product_ids[]" class="product_id" value="${item.product_id}">
+  </td>
+  <td class="text-center">
+    <span class="">${item.variant_id}</span>
+    <input type="hidden" name="variant_ids[]" class="variant_id" value="${item.variant_id}">
+  </td>
+  <td class="text-center">
+    <input type="number" name="quantities[]" class="form-control form-control-sm text-center quantity" 
+      value="${quantityValue}" min="1" required style="max-width: 80px; margin: 0 auto;">
+  </td>
+`;
+
+
                 tbody.appendChild(tr);
             });
             
