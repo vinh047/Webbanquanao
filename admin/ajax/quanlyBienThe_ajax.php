@@ -82,7 +82,7 @@ foreach ($data as $row) {
     echo "
         <tr class='text-center'>
             <td class='hienthiidbt'>$idvr</td>
-            <td class='hienthianh'>$tensp</td>
+            <td class='hienthianh'>$idsp - $tensp</td>
             <td class='hienthiidsp'><img src='../../assets/img/sanpham/$anh' style='width:100px;height:100px;object-fit:cover;' class='img-fluid'></td>
             <td class='hienthisize'>$size</td>
             <td class='hienthigia'>$soluong</td>

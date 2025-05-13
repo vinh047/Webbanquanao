@@ -1,16 +1,8 @@
 Array
 (
-    [txtMaBt] => 2
+    [txtMaBt] => 15
+    [tenAnhCu] => 10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg
 )
 Array
 (
-    [fileAnhSua] => Array
-        (
-            [name] => 10f24dps002-l-indigo-quan-short-nam-1-jpg-88kg.jpg
-            [type] => image/jpeg
-            [tmp_name] => C:\xampp\tmp\phpFABC.tmp
-            [error] => 0
-            [size] => 1218301
-        )
-
 )

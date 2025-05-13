@@ -515,3 +515,19 @@ button:active {
     min-width: 80px;
     text-align: center;
 }
+
+
+.truncate-text {
+  max-width: 250px;      /* tùy chỉnh chiều rộng tối đa */
+  white-space: nowrap;   /* không xuống dòng */
+  overflow: hidden;      /* ẩn phần dư */
+  text-overflow: ellipsis; /* hiện "..." nếu quá dài */
+}
+
+.suaphieunhap-text
+{
+      max-width: 300px;      /* tùy chỉnh chiều rộng tối đa */
+  white-space: nowrap;   /* không xuống dòng */
+  overflow: hidden;      /* ẩn phần dư */
+  text-overflow: ellipsis; /* hiện "..." nếu quá dài */
+}

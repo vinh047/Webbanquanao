@@ -52,18 +52,18 @@ if ($count_orders > 0) {
         $stmtDeleteVariant->execute([$variant_id]);
 
         // 4. Cập nhật lại tổng giá trị cho các phiếu nhập liên quan
-        $stmtUpdateTotal = $pdo->prepare("
-            UPDATE importreceipt 
-            SET total_price = (
-                SELECT COALESCE(SUM(quantity * unit_price), 0)
-                FROM importreceipt_details
-                WHERE importreceipt_id = ?
-            )
-            WHERE ImportReceipt_id = ?
-        ");
-        foreach ($receiptIds as $receiptId) {
-            $stmtUpdateTotal->execute([$receiptId, $receiptId]);
-        }
+        // $stmtUpdateTotal = $pdo->prepare("
+        //     UPDATE importreceipt 
+        //     SET total_price = (
+        //         SELECT COALESCE(SUM(quantity * unit_price), 0)
+        //         FROM importreceipt_details
+        //         WHERE importreceipt_id = ?
+        //     )
+        //     WHERE ImportReceipt_id = ?
+        // ");
+        // foreach ($receiptIds as $receiptId) {
+        //     $stmtUpdateTotal->execute([$receiptId, $receiptId]);
+        // }
 
         $pdo->commit();
 
