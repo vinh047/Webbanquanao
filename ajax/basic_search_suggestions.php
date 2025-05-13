@@ -1,26 +1,35 @@
 <?php
-require_once 'database/DBConnection.php';
-$db = DBConnect::getInstance();
+require_once __DIR__ . '/../database/DBConnection.php';
 
+header('Content-Type: application/json');
+
+$db = DBConnect::getInstance();
 $input = json_decode(file_get_contents('php://input'), true);
+
 $keyword = $input['keyword'] ?? '';
 
 $results = [];
-if ($keyword !== '') {
+
+if (!empty($keyword)) {
     $keywordNormalized = mb_strtolower(removeVietnamese($keyword));
-    $rows = $db->select("SELECT name FROM products", []);
+
+    $rows = $db->select("SELECT product_id, name FROM products", []);
 
     foreach ($rows as $row) {
         $name = $row['name'];
+        $product_id = $row['product_id'];
         $nameNormalized = mb_strtolower(removeVietnamese($name));
+
         if (strpos($nameNormalized, $keywordNormalized) !== false) {
-            $results[] = $name;
+            $link = '<a href="layout/product_detail.php?product_id=' . $product_id . '" class="text-decoration-none">' . htmlspecialchars($name) . '</a>';
+            $results[] = $link;
         }
     }
 }
 
 echo json_encode($results);
 
+// Hàm bỏ dấu tiếng Việt
 function removeVietnamese($str) {
     $accents = [
         'à','á','ạ','ả','ã','â','ầ','ấ','ậ','ẩ','ẫ','ă','ằ','ắ','ặ','ẳ','ẵ',
@@ -56,4 +65,3 @@ function removeVietnamese($str) {
     ];
     return str_replace($accents, $replacements, $str);
 }
-?>

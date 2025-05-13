@@ -50,6 +50,7 @@ if (!empty($_SESSION['user_id'])) {
 }
 
 ?>
+<link rel="stylesheet" href="../assets/css/basic_search.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=shopping_cart" />
 <header class="header">
 
@@ -97,9 +98,17 @@ if (!empty($_SESSION['user_id'])) {
 
 	<div class="icon-group">
 		<!-- Search icon -->
-		<a href="/search.html" class="icon">
+		<a href="#" class="icon" id="openSearch">
 			<i class="fa-solid fa-magnifying-glass"></i>
 		</a>
+
+		<div id="searchOverlay" class="search-overlay">
+			<div class="search-box">
+				<button class="close-btn" id="closeSearch">&times;</button>
+				<input type="text" id="searchInput" placeholder="Bạn tìm kiếm gì hôm nay...">
+				<div id="searchResultBox"></div>
+			</div>
+		</div>
 
 		<?php if ($user): ?>
 			<!-- Khi click icon user sẽ redirect thẳng tới info_user.php -->
@@ -174,6 +183,9 @@ if (!empty($_SESSION['user_id'])) {
 <script src="/assets/js/cart.js"         defer></script>
 <script src="/assets/js/mini_cart.js"    defer></script>
 <script src="/assets/js/header.js"       defer></script>
+<script src="../assets/js/basic_search_overlay.js"></script>
+<script src="../assets/js/basic_search_ui.js"></script>
+<script src="../assets/js/basic_search_logic.js"></script>
 
 <?php if (!empty($_SESSION['user_id'])): ?>
 <script defer>

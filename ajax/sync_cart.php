@@ -36,13 +36,7 @@ try {
         $cart_id = $db->lastInsertId();
     }
 
-    // 2. Lấy danh sách variant_id từ client
-    $variantIdsFromClient = array_filter(array_map(function ($item) {
-        return isset($item['variant_id']) ? (int)$item['variant_id'] : 0;
-    }, $data));
-
-
-    // 4. Cập nhật hoặc thêm từng sản phẩm
+    // 2. Cập nhật hoặc thêm từng sản phẩm từ localStorage
     foreach ($data as $item) {
         $product_id = (int)($item['product_id'] ?? 0);
         $variant_id = (int)($item['variant_id'] ?? 0);
@@ -56,20 +50,23 @@ try {
         $stockRow = $db->selectOne("SELECT stock FROM product_variants WHERE variant_id = ?", [$variant_id]);
         $stock = isset($stockRow['stock']) ? (int)$stockRow['stock'] : 0;
 
-        if ($stock < $quantity) {
-            // Có thể log thêm chi tiết nếu cần
+        if ($stock < 1) {
             continue;
         }
 
         // Kiểm tra xem sản phẩm đã có trong cart chưa
-        $existing = $db->selectOne("SELECT cart_detail_id FROM cart_details WHERE cart_id = ? AND variant_id = ?", [$cart_id, $variant_id]);
+        $existing = $db->selectOne("SELECT cart_detail_id, quantity FROM cart_details WHERE cart_id = ? AND variant_id = ?", [$cart_id, $variant_id]);
 
         if ($existing) {
-            $db->execute("UPDATE cart_details SET quantity = ? WHERE cart_detail_id = ?", [$quantity, $existing['cart_detail_id']]);
+            // Nếu tồn tại → cộng dồn số lượng, nhưng không vượt quá tồn kho
+            $newQty = min($existing['quantity'] + $quantity, $stock);
+            $db->execute("UPDATE cart_details SET quantity = ? WHERE cart_detail_id = ?", [$newQty, $existing['cart_detail_id']]);
         } else {
+            // Nếu chưa có → thêm mới nhưng không vượt tồn kho
+            $qtyToAdd = min($quantity, $stock);
             $db->execute(
                 "INSERT INTO cart_details (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)",
-                [$cart_id, $product_id, $variant_id, $quantity]
+                [$cart_id, $product_id, $variant_id, $qtyToAdd]
             );
         }
     }

@@ -4,29 +4,31 @@ require_once './database/DBConnection.php';
 $db = DBConnect::getInstance();
 
 $user_id = $_SESSION['user_id'] ?? null;
-$user = ['name'=>'','phone'=>'','email'=>''];
+$user = ['name' => '', 'phone' => '', 'email' => ''];
 $user_addresses = [];
 if ($user_id) {
-    $user = $db->selectOne("SELECT name, phone, email FROM users WHERE user_id = ?", [$user_id]);
-    $user_addresses = $db->select(
-        "SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_default DESC, updated_at DESC",
-        [$user_id]
-    );
+  $user = $db->selectOne("SELECT name, phone, email FROM users WHERE user_id = ?", [$user_id]);
+  $user_addresses = $db->select(
+    "SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_default DESC, updated_at DESC",
+    [$user_id]
+  );
 }
 $payment_methods = $db->select("SELECT * FROM payment_method", []);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sagkuto</title>
+  <title>sagkuto - Thanh toán</title>
   <link rel="stylesheet" href="./assets/css/pay.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/fonts/font.css">
   <link rel="stylesheet" href="./assets/css/footer.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
   <div class="container-md mt-3">
     <div class="border rounded py-2 px-4 d-flex align-items-center">
@@ -42,29 +44,26 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
 
   <div class="container my-5">
     <div class="row">
+      <!-- Thông tin giao hàng -->
       <div class="col-lg-4 mb-4">
         <h5>Thông tin giao hàng</h5>
         <form id="shipping-form" novalidate>
-          <!-- Họ và tên -->
           <div class="mb-2">
             <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên" required
-                   value="<?= htmlspecialchars($user['name'] ?? '') ?>">
+              value="<?= htmlspecialchars($user['name'] ?? '') ?>">
             <div class="invalid-feedback">Họ và tên là bắt buộc</div>
           </div>
-          <!-- Số điện thoại -->
           <div class="mb-2">
             <input type="tel" class="form-control" id="sdt" name="phone" placeholder="Số điện thoại" required
-                   value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+              value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
             <div class="invalid-feedback">Số điện thoại là bắt buộc</div>
           </div>
-          <!-- Email -->
           <div class="mb-3">
             <input type="email" class="form-control" id="email" name="email" placeholder="Email" required
-                   value="<?= htmlspecialchars($user['email'] ?? '') ?>">
+              value="<?= htmlspecialchars($user['email'] ?? '') ?>">
             <div class="invalid-feedback">Email là bắt buộc</div>
           </div>
 
-          <!-- Chọn kiểu nhập địa chỉ -->
           <div class="mb-3 d-flex">
             <div class="form-check me-4">
               <input class="form-check-input" type="radio" name="address_option" id="addr_saved" value="saved" checked>
@@ -76,13 +75,12 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
             </div>
           </div>
 
-          <!-- Phần chọn địa chỉ đã lưu -->
           <div id="saved-container" class="mb-3">
             <select id="saved-address" class="form-select">
               <option selected disabled>Chọn địa chỉ đã lưu</option>
               <?php foreach ($user_addresses as $addr): ?>
                 <?php
-                  $full = $addr['address_detail'] . ', ' . $addr['ward'] . ', ' . $addr['district'] . ', ' . $addr['province'];
+                $full = $addr['address_detail'] . ', ' . $addr['ward'] . ', ' . $addr['district'] . ', ' . $addr['province'];
                 ?>
                 <option value="<?= $addr['address_id'] ?>" <?= $addr['is_default'] ? 'selected' : '' ?>>
                   <?= htmlspecialchars($full) ?>
@@ -92,7 +90,6 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
             <div class="invalid-feedback">Chọn địa chỉ đã lưu</div>
           </div>
 
-          <!-- Phần nhập địa chỉ mới (ẩn mặc định) -->
           <div id="new-container" class="mb-3" style="display:none;">
             <div class="row g-2 mb-2">
               <div class="col-md-4">
@@ -121,7 +118,7 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
         </form>
       </div>
 
-      <!-- Mua online & Phương thức thanh toán -->
+      <!-- Phương thức & Mua online -->
       <div class="col-lg-4 mb-4">
         <h5>Mua online</h5>
         <div class="border p-3 mb-3 rounded">
@@ -135,7 +132,7 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
         <div class="border p-3 rounded">
           <?php foreach ($payment_methods as $method): ?>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="payment_method" id="pm<?= $method['payment_method_id'] ?>" value="<?= $method['payment_method_id'] ?>" <?= $method['payment_method_id']==1? 'checked':'' ?> required>
+              <input class="form-check-input" type="radio" name="payment_method" id="pm<?= $method['payment_method_id'] ?>" value="<?= $method['payment_method_id'] ?>" <?= $method['payment_method_id'] == 1 ? 'checked' : '' ?> required>
               <label class="form-check-label" for="pm<?= $method['payment_method_id'] ?>">
                 <?= htmlspecialchars($method['name']) ?>
               </label>
@@ -145,8 +142,8 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
 
         <h6 class="mt-4 d-flex justify-content-between">Voucher <a href="#" class="text-decoration-none">Xem tất cả</a></h6>
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
-          <button class="btn btn-dark">Áp dụng</button>
+          <input type="text" class="form-control" placeholder="Nhập mã giảm giá" id="voucher-code">
+          <button class="btn btn-dark" id="apply-voucher-btn">Áp dụng</button>
         </div>
       </div>
 
@@ -154,23 +151,73 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
       <div class="col-lg-4 order-summary">
         <h5>Đơn hàng</h5>
         <div id="order-items"></div>
+
         <ul class="list-group mt-3">
-          <li class="list-group-item d-flex justify-content-between"><span>Tạm tính</span><strong id="subtotal">0đ</strong></li>
-          <li class="list-group-item d-flex justify-content-between"><span>Phí vận chuyển</span><span>0đ</span></li>
-          <li class="list-group-item d-flex justify-content-between"><span>Giảm giá</span><span>0đ</span></li>
-          <li class="list-group-item d-flex justify-content-between"><strong>Thành tiền</strong><strong id="total">0đ</strong></li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Tạm tính</span>
+            <strong id="subtotal">0đ</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Phí vận chuyển</span>
+            <span>0đ</span> <!-- payment.js lấy qua nth-child(2) -->
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Giảm giá</span>
+            <span>0đ</span> <!-- payment.js lấy qua nth-child(3) -->
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Thành tiền</strong>
+            <strong id="total">0đ</strong> <!-- payment.js sẽ gán vào đây -->
+          </li>
         </ul>
-        <button class="btn btn-dark w-100 mt-3" onclick="submitOrder()">Đặt hàng</button>
+
+        <!-- <span> ẩn dùng để JS cập nhật trước, rồi sẽ copy vào #total -->
+        <span id="paid_price" style="display:none">0đ</span>
+
+        <!-- Container để show QR code -->
+        <div id="qr-section" class="mt-3"></div>
+
+        <button id="btnPay" class="btn btn-dark w-100 mt-3" onclick="submitOrder()">
+          Đặt hàng
+        </button>
       </div>
+
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Tạo biến JS dùng cho pay.js -->
   <script>
     window.savedAddresses = <?= json_encode($user_addresses, JSON_UNESCAPED_UNICODE) ?>;
     window.currentUser = <?= json_encode($user, JSON_UNESCAPED_UNICODE) ?>;
+
+    // Define startPaymentProcess to bridge pay.js & payment.js
+    window.startPaymentProcess = function(orderData) {
+      // Giả sử trong DB, phương thức COD có id = 1:
+      if (orderData.payment_method === '1') {
+        // Thanh toán khi nhận hàng
+        alert('Đặt hàng thành công');
+        return;
+      }
+
+      // Nếu đến đây, tức là chọn chuyển khoản ngân hàng → xuất QR
+      // Bạn có thể tái sử dụng MY_BANK từ payment.js, hoặc định nghĩa lại:
+      const MY_BANK = {
+        BANK_ID: 'Vietcombank',
+        ACCOUNT_NO: '1025574990'
+      };
+      // Lấy amount từ DOM (đã được payment.js tính trước đó)
+      const raw = document.getElementById('paid_price').textContent || '';
+      const amount = parseInt(raw.replace(/\D/g, ''), 10) || 0;
+      const qrUrl = `https://img.vietqr.io/image/${MY_BANK.BANK_ID}-${MY_BANK.ACCOUNT_NO}-compact2.png?amount=${amount}&accountName=SAUKUTO`;
+      document.getElementById('qr-section').innerHTML = `
+      <div class="text-center">
+        <p class="mb-2">Quét mã QR ngân hàng của bạn</p>
+        <img src="${qrUrl}" width="150" alt="QR Code">
+      </div>`;
+    };
   </script>
-  <script src="../assets/js/pay.js"></script>
+  <script src="./assets/js/pay.js"></script>
+  <script src="./assets/js/payment.js"></script>
 </body>
+
 </html>

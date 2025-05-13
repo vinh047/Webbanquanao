@@ -1,3 +1,1 @@
-
-[{"id":"1","variant_id":"1","quantity":14,"name":"Áo polo nam dệt kim tay ngắn form regular","color_id":"8","size":"X","price":540000,"image":"10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg"}]
-
+[{"product_id":6,"name":"Áo thun tay ngắn nam S.café in.Boxy","price":739700,"quantity":5,"image":"10s25tss048-strawberry-1-jpg-ayc7.jpg","variant_id":29,"color_id":9,"size":"X"}]

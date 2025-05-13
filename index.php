@@ -49,6 +49,9 @@ if (isset($_GET['page'])) {
             case 'lichsumuahang':
                 include('./layout/info_user.php');
                 break;
+            case 'search':
+                include "layout/search.php";
+                break;
             case 'error':
                 include('./layout/error404.php');
                 break;
