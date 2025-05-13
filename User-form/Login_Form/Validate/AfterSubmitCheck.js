@@ -70,7 +70,11 @@ async function submitForm(e) {
           return;
         }
 
-        if ([2, 3, 4].includes(role)  ||  online === 0 ) {
+        if ([2, 3, 4].includes(role)  ) {
+          alert("Tài khoản đã bị cấm vĩnh viễn");
+          return;
+        }
+        else if (online === 0){
           alert("Tài khoản đã bị khóa");
           return;
         }

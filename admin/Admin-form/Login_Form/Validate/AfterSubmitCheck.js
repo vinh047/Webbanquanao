@@ -7,7 +7,7 @@ async function submitForm(e) {
   const formData = new FormData(e.target);
 
   try {
-    const response = await fetch("/User-form/Login_Form/userdb_func.php", {
+    const response = await fetch("/admin/Admin-form/Login_Form/userdb_func.php", {
       method: "POST",
       body: formData
     });

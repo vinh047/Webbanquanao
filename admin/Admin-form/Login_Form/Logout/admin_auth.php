@@ -15,7 +15,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 }
 
 // Kiểm tra quyền đăng nhập
-if (!isset($_SESSION['user_id']) || ($_SESSION['role_id'] ?? 1) == 1) {
+if (!isset($_SESSION['admin_id']) || ($_SESSION['role_id'] ?? 1) == 1) {
     header('Location: Admin-form/Login_Form/Login_Form.php');
     exit();
 }

@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
+if (isset($_SESSION['admin_id'])) {
+    $admin_id = $_SESSION['admin_id'];
 } else {
-    $user_id = null;
+    $admin_id = null;
 }
 ?>
