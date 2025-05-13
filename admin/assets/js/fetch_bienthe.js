@@ -216,7 +216,49 @@ function xemChiTiet()
 
 function hienthisuaBienThe()
 {
-    document.querySelectorAll(".btn-sua").forEach(btn => {
+    // document.querySelectorAll(".btn-sua").forEach(btn => {
+    //     btn.addEventListener("click", function (e) {
+    //         const idvr = this.dataset.idvr;
+    //         const idsp = this.dataset.idsp;
+    //         const anh = this.dataset.anh;
+    //         const size = this.dataset.size;
+    //         const soluong = this.dataset.soluong;
+    //         const mau = this.dataset.mau;
+    //         const idctpn = this.dataset.idct;
+    //         const tensp = this.dataset.tensp;
+    
+    //         const formSua = document.getElementById("formSuaSPbienThe");
+    
+    //         // Truyền dữ liệu vào form
+    //         formSua.querySelector("input[name='txtMaBt']").value = idvr;
+    //         formSua.querySelector("input[name='txtMaSua']").value = idsp;
+    //         formSua.querySelector("input[name='txtMaCTPN']").value = idctpn;
+    //         formSua.querySelector("select[name='cbSizeSua']").value = size;
+    //         formSua.querySelector("select[name='cbMauSua']").value = mau;
+    //         formSua.querySelector("input[name='txtSlSua']").value = soluong;
+    //         formSua.querySelector("input[name='txtTenspSua']").value = tensp;
+
+    //         // Gán tên file ảnh vào khu vực hiển thị tên file
+    //         document.getElementById("tenFileAnhSua").textContent = anh;
+    
+    //         // Gán ảnh preview
+    //         const imgPreview = document.querySelector("#hienthianhSua img");
+    //         imgPreview.src = "../../assets/img/sanpham/" + anh;
+    //         imgPreview.style.display = "block";
+    
+    //                 if (!permissions.includes('write')) {
+    //         const tBquyen = document.querySelector('.thongBaoQuyen');
+    //         tBquyen.style.display = 'block';
+    //         tBquyen.classList.add('show');
+    //         setTimeout(() => tBquyen.classList.remove('show'), 2000);
+    //         return; 
+    //     }
+    //         // ✅ Mở modal Bootstrap
+    //         const modalSuaBienThe = new bootstrap.Modal(document.getElementById('modalSuaBienThe'));
+    //         modalSuaBienThe.show();
+    //     });
+    // });
+   document.querySelectorAll(".btn-sua").forEach(btn => {
         btn.addEventListener("click", function (e) {
             const idvr = this.dataset.idvr;
             const idsp = this.dataset.idsp;
@@ -228,7 +270,9 @@ function hienthisuaBienThe()
             const tensp = this.dataset.tensp;
     
             const formSua = document.getElementById("formSuaSPbienThe");
-    
+            // 🔁 Reset file input và tên file
+        const fileInput = document.getElementById("fileAnhSua");
+        fileInput.value = ""; // Xóa input file
             // Truyền dữ liệu vào form
             formSua.querySelector("input[name='txtMaBt']").value = idvr;
             formSua.querySelector("input[name='txtMaSua']").value = idsp;
@@ -258,6 +302,7 @@ function hienthisuaBienThe()
             modalSuaBienThe.show();
         });
     });
+
 }
 function xoaBienThe()
 {
@@ -296,11 +341,12 @@ function xoaBienThe()
                         // Hiển thị thông báo xóa thành công
                         if(action === 'hidden')
                         {
-                            const tbXoane = document.querySelector(".thongbaoXoaHiddenThanhCong");
-                            tbXoane.style.display = "block";
-                            tbXoane.classList.add("show");
+                            // const tbXoane = document.querySelector(".thongbaoXoaHiddenThanhCong");
+                            // tbXoane.style.display = "block";
+                            // tbXoane.classList.add("show");
 
-                            setTimeout(() => tbXoane.classList.remove('show'), 2000);
+                            // setTimeout(() => tbXoane.classList.remove('show'), 2000);
+                            alert('Xóa biến thể thành công');
 
                             if (document.querySelectorAll(".btn-sua").length === 1 && currentPage > 1) {
                                 currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
@@ -310,11 +356,12 @@ function xoaBienThe()
                             fetchBienThe(currentPage);
                         }else
                         {
-                            const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
-                            tbXoa.style.display = "block";
-                            tbXoa.classList.add("show");
+                            // const tbXoa = document.querySelector(".thongbaoXoaThanhCong");
+                            // tbXoa.style.display = "block";
+                            // tbXoa.classList.add("show");
 
-                            setTimeout(() => tbXoa.classList.remove('show'), 2000);
+                            // setTimeout(() => tbXoa.classList.remove('show'), 2000);
+                            alert('Xóa biến thể thành công');
 
                             if (document.querySelectorAll(".btn-sua").length === 1 && currentPage > 1) {
                                 currentPage -= 1; // nếu chỉ còn 1 sản phẩm → lùi trang
@@ -323,10 +370,11 @@ function xoaBienThe()
                             fetchBienThe(currentPage);
                         }
                     } else {
-                        const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
-                        tbXoaTB.style.display = "block";
-                        tbXoaTB.classList.add("show");      
-                        setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                        // const tbXoaTB = document.querySelector(".thongbaoXoaThatBai");
+                        // tbXoaTB.style.display = "block";
+                        // tbXoaTB.classList.add("show");      
+                        // setTimeout(() => tbXoaTB.classList.remove('show'), 2000);
+                        alert('Xóa biến thể thất bại');
                     }
 
                     // Ẩn popup và overlay sau khi xử lý xong
@@ -420,63 +468,64 @@ function resetFormLoc()
 
 function suaBienThe(){}
 formSua.addEventListener("submit", async function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const idBienThe = document.getElementById("txtMaBt").value;
-    const file = document.getElementById("fileAnhSua").files[0];
+  const idBienThe = document.getElementById("txtMaBt").value;
+  const fileInput = document.getElementById("fileAnhSua");
+  const file = fileInput.files[0];
+  const tenAnhCu = document.getElementById("tenFileAnhSua").textContent.trim(); // Lấy tên ảnh cũ đang hiển thị
 
-    if (!file) {
-        loi.textContent = "Vui lòng chọn ảnh mới!";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-        return;
+  const formData = new FormData();
+  formData.append("txtMaBt", idBienThe);
+
+  if (file) {
+    formData.append("fileAnhSua", file); // Gửi ảnh mới
+  } else {
+    formData.append("tenAnhCu", tenAnhCu); // Gửi tên ảnh cũ
+  }
+
+  // ✅ Debug
+  for (const [key, value] of formData.entries()) {
+    console.log(key, ':', value);
+  }
+
+  try {
+    const resUpdate = await fetch("./ajax/updateBienThe.php", {
+      method: "POST",
+      body: formData
+    });
+    const result = await resUpdate.json();
+
+    if (result.success) {
+    //   const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
+    //   tbUpdate.textContent = result.message;
+    //   tbUpdate.style.display = "block";
+    //   tbUpdate.classList.add("show");
+    //   setTimeout(() => tbUpdate.classList.remove("show"), 2000);
+        alert('Cập nhật biến thể thành công');
+
+      const modalElement = document.getElementById('modalSuaBienThe');
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      if (modalInstance) modalInstance.hide();
+
+      fetchBienThe(currentPage);
+    } else {
+      loi.textContent = result.message;
+    //   thongbao.style.display = 'block';
+    //   thongbao.classList.add('show');
+    //   setTimeout(() => thongbao.classList.remove('show'), 2000);
+    alert('Cập nhật biến thể thất bại');
     }
 
-    const formData = new FormData();
-    formData.append("txtMaBt", idBienThe);
-    formData.append("fileAnhSua", file);
-
-    // ✅ Debug kiểm tra kỹ dữ liệu
-    for (const [key, value] of formData.entries()) {
-        console.log(key, ':', value);
-    }
-
-    try {
-        const resUpdate = await fetch("./ajax/updateBienThe.php", {
-            method: "POST",
-            body: formData
-        });
-        const result = await resUpdate.json();
-        console.log(result);
-
-        if (result.success) {
-            const tbUpdate = document.querySelector(".thongbaoUpdateThanhCong");
-            tbUpdate.textContent = result.message;
-            tbUpdate.style.display = "block";
-            tbUpdate.classList.add("show");
-            setTimeout(() => tbUpdate.classList.remove('show'), 2000);
-
-            const modalElement = document.getElementById('modalSuaBienThe');
-            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) modalInstance.hide();
-
-            fetchBienThe(currentPage);
-        } else {
-            loi.textContent = result.message;
-            thongbao.style.display = 'block';
-            thongbao.classList.add('show');
-            setTimeout(() => thongbao.classList.remove('show'), 2000);
-        }
-
-    } catch (err) {
-        console.error("Lỗi:", err);
-        loi.textContent = "Lỗi kết nối tới máy chủ!";
-        thongbao.style.display = 'block';
-        thongbao.classList.add('show');
-        setTimeout(() => thongbao.classList.remove('show'), 2000);
-    }
+  } catch (err) {
+    console.error("Lỗi:", err);
+    loi.textContent = "Lỗi kết nối tới máy chủ!";
+    thongbao.style.display = 'block';
+    thongbao.classList.add('show');
+    setTimeout(() => thongbao.classList.remove('show'), 2000);
+  }
 });
+
 
 
 document.getElementById("fileAnhSua").addEventListener("change", function () {

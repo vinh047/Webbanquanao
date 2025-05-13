@@ -1,1 +1,1 @@
-[{"product_id":6,"name":"Áo thun tay ngắn nam S.café in.Boxy","price":739700,"quantity":5,"image":"10s25tss048-strawberry-1-jpg-ayc7.jpg","variant_id":29,"color_id":9,"size":"X"}]
+[{"id":"20","variant_id":"96","quantity":3,"name":"Quần lót nam organic cotton .Boxer","color_id":"8","size":"X","price":13000,"image":"10s25und001-white-jpg-um7a.jpg"},{"id":"20","variant_id":"4","quantity":1,"name":"Quần lót nam organic cotton .Boxer","color_id":"12","size":"XL","price":13000,"image":"10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg"}]

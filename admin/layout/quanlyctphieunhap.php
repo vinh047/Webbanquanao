@@ -36,6 +36,9 @@ if ($role_id) {
     $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
 }
 
+// ✅ Gán biến kiểm tra quyền để dùng cho HTML bên dưới
+$hasReadPermission = in_array('read', $_SESSION['permissions'] ?? []);
+
 // Truyền quyền vào thẻ HTML
 $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
     $color = $db->select("SELECT * FROM colors",[]);
@@ -104,7 +107,11 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <th class="bg-secondary text-white tensp giaodienmb">Tên SP</th>
                                 <th class="bg-secondary text-white tensp giaodienmb">Ngày lập</th>
                                 <th class="bg-secondary text-white hienthigia giaodienmb">Trạng thái</th>
-                                <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
+                                <!-- <th class="bg-secondary text-white hienthibtn-ne cotxuly">Xử lý</th> -->
+                                 <?php if ($hasReadPermission): ?>
+    <th class="bg-secondary text-white hienthibtn-ne cotxuly">Xử lý</th>
+<?php endif; ?>
+
                             </tr>
                         </thead>
                         <tbody id="product-list">

@@ -189,26 +189,30 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
   <script>
     window.savedAddresses = <?= json_encode($user_addresses, JSON_UNESCAPED_UNICODE) ?>;
     window.currentUser = <?= json_encode($user, JSON_UNESCAPED_UNICODE) ?>;
+    window.bankAccount = <?= json_encode(
+                            $db->selectOne("SELECT bank_code AS BANK_ID, account_number AS ACCOUNT_NO FROM bank_account WHERE is_active = 1 AND is_default = 1 LIMIT 1"),
+                            JSON_UNESCAPED_UNICODE
+                          ) ?>;
 
     // Define startPaymentProcess to bridge pay.js & payment.js
     window.startPaymentProcess = function(orderData) {
       // Giả sử trong DB, phương thức COD có id = 1:
       if (orderData.payment_method === '1') {
-        // Thanh toán khi nhận hàng
         alert('Đặt hàng thành công');
         return;
       }
 
-      // Nếu đến đây, tức là chọn chuyển khoản ngân hàng → xuất QR
-      // Bạn có thể tái sử dụng MY_BANK từ payment.js, hoặc định nghĩa lại:
-      const MY_BANK = {
-        BANK_ID: 'Vietcombank',
-        ACCOUNT_NO: '1025574990'
+      // Lấy dữ liệu ngân hàng từ window.bankAccount
+      const MY_BANK = window.bankAccount || {
+        BANK_ID: 'DEFAULTBANK',
+        ACCOUNT_NO: '0000000000'
       };
+
       // Lấy amount từ DOM (đã được payment.js tính trước đó)
       const raw = document.getElementById('paid_price').textContent || '';
       const amount = parseInt(raw.replace(/\D/g, ''), 10) || 0;
       const qrUrl = `https://img.vietqr.io/image/${MY_BANK.BANK_ID}-${MY_BANK.ACCOUNT_NO}-compact2.png?amount=${amount}&accountName=SAUKUTO`;
+
       document.getElementById('qr-section').innerHTML = `
       <div class="text-center">
         <p class="mb-2">Quét mã QR ngân hàng của bạn</p>

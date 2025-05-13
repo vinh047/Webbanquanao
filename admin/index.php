@@ -96,12 +96,24 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                 </li>
 
                 <li class="nav-item mb-2">
-
                     <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'donhang' ? 'active' : '' ?>" href="index.php?page=donhang&pageadmin=1">
                         <i class="fa fa-cart-plus"></i> <span>Đơn hàng</span>
                     </a>
                 </li>
 
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'khachhang' ? 'active' : '' ?>" href="index.php?page=khachhang&pageadmin=1">
+                        <i class="fa-solid fa-users"></i> <span>Khách hàng</span>
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'taikhoannganhang' ? 'active' : '' ?>" href="index.php?page=taikhoannganhang&pageadmin=1">
+                        <i class="fa-solid fa-credit-card"></i> <span>Tài khoản ngân hàng</span>
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
                     <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'thongke' ? 'active' : '' ?>" href="index.php?page=thongke&pageadmin=1">
                         <i class="fas fa-chart-line"></i> <span>Thống kê</span>
                     </a>
@@ -183,10 +195,15 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                     case 'donhang':
                         include '../admin/layout/don_hang.php';
                         break;
+                    case 'khachhang':
+                        include '../admin/layout/khach_hang.php';
+                        break;
+                    case 'taikhoannganhang':
+                        include '../admin/layout/tai_khoan_ngan_hang.php';
+                        break;
                     case 'thongke':
                         include '../admin/layout/thongke.php';
                         break;
-                        
                 }
             }
             ?>

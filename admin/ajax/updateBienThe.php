@@ -4,43 +4,50 @@ header('Content-Type: application/json');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Ghi log để debug
+        file_put_contents("log_update.txt", print_r($_POST, true) . print_r($_FILES, true));
 
-        // Debug xem $_POST và $_FILES nhận được gì
-        file_put_contents("log_update.txt", print_r($_POST, true).print_r($_FILES, true));
-
-        if (!isset($_POST['txtMaBt'], $_FILES['fileAnhSua'])) {
-            echo json_encode(['success' => false, 'message' => 'Thiếu dữ liệu gửi lên!']);
+        if (!isset($_POST['txtMaBt'])) {
+            echo json_encode(['success' => false, 'message' => 'Thiếu mã biến thể!']);
             exit;
         }
 
         $idvr = (int)$_POST['txtMaBt'];
-        $file = $_FILES['fileAnhSua'];
+        $tenAnhCu = $_POST['tenAnhCu'] ?? null;
 
-        if ($file['size'] <= 0) {
-            echo json_encode(['success' => false, 'message' => 'File ảnh rỗng hoặc không hợp lệ!']);
-            exit;
-        }
+        $db = DBConnect::getInstance();
+        $conn = $db->getConnection();
 
-        $anh = basename($file['name']);
-        $uploadDir = __DIR__ . '/../../assets/img/sanpham/';
+        $file = $_FILES['fileAnhSua'] ?? null;
 
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+        if ($file && $file['size'] > 0) {
+            // Có ảnh mới
+            $anh = basename($file['name']);
+            $uploadDir = __DIR__ . '/../../assets/img/sanpham/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
 
-        $uploadFilePath = $uploadDir . $anh;
+            $uploadFilePath = $uploadDir . $anh;
 
-        if (move_uploaded_file($file['tmp_name'], $uploadFilePath)) {
-            $db = DBConnect::getInstance();
-            $conn = $db->getConnection();
-
-            $stmt = $conn->prepare("UPDATE product_variants SET image = ? WHERE variant_id = ?");
-            $stmt->execute([$anh, $idvr]);
-
-            echo json_encode(['success' => true, 'message' => 'Cập nhật ảnh thành công']);
+            if (!move_uploaded_file($file['tmp_name'], $uploadFilePath)) {
+                echo json_encode(['success' => false, 'message' => 'Upload ảnh thất bại']);
+                exit;
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Upload ảnh thất bại']);
+            // Không có ảnh mới → dùng ảnh cũ
+            if (!$tenAnhCu) {
+                echo json_encode(['success' => false, 'message' => 'Không có ảnh mới hoặc ảnh cũ!']);
+                exit;
+            }
+            $anh = basename($tenAnhCu);
         }
+
+        // Cập nhật ảnh trong DB
+        $stmt = $conn->prepare("UPDATE product_variants SET image = ? WHERE variant_id = ?");
+        $stmt->execute([$anh, $idvr]);
+
+        echo json_encode(['success' => true, 'message' => 'Cập nhật ảnh thành công']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Phương thức không hợp lệ!']);
     }

@@ -10,6 +10,20 @@ $loc = $locRaw ?: "";
 $total = $db->select("SELECT COUNT(*) AS total FROM importreceipt im $loc", []);
 $totalItems = $total[0]['total'];
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+//Lấy id nhân viên
+$permissions = $_SESSION['permissions'] ?? [];
+
+$hasReadPermission = in_array('read', $permissions);
+$hasWritePermission = in_array('write', $permissions);
+$hasDeletePermission = in_array('delete', $permissions);
+
+// Kiểm tra nếu có bất kỳ quyền nào
+$hasAnyActionPermission = $hasReadPermission || $hasWritePermission || $hasDeletePermission;
+
+
 // Lấy trang hiện tại
 $page = isset($_POST['pageproduct']) ? (int)$_POST['pageproduct'] : 1;
 $limit = 5;
@@ -58,27 +72,41 @@ foreach ($data as $row) {
                 ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6 text-dark' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
                 : "<span class='badge bg-success'><i class='fa-regular fa-circle-check'></i> Đã xác nhận</span>") . "
         </td>
-        <td>
-            <div class='d-flex justify-content-center $hideGap'>
-                <div>
-<button class='btn btn-success btn-sua'
-    data-idpn='$idpn'
-    data-idnv='$idnv'
-    data-idncc='$idncc'
-    data-tennv='$tennv'
-    data-gia='{$row['total_price']}'
-    data-ngaylap='$ngaylap'
-    style='width:90px; $hideBtn'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
-                </div>
-                <div>
-                    <button class='btn btn-danger btn-xoa'
-    data-idpn='$idpn'
-    style='width:90px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
-                </div>
-                <div>                    <button class='btn btn-info text-white btn-xemchitietPN text-white' data-idpn='$idpn' style='width:90px;margin-left:1px;'><i class='fa-regular fa-eye'></i> chi tiết</button>
-</div>
-            </div>
-        </td>
+" . ($hasAnyActionPermission ? "
+<td>
+    <div class='d-flex justify-content-center $hideGap'>
+        " . ($hasWritePermission ? "
+        <div>
+            <button class='btn btn-success btn-sua'
+                data-idpn='$idpn'
+                data-idnv='$idnv'
+                data-idncc='$idncc'
+                data-tennv='$tennv'
+                data-gia='{$row['total_price']}'
+                data-ngaylap='$ngaylap'
+                style='width:90px; $hideBtn'><i class='fa-regular fa-pen-to-square'></i> Sửa</button>
+        </div>
+        " : "") . "
+
+        " . ($hasDeletePermission ? "
+        <div>
+            <button class='btn btn-danger btn-xoa'
+                data-idpn='$idpn'
+                style='width:90px; $hideBtn'><i class='fa-regular fa-trash-can'></i> Xóa</button>
+        </div>
+        " : "") . "
+
+        " . ($hasReadPermission ? "
+        <div>
+            <button class='btn btn-info text-white btn-xemchitietPN text-white' data-idpn='$idpn' style='width:90px;margin-left:1px;'>
+                <i class='fa-regular fa-eye'></i> chi tiết
+            </button>
+        </div>
+        " : "") . "
+    </div>
+</td>
+" : "") . "
+
     </tr>";
 
 }

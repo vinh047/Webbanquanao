@@ -9,39 +9,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../../assets/fonts/font.css">
     <link rel="stylesheet" href="./assets/css/sanpham.css"> 
-    <?php
+<?php
 if (session_status() == PHP_SESSION_NONE) {
-    session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
+    session_start();
 }
 
-// Kiểm tra quyền của người dùng
+require_once __DIR__ . '/../../database/DBConnection.php';
+$dbInstance = DBConnect::getInstance();  // ✅ chỉ gọi 1 lần
+$conn = $dbInstance->getConnection();
+
+// ✅ Lấy danh sách cần dùng để truyền vào JS
+$productList = $conn->query("SELECT product_id, name FROM products WHERE is_deleted=0")->fetchAll(PDO::FETCH_ASSOC);
+$sizeList = $conn->query("SELECT size_id, name FROM sizes ORDER BY size_id ASC")->fetchAll(PDO::FETCH_ASSOC);
+$colorList = $conn->query("SELECT color_id, name FROM colors ORDER BY color_id ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+// ✅ Phân quyền
 $user_id = $_SESSION['user_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
 
 if ($role_id) {
-    // Kết nối đến cơ sở dữ liệu và lấy quyền của người dùng
-    require_once(__DIR__ . '/../../database/DBConnection.php');
-    $db = DBConnect::getInstance();
-
-    // Truy vấn để lấy tất cả quyền của người dùng với permission_id = 1
-    $permissions = $db->select("SELECT action, permission_id FROM role_permission_details WHERE role_id = ? AND permission_id = 1", [$role_id]);
-
-    // Lưu các quyền vào mảng permissions trong session
-    $permissionsArray = [];
-    foreach ($permissions as $permission) {
-        $permissionsArray[] = $permission['action']; // Lưu các hành động vào mảng permissions
-    }
-
-    // Lưu các quyền vào session
-    $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
+    $permissions = $dbInstance->select("SELECT action FROM role_permission_details WHERE role_id = ? AND permission_id = 1", [$role_id]);
+    $_SESSION['permissions'] = array_column($permissions, 'action');
 }
 
-// Truyền quyền vào thẻ HTML
-$permissionsJson = json_encode($_SESSION['permissions'] ?? []);
+$permissions = $_SESSION['permissions'] ?? [];
+$hasReadPermission = in_array('read', $permissions);
+$hasWritePermission = in_array('write', $permissions);
+$hasDeletePermission = in_array('delete', $permissions);
+$hasAnyActionPermission = $hasReadPermission || $hasWritePermission || $hasDeletePermission;
 
-$categories = $db->select("SELECT * FROM categories", []);
-$product = $db->select("SELECT products.*, categories.name as category_name FROM products JOIN categories ON products.category_id = categories.category_id ORDER BY products.product_id ASC", []);
+// ✅ Truyền quyền vào HTML
+$permissionsJson = json_encode($permissions);
+
+// ✅ Dữ liệu danh mục và sản phẩm
+$categories = $dbInstance->select("SELECT * FROM categories", []);
+$product = $dbInstance->select("
+    SELECT p.*, c.name as category_name
+    FROM products p
+    JOIN categories c ON p.category_id = c.category_id
+    ORDER BY p.product_id ASC
+", []);
 ?>
+
 
 </head>
 <body>
@@ -57,6 +66,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                     <button type="button" class="btn btn-secondary" id="btnThemSanPhamMoi">
     <i class="fa fa-plus"></i> Thêm SP mới
   </button>
+    <button id="btnMoModalBienThe" class="btn btn-warning text-white"><i class="fa fa-plus"></i> Thêm biến thể</button>
                     </div>
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc sản phẩm"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
                     <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;z-index : 2000;border:1px solid black;">
@@ -160,7 +170,9 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
                             <th class="bg-secondary text-white mota giaodienmb">Mô tả Sản phẩm</th>
                             <!-- <th class="bg-secondary text-white hienthigia">Giá nhập</th> -->
                             <th class="bg-secondary text-white hienthigia giaodienmb">Giá bán</th>
+                            <?php if ($hasAnyActionPermission): ?>
                             <th class="bg-secondary text-white hienthibtn">Xử lý</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody id="product-list">
@@ -345,7 +357,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
 
       <div class="modal-body">
         <div class="mb-3">
-          <p><strong>Mã sản phẩm:</strong> <span id="idSP"></span></p>
+          <p><strong>ID sản phẩm:</strong> <span id="idSP"></span></p>
           <p><strong>Tên sản phẩm:</strong> <span id="tenNSP"></span></p>
           <p><strong>Loại sản phẩm:</strong> <span id="loaiSP"></span></p>
           <p><strong>Mô tả sản phẩm:</strong> <span id="motaSP"></span></p>
@@ -358,7 +370,7 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
           <thead>
             <tr class="text-center">
                 <th>#</th>
-              <th>Mã biến thể</th>
+              <th>ID biến thể</th>
               <th>Sản phẩm</th>
               <th>Size</th>
               <th>Màu</th>
@@ -376,6 +388,73 @@ $product = $db->select("SELECT products.*, categories.name as category_name FROM
     </div>
   </div>
 </div>
+
+<!-- Modal thêm biến thể -->
+<div class="modal fade" id="modalThemBienThe" tabindex="-1" aria-labelledby="modalThemBienTheLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalThemBienTheLabel">Thêm Biến Thể cho sản phẩm</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+
+      <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
+        <form id="formBienThe" enctype="multipart/form-data">
+          
+              <div class="row">
+                <div class="col-md-4">
+                <label class="form-label">Chọn sản phẩm</label>
+              <select name="id_sanpham" id="id_sanpham" class="form-select w-50 select2">
+                <option value="">-- Chọn sản phẩm --</option>
+                <?php foreach ($productList as $ten): ?>
+                    <option value="<?= $ten['product_id'] ?>"><?=$ten['product_id']?> - <?= $ten['name'] ?></option>
+                <?php endforeach; ?>
+              </select>
+                </div>
+              </div>
+
+          <div id="variant-container"></div>
+
+          <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-danger me-auto" type="button" id="resetBienThe">Reset</button>
+            <button type="button" class="btn btn-secondary" id="btnAddVariantRow">
+              <i class="fa fa-plus me-1"></i> Thêm dòng biến thể
+            </button>
+            <button type="submit" class="btn btn-success">Lưu biến thể</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="thongbaoThemBTThanhCong  bg-success me-3 mt-3 p-3 rounded-2">
+            <p class="mb-0 text-white">   
+              Lưu biến thể thành công    
+            </p>
+        </div>
+        <div class="modal fade" id="modalThongBao" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Thông báo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Nội dung thông báo -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const productListFromPHP = <?= json_encode($productList) ?>;
+  const sizeListFromPHP = <?= json_encode($sizeList) ?>;
+  const colorListFromPHP = <?= json_encode($colorList) ?>;
+    console.log("✅ Product list:", productListFromPHP);  // 👈 kiểm tra xem có ra không
+
+</script>
 
     <script src="./assets/js/fetch_sanpham.js"></script>
 </body>

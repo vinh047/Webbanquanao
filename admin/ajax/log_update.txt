@@ -1,16 +1,8 @@
 Array
 (
-    [txtMaBt] => 1
+    [txtMaBt] => 15
+    [tenAnhCu] => 10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg
 )
 Array
 (
-    [fileAnhSua] => Array
-        (
-            [name] => lock_icon.png
-            [type] => image/png
-            [tmp_name] => C:\xampp\tmp\php3916.tmp
-            [error] => 0
-            [size] => 823
-        )
-
 )

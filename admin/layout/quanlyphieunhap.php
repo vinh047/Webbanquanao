@@ -34,7 +34,7 @@ $db = DBConnect::getInstance()->getConnection();
 
 
 // ✅ Lấy danh sách cần dùng để truyền vào JS
-$productList = $db->query("SELECT product_id, name FROM products")->fetchAll(PDO::FETCH_ASSOC);
+$productList = $db->query("SELECT product_id, name FROM products WHERE is_deleted=0")->fetchAll(PDO::FETCH_ASSOC);
 $sizeList = $db->query("SELECT size_id, name FROM sizes ORDER BY size_id ASC")->fetchAll(PDO::FETCH_ASSOC);
 $colorList = $db->query("SELECT color_id, name FROM colors")->fetchAll(PDO::FETCH_ASSOC);
 
@@ -78,11 +78,19 @@ if ($role_id) {
     $_SESSION['permissions'] = $permissionsArray; // Lưu danh sách quyền vào session
 }
 
+
+$permissions = $_SESSION['permissions'] ?? [];
+$hasReadPermission = in_array('read', $permissions);
+$hasWritePermission = in_array('write', $permissions);
+$hasDeletePermission = in_array('delete', $permissions);
+// ✅ Kiểm tra nếu KHÔNG có quyền nào
+$hasAnyActionPermission = $hasReadPermission || $hasWritePermission || $hasDeletePermission;
+
 // Truyền quyền vào thẻ HTML
 $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         $categories = $db->select("SELECT * FROM categories", []);
         $suppliers = $db->select("SELECT * FROM supplier",[]);
-        $tensp = $db->select("SELECT * FROM products",[]);
+        $tensp = $db->select("SELECT * FROM products WHERE is_deleted=0",[]);
         $color = $db->select("SELECT * FROM colors",[]);
         $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
         $nhanvien = $db->select("SELECT * FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.role_id > 1",[]);
@@ -257,7 +265,9 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <th class="bg-secondary text-white tensp giaodienmb">Tổng tiền</th>
                                 <th class="bg-secondary text-white tensp giaodienmb">Ngày lập</th>
                                 <th class="bg-secondary text-white tensp">Trạng thái</th>
-                                <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
+<?php if ($hasAnyActionPermission): ?>
+    <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
+<?php endif; ?>
                             </tr>
                         </thead>
                         <tbody id="product-list">
@@ -288,6 +298,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         <div class="row g-4">
           <!-- Thông tin bên trái -->
           <div class="col-md-4">
+                        <h6 class="fw-bold mb-2">Phiếu nhập</h6>
             <form id="formSuaPN">
               <div class="mb-3">
                 <label class="form-label">Mã PN</label>
@@ -327,8 +338,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <table class="table table-bordered" id="tableChiTietPhieuNhap">
               <thead>
                 <tr class="text-center">
-                  <th>Tên sản phẩm</th>
-                  <th style="width:15%;">Mã biến thể</th>
+                  <th style="width:50%;">Tên sản phẩm</th>
+                  <th style="width:15%;">ID biến thể</th>
                   <th style="width:15%;">Số lượng nhập</th>
                 </tr>
               </thead>
@@ -510,7 +521,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
 
         <table class="table table-bordered" id="chitiet-phieunhap">
           <thead>
-            <tr>
+            <tr class="text-center">
               <th>#</th>
               <th>ID BT</th>
               <th>Sản phẩm</th>
@@ -518,7 +529,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
               <th>Màu</th>
               <th>Giá nhập</th>
               <th>Số lượng</th>
-              <th>Tồn kho hiện tại</th>
+              <th>Tồn kho</th>
             </tr>
           </thead>
           <tbody>
@@ -548,9 +559,9 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         <table class="table table-bordered">
           <thead>
             <tr class="text-center">
-              <th>Mã CTPN</th>
-              <th>Mã SP</th>
-              <th>Mã Biến Thể</th>
+              <th>ID CTPN</th>
+              <th>ID SP</th>
+              <th>ID Biến Thể</th>
               <th>Số lượng nhập</th>
               <th>Hành động</th>
             </tr>
