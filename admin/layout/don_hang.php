@@ -285,6 +285,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                     <!-- Sản phẩm -->
                     <div class="col-md-3">
                         <div class="form-floating position-relative">
+                            <input type="hidden" name="product_id">
                             <input type="text" id="product_id" class="form-control pe-5" placeholder="Sản phẩm" readonly>
                             <label for="product_id">Sản phẩm</label>
                             <button type="button" class="btn btn-outline-secondary position-absolute end-0 top-0 mt-2 me-2" id="btnChonSanPham">
@@ -456,6 +457,46 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         </div>
     </div>
 </div>
+
+<!-- Modal Chọn Biến Thể -->
+<div class="modal fade" id="modalChonVariant" tabindex="-1" aria-labelledby="modalChonVariantLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="modalChonVariantLabel">Chọn biến thể sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Bảng danh sách biến thể -->
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Ảnh</th>
+                                <th>Size</th>
+                                <th>Màu sắc</th>
+                                <th>Tồn kho</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="variantTableBody">
+                            <!-- Dữ liệu biến thể sẽ được load bằng AJAX -->
+                        </tbody>
+                    </table>
+                    <div class="variant-pagination-wrap"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -753,6 +794,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
             });
     });
 
+    // Bắt sự kiện click nút "Chọn" trong bảng danh sách user
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-choose-user');
         if (!btn) return;
@@ -760,21 +802,26 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         const userId = btn.getAttribute('data-user-id');
         const userName = btn.getAttribute('data-name');
 
-        // Gán giá trị vào ô input user_id (hiển thị tên thay vì ID)
-        const inputUser = document.getElementById('user_id');
-        if (inputUser) {
-            inputUser.value = userName;
-            inputUser.setAttribute('data-user-id', userId); // nếu cần lưu ID ngầm
+        if (!previousModalId) return;
+        const parentModal = document.getElementById(previousModalId);
+        if (!parentModal) return;
+
+        // Gán tên hiển thị vào input (visible)
+        const visibleInput = parentModal.querySelector('#user_id');
+        if (visibleInput) {
+            visibleInput.value = userName;
+            visibleInput.setAttribute('data-user-id', userId);
         }
 
-        document.querySelector('input[name="user_id"]').value = userId;
-
+        // Gán giá trị thực (ẩn) để submit
+        const hiddenInput = parentModal.querySelector('input[name="user_id"]');
+        if (hiddenInput) {
+            hiddenInput.value = userId;
+        }
 
         // Đóng modal chọn user
         const modalUser = bootstrap.Modal.getInstance(document.getElementById('modalChonUser'));
-        if (modalUser) {
-            modalUser.hide();
-        }
+        if (modalUser) modalUser.hide();
     });
 
     document.getElementById('btnChonSanPham').addEventListener('click', function() {
@@ -846,5 +893,87 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                 }
             });
         }
+    }
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-choose-product');
+        if (!btn) return;
+
+        const productId = btn.getAttribute('data-product-id');
+        const productName = btn.getAttribute('data-name');
+
+        if (!previousModalSanPhamId) return;
+
+        const modalElement = document.getElementById(previousModalSanPhamId);
+        if (!modalElement) return;
+
+        // Gán dữ liệu cho modal tương ứng
+        const input = modalElement.querySelector('#product_id');
+        if (input) {
+            input.value = productName;
+            input.setAttribute('data-product-id', productId);
+        }
+
+        const hiddenInput = modalElement.querySelector('input[name="product_id"]');
+        if (hiddenInput) {
+            hiddenInput.value = productId;
+        }
+
+        // Đóng modal chọn sản phẩm
+        const modalSP = bootstrap.Modal.getInstance(document.getElementById('modalChonSanPham'));
+        if (modalSP) modalSP.hide();
+    });
+
+
+
+
+
+
+
+
+    // Sự kiện mở modal chọn biến thể từ modal thêm đơn hàng
+    document.getElementById('btnChonBienThe').addEventListener('click', function() {
+        openModalChonVariant('modalThemDonHang');
+    });
+
+    let previousModalVariantId = null;
+
+    function openModalChonVariant(fromModalId) {
+        previousModalVariantId = fromModalId;
+
+        const parentModal = document.getElementById(fromModalId);
+        const productInput = parentModal.querySelector('input[name="product_id"]');
+
+        if (!productInput || !productInput.value) {
+            alert("Vui lòng chọn sản phẩm trước khi chọn biến thể.");
+            return;
+        }
+
+        // Ẩn modal hiện tại
+        const current = bootstrap.Modal.getInstance(parentModal);
+        if (current) current.hide();
+
+        // Gọi loadVariants với đúng product_id
+        loadVariants(productInput.value);
+
+        // Hiện modal chọn biến thể
+        const modal = new bootstrap.Modal(document.getElementById('modalChonVariant'));
+        modal.show();
+    }
+
+    let currentFilterParamsVariant = '';
+
+    function loadVariants(productId) {
+        if (!productId) {
+            alert("Vui lòng chọn sản phẩm trước khi chọn biến thể.");
+            return;
+        }
+
+        const variantWrap = document.querySelector('#variantTableBody');
+        fetch('ajax/load_variants_for_order.php?product_id=' + productId)
+            .then(res => res.json())
+            .then(data => {
+                variantWrap.innerHTML = data.variantHtml || '';
+            });
     }
 </script>
