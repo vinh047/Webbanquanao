@@ -27,7 +27,9 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
             session_start(); // Chỉ gọi session_start() nếu session chưa được bắt đầu
         }
         // Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
-        $user_id = $_SESSION['user_id'] ?? null;
+        // $user_id = $_SESSION['user_id'] ?? null;
+        $user_id = $_SESSION['admin_id'] ?? null;
+
         $role_id = $_SESSION['role_id'] ?? null;
 
         if ($user_id) {

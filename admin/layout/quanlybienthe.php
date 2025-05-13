@@ -16,7 +16,8 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Kiểm tra quyền của người dùng
-$user_id = $_SESSION['user_id'] ?? null;
+// $user_id = $_SESSION['user_id'] ?? null;
+$user_id = $_SESSION['admin_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
 
 if ($role_id) {

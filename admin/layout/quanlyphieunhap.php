@@ -39,7 +39,8 @@ $sizeList = $db->query("SELECT size_id, name FROM sizes ORDER BY size_id ASC")->
 $colorList = $db->query("SELECT color_id, name FROM colors")->fetchAll(PDO::FETCH_ASSOC);
 
 // Kiểm tra xem người dùng đã đăng nhập chưa và lấy role_id từ session
-$user_id = $_SESSION['user_id'] ?? null;
+// $user_id = $_SESSION['user_id'] ?? null;
+$user_id = $_SESSION['admin_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
 
 if ($user_id) {

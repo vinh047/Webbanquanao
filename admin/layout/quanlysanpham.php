@@ -24,7 +24,8 @@ $sizeList = $conn->query("SELECT size_id, name FROM sizes ORDER BY size_id ASC")
 $colorList = $conn->query("SELECT color_id, name FROM colors ORDER BY color_id ASC")->fetchAll(PDO::FETCH_ASSOC);
 
 // ✅ Phân quyền
-$user_id = $_SESSION['user_id'] ?? null;
+// $user_id = $_SESSION['user_id'] ?? null;
+$user_id = $_SESSION['admin_id'] ?? null;
 $role_id = $_SESSION['role_id'] ?? null;
 
 if ($role_id) {
