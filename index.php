@@ -70,5 +70,15 @@ include("./layout/footer.php");
 <!-- <script src="/assets/js/cart.js"      defer></script>
 <script src="/assets/js/header.js"    defer></script>
 <script src="/assets/js/info_user.js" defer></script> -->
+<?php if (!empty($_SESSION['user_id'])): ?>
+<script>
+window.addEventListener('load', () => {
+  if (typeof syncCartAfterLogin === 'function' && !sessionStorage.getItem('cart_merge_prompted')) {
+    syncCartAfterLogin();
+  }
+});
+</script>
+<?php endif; ?>
+
 </body>
 </html>

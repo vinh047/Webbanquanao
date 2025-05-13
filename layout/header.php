@@ -186,21 +186,23 @@ if (!empty($_SESSION['user_id'])) {
 <script src="../assets/js/basic_search_ui.js"></script>
 <script src="../assets/js/basic_search_logic.js"></script>
 <?php if (!empty($_SESSION['user_id'])): ?>
-<script defer>
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof syncCartAfterLogin === 'function') {
+<script>
+console.log("🟡 Kiểm tra syncCartAfterLogin trong header.php");
+
+window.addEventListener('load', () => {
+  console.log("🟢 window loaded, checking syncCartAfterLogin...");
+  if (typeof syncCartAfterLogin === 'function' && sessionStorage.getItem('cart_merge_prompted') === '0') {
+    console.log("✅ Gọi syncCartAfterLogin()");
     syncCartAfterLogin();
+  } else {
+    console.log("❌ Không gọi được syncCartAfterLogin hoặc đã hỏi rồi.");
   }
 });
 </script>
 <?php endif; ?>
-<?php if (!empty($_SESSION['user_id']) && empty($_SESSION['cart_synced'])): ?>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof syncCartAfterLogin === 'function') {
-        syncCartAfterLogin();
-      }
-    });
-  </script>
-  <?php $_SESSION['cart_synced'] = true; ?>
+
+<?php if (isset($_GET['loggedout']) && $_GET['loggedout'] == '1'): ?>
+<script>
+  sessionStorage.setItem('cart_merge_prompted', '0');
+</script>
 <?php endif; ?>

@@ -1,67 +1,70 @@
 <?php
-require_once '../database/DBConnection.php';
+session_start();
+require_once '../../database/DBConnection.php'; // ✅ Sửa đường dẫn đúng nếu file nằm trong /ajax
 $db = DBConnect::getInstance();
+header('Content-Type: application/json');
 
-$data = json_decode(file_get_contents("php://input"), true);
-$cart = $data['cart']; // ✅ Giỏ hàng đầy đủ (có variant_id)
-// Kiểm tra dữ liệu hợp lệ
-if (!$data || !isset($data['cart']) || !is_array($data['cart'])) {
-    echo json_encode(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);
+// Lấy và decode JSON input
+$raw = file_get_contents('php://input');
+$data = json_decode($raw, true);
+
+// Kiểm tra dữ liệu đầu vào
+if (!$data || empty($data['cart']) || empty($data['name'])) {
+    echo json_encode(['success' => false, 'message' => 'Dữ liệu đơn hàng không hợp lệ']);
     exit;
 }
 
 try {
-    $fullname = $data['ho'] . ' ' . $data['ten'];
-    $phone = $data['sdt'];
-    $email = $data['email'];
-    $address = $data['province'] . ', ' . $data['district'] . ', ' . $data['ward'] . ', ' . $data['address'];
-    $note = "Họ tên: $fullname | SĐT: $phone | Email: $email";
-    $created_at = date('Y-m-d H:i:s');
+    $db->beginTransaction();
 
-    // Lưu đơn hàng
-    $sql = "INSERT INTO orders (user_id, status, total_price, shipping_address, note, created_at, payment_method_id, staff_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $params = [
-        null,           // user_id (khách vãng lai)
-        0,              // status = mới
-        $data['total'],
-        $address,
-        $note,
-        $created_at,
-        $data['payment_method'],
-        null            // staff_id
-    ];
-    $db->execute($sql, $params);
+    $user_id = $_SESSION['user_id'] ?? null;
+    $address = $data['address'] ?? [];
+
+    // Lưu vào bảng orders
+    $db->insert('orders', [
+        'user_id' => $user_id,
+        'name' => $data['name'],
+        'phone' => $data['phone'],
+        'email' => $data['email'],
+        'payment_method' => $data['payment_method'],
+        'total_price' => $data['total_price'],
+        'discount' => $data['discount'],
+        'shipping_fee' => $data['shipping_fee'],
+        'status' => 'pending',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
     $order_id = $db->lastInsertId();
-    // Lưu chi tiết từng sản phẩm
-    foreach ($data['cart'] as $item) {
-        $total_price = $item['price'] * $item['quantity'];
-        $sql = "INSERT INTO order_details (order_id, product_id, quantity, total_price, variant_id)
-        VALUES (?, ?, ?, ?, ?)";
-        $db->execute($sql, [
-            $order_id,
-            $item['id'],
-            $item['quantity'],
-            $item['price'] * $item['quantity'], // total_price
-            $item['variant_id'] ?? null
-        ]);
 
-    }    
-    error_log("Trừ tồn kho: variant_id = " . $item['variant_id'] . ", quantity = " . $item['quantity']);
-
-    // ✅ Sau khi thêm order_details, trừ tồn kho:
-    foreach ($data['cart'] as $item) {
-        $sql = "UPDATE product_variants 
-                SET stock = stock - ? 
-                WHERE variant_id = ? AND stock >= ?";
-        $db->execute($sql, [
-            $item['quantity'],
-            $item['variant_id'],
-            $item['quantity']
+    // Lưu địa chỉ nếu là địa chỉ mới
+    if (empty($address['saved_id']) && !empty($address['province'])) {
+        $db->insert('user_addresses', [
+            'user_id' => $user_id,
+            'address_detail' => $address['detail'] ?? '',
+            'ward' => $address['ward'] ?? '',
+            'district' => $address['district'] ?? '',
+            'province' => $address['province'] ?? '',
+            'is_default' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
     }
-    
+
+    // Lưu chi tiết đơn hàng
+    foreach ($data['cart'] as $item) {
+        if (!isset($item['product_id'], $item['variant_id'], $item['price'], $item['quantity'])) continue;
+
+        $db->insert('order_details', [
+            'order_id' => $order_id,
+            'product_id' => $item['product_id'],
+            'variant_id' => $item['variant_id'],
+            'price' => $item['price'],
+            'quantity' => $item['quantity']
+        ]);
+    }
+
+    $db->commit();
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    $db->rollBack();
+    echo json_encode(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
 }

@@ -1,3 +1,35 @@
+function gatherOrderData(paymentMethodId) {
+  const name = document.getElementById('name')?.value.trim();
+  const phone = document.getElementById('sdt')?.value.trim();
+  const email = document.getElementById('email')?.value.trim();
+
+  const addressType = document.querySelector('input[name="address_option"]:checked')?.value;
+  let address = {};
+
+  if (addressType === 'saved') {
+    address.saved_id = document.getElementById('saved-address')?.value;
+  } else {
+    address.province = document.getElementById('province')?.value;
+    address.district = document.getElementById('district')?.value;
+    address.ward = document.getElementById('ward')?.value;
+    address.detail = document.getElementById('specific-address')?.value.trim();
+  }
+
+  const cartItems = JSON.parse(sessionStorage.getItem('selectedCartItems') || '[]');
+
+  return {
+    name,
+    phone,
+    email,
+    address,
+    cart: cartItems,
+    payment_method: paymentMethodId,
+    discount: window.discount || 0,
+    shipping_fee: window.shippingFee || 0,
+    total_price: document.getElementById('paid_price')?.textContent?.replace(/\D/g, '') || 0
+  };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const btnPay = document.getElementById('btnPay');
   const paidPriceEl = document.getElementById('paid_price');
@@ -5,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const MY_BANK = window.bankAccount || { BANK_ID: 'MBBank', ACCOUNT_NO: '0000000000' };
 
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const cart = JSON.parse(sessionStorage.getItem('selectedCartItems')) || [];
   let subtotal = 0;
   window.discount = 0;
   window.shippingFee = 30000;
@@ -54,16 +86,39 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (btnPay && paidPriceEl && qrSection) {
-    btnPay.addEventListener('click', (e) => {
+    btnPay.addEventListener('click', async (e) => {
       e.preventDefault();
       qrSection.innerHTML = '';
 
       const method = document.querySelector("input[name='payment_method']:checked").value;
 
       if (method === '1') {
-        alert('Đặt hàng thành công');
+        const orderData = gatherOrderData(method);
+      
+        try {
+          const res = await fetch('./ajax/save_order.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+          });
+      
+          const result = await res.json();
+          if (result.success) {
+            alert('Đặt hàng thành công');
+            localStorage.removeItem('cart');
+            sessionStorage.removeItem('selectedCartItems');
+            window.location.href = 'index.php';
+          } else {
+            alert('Lỗi đặt hàng: ' + (result.message || 'Không rõ nguyên nhân'));
+          }
+        } catch (err) {
+          console.error('Lỗi gửi đơn hàng:', err);
+          alert('Không thể gửi đơn hàng. Vui lòng thử lại sau.');
+        }
+      
         return;
       }
+      
 
       const raw = paidPriceEl.textContent || '';
       const amount = parseInt(raw.replace(/\D/g, ''), 10) || 0;

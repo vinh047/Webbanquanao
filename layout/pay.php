@@ -124,7 +124,7 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
         <div class="border p-3 mb-3 rounded">
           <div class="form-check">
             <input class="form-check-input" type="radio" name="shipping" id="defaultShipping" checked>
-            <label class="form-check-label" for="defaultShipping">Giao hàng tiêu chuẩn (3 - 6 ngày)</label>
+            <label class="form-check-label" for="defaultShipping">Giao hàng tiêu chuẩn</label>
           </div>
         </div>
 

@@ -38,6 +38,10 @@
   <h4 class="mb-4">GIỎ HÀNG CỦA BẠN</h4>
   
   <div class="cart-scroll-area border rounded p-3">
+    <div class="d-flex align-items-center mb-2">
+      <input type="checkbox" id="select-all" class="form-check-input me-2">
+      <label for="select-all" class="mb-0">Chọn tất cả</label>
+    </div>
     <div id="cart-items"></div>
   </div>
 </div>
@@ -52,8 +56,6 @@
                    <span>Tạm tính:</span>
                    <strong class="text-danger" id="total-price">0₫</strong>
                  </div>
-                 <p class="small mb-2"><i class="fa fa-clock me-1"></i> Giao hàng từ 3-5 ngày</p>
-                 <p class="small mb-4"><i class="fa fa-truck me-1"></i> Free ship đơn trên 1.000.000₫</p>
                  <a href="index.php?page=pay" class="btn btn-dark w-100 fw-bold">THANH TOÁN</a>
 
                  <a href="index.php?page=sanpham" class="btn btn-outline-secondary w-100 mt-2 fw-bold">
