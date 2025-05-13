@@ -182,11 +182,9 @@ if (!empty($_SESSION['user_id'])) {
 <script src="/ajax/generate_color_map.php"></script>
 <script src="/assets/js/cart.js"         defer></script>
 <script src="/assets/js/header.js"       defer></script>
-<<<<<<< Updated upstream
 <script src="../assets/js/basic_search_overlay.js"></script>
 <script src="../assets/js/basic_search_ui.js"></script>
 <script src="../assets/js/basic_search_logic.js"></script>
-
 <?php if (!empty($_SESSION['user_id'])): ?>
 <script defer>
 document.addEventListener('DOMContentLoaded', () => {
@@ -196,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <?php endif; ?>
-=======
 <?php if (!empty($_SESSION['user_id']) && empty($_SESSION['cart_synced'])): ?>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -207,4 +204,3 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
   <?php $_SESSION['cart_synced'] = true; ?>
 <?php endif; ?>
->>>>>>> Stashed changes
