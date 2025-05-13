@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2025 at 04:57 AM
+-- Generation Time: May 13, 2025 at 06:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_web_quanao`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank_account`
+--
+
+CREATE TABLE `bank_account` (
+  `account_id` int(11) NOT NULL,
+  `bank_code` varchar(20) NOT NULL,
+  `account_number` varchar(50) NOT NULL,
+  `account_name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_default` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bank_account`
+--
+
+INSERT INTO `bank_account` (`account_id`, `bank_code`, `account_number`, `account_name`, `is_active`, `is_default`) VALUES
+(1, 'MBBank', '0968937705', 'SAGKUTO', 1, 1),
+(2, 'Vietcombank', '1025574990', 'SAGKUTO', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -782,9 +805,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `name`, `password`, `email`, `phone`, `role_id`, `status`, `otp`, `otp_expired_at`) VALUES
-(1, 'admin', 'adminpass', 'admin@example.com', '0900000000', 2, 1, NULL, NULL),
-(2, 'khach1', 'khachpass', 'khach1@example.com', '0900000001', 1, 1, NULL, NULL),
-(3, 'staff1', 'staffpass', 'staff1@example.com', '0900000002', 4, 1, NULL, NULL);
+(1, 'admin', '$2y$10$2GqI1uPXboKEgUDKeBR4Ded1JwDddOKgTHJQ.Ra9Cl6c8/mn4gFES', 'admin@example.com', '0900000000', 2, 1, NULL, NULL),
+(2, 'khach1', '$2y$10$wJJ77ST9bygbyzEpo8vHj.srKA9qvrAnVLm7dhBlrm8jpzJ4JBfS6', 'khach1@example.com', '0900000001', 1, 1, NULL, NULL),
+(3, 'staff1', '$2y$10$POyKL/vLwc1Lj04LgJSFMOgYGASyFKg2Bv1.E6MKDDHh8yXYyzaBa', 'staff1@example.com', '0900000002', 4, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -807,6 +830,14 @@ CREATE TABLE `user_addresses` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `bank_account`
+--
+ALTER TABLE `bank_account`
+  ADD PRIMARY KEY (`account_id`),
+  ADD UNIQUE KEY `ux_bank_account` (`bank_code`,`account_number`),
+  ADD KEY `idx_bank_code` (`bank_code`);
 
 --
 -- Indexes for table `cart`
@@ -959,6 +990,12 @@ ALTER TABLE `user_addresses`
 --
 
 --
+-- AUTO_INCREMENT for table `bank_account`
+--
+ALTER TABLE `bank_account`
+  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
@@ -1070,7 +1107,7 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- AUTO_INCREMENT for table `user_addresses`
@@ -1171,65 +1208,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- thêm khách hàng
-INSERT INTO `users` (`name`, `password`, `email`, `phone`, `role_id`, `status`, `otp`, `otp_expired_at`) VALUES
-('Nguyễn Văn Khanh', '123456Zz@', 'ncot38600@customer.com', '0968123456', 1, 1, NULL, NULL),
-('Nguyễn Văn Thanh',  '123456Zz@', 'nguyenvanthanh1@customer.com',  '0968000001', 1, 1, NULL, NULL),
-('Trần Thị Minh',     '123456Zz@', 'tranthiminh2@customer.com',     '0968000002', 1, 1, NULL, NULL),
-('Lê Văn Hùng',       '123456Zz@', 'levanhung3@customer.com',       '0968000003', 1, 1, NULL, NULL),
-('Phạm Thị Lan',       '123456Zz@', 'phamthilan4@customer.com',       '0968000004', 1, 1, NULL, NULL),
-('Hoàng Văn Tùng',     '123456Zz@', 'hoangvantung5@customer.com',     '0968000005', 1, 1, NULL, NULL),
-('Phan Minh Tuấn',     '123456Zz@', 'phanminhtuan6@customer.com',     '0968000006', 1, 1, NULL, NULL),
-('Vũ Thị Hồng',        '123456Zz@', 'vuthihong7@customer.com',        '0968000007', 1, 1, NULL, NULL),
-('Võ Văn Trung',       '123456Zz@', 'vovantrung8@customer.com',       '0968000008', 1, 1, NULL, NULL),
-('Đỗ Minh Châu',       '123456Zz@', 'dominhchau9@customer.com',       '0968000009', 1, 1, NULL, NULL),
-('Hồ Thị Yến',         '123456Zz@', 'hothiyen10@customer.com',        '0968000010', 1, 1, NULL, NULL),
-('Bùi Văn Đức',        '123456Zz@', 'buivanduc11@customer.com',       '0968000011', 1, 1, NULL, NULL),
-('Đặng Thị Ly',        '123456Zz@', 'dangthily12@customer.com',       '0968000012', 1, 1, NULL, NULL),
-('Dương Minh Sơn',     '123456Zz@', 'duongminhson13@customer.com',    '0968000013', 1, 1, NULL, NULL),
-('Ngô Thị Thanh',      '123456Zz@', 'ngothithanh14@customer.com',     '0968000014', 1, 1, NULL, NULL),
-('Đinh Văn Phúc',      '123456Zz@', 'dinhvanphuc15@customer.com',     '0968000015', 1, 1, NULL, NULL),
-('Trương Thị Phương',  '123456Zz@', 'truongthiphuong16@customer.com','0968000016', 1, 1, NULL, NULL),
-('Lý Minh Khoa',       '123456Zz@', 'lyminhkhoa17@customer.com',      '0968000017', 1, 1, NULL, NULL),
-('Lưu Thị Hạnh',       '123456Zz@', 'luthihanh18@customer.com',       '0968000018', 1, 1, NULL, NULL),
-('Phùng Văn Sơn',      '123456Zz@', 'phungvanson19@customer.com',     '0968000019', 1, 1, NULL, NULL),
-('Tạ Thị Nhung',       '123456Zz@', 'tathinhung20@customer.com',      '0968000020', 1, 1, NULL, NULL),
-('Lâm Minh Nhật',      '123456Zz@', 'lamminhnhat21@customer.com',     '0968000021', 1, 1, NULL, NULL),
-('Trịnh Thị Mai',      '123456Zz@', 'trinhthimai22@customer.com',     '0968000022', 1, 1, NULL, NULL),
-('Hà Văn Duy',         '123456Zz@', 'havanduy23@customer.com',        '0968000023', 1, 1, NULL, NULL),
-('Kiều Thị Ngọc',      '123456Zz@', 'kieuthingoc24@customer.com',     '0968000024', 1, 1, NULL, NULL),
-('Cao Văn Khánh',      '123456Zz@', 'caovankhanh25@customer.com',     '0968000025', 1, 1, NULL, NULL),
-('Lê Thị Bảo',         '123456Zz@', 'lethibao26@customer.com',        '0968000026', 1, 1, NULL, NULL),
-('Nguyễn Thị Trang',   '123456Zz@', 'nguyenthitrang27@customer.com',  '0968000027', 1, 1, NULL, NULL),
-('Trần Văn Toàn',      '123456Zz@', 'tranvantoan28@customer.com',     '0968000028', 1, 1, NULL, NULL),
-('Phạm Minh Phúc',      '123456Zz@', 'phamminhphuc29@customer.com',    '0968000029', 1, 1, NULL, NULL),
-('Hoàng Thị Ngân',     '123456Zz@', 'hoangthingan30@customer.com',    '0968000030', 1, 1, NULL, NULL),
-('Phan Văn Hiếu',      '123456Zz@', 'phanvanhieu31@customer.com',     '0968000031', 1, 1, NULL, NULL),
-('Vũ Minh Đức',        '123456Zz@', 'vuminhduc32@customer.com',       '0968000032', 1, 1, NULL, NULL),
-('Võ Thị Thanh',       '123456Zz@', 'vothithanh33@customer.com',      '0968000033', 1, 1, NULL, NULL),
-('Đỗ Văn Nam',         '123456Zz@', 'dovannam34@customer.com',        '0968000034', 1, 1, NULL, NULL),
-('Hồ Minh Khang',      '123456Zz@', 'hominhkhang35@customer.com',     '0968000035', 1, 1, NULL, NULL),
-('Bùi Thị Thanh',      '123456Zz@', 'buithithanh36@customer.com',     '0968000036', 1, 1, NULL, NULL),
-('Đặng Văn Long',      '123456Zz@', 'dangvanlong37@customer.com',     '0968000037', 1, 1, NULL, NULL),
-('Dương Thị Hà',       '123456Zz@', 'duongthiha38@customer.com',      '0968000038', 1, 1, NULL, NULL),
-('Ngô Văn Công',       '123456Zz@', 'ngovancong39@customer.com',      '0968000039', 1, 1, NULL, NULL),
-('Đinh Thị Nhi',       '123456Zz@', 'dinhthinh40@customer.com',       '0968000040', 1, 1, NULL, NULL);
-
-
-
-CREATE TABLE `bank_account` (
-  `account_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `bank_code` VARCHAR(20) NOT NULL,           -- mã ngân hàng như 'MBBank', 'VCB', 'TCB'
-  `account_number` VARCHAR(50) NOT NULL,    -- số tài khoản ngân hàng
-  `account_name` VARCHAR(100) NOT NULL,              -- tên chủ tài khoản (nên có)
-  `is_active` TINYINT(1) NOT NULL DEFAULT 1,          -- đánh dấu còn dùng hay không (0 = ngừng, 1 = dùng)
-  `is_default` TINYINT(1) NOT NULL DEFAULT 0,  -- '1 = mặc định',
-  UNIQUE KEY `ux_bank_account` (`bank_code`, `account_number`),
-  -- nếu search theo ngân hàng nhiều, thêm index sẽ nhanh hơn
-  KEY `idx_bank_code` (`bank_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `bank_account` (`bank_code`, `account_number`, `account_name`, `is_active`, `is_default`) VALUES
-('MBBank', '0968937705', 'SAGKUTO', 1, 1),
-('Vietcombank', '1025574990', 'SAGKUTO', 1, 0);
