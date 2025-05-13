@@ -59,7 +59,7 @@ try {
 
         if ($existing) {
             // Nếu tồn tại → cộng dồn số lượng, nhưng không vượt quá tồn kho
-            $newQty = min($existing['quantity'] + $quantity, $stock);
+            $newQty = min($quantity, $stock);
             $db->execute("UPDATE cart_details SET quantity = ? WHERE cart_detail_id = ?", [$newQty, $existing['cart_detail_id']]);
         } else {
             // Nếu chưa có → thêm mới nhưng không vượt tồn kho

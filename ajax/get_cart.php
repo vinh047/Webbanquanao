@@ -19,7 +19,7 @@ $user_id = $_SESSION['user_id'];
 try {
     $sql = "
     SELECT 
-        d.product_id AS id,
+        d.product_id,
         d.variant_id,
         d.quantity,
         p.name,
@@ -39,9 +39,13 @@ try {
 
 
 
+
     $items = $db->select($sql, [$user_id]);
 
     foreach ($items as &$item) {
+        $item['product_id'] = (int)$item['product_id'];
+        $item['variant_id'] = (int)$item['variant_id'];
+        $item['color_id'] = (int)$item['color_id'];
         $item['quantity'] = (int)$item['quantity'];
         $item['price'] = (float)$item['price'];
     }

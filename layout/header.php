@@ -140,8 +140,9 @@ if (!empty($_SESSION['user_id'])) {
 
 		<!-- Mini cart sidebar -->
 		<div id="mini-cart"
-			class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 d-flex flex-column"
-			style="width: 300px; height: 100vh; z-index: 9999;">
+ 			class="d-none bg-white shadow p-3 rounded position-fixed end-0 top-0 flex-column"
+  			style="width: 300px; height: 100vh; z-index: 9999;">
+
 			<h6 class="mb-3">
 				Sản phẩm trong giỏ (<span id="cart-item-count">0</span>)
 			</h6>
@@ -179,10 +180,9 @@ if (!empty($_SESSION['user_id'])) {
 
 <!-- Các script quản lý giỏ hàng và menu -->
 <script src="/ajax/generate_color_map.php"></script>
-<script src="/assets/js/addToCart.js"    defer></script>
 <script src="/assets/js/cart.js"         defer></script>
-<script src="/assets/js/mini_cart.js"    defer></script>
 <script src="/assets/js/header.js"       defer></script>
+<<<<<<< Updated upstream
 <script src="../assets/js/basic_search_overlay.js"></script>
 <script src="../assets/js/basic_search_ui.js"></script>
 <script src="../assets/js/basic_search_logic.js"></script>
@@ -196,3 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <?php endif; ?>
+=======
+<?php if (!empty($_SESSION['user_id']) && empty($_SESSION['cart_synced'])): ?>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof syncCartAfterLogin === 'function') {
+        syncCartAfterLogin();
+      }
+    });
+  </script>
+  <?php $_SESSION['cart_synced'] = true; ?>
+<?php endif; ?>
+>>>>>>> Stashed changes
