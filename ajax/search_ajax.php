@@ -50,9 +50,16 @@ if (!$countResult) {
 $totalItems = mysqli_fetch_assoc($countResult)['total'];
 
 if ($totalItems == 0) {
-    echo '<div class="col-12 text-center text-muted py-5">Không tìm thấy sản phẩm phù hợp.</div>';
+    echo '<div class="col-12 text-center text-muted py-5">
+        <p class="mb-3">Không tìm thấy sản phẩm phù hợp.</p>
+        <a href="index.php" class="btn btn-outline-primary">
+            <i class="fas fa-home me-1"></i> Quay về trang chủ
+        </a>
+    </div>';
     exit;
 }
+
+
 
 $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();

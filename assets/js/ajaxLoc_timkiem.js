@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         const query = new URLSearchParams(window.location.search);
                         query.set("pageproduct", page);
                         fetchProducts(query.toString());
-                        history.pushState(null, "", "search.php?" + query.toString());
+                        history.pushState(null, "", "index.php?page=search&" + query.toString());
                     });
                 });
 
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             const query = new URLSearchParams(window.location.search);
                             query.set("pageproduct", page);
                             fetchProducts(query.toString());
-                            history.pushState(null, "", "search.php?" + query.toString());
+                            history.pushState(null, "", "index.php?page=search&" + query.toString());
                         }
                     });
                 }
@@ -54,11 +54,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
         formData.set("pageproduct", currentPage);
 
+        // ➕ Giữ lại q nếu có
+        const searchQuery = new URLSearchParams(window.location.search).get("q");
+        if (searchQuery) {
+            formData.set("q", searchQuery);
+        }
+
         const queryString = formDataToQueryString(formData);
         fetchProducts(queryString);
 
-        const newURL = "search.php?" + queryString;
-        history.replaceState(null, "", newURL);
+        const newURL = "index.php?page=search&" + queryString;
+        history.pushState(null, "", newURL);
     });
 
     // Sắp xếp
@@ -75,10 +81,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
             formData.set("pageproduct", currentPage);
 
+            const searchQuery = new URLSearchParams(window.location.search).get("q");
+            if (searchQuery) {
+                formData.set("q", searchQuery);
+            }
+
             const queryString = formDataToQueryString(formData);
             fetchProducts(queryString);
 
-            const newURL = "search.php?" + queryString;
+            const newURL = "index.php?page=search&" + queryString;
             history.pushState(null, "", newURL);
         });
     });
@@ -100,6 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         fetchProducts();
     }
+    window.addEventListener("popstate", function () {
+        const urlParams = window.location.search.startsWith("?")
+            ? window.location.search.substring(1)
+            : "";
+    
+        // Gọi lại fetchProducts để cập nhật giao diện đúng với URL hiện tại
+        fetchProducts(urlParams);
+    });
 });
 
 function formDataToQueryString(formData) {
