@@ -17,6 +17,8 @@ $userDetail = $db->selectOne(
     [$user_id]
 );
 
+// XÓA TOÀN BỘ BLOCK XỬ LÝ $_GET['cancel'] Ở ĐÂY
+
 $currentPage = $_GET['page'] ?? 'taikhoan';
 ?>
 
