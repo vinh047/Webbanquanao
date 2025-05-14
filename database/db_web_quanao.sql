@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2025 at 06:57 PM
+-- Generation Time: May 14, 2025 at 07:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -56,6 +56,13 @@ CREATE TABLE `cart` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `user_id`, `created_at`) VALUES
+(2, 2, '2025-05-14 00:53:33');
+
 -- --------------------------------------------------------
 
 --
@@ -69,6 +76,14 @@ CREATE TABLE `cart_details` (
   `variant_id` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cart_details`
+--
+
+INSERT INTO `cart_details` (`cart_detail_id`, `cart_id`, `product_id`, `variant_id`, `quantity`) VALUES
+(33, 2, 2, 6, 8),
+(34, 2, 2, 7, 4);
 
 -- --------------------------------------------------------
 
@@ -342,6 +357,19 @@ CREATE TABLE `orders` (
   `staff_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `status`, `total_price`, `shipping_address`, `note`, `created_at`, `payment_method_id`, `staff_id`) VALUES
+(6, 2, '', 1304000.00, '', 'khach1@example.com', '2025-05-14 11:45:19', 1, NULL),
+(18, 2, '', 732000.00, '', 'khach1@example.com', '2025-05-14 12:05:51', 1, NULL),
+(19, 2, '', 2071000.00, '', 'khach1@example.com', '2025-05-14 12:08:19', 1, NULL),
+(20, 2, '', 1304000.00, '', 'khach1@example.com', '2025-05-14 12:08:31', 1, NULL),
+(21, 2, '', 667000.00, '', 'khach1@example.com', '2025-05-14 12:42:53', 1, NULL),
+(22, 2, 'Chờ xác nhận', 1911000.00, '', NULL, '2025-05-14 20:22:15', 1, NULL),
+(23, 2, 'Chờ xác nhận', 2548000.00, '', NULL, '2025-05-14 22:28:03', 1, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -357,6 +385,19 @@ CREATE TABLE `order_details` (
   `total_price` decimal(12,2) DEFAULT NULL,
   `variant_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_details`
+--
+
+INSERT INTO `order_details` (`order_detail_id`, `order_id`, `product_id`, `quantity`, `price`, `total_price`, `variant_id`) VALUES
+(6, 6, 2, 2, 637000.00, 1274000.00, 6),
+(18, 18, 1, 1, 702000.00, 702000.00, 5),
+(19, 19, 4, 2, 1020500.00, 2041000.00, 16),
+(20, 20, 2, 2, 637000.00, 1274000.00, 7),
+(21, 21, 2, 1, 637000.00, 637000.00, 6),
+(22, 22, 2, 3, 637000.00, 1911000.00, 6),
+(23, 23, 2, 4, 637000.00, 2548000.00, 6);
 
 -- --------------------------------------------------------
 
@@ -477,21 +518,21 @@ INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `stock`, `c
 (2, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 50, 8, 3, 0),
 (3, 1, '10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg', 50, 8, 5, 0),
 (4, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 50, 12, 5, 0),
-(5, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 50, 12, 4, 0),
-(6, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', 50, 7, 2, 0),
-(7, 2, '10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg', 50, 2, 3, 0),
+(5, 1, '10f24kni004-navy-ao-len-tay-ngan-nam-1-jpg-kah0.jpg', 47, 12, 4, 0),
+(6, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', 36, 7, 2, 0),
+(7, 2, '10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg', 46, 2, 3, 0),
 (8, 2, '10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg', 50, 7, 3, 0),
-(9, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', 50, 1, 4, 0),
+(9, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', 44, 1, 4, 0),
 (10, 3, '10s25shl015-white-ao-so-mi-nam-1-jpg-4e7k.jpg', 50, 8, 4, 0),
 (11, 3, '10s25shl015-black-ao-so-mi-nam-1-jpg-o1t0.jpg', 50, 1, 5, 0),
 (12, 3, '10s25shl015-white-ao-so-mi-nam-1-jpg-4e7k.jpg', 50, 8, 5, 0),
-(13, 4, '10f24jac005-dried-sage-ao-khoac-nam-1-jpg-7q20.jpg', 50, 6, 5, 0),
+(13, 4, '10f24jac005-dried-sage-ao-khoac-nam-1-jpg-7q20.jpg', 48, 6, 5, 0),
 (14, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 50, 8, 4, 0),
 (15, 4, '10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg', 50, 1, 4, 0),
-(16, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 50, 8, 3, 0),
+(16, 4, '10f24jac005-silver-birch-ao-khoac-nam-1-jpg-3nvj.jpg', 46, 8, 3, 0),
 (17, 4, '10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg', 50, 1, 5, 0),
 (18, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 50, 13, 2, 0),
-(19, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 50, 13, 1, 0),
+(19, 5, '10F24PKS001_BITTER-CHOCO_1_quan-short-nam-1-ubui.jpg', 48, 13, 1, 0),
 (20, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 50, 1, 3, 0),
 (21, 5, '10F24PKS001_BLACK_1_quan-short-nam-1-ocls.jpg', 50, 1, 1, 0),
 (22, 5, '10F24PKS001_COVERT-GREEN_1_quan-short-nam-1-rgiw.jpg', 50, 2, 2, 0),
@@ -503,7 +544,7 @@ INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `stock`, `c
 (28, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 50, 9, 3, 0),
 (29, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 50, 9, 4, 0),
 (30, 6, '10s25tss048-strawberry-1-jpg-ayc7.jpg', 50, 9, 5, 0),
-(31, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 50, 3, 2, 0),
+(31, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 48, 3, 2, 0),
 (32, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 50, 3, 3, 0),
 (33, 7, '10s25tss008-cool-brew-1-jpg-xdx8.jpg', 50, 3, 4, 0),
 (34, 7, '10s25tss008-brown-rice-1-jpg-vnjs.jpg', 50, 2, 3, 0),
@@ -827,6 +868,39 @@ CREATE TABLE `user_addresses` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vouchers`
+--
+
+CREATE TABLE `vouchers` (
+  `voucher_id` int(11) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `discount` decimal(10,2) NOT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `vouchers`
+--
+
+INSERT INTO `vouchers` (`voucher_id`, `code`, `discount`, `start_date`, `end_date`, `status`) VALUES
+(1, 'huydev', 20.00, '2025-05-01', '2025-05-22', 'active'),
+(2, 'huydev1', 20.00, '2025-05-01', '2025-05-16', 'active'),
+(3, 'huydev2', 30.00, '2025-05-01', '2025-05-19', 'active'),
+(4, 'huydev3', 30.00, '2025-05-01', '2025-05-28', 'inactive'),
+(5, 'huydev4', 30.00, '2025-05-01', '2025-05-30', 'active'),
+(6, 'huydev5', 30.00, '2025-05-01', '2025-05-28', 'inactive'),
+(9, 'huydev7', 30.00, '2025-05-01', '2025-05-28', 'inactive'),
+(10, 'huydev8', 30.00, '2025-05-01', '2025-05-29', 'inactive'),
+(11, 'huydev9', 30.00, '2025-05-01', '2025-05-08', 'inactive'),
+(12, 'huydev10', 30.00, '2025-05-01', '2025-05-23', 'inactive'),
+(13, 'huydev11', 30.00, '2025-05-01', '2025-05-31', 'active'),
+(14, 'huydev12', 30.00, '2025-05-01', '2025-05-31', 'active');
+
 --
 -- Indexes for dumped tables
 --
@@ -986,6 +1060,13 @@ ALTER TABLE `user_addresses`
   ADD KEY `idx_user` (`user_id`);
 
 --
+-- Indexes for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  ADD PRIMARY KEY (`voucher_id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -999,13 +1080,13 @@ ALTER TABLE `bank_account`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart_details`
 --
 ALTER TABLE `cart_details`
-  MODIFY `cart_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cart_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1035,13 +1116,13 @@ ALTER TABLE `importreceipt_details`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `payment_method`
@@ -1114,6 +1195,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_addresses`
   MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  MODIFY `voucher_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
