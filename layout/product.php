@@ -145,13 +145,13 @@
                                             <div class="col-12">
                                                 <div class="input-group">
                                                     <span class="input-group-text rounded-start-1" style="width: 80px;">Giá min : </span>
-                                                    <input type="text" name="giamin" class="form-control rounded-end-1 form-control-sm">
+                                                    <input type="number" name="giamin" class="form-control rounded-end-1 form-control-sm">
                                                 </div>
                                             </div>
                                             <div class="col-12 mt-2">
                                                 <div class="input-group">
                                                     <span class="input-group-text rounded-start-1" style="width: 80px;">Giá max : </span>
-                                                    <input type="text" name="giamax" class="form-control rounded-end-1 form-control-sm">
+                                                    <input type="number" name="giamax" class="form-control rounded-end-1 form-control-sm">
                                                 </div>
                                             </div>
                                         </div>

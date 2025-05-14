@@ -17,6 +17,8 @@ $userDetail = $db->selectOne(
     [$user_id]
 );
 
+// XÓA TOÀN BỘ BLOCK XỬ LÝ $_GET['cancel'] Ở ĐÂY
+
 $currentPage = $_GET['page'] ?? 'taikhoan';
 ?>
 
@@ -81,11 +83,6 @@ if ($currentPage === 'danhsachdiachi') {
 }
 ?>
 
-
-<!-- <script src="/assets/js/mini_cart.js" defer></script>
-<script src="/assets/js/addToCart.js" defer></script>
-<script src="/assets/js/cart.js" defer></script>
-<script src="/assets/js/header.js" defer></script> -->
 <script src="/assets/js/info_user.js" defer></script>
 
 <script>
