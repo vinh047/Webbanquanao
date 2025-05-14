@@ -84,6 +84,20 @@ foreach ($customers as $c): ?>
                 data-bs-target="#modalXoaKH">
                 <i class="fas fa-trash"></i> Xóa
             </button>
+
+            <!-- nút chi tiết -->
+             <button class="btn btn-info btn-detail-customer mx-1"
+                data-id="<?=   $c['user_id']   ?>"
+                data-name="<?= htmlspecialchars($c['name'])     ?>"
+                data-email="<?= htmlspecialchars($c['email'])    ?>"
+                data-password="<?= htmlspecialchars($c['password'])?>"
+                data-phone="<?= htmlspecialchars($c['phone'])    ?>"
+                data-status="<?= $c['status'] ?>"
+                data-bs-toggle="modal"
+                data-bs-target="#modalChiTietKH">
+                <i class="fas fa-info-circle"></i> Chi tiết
+                
+             </button>
         </td>
     </tr>
 <?php endforeach;

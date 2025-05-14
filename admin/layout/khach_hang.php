@@ -1,3 +1,13 @@
+<style>
+    .nav-tabs .nav-link {
+        color: black;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: white !important;
+    }
+</style>
 <!-- Thanh tìm kiếm -->
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
     <div class="mx-auto w-25">
@@ -100,6 +110,55 @@
     </div>
 </div>
 
+<!-- Modal CHI TIẾT khách hàng -->
+<div class="modal fade" id="modalChiTietKH" tabindex="-1" aria-labelledby="modalChiTietKHLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Chi tiết khách hàng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Thông tin cơ bản -->
+                <h6>Thông tin cơ bản</h6>
+                <p><strong>Tên:</strong> <span id="ct-name"></span></p>
+                <p><strong>Email:</strong> <span id="ct-email"></span></p>
+                <p><strong>SĐT:</strong> <span id="ct-phone"></span></p>
+                <p><strong>Trạng thái:</strong> <span id="ct-status"></span></p>
+                <p><strong>Mật khẩu:</strong> <span id="ct-password"></span></p>
+
+                <hr>
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="khachHangTab" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab">Đơn hàng</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">Lịch sử mua hàng</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="addresses-tab" data-bs-toggle="tab" data-bs-target="#addresses" type="button" role="tab">Danh sách địa chỉ</button>
+                    </li>
+                </ul>
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="orders" role="tabpanel">
+                        <div id="ct-orders">Đang tải đơn hàng...</div>
+                    </div>
+                    <div class="tab-pane fade" id="history" role="tabpanel">
+                        <div id="ct-history">Đang tải lịch sử mua hàng...</div>
+                    </div>
+                    <div class="tab-pane fade" id="addresses" role="tabpanel">
+                        <div id="ct-addresses">Đang tải địa chỉ...</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <script>
     let currentFilterParams = "";
 
@@ -119,7 +178,7 @@
 
     function phantrang() {
         document.querySelectorAll(".page-link-custom").forEach(btn => {
-            btn.addEventListener("click", function (e) {
+            btn.addEventListener("click", function(e) {
                 e.preventDefault();
                 const page = parseInt(this.dataset.page);
                 loadCustomers(page, currentFilterParams);
@@ -127,14 +186,14 @@
         });
     }
 
-    document.getElementById("searchCustomer").addEventListener("input", function () {
+    document.getElementById("searchCustomer").addEventListener("input", function() {
         const keyword = this.value.trim();
         currentFilterParams = keyword ? `&search_name=${encodeURIComponent(keyword)}` : '';
         loadCustomers(1, currentFilterParams);
     });
 
     // Gán dữ liệu khi nhấn XÓA
-    document.querySelector('.customer-wrap').addEventListener('click', function (e) {
+    document.querySelector('.customer-wrap').addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-delete-customer');
         if (!btn) return;
 
@@ -146,13 +205,13 @@
         document.getElementById("trangthaiKhachXoa").value = btn.dataset.status == "1" ? "Hoạt động" : "Khóa";
     });
 
-    document.getElementById("formXoaKH").addEventListener("submit", function (e) {
+    document.getElementById("formXoaKH").addEventListener("submit", function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         fetch("ajax/delete_customer.php", {
-            method: "POST",
-            body: formData
-        })
+                method: "POST",
+                body: formData
+            })
             .then(res => res.json())
             .then(data => {
                 alert(data.message);
@@ -164,7 +223,7 @@
     });
 
     // Gán dữ liệu khi nhấn SỬA
-    document.querySelector('.customer-wrap').addEventListener('click', function (e) {
+    document.querySelector('.customer-wrap').addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-edit-customer');
         if (!btn) return;
 
@@ -176,13 +235,13 @@
         document.getElementById("trangthaiKhachSua").value = btn.dataset.status || "1";
     });
 
-    document.getElementById("formSuaKH").addEventListener("submit", function (e) {
+    document.getElementById("formSuaKH").addEventListener("submit", function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         fetch("ajax/update_customer.php", {
-            method: "POST",
-            body: formData
-        })
+                method: "POST",
+                body: formData
+            })
             .then(res => res.json())
             .then(data => {
                 alert(data.message);
@@ -191,5 +250,26 @@
                     loadCustomers(1, currentFilterParams);
                 }
             });
+    });
+    document.querySelector('.customer-wrap').addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-detail-customer');
+        if (!btn) return;
+
+        const userId = btn.dataset.id;
+        document.getElementById('ct-name').textContent = btn.dataset.name || '';
+        document.getElementById('ct-email').textContent = btn.dataset.email || '';
+        document.getElementById('ct-phone').textContent = btn.dataset.phone || '';
+        document.getElementById('ct-status').textContent = btn.dataset.status == "1" ? "Hoạt động" : "Khóa";
+        document.getElementById('ct-password').textContent = btn.dataset.password || '';
+
+        // Gọi AJAX để load đơn hàng và địa chỉ
+        fetch(`ajax/chi_tiet_khach_hang.php?user_id=${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('ct-orders').innerHTML = data.ordersHtml || 'Không có đơn hàng.';
+                document.getElementById('ct-history').innerHTML = data.historyHtml || 'Không có lịch sử.';
+                document.getElementById('ct-addresses').innerHTML = data.addressesHtml || 'Không có địa chỉ.';
+            });
+
     });
 </script>
