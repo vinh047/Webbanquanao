@@ -14,18 +14,33 @@ $page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
 
 $loc = locSanPham($connection);
 $sapxep = str_replace("products.", "p.", sapXepSanPham());
+// $whereCondition = "v.is_deleted = 0 AND v.stock > 0";
+// $loc = $loc ? str_replace(["products.", "product_variants.", "WHERE"], ["p.", "v.", "WHERE $whereCondition AND"], $loc) : "WHERE $whereCondition";
 $whereCondition = "v.is_deleted = 0 AND v.stock > 0";
-$loc = $loc ? str_replace(["products.", "product_variants.", "WHERE"], ["p.", "v.", "WHERE $whereCondition AND"], $loc) : "WHERE $whereCondition";
+$loc = $loc
+    ? str_replace(["products.", "product_variants.", "WHERE"], ["p.", "v.", "WHERE $whereCondition AND"], $loc)
+    : "WHERE $whereCondition";
 
+// $countSQL = "
+// SELECT COUNT(*) AS total FROM (
+//     SELECT p.product_id
+//     FROM products p
+//     JOIN (SELECT * FROM product_variants WHERE is_deleted = 0 AND stock > 0 GROUP BY product_id) v ON p.product_id = v.product_id
+//     $loc
+//     GROUP BY p.product_id
+// ) AS t
+// ";
 $countSQL = "
-SELECT COUNT(*) AS total FROM (
+SELECT COUNT(*) AS total
+FROM (
     SELECT p.product_id
     FROM products p
-    JOIN (SELECT * FROM product_variants WHERE is_deleted = 0 AND stock > 0 GROUP BY product_id) v ON p.product_id = v.product_id
+    JOIN product_variants v ON p.product_id = v.product_id
     $loc
     GROUP BY p.product_id
 ) AS t
 ";
+
 
 $countResult = mysqli_query($connection, $countSQL);
 if (!$countResult) {
@@ -41,18 +56,29 @@ if ($totalItems == 0) {
 $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
+// $productSQL = "
+// SELECT p.*, v.variant_id, v.image
+// FROM products AS p
+// JOIN (
+//     SELECT * FROM product_variants
+//     WHERE is_deleted = 0 AND stock > 0
+//     GROUP BY product_id
+// ) AS v ON p.product_id = v.product_id
+// $loc
+// $sapxep
+// LIMIT $limit OFFSET $offset
+// ";
+
 $productSQL = "
-SELECT p.*, v.variant_id, v.image
-FROM products AS p
-JOIN (
-    SELECT * FROM product_variants
-    WHERE is_deleted = 0 AND stock > 0
-    GROUP BY product_id
-) AS v ON p.product_id = v.product_id
+SELECT p.*, MIN(v.variant_id) AS variant_id, v.image
+FROM products p
+JOIN product_variants v ON p.product_id = v.product_id
 $loc
+GROUP BY p.product_id
 $sapxep
 LIMIT $limit OFFSET $offset
 ";
+
 
 $result = mysqli_query($connection, $productSQL);
 if (!$result) {
