@@ -25,9 +25,9 @@ function gatherOrderData(paymentMethodId) {
     cart: cartItems,
     payment_method: paymentMethodId,
     discount: window.discount || 0,
-    shipping_fee: window.shippingFee || 0,
     total_price: parseFloat(document.getElementById('paid_price')?.textContent?.replace(/\D/g, '') || 0)
   };
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cart = JSON.parse(sessionStorage.getItem('selectedCartItems')) || [];
   let subtotal = 0;
   window.discount = 0;
-  window.shippingFee = 30000;
+  // window.shippingFee = 30000;
 
   const orderItemsEl = document.getElementById('order-items');
   orderItemsEl.innerHTML = '';
@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('subtotal').textContent = subtotal.toLocaleString() + 'đ';
-  document.querySelector('.list-group-item:nth-child(2) span:nth-child(2)').textContent = window.shippingFee.toLocaleString() + 'đ';
-  document.getElementById('paid_price').textContent = (subtotal + window.shippingFee - window.discount).toLocaleString() + 'đ';
+  // document.querySelector('.list-group-item:nth-child(2) span:nth-child(2)').textContent = window.shippingFee.toLocaleString() + 'đ';
+  document.getElementById('paid_price').textContent = (subtotal - window.discount).toLocaleString() + 'đ';
   document.getElementById('total').textContent = document.getElementById('paid_price').textContent;
 
   // Voucher Logic
@@ -75,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const code = voucherInput.value.trim().toUpperCase();
     if (code === 'HUYDEPTRAI') window.discount = subtotal * 0.1;
-    else if (code === 'MINHHUY') window.discount = window.shippingFee;
+    //chú ý chỗ voucher này
+    else if (code === 'MINHHUY') window.discount = 0;
     else { window.discount = 0; alert('Mã giảm giá không hợp lệ!'); }
 
     document.querySelector('.list-group-item:nth-child(3) span:nth-child(2)').textContent =

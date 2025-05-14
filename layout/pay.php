@@ -120,13 +120,13 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
 
       <!-- Phương thức & Mua online -->
       <div class="col-lg-4 mb-4">
-        <h5>Mua online</h5>
+        <!-- <h5>Mua online</h5>
         <div class="border p-3 mb-3 rounded">
           <div class="form-check">
             <input class="form-check-input" type="radio" name="shipping" id="defaultShipping" checked>
             <label class="form-check-label" for="defaultShipping">Giao hàng tiêu chuẩn</label>
           </div>
-        </div>
+        </div> -->
 
         <h5>Phương thức thanh toán</h5>
         <div class="border p-3 rounded">
@@ -157,10 +157,10 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
             <span>Tạm tính</span>
             <strong id="subtotal">0đ</strong>
           </li>
-          <li class="list-group-item d-flex justify-content-between">
+          <!-- <li class="list-group-item d-flex justify-content-between">
             <span>Phí vận chuyển</span>
-            <span>0đ</span> <!-- payment.js lấy qua nth-child(2) -->
-          </li>
+            <span>0đ</span>
+          </li> -->
           <li class="list-group-item d-flex justify-content-between">
             <span>Giảm giá</span>
             <span>0đ</span> <!-- payment.js lấy qua nth-child(3) -->

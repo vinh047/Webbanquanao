@@ -39,7 +39,7 @@
   
   <div class="cart-scroll-area border rounded p-3">
     <div class="d-flex align-items-center mb-2">
-      <input type="checkbox" id="select-all" class="form-check-input me-2">
+      <input type="checkbox" id="select-all" class="form-check-input me-2" style="border: 1px solic black;">
       <label for="select-all" class="mb-0">Chọn tất cả</label>
     </div>
     <div id="cart-items"></div>
@@ -56,7 +56,7 @@
                    <span>Tạm tính:</span>
                    <strong class="text-danger" id="total-price">0₫</strong>
                  </div>
-                 <a href="index.php?page=pay" class="btn btn-dark w-100 fw-bold">THANH TOÁN</a>
+                 <a href="index.php?page=pay" id="btn-checkout" class="btn btn-dark w-100 fw-bold">THANH TOÁN</a>
 
                  <a href="index.php?page=sanpham" class="btn btn-outline-secondary w-100 mt-2 fw-bold">
                        TIẾP TỤC MUA SẮM
