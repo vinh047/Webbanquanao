@@ -48,24 +48,39 @@ document.addEventListener("DOMContentLoaded", function () {
     // Khi submit lọc
     filterForm.addEventListener("submit", function (e) {
         e.preventDefault();
+    
+        // 1. Lấy FormData gốc để kiểm tra filter (chưa delete bất cứ thứ gì)
+        const rawForm = new FormData(this);
+    
+        // 2. Lọc ra những entry thực sự là filter: bỏ pageproduct, q và bỏ giá trị rỗng
+        const filterEntries = Array.from(rawForm.entries()).filter(([key, val]) => {
+            if (key === "page" || key === "pageproduct" || key === "q") return false;
+            return val.toString().trim() !== "";
+        });
+    
+        // 3. Nếu không có bất kỳ filter nào được chọn thì cấm submit
+        if (filterEntries.length === 0) {
+            alert("Vui lòng chọn ít nhất một tiêu chí lọc trước khi nhấn Lọc");
+            return;  // dừng luôn, không load lại dữ liệu hay thay đổi URL
+        }
+    
+        // 4. Ngược lại build FormData và gửi request như bình thường
         const formData = new FormData(this);
         formData.delete("page");
-
+    
         const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
         formData.set("pageproduct", currentPage);
-
-        // ➕ Giữ lại q nếu có
+    
         const searchQuery = new URLSearchParams(window.location.search).get("q");
         if (searchQuery) {
             formData.set("q", searchQuery);
         }
-
+    
         const queryString = formDataToQueryString(formData);
         fetchProducts(queryString);
-
-        const newURL = "index.php?page=search&" + queryString;
-        history.pushState(null, "", newURL);
+        history.pushState(null, "", "index.php?page=search&" + queryString);
     });
+    
 
     // Sắp xếp
     document.querySelectorAll(".sort-btn").forEach(btn => {
