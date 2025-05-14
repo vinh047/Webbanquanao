@@ -4,10 +4,10 @@
     }
 
     .nav-tabs .nav-link.active {
-        background-color: #0d6efd;
-        color: white !important;
+        color: #0d6efd; /* màu xanh Bootstrap */
     }
 </style>
+
 <!-- Thanh tìm kiếm -->
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
     <div class="mx-auto w-25">
