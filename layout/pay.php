@@ -196,28 +196,24 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
 
     // Define startPaymentProcess to bridge pay.js & payment.js
     window.startPaymentProcess = function(orderData) {
-      // Giả sử trong DB, phương thức COD có id = 1:
       if (orderData.payment_method === '1') {
-        alert('Đặt hàng thành công');
-        return;
+        return; // ❌ Bỏ dòng alert ở đây, để payment.js lo
       }
 
-      // Lấy dữ liệu ngân hàng từ window.bankAccount
       const MY_BANK = window.bankAccount || {
         BANK_ID: 'DEFAULTBANK',
         ACCOUNT_NO: '0000000000'
       };
 
-      // Lấy amount từ DOM (đã được payment.js tính trước đó)
       const raw = document.getElementById('paid_price').textContent || '';
       const amount = parseInt(raw.replace(/\D/g, ''), 10) || 0;
       const qrUrl = `https://img.vietqr.io/image/${MY_BANK.BANK_ID}-${MY_BANK.ACCOUNT_NO}-compact2.png?amount=${amount}&accountName=SAUKUTO`;
 
       document.getElementById('qr-section').innerHTML = `
-      <div class="text-center">
-        <p class="mb-2">Quét mã QR ngân hàng của bạn</p>
-        <img src="${qrUrl}" width="150" alt="QR Code">
-      </div>`;
+    <div class="text-center">
+      <p class="mb-2">Quét mã QR ngân hàng của bạn</p>
+      <img src="${qrUrl}" width="150" alt="QR Code">
+    </div>`;
     };
   </script>
   <script src="./assets/js/pay.js"></script>

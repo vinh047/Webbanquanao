@@ -31,7 +31,7 @@ try {
         throw new Exception("Bạn chưa đăng nhập");
     }
 
-    // 1) Ghép địa chỉ thành 1 chuỗi
+    // Ghép địa chỉ
     $addr = $data['address'] ?? [];
     $parts = array_filter([
       $addr['detail']   ?? null,
@@ -41,7 +41,10 @@ try {
     ]);
     $shipping_address = implode(', ', $parts);
 
-    // 2) Thêm đơn hàng, để MySQL dùng DEFAULT status = 'Chờ xác nhận'
+    $total_price = floatval($data['total_price']);
+    $payment_method_id = intval($data['payment_method']);
+
+    // Thêm đơn hàng
     $stmt = $pdo->prepare("
       INSERT INTO orders (
         user_id,
@@ -56,13 +59,13 @@ try {
     ");
     $stmt->execute([
       $user_id,
-      floatval($data['total_price']),
+      $total_price,
       $shipping_address,
-      intval($data['payment_method'])
+      $payment_method_id
     ]);
     $order_id = $pdo->lastInsertId();
 
-    // 3) Nếu là địa chỉ mới thì lưu vào user_addresses
+    // Nếu địa chỉ mới thì lưu
     if (empty($addr['saved_id']) && !empty($addr['province'])) {
       $pdo->prepare("
         INSERT INTO user_addresses
@@ -78,19 +81,15 @@ try {
       ]);
     }
 
-    // 4) Chuẩn bị chèn chi tiết và trừ kho
-    $stmtDetail     = $pdo->prepare("
+    // Thêm chi tiết đơn hàng & cập nhật tồn kho
+    $stmtDetail = $pdo->prepare("
       INSERT INTO order_details
         (order_id, product_id, variant_id, price, quantity, total_price)
       VALUES (?, ?, ?, ?, ?, ?)
     ");
-    $stmtCheckStock = $pdo->prepare("
-      SELECT stock FROM product_variants WHERE variant_id = ?
-    ");
+    $stmtCheckStock = $pdo->prepare("SELECT stock FROM product_variants WHERE variant_id = ?");
     $stmtUpdateStock = $pdo->prepare("
-      UPDATE product_variants
-      SET stock = stock - ?
-      WHERE variant_id = ?
+      UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?
     ");
 
     foreach ($data['cart'] as $item) {
@@ -103,10 +102,10 @@ try {
       $stmtCheckStock->execute([$variant_id]);
       $remaining = intval($stmtCheckStock->fetchColumn());
       if ($remaining < $qty) {
-        throw new Exception("Sản phẩm #{$variant_id} chỉ còn {$remaining}, bạn cần {$qty}");
+        throw new Exception("Sản phẩm #$variant_id chỉ còn $remaining, bạn cần $qty");
       }
 
-      // Chèn chi tiết
+      // Lưu chi tiết
       $stmtDetail->execute([
         $order_id,
         $product_id,
@@ -116,20 +115,19 @@ try {
         $price * $qty
       ]);
 
-      // Cập nhật trừ kho
+      // Trừ kho
       $stmtUpdateStock->execute([$qty, $variant_id]);
     }
 
     $pdo->commit();
 
-    echo json_encode(['success'=>true]);
+    echo json_encode(['success' => true, 'order_id' => $order_id]);
     exit;
 
 } catch (Exception $e) {
     $pdo->rollBack();
-    // Ghi log nếu cần
     file_put_contents(__DIR__.'/log_order_error.txt',
       date('c')." - ".$e->getMessage()."\n", FILE_APPEND);
-    echo json_encode(['success'=>false,'message'=>$e->getMessage()]);
+    echo json_encode(['success'=>false, 'message'=>$e->getMessage()]);
     exit;
 }
