@@ -1,8 +1,6 @@
 <?php
 require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,6 +114,12 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                 </li>
 
                 <li class="nav-item mb-2">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'vouchers' ? 'active' : '' ?>" href="index.php?page=vouchers&pageadmin=1">
+                        <i class="fa-solid fa-ticket"></i> <span>Vouchers</span>
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
                     <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'thongke' ? 'active' : '' ?>" href="index.php?page=thongke&pageadmin=1">
                         <i class="fas fa-chart-line"></i> <span>Thống kê</span>
                     </a>
@@ -205,6 +209,9 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                         break;
                     case 'thongke':
                         include '../admin/layout/thongke.php';
+                        break;
+                    case 'vouchers':
+                        include '../admin/layout/vouchers.php';
                         break;
                 }
             }

@@ -65,7 +65,6 @@ async function submitForm(e) {
           // Redirect sau khi đồng bộ
           setTimeout(() => {
             alert("Đăng nhập thành công");
-            
             sessionStorage.setItem("cart_merge_prompted", "0"); // 🔥 Đặt lại để hiển thị alert gộp
             window.location.href = location.origin + "/index.php";
           }, 100);
