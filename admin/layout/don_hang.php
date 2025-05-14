@@ -6,7 +6,7 @@ $statuses = $db->getEnumValues('orders', 'status');
 
 $payment_methods = $db->select('SELECT * FROM payment_method WHERE is_deleted = 0', []);
 
-$current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_id = ?', [$_SESSION['user_id']]);
+$current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_id = ?', [$_SESSION['admin_id']]);
 ?>
 <style>
     .modal.fade .modal-dialog {
@@ -157,8 +157,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                                 <!-- Ô input có floating label -->
                                 <div class="col-10">
                                     <div class="form-floating">
-                                        <input type="hidden" name="user_id">
-                                        <input type="text" id="user_id" class="form-control" placeholder="" readonly>
+                                        <input type="text" id="user_id" class="form-control" placeholder="" name="user_id" readonly>
                                         <label for="user_id">Khách hàng</label>
                                     </div>
                                 </div>
@@ -184,7 +183,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                         <!-- Trạng thái -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select id="status" name="status" class="form-select">
+                                <select id="statusThem" name="status" class="form-select">
                                     <option value="Chờ xác nhận">Chờ xác nhận</option>
                                     <option value="Đã thanh toán, chờ giao hàng">Đã thanh toán, chờ giao hàng</option>
                                     <option value="Đang giao hàng">Đang giao hàng</option>
@@ -285,8 +284,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                     <!-- Sản phẩm -->
                     <div class="col-md-3">
                         <div class="form-floating position-relative">
-                            <input type="hidden" name="product_id">
-                            <input type="text" id="product_id" class="form-control pe-5" placeholder="Sản phẩm" readonly>
+                            <input type="text" id="product_id" class="form-control pe-5" placeholder="Sản phẩm" name="product_id" readonly>
                             <label for="product_id">Sản phẩm</label>
                             <button type="button" class="btn btn-outline-secondary position-absolute end-0 top-0 mt-2 me-2" id="btnChonSanPham">
                                 <i class="fa fa-search"></i>
@@ -316,7 +314,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                     <!-- Đơn giá -->
                     <div class="col-md-2">
                         <div class="form-floating">
-                            <input type="number" id="price" class="form-control" placeholder="Đơn giá" readonly>
+                            <input type="text" id="price" class="form-control" placeholder="Đơn giá" readonly>
                             <label for="price">Đơn giá</label>
                         </div>
                     </div>
@@ -347,6 +345,12 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                             <!-- Sẽ được JS thêm vào -->
                         </tbody>
                     </table>
+                    <!-- Tổng tiền đơn hàng -->
+                    <div class="d-flex justify-content-end mt-3 me-2">
+                        <h5 class="fw-bold">
+                            Tổng tiền: <span id="tongTienDonHang">0 ₫</span>
+                        </h5>
+                    </div>
                 </div>
 
             </div>
@@ -497,10 +501,434 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 </div>
 
 
+<!-- Modal Xóa Đơn Hàng -->
+<div class="modal fade" id="modalXoaDonHang" tabindex="-1" aria-labelledby="modalXoaDonHangLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Xóa Đơn Hàng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formXoaDonHang">
+                    <div class="row g-3">
+                        <!-- Khách hàng -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="delete_user_name" class="form-control" placeholder="Khách hàng" readonly>
+                                <label for="delete_user_name">Khách hàng</label>
+                            </div>
+                        </div>
+
+                        <!-- Nhân viên -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="delete_staff_name" class="form-control" placeholder="Nhân viên tạo đơn" readonly>
+                                <label for="delete_staff_name">Nhân viên tạo đơn</label>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="delete_status" class="form-control" placeholder="Trạng thái" readonly>
+                                <label for="delete_status">Trạng thái</label>
+                            </div>
+                        </div>
+
+                        <!-- Phương thức thanh toán -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="delete_payment_method" class="form-control" placeholder="Phương thức thanh toán" readonly>
+                                <label for="delete_payment_method">Phương thức thanh toán</label>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea id="delete_note" class="form-control" placeholder="Ghi chú" style="height: 100px" readonly></textarea>
+                                <label for="delete_note">Ghi chú</label>
+                            </div>
+                        </div>
+
+                        <!-- Địa chỉ giao hàng -->
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea id="delete_shipping_address" class="form-control" placeholder="Địa chỉ giao hàng" style="height: 80px" readonly></textarea>
+                                <label for="delete_shipping_address">Địa chỉ giao hàng</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+                <!-- Chi tiết đơn hàng -->
+                <div class="mt-3">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Biến thể</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="delete_orderDetailQueue">
+                            <!-- Dữ liệu chi tiết đơn hàng sẽ được load bằng JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tổng tiền đơn hàng -->
+                <div class="d-flex justify-content-end mt-3 me-2">
+                    <h5 class="fw-bold">
+                        Tổng tiền: <span id="delete_tongTienDonHang">0 ₫</span>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnConfirmDeleteOrder" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> Xác nhận xóa
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+
+<!-- Modal Xem Chi Tiết Đơn Hàng -->
+<div class="modal fade" id="modalXemChiTietDonHang" tabindex="-1" aria-labelledby="modalXemChiTietDonHangLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Chi Tiết Đơn Hàng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formXemChiTietDonHang">
+                    <div class="row g-3">
+                        <!-- Khách hàng -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="ct_user_name" class="form-control" placeholder="Khách hàng" readonly>
+                                <label for="ct_user_name">Khách hàng</label>
+                            </div>
+                        </div>
+
+                        <!-- Nhân viên -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="ct_staff_name" class="form-control" placeholder="Nhân viên tạo đơn" readonly>
+                                <label for="ct_staff_name">Nhân viên tạo đơn</label>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="ct_status" class="form-control" placeholder="Trạng thái" readonly>
+                                <label for="ct_status">Trạng thái</label>
+                            </div>
+                        </div>
+
+                        <!-- Phương thức thanh toán -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="ct_payment_method" class="form-control" placeholder="Phương thức thanh toán" readonly>
+                                <label for="ct_payment_method">Phương thức thanh toán</label>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea id="ct_note" class="form-control" placeholder="Ghi chú" style="height: 100px" readonly></textarea>
+                                <label for="ct_note">Ghi chú</label>
+                            </div>
+                        </div>
+
+                        <!-- Địa chỉ giao hàng -->
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea id="ct_shipping_address" class="form-control" placeholder="Địa chỉ giao hàng" style="height: 80px" readonly></textarea>
+                                <label for="ct_shipping_address">Địa chỉ giao hàng</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+                <!-- Chi tiết đơn hàng -->
+                <div class="mt-3">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Biến thể</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ct_orderDetailQueue">
+                            <!-- Dữ liệu chi tiết đơn hàng sẽ được load bằng JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tổng tiền đơn hàng -->
+                <div class="d-flex justify-content-end mt-3 me-2">
+                    <h5 class="fw-bold">
+                        Tổng tiền: <span id="ct_tongTienDonHang">0 ₫</span>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa Đơn Hàng -->
+<div class="modal fade" id="modalSuaDonHang" tabindex="-1" aria-labelledby="modalSuaDonHangLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Sửa Đơn Hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formSuaDonHang">
+                    <input type="hidden" id="edit_order_id" name="order_id">
+                    <div class="row g-3">
+                        <!-- Khách hàng -->
+                        <div class="col-md-6">
+                            <div class="row g-0">
+                                <div class="col-10">
+                                    <div class="form-floating">
+                                        <input type="text" id="edit_user_id" class="form-control" placeholder="" name="user_id" readonly>
+                                        <label for="edit_user_id">Khách hàng</label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-outline-secondary w-100 h-100" id="btnChonKhachHang_Sua">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nhân viên -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="edit_staff_id" name="staff_id" class="form-control" placeholder="Nhân viên" readonly>
+                                <label for="edit_staff_id">Nhân viên tạo đơn</label>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="statusSua" name="status" class="form-select">
+                                    <option value="Chờ xác nhận">Chờ xác nhận</option>
+                                    <option value="Đã thanh toán, chờ giao hàng">Đã thanh toán, chờ giao hàng</option>
+                                    <option value="Đang giao hàng">Đang giao hàng</option>
+                                    <option value="Giao thành công">Giao thành công</option>
+                                    <option value="Đã huỷ">Đã huỷ</option>
+                                </select>
+                                <label for="statusSua">Tình trạng</label>
+                            </div>
+                        </div>
+
+                        <!-- Phương thức thanh toán -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="payment_method_id_sua" name="payment_method_id" class="form-select">
+                                    <?php foreach ($payment_methods as $pm): ?>
+                                        <option value="<?= $pm['payment_method_id'] ?>"><?= $pm['name'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <label for="payment_method_id_sua">Phương thức thanh toán</label>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <textarea id="note_sua" name="note" class="form-control" placeholder="Ghi chú" style="height: 100px"></textarea>
+                                <label for="note_sua">Ghi chú</label>
+                            </div>
+                        </div>
+
+                        <!-- Loại địa chỉ -->
+                        <div class="col-md-6">
+                            <label class="form-label d-block">Loại địa chỉ</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="address_option_sua" id="addr_saved_sua" value="saved" checked>
+                                    <label class="form-check-label" for="addr_saved_sua">Địa chỉ đã lưu</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="address_option_sua" id="addr_new_sua" value="new">
+                                    <label class="form-check-label" for="addr_new_sua">Nhập địa chỉ mới</label>
+                                </div>
+                            </div>
+
+                            <div id="saved-container-sua" class="form-floating mt-3">
+                                <select id="saved-address-sua" class="form-select">
+                                    <option selected disabled>Chọn địa chỉ</option>
+                                    <?php foreach ($user_addresses as $addr): ?>
+                                        <?php
+                                        $full = $addr['address_detail'] . ', ' . $addr['ward'] . ', ' . $addr['district'] . ', ' . $addr['province'];
+                                        ?>
+                                        <option value="<?= $addr['address_id'] ?>" <?= $addr['is_default'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($full) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <label for="saved-address-sua">Địa chỉ đã lưu</label>
+                            </div>
+
+                            <div id="new-container-sua" class="mt-3" style="display: none;">
+                                <label class="form-label fw-semibold mb-2">Địa chỉ mới</label>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-4 form-floating">
+                                        <select id="province-sua" class="form-select">
+                                            <option selected disabled>Tỉnh/TP</option>
+                                        </select>
+                                        <label for="province-sua">Tỉnh/TP</label>
+                                    </div>
+                                    <div class="col-md-4 form-floating">
+                                        <select id="district-sua" class="form-select">
+                                            <option selected disabled>Quận/Huyện</option>
+                                        </select>
+                                        <label for="district-sua">Quận/Huyện</label>
+                                    </div>
+                                    <div class="col-md-4 form-floating">
+                                        <select id="ward-sua" class="form-select">
+                                            <option selected disabled>Phường/Xã</option>
+                                        </select>
+                                        <label for="ward-sua">Phường/Xã</label>
+                                    </div>
+                                </div>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="specific-address-sua" placeholder="Số nhà, đường...">
+                                    <label for="specific-address-sua">Địa chỉ cụ thể</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+                <!-- Chi tiết đơn hàng -->
+                <div class="row g-3 align-items-end mt-3">
+                    <!-- Sản phẩm -->
+                    <div class="col-md-3">
+                        <div class="form-floating position-relative">
+                            <input type="text" id="product_id_sua" class="form-control pe-5" placeholder="Sản phẩm" name="product_id_sua" readonly>
+                            <label for="product_id_sua">Sản phẩm</label>
+                            <button type="button" class="btn btn-outline-secondary position-absolute end-0 top-0 mt-2 me-2" id="btnChonSanPham_Sua">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Biến thể -->
+                    <div class="col-md-3">
+                        <div class="form-floating position-relative">
+                            <input type="text" id="variant_id_sua" class="form-control pe-5" placeholder="Biến thể" readonly>
+                            <label for="variant_id_sua">Biến thể (variant)</label>
+                            <button type="button" class="btn btn-outline-secondary position-absolute end-0 top-0 mt-2 me-2" id="btnChonBienThe_Sua">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Số lượng -->
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <input type="number" id="quantity_sua" class="form-control" placeholder="Số lượng" min="1">
+                            <label for="quantity_sua">Số lượng</label>
+                        </div>
+                    </div>
+
+                    <!-- Đơn giá -->
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <input type="text" id="price_sua" class="form-control" placeholder="Đơn giá" readonly>
+                            <label for="price_sua">Đơn giá</label>
+                        </div>
+                    </div>
+
+                    <!-- Nút thêm -->
+                    <div class="col-md-2">
+                        <button class="btn btn-success w-100" id="btnThemChiTiet_Sua">
+                            <i class="fa fa-plus"></i> Thêm sản phẩm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Danh sách sản phẩm đã thêm -->
+                <div class="mt-4">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Biến thể</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                                <th>Xoá</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderDetailQueue_sua">
+                            <!-- Sẽ được JS thêm vào -->
+                        </tbody>
+                    </table>
+                    <!-- Tổng tiền đơn hàng -->
+                    <div class="d-flex justify-content-end mt-3 me-2">
+                        <h5 class="fw-bold">
+                            Tổng tiền: <span id="tongTienDonHang_sua">0 ₫</span>
+                        </h5>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnLuuDonHang_Sua" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Lưu thay đổi
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
+    function formatVND(amount) {
+        if (isNaN(amount)) return '0 ₫';
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+
     let currentFilterParams = '';
 
     function loadOrders(page = 1, params = "") {
@@ -742,59 +1170,74 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         });
     }
 
-    const savedRadio = document.getElementById('addr_saved');
-    const newRadio = document.getElementById('addr_new');
-    const savedContainer = document.getElementById('saved-container');
-    const newContainer = document.getElementById('new-container');
+    // Hàm toggle địa chỉ
+    function setupAddressToggle(savedRadioId, newRadioId, savedContainerId, newContainerId) {
+        const savedRadio = document.getElementById(savedRadioId);
+        const newRadio = document.getElementById(newRadioId);
+        const savedContainer = document.getElementById(savedContainerId);
+        const newContainer = document.getElementById(newContainerId);
 
-    function toggleAddress() {
-        if (savedRadio.checked) {
-            savedContainer.style.display = 'block';
-            newContainer.style.display = 'none';
-        } else {
-            savedContainer.style.display = 'none';
-            newContainer.style.display = 'block';
+        function toggleAddress() {
+            if (savedRadio.checked) {
+                savedContainer.style.display = 'block';
+                newContainer.style.display = 'none';
+            } else {
+                savedContainer.style.display = 'none';
+                newContainer.style.display = 'block';
+            }
         }
+        savedRadio.addEventListener('change', toggleAddress);
+        newRadio.addEventListener('change', toggleAddress);
+        toggleAddress();
     }
-    savedRadio.addEventListener('change', toggleAddress);
-    newRadio.addEventListener('change', toggleAddress);
-    toggleAddress();
 
-    // --- Province/District/Ward for new address ---
-    const provinceSelect = document.getElementById('province');
-    const districtSelect = document.getElementById('district');
-    const wardSelect = document.getElementById('ward');
+    // Hàm load tỉnh/quận/phường cho selects
+    function setupProvinceDistrictWard(provinceId, districtId, wardId) {
+        const provinceSelect = document.getElementById(provinceId);
+        const districtSelect = document.getElementById(districtId);
+        const wardSelect = document.getElementById(wardId);
 
-    fetch('https://provinces.open-api.vn/api/p/')
-        .then(res => res.json())
-        .then(data => {
-            provinceSelect.innerHTML = '<option selected disabled>Tỉnh/TP</option>';
-            data.forEach(p => {
-                const name = p.name.replace(/^Tỉnh |^Thành phố /, '');
-                provinceSelect.add(new Option(name, p.code));
+        if (!provinceSelect || !districtSelect || !wardSelect) return;
+
+        fetch('https://provinces.open-api.vn/api/p/')
+            .then(res => res.json())
+            .then(data => {
+                provinceSelect.innerHTML = '<option selected disabled>Tỉnh/TP</option>';
+                data.forEach(p => {
+                    const name = p.name.replace(/^Tỉnh |^Thành phố /, '');
+                    provinceSelect.add(new Option(name, p.code));
+                });
             });
+
+        provinceSelect.addEventListener('change', () => {
+            districtSelect.innerHTML = '<option selected disabled>Quận/Huyện</option>';
+            wardSelect.innerHTML = '<option selected disabled>Phường/Xã</option>';
+            fetch(`https://provinces.open-api.vn/api/p/${provinceSelect.value}?depth=2`)
+                .then(res => res.json())
+                .then(obj => {
+                    obj.districts.forEach(d => districtSelect.add(new Option(d.name, d.code)));
+                });
         });
 
-    provinceSelect.addEventListener('change', () => {
-        districtSelect.innerHTML = '<option selected disabled>Quận/Huyện</option>';
-        wardSelect.innerHTML = '<option selected disabled>Phường/Xã</option>';
-        fetch(`https://provinces.open-api.vn/api/p/${provinceSelect.value}?depth=2`)
-            .then(res => res.json())
-            .then(obj => {
-                obj.districts.forEach(d => districtSelect.add(new Option(d.name, d.code)));
-            });
-    });
+        districtSelect.addEventListener('change', () => {
+            wardSelect.innerHTML = '<option selected disabled>Phường/Xã</option>';
+            fetch(`https://provinces.open-api.vn/api/d/${districtSelect.value}?depth=2`)
+                .then(res => res.json())
+                .then(obj => {
+                    obj.wards.forEach(w => wardSelect.add(new Option(w.name, w.code)));
+                });
+        });
+    }
 
-    districtSelect.addEventListener('change', () => {
-        wardSelect.innerHTML = '<option selected disabled>Phường/Xã</option>';
-        fetch(`https://provinces.open-api.vn/api/d/${districtSelect.value}?depth=2`)
-            .then(res => res.json())
-            .then(obj => {
-                obj.wards.forEach(w => wardSelect.add(new Option(w.name, w.code)));
-            });
-    });
+    // Gọi cho modal Thêm đơn hàng
+    setupAddressToggle('addr_saved', 'addr_new', 'saved-container', 'new-container');
+    setupProvinceDistrictWard('province', 'district', 'ward');
 
-    // Bắt sự kiện click nút "Chọn" trong bảng danh sách user
+    // Gọi cho modal Sửa đơn hàng (nếu có)
+    setupAddressToggle('addr_saved_sua', 'addr_new_sua', 'saved-container-sua', 'new-container-sua');
+    setupProvinceDistrictWard('province_sua', 'district_sua', 'ward_sua');
+
+
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-choose-user');
         if (!btn) return;
@@ -806,25 +1249,58 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         const parentModal = document.getElementById(previousModalId);
         if (!parentModal) return;
 
-        // Gán tên hiển thị vào input (visible)
-        const visibleInput = parentModal.querySelector('#user_id');
-        if (visibleInput) {
-            visibleInput.value = userName;
-            visibleInput.setAttribute('data-user-id', userId);
+        // Lấy input duy nhất name="user_id"
+        const userInput = parentModal.querySelector('input[name="user_id"]');
+        if (userInput) {
+            // Hiển thị tên khách hàng trong input
+            userInput.value = userName;
+
+            // Lưu user_id trong data attribute (data-user-id) để submit hoặc xử lý JS
+            userInput.setAttribute('data-user-id', userId);
         }
 
-        // Gán giá trị thực (ẩn) để submit
-        const hiddenInput = parentModal.querySelector('input[name="user_id"]');
-        if (hiddenInput) {
-            hiddenInput.value = userId;
-        }
+        // Load địa chỉ khách hàng
+        loadUserAddresses(userId);
 
         // Đóng modal chọn user
         const modalUser = bootstrap.Modal.getInstance(document.getElementById('modalChonUser'));
         if (modalUser) modalUser.hide();
     });
 
+
+    function loadUserAddresses(userId) {
+        fetch('ajax/get_user_address.php?user_id=' + userId)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success || !Array.isArray(data.data)) {
+                    console.warn("Không có địa chỉ nào.");
+                    return;
+                }
+
+                const select = document.getElementById('saved-address');
+                select.innerHTML = '';
+
+                data.data.forEach(addr => {
+                    const option = document.createElement('option');
+                    option.value = addr.address_id;
+                    option.textContent = `${addr.address_detail}, ${addr.ward}, ${addr.district}, ${addr.province}`;
+                    if (addr.is_default == 1) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            })
+            .catch(err => {
+                console.error('Lỗi khi lấy địa chỉ:', err);
+            });
+    }
+
     document.getElementById('btnChonSanPham').addEventListener('click', function() {
+        // Xóa dữ liệu biến thể nếu chọn lại sản phẩm
+        const variantInput = document.getElementById('variant_id');
+        variantInput.value = "";
+        variantInput.dataset.variantId = "";
+
         openModalChonSanPham('modalThemDonHang');
     });
 
@@ -901,28 +1377,36 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
         const productId = btn.getAttribute('data-product-id');
         const productName = btn.getAttribute('data-name');
+        const price = btn.getAttribute('data-price');
 
         if (!previousModalSanPhamId) return;
 
         const modalElement = document.getElementById(previousModalSanPhamId);
         if (!modalElement) return;
 
-        // Gán dữ liệu cho modal tương ứng
-        const input = modalElement.querySelector('#product_id');
+        // Tìm input product_id hoặc product_id_sua
+        let input = modalElement.querySelector('#product_id');
+        if (!input) input = modalElement.querySelector('#product_id_sua');
+
         if (input) {
             input.value = productName;
             input.setAttribute('data-product-id', productId);
         }
 
-        const hiddenInput = modalElement.querySelector('input[name="product_id"]');
-        if (hiddenInput) {
-            hiddenInput.value = productId;
+        // Tìm input price hoặc price_sua
+        let priceInput = modalElement.querySelector('#price');
+        if (!priceInput) priceInput = modalElement.querySelector('#price_sua');
+
+        if (priceInput) {
+            priceInput.value = formatVND(price);
+            priceInput.setAttribute('data-price', price);
         }
 
         // Đóng modal chọn sản phẩm
         const modalSP = bootstrap.Modal.getInstance(document.getElementById('modalChonSanPham'));
         if (modalSP) modalSP.hide();
     });
+
 
 
 
@@ -942,9 +1426,20 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         previousModalVariantId = fromModalId;
 
         const parentModal = document.getElementById(fromModalId);
-        const productInput = parentModal.querySelector('input[name="product_id"]');
+        // Cố gắng lấy input #product_id hoặc #product_id_sua tùy modal
+        let inputEl = parentModal.querySelector('#product_id');
+        if (!inputEl) {
+            inputEl = parentModal.querySelector('#product_id_sua');
+        }
 
-        if (!productInput || !productInput.value) {
+        if (!inputEl) {
+            alert("Không tìm thấy ô nhập sản phẩm.");
+            return;
+        }
+
+        const productId = inputEl.dataset.productId?.trim();
+
+        if (!productId) {
             alert("Vui lòng chọn sản phẩm trước khi chọn biến thể.");
             return;
         }
@@ -954,12 +1449,23 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         if (current) current.hide();
 
         // Gọi loadVariants với đúng product_id
-        loadVariants(productInput.value);
+        loadVariants(productId);
 
         // Hiện modal chọn biến thể
         const modal = new bootstrap.Modal(document.getElementById('modalChonVariant'));
         modal.show();
     }
+
+
+
+    // Khi modal chọn biến thể bị đóng → mở lại modal trước đó
+    document.getElementById('modalChonVariant').addEventListener('hidden.bs.modal', function() {
+        if (previousModalVariantId) {
+            const backModal = new bootstrap.Modal(document.getElementById(previousModalVariantId));
+            backModal.show();
+            previousModalVariantId = null;
+        }
+    });
 
     let currentFilterParamsVariant = '';
 
@@ -976,4 +1482,961 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                 variantWrap.innerHTML = data.variantHtml || '';
             });
     }
+
+
+    function updateTongTien() {
+        let total = 0;
+        document.querySelectorAll('#orderDetailQueue tr').forEach(row => {
+            const quantity = parseInt(row.querySelector('input[name="quantities[]"]').value);
+            const price = parseFloat(row.querySelector('input[name="prices[]"]').value);
+            total += quantity * price;
+        });
+
+        document.getElementById('tongTienDonHang').textContent = total.toLocaleString('vi-VN') + ' ₫';
+    }
+
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-choose-variant');
+        if (!btn) return;
+
+        const variantId = btn.getAttribute('data-variant-id');
+        const color = btn.getAttribute('data-color');
+        const size = btn.getAttribute('data-size');
+
+        if (!previousModalVariantId) return;
+
+        const modalElement = document.getElementById(previousModalVariantId);
+        if (!modalElement) return;
+
+        // Thử lấy input variant_id theo 2 kiểu: modal thêm và sửa
+        let visibleInput = modalElement.querySelector('#variant_id');
+        if (!visibleInput) {
+            visibleInput = modalElement.querySelector('#variant_id_sua');
+        }
+        if (visibleInput) {
+            visibleInput.value = `${size} - ${color}`;
+            visibleInput.setAttribute('data-variant-id', variantId);
+        }
+
+        let hiddenInput = modalElement.querySelector('input[name="variant_id"]');
+        if (!hiddenInput) {
+            hiddenInput = modalElement.querySelector('input[name="variant_id_sua"]');
+        }
+        if (hiddenInput) {
+            hiddenInput.value = variantId;
+        }
+
+        // Đóng modal chọn biến thể
+        const modalVariant = bootstrap.Modal.getInstance(document.getElementById('modalChonVariant'));
+        if (modalVariant) modalVariant.hide();
+    });
+
+
+
+
+
+
+    document.getElementById('btnThemChiTiet').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const productInput = document.querySelector('#product_id');
+        const variantInput = document.querySelector('#variant_id');
+        const quantityInput = document.getElementById('quantity');
+        const priceInput = document.getElementById('price');
+
+        const productId = productInput?.dataset.productId?.trim();
+        const productName = productInput?.value.trim();
+        const variantId = variantInput?.dataset.variantId?.trim();
+        const variantName = variantInput?.value.trim();
+        const quantity = parseInt(quantityInput?.value.trim());
+        const price = parseInt(priceInput?.dataset.price?.trim());
+
+        if (!productId || !variantId || !quantity || quantity <= 0) {
+            alert("Vui lòng nhập đầy đủ thông tin: Sản phẩm, Biến thể và Số lượng hợp lệ.");
+            return;
+        }
+
+        const tableBody = document.getElementById('orderDetailQueue');
+        let existingRow = null;
+        let existingQuantity = 0;
+
+        // Tìm dòng trùng variant_id
+        tableBody.querySelectorAll('tr').forEach(row => {
+            const hiddenVariantIdInput = row.querySelector('input[name="variant_ids[]"]');
+            if (hiddenVariantIdInput && hiddenVariantIdInput.value === variantId) {
+                existingRow = row;
+                existingQuantity = parseInt(row.querySelector('input[name="quantities[]"]').value);
+            }
+        });
+
+        const totalQuantity = existingQuantity + quantity;
+
+        // Gọi kiểm tra tồn kho tổng
+        fetch('ajax/check_stock_variant.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    variant_id: variantId,
+                    quantity: totalQuantity
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Sản phẩm không đủ tồn kho, chỉ còn: " + data.message + " sản phẩm!");
+                    return;
+                }
+
+                // Nếu đã tồn tại dòng → cập nhật
+                if (existingRow) {
+                    const newTotal = totalQuantity * price;
+
+                    existingRow.querySelector('input[name="quantities[]"]').value = totalQuantity;
+                    existingRow.querySelector('td:nth-child(3)').innerText = totalQuantity;
+
+                    existingRow.querySelector('input[name="prices[]"]').value = price;
+                    existingRow.querySelector('td:nth-child(4)').innerHTML = `${price.toLocaleString('vi-VN')} ₫`;
+
+                    existingRow.querySelector('td:nth-child(5)').innerText = newTotal.toLocaleString('vi-VN') + " ₫";
+
+                    existingRow.dataset.price = price;
+                    existingRow.dataset.total = newTotal;
+                } else {
+                    // Thêm dòng mới nếu chưa có
+                    const totalPrice = quantity * price;
+                    const row = document.createElement('tr');
+                    row.dataset.price = price;
+                    row.dataset.total = totalPrice;
+
+                    row.innerHTML = `
+                        <td>
+                            <input type="hidden" name="product_ids[]" value="${productId}">
+                            ${productName}
+                        </td>
+                        <td>
+                            <input type="hidden" name="variant_ids[]" value="${variantId}">
+                            ${variantName}
+                        </td>
+                        <td>
+                            <input type="hidden" name="quantities[]" value="${quantity}">
+                            ${quantity}
+                        </td>
+                        <td>
+                            <input type="hidden" name="prices[]" value="${price}">
+                            ${price.toLocaleString('vi-VN')} ₫
+                        </td>
+                        <td>${totalPrice.toLocaleString('vi-VN')} ₫</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger btn-remove-row">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                    updateTongTien();
+                }
+
+                // Reset các ô nhập
+                productInput.value = "";
+                productInput.dataset.productId = "";
+                variantInput.value = "";
+                variantInput.dataset.variantId = "";
+                quantityInput.value = "";
+                priceInput.value = "";
+                priceInput.dataset.price = "";
+            })
+            .catch(error => {
+                console.error('Lỗi khi kiểm tra tồn kho:', error);
+                alert("Đã xảy ra lỗi khi kiểm tra tồn kho.");
+            });
+    });
+
+
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-remove-row');
+        if (!btn) return;
+
+        const row = btn.closest('tr');
+        if (row) row.remove();
+        updateTongTien();
+    });
+
+
+
+
+
+    document.getElementById('btnLuuDonHang').addEventListener('click', function() {
+        const userId = document.querySelector('#user_id')?.dataset.userId;
+        const staffId = document.querySelector('#staff_id').dataset.staffId;
+        const status = document.querySelector('#statusThem').value;
+        const paymentMethodId = document.querySelector('#payment_method_id').value;
+        const note = document.querySelector('#note').value.trim();
+        console.log(status)
+
+        if (!userId) {
+            alert("Vui lòng chọn khách hàng.");
+            return;
+        }
+
+        // Địa chỉ: tự chọn xử lý thêm nếu có địa chỉ mới/lưu
+        let shippingAddress = '';
+        const savedAddr = document.getElementById('saved-address');
+        if (document.getElementById('addr_saved').checked) {
+            shippingAddress = savedAddr?.selectedOptions[0]?.textContent || '';
+        } else {
+            const specific = document.getElementById('specific-address').value.trim();
+            const wardSelect = document.getElementById('ward');
+            const districtSelect = document.getElementById('district');
+            const provinceSelect = document.getElementById('province');
+
+            if (!specific || !wardSelect.value || !districtSelect.value || !provinceSelect.value) {
+                alert("Vui lòng nhập đầy đủ địa chỉ mới.");
+                return;
+            }
+
+            const ward = wardSelect.selectedOptions[0].textContent;
+            const district = districtSelect.selectedOptions[0].textContent;
+            const province = provinceSelect.selectedOptions[0].textContent;
+
+            shippingAddress = `${specific}, ${ward}, ${district}, ${province}`;
+        }
+
+        // Chi tiết đơn hàng
+        const rows = document.querySelectorAll('#orderDetailQueue tr');
+        if (rows.length === 0) {
+            alert("Vui lòng thêm ít nhất 1 sản phẩm vào đơn hàng.");
+            return;
+        }
+
+        const orderDetails = [];
+        let totalPrice = 0;
+
+        rows.forEach(row => {
+            const product_id = row.querySelector('input[name="product_ids[]"]').value;
+            const variant_id = row.querySelector('input[name="variant_ids[]"]').value;
+            const quantity = parseInt(row.querySelector('input[name="quantities[]"]').value);
+            const price = parseFloat(row.querySelector('input[name="prices[]"]').value);
+            const lineTotal = quantity * price;
+
+            totalPrice += lineTotal;
+
+            orderDetails.push({
+                product_id,
+                variant_id,
+                quantity,
+                price,
+                total_price: lineTotal
+            });
+        });
+
+        // Gửi dữ liệu lên add_order.php
+        fetch('ajax/add_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    staff_id: staffId,
+                    status,
+                    payment_method_id: paymentMethodId,
+                    note,
+                    shipping_address: shippingAddress,
+                    total_price: totalPrice,
+                    order_details: orderDetails
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Thêm đơn hàng thành công!");
+
+                    // Đóng modal thêm đơn hàng
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemDonHang'));
+                    if (modal) modal.hide();
+
+                    // Reset form inputs trong modal
+                    const form = document.getElementById('formThemDonHang');
+                    if (form) form.reset();
+
+                    // Reset các input ẩn hoặc các trường dữ liệu động
+                    // Ví dụ reset input ẩn user_id, staff_id, data-user-id ...
+                    const userInput = document.querySelector('#user_id');
+                    if (userInput) {
+                        userInput.value = '';
+                        userInput.removeAttribute('data-user-id');
+                    }
+                    const variantInput = document.querySelector('#variant_id');
+                    if (variantInput) {
+                        variantInput.value = '';
+                        variantInput.removeAttribute('data-variant-id');
+                    }
+                    const productInput = document.querySelector('#product_id');
+                    if (productInput) {
+                        productInput.value = '';
+                        productInput.removeAttribute('data-product-id');
+                    }
+                    const priceInput = document.querySelector('#price');
+                    if (priceInput) {
+                        priceInput.value = '';
+                        priceInput.removeAttribute('data-price');
+                    }
+
+                    // Xóa hết dòng trong bảng chi tiết đơn hàng
+                    const tbody = document.getElementById('orderDetailQueue');
+                    if (tbody) tbody.innerHTML = '';
+                    // Reset form hoặc reload lại bảng
+                    loadOrders(1, currentFilterParams);
+                } else {
+                    alert("Thêm đơn hàng thất bại: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi gửi đơn hàng:", err);
+                alert("Đã xảy ra lỗi khi gửi đơn hàng.");
+            });
+    });
+
+
+
+
+
+    function showDeleteOrderDetails(data) {
+        document.getElementById('delete_user_name').value = data.user_name;
+        document.getElementById('delete_staff_name').value = data.staff_name;
+        document.getElementById('delete_status').value = data.status;
+        document.getElementById('delete_payment_method').value = data.payment_method_name;
+        document.getElementById('delete_note').value = data.note;
+        document.getElementById('delete_shipping_address').value = data.shipping_address;
+
+        const tbody = document.getElementById('delete_orderDetailQueue');
+        tbody.innerHTML = ''; // Xóa dữ liệu cũ
+
+        let totalPrice = 0;
+        data.order_details.forEach(item => {
+            const row = document.createElement('tr');
+
+            const lineTotal = item.quantity * item.price;
+            totalPrice += lineTotal;
+
+            row.innerHTML = `
+            <td>${item.product_name}</td>
+            <td>${item.variant_name}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price.toLocaleString('vi-VN')} ₫</td>
+            <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
+        `;
+            tbody.appendChild(row);
+        });
+
+        document.getElementById('delete_tongTienDonHang').textContent = totalPrice.toLocaleString('vi-VN') + ' ₫';
+
+        // Hiện modal xóa
+        const modal = new bootstrap.Modal(document.getElementById('modalXoaDonHang'));
+        modal.show();
+    }
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-delete-order');
+        if (!btn) return;
+
+        // Lấy dữ liệu từ data attributes trên nút
+        const orderId = btn.dataset.orderId;
+        const userName = btn.dataset.userName;
+        const staffName = btn.dataset.staffName;
+        const status = btn.dataset.status;
+        const paymentMethodName = btn.dataset.paymentMethodName;
+        const note = btn.dataset.note;
+        const shippingAddress = btn.dataset.shippingAddress;
+
+        // Gửi AJAX lấy chi tiết order
+        fetch(`ajax/get_order_details.php?order_id=${orderId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const modalData = {
+                        user_name: userName,
+                        staff_name: staffName,
+                        status,
+                        payment_method_name: paymentMethodName,
+                        note,
+                        shipping_address: shippingAddress,
+                        order_details: data.order_details || []
+                    };
+                    showDeleteOrderDetails(modalData);
+
+                    // Lưu orderId vào nút xác nhận xóa để dùng sau
+                    const btnConfirm = document.getElementById('btnConfirmDeleteOrder');
+                    btnConfirm.dataset.orderId = orderId;
+                } else {
+                    alert('Không lấy được chi tiết đơn hàng: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi lấy chi tiết đơn hàng:', err);
+                alert('Lỗi khi lấy chi tiết đơn hàng.');
+            });
+    });
+
+    // Xử lý nút xác nhận xóa
+    document.getElementById('btnConfirmDeleteOrder').addEventListener('click', function() {
+        const orderId = this.dataset.orderId;
+        if (!orderId) return;
+
+        fetch('ajax/delete_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    order_id: orderId
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Xóa đơn hàng thành công!');
+                    const modalEl = document.getElementById('modalXoaDonHang');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                    // Reload lại danh sách đơn hàng (nếu bạn có hàm loadOrders)
+                    loadOrders(1, currentFilterParams);
+                } else {
+                    alert('Xóa đơn hàng thất bại: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi khi xóa đơn hàng:', err);
+                alert('Đã xảy ra lỗi khi xóa đơn hàng.');
+            });
+    });
+
+
+
+
+
+    function showOrderDetails(data) {
+        document.getElementById('ct_user_name').value = data.user_name;
+        document.getElementById('ct_staff_name').value = data.staff_name;
+        document.getElementById('ct_status').value = data.status;
+        document.getElementById('ct_payment_method').value = data.payment_method_name;
+        document.getElementById('ct_note').value = data.note;
+        document.getElementById('ct_shipping_address').value = data.shipping_address;
+
+        const tbody = document.getElementById('ct_orderDetailQueue');
+        tbody.innerHTML = ''; // Xóa cũ
+
+        let totalPrice = 0;
+        data.order_details.forEach(item => {
+            const row = document.createElement('tr');
+
+            const lineTotal = item.quantity * item.price;
+            totalPrice += lineTotal;
+
+            row.innerHTML = `
+            <td>${item.product_name}</td>
+            <td>${item.variant_name}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price.toLocaleString('vi-VN')} ₫</td>
+            <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
+        `;
+            tbody.appendChild(row);
+        });
+
+        document.getElementById('ct_tongTienDonHang').textContent = totalPrice.toLocaleString('vi-VN') + ' ₫';
+
+        // Hiện modal
+        const modal = new bootstrap.Modal(document.getElementById('modalXemChiTietDonHang'));
+        modal.show();
+    }
+
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-view-order');
+        if (!btn) return;
+
+        // Lấy dữ liệu từ data attributes trên nút
+        const orderId = btn.dataset.orderId;
+        const userId = btn.dataset.userId;
+        const userName = btn.dataset.userName;
+        const status = btn.dataset.status;
+        const totalPrice = btn.dataset.totalPrice;
+        const shippingAddress = btn.dataset.shippingAddress;
+        const note = btn.dataset.note;
+        const createdAt = btn.dataset.createdAt;
+        const paymentMethodId = btn.dataset.paymentMethodId;
+        const paymentMethodName = btn.dataset.paymentMethodName;
+        const staffId = btn.dataset.staffId;
+        const staffName = btn.dataset.staffName;
+
+        // Hàm đổ dữ liệu vào modal
+        function fillModal(data) {
+            document.getElementById('ct_user_name').value = data.user_name || '';
+            document.getElementById('ct_staff_name').value = data.staff_name || '';
+            document.getElementById('ct_status').value = data.status || '';
+            document.getElementById('ct_payment_method').value = data.payment_method_name || '';
+            document.getElementById('ct_note').value = data.note || '';
+            document.getElementById('ct_shipping_address').value = data.shipping_address || '';
+
+            const tbody = document.getElementById('ct_orderDetailQueue');
+            tbody.innerHTML = '';
+
+            let total = 0;
+            data.order_details.forEach(item => {
+                const tr = document.createElement('tr');
+                const lineTotal = item.quantity * item.price;
+                total += lineTotal;
+
+                tr.innerHTML = `
+                <td>${item.product_name}</td>
+                <td>${item.variant_name}</td>
+                <td>${item.quantity}</td>
+                <td>${item.price.toLocaleString('vi-VN')} ₫</td>
+                <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
+            `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('ct_tongTienDonHang').textContent = total.toLocaleString('vi-VN') + ' ₫';
+        }
+
+        // Gửi AJAX lấy chi tiết đơn hàng theo orderId
+        fetch(`ajax/get_order_details.php?order_id=${orderId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Gộp dữ liệu chung từ nút với chi tiết order trả về từ server
+                    const modalData = {
+                        user_name: userName,
+                        staff_name: staffName,
+                        status,
+                        payment_method_name: paymentMethodName,
+                        note,
+                        shipping_address: shippingAddress,
+                        order_details: data.order_details || []
+                    };
+
+                    fillModal(modalData);
+
+                    // Hiện modal chi tiết
+                    const modal = new bootstrap.Modal(document.getElementById('modalXemChiTietDonHang'));
+                    modal.show();
+                } else {
+                    alert('Không lấy được chi tiết đơn hàng: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi lấy chi tiết đơn hàng:', err);
+                alert('Lỗi khi lấy chi tiết đơn hàng.');
+            });
+    });
+
+
+
+
+
+
+
+
+
+
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-edit-order');
+        if (!btn) return;
+
+        // Lấy data attributes từ nút bấm
+        const orderId = btn.getAttribute('data-order-id');
+        const userId = btn.getAttribute('data-user-id');
+        const userName = btn.getAttribute('data-user-name');
+        const staffId = btn.getAttribute('data-staff-id');
+        const staffName = btn.getAttribute('data-staff-name');
+        const status = btn.getAttribute('data-status');
+        const paymentMethodId = btn.getAttribute('data-payment-method-id');
+        const note = btn.getAttribute('data-note');
+        const shippingAddress = btn.getAttribute('data-shipping-address');
+        // Có thể thêm created_at nếu cần
+
+        // Đặt dữ liệu vào modal sửa
+        document.getElementById('edit_order_id').value = orderId;
+
+        const userInput = document.getElementById('edit_user_id');
+        userInput.value = userName;
+        userInput.setAttribute('data-user-id', userId);
+
+        const staffInput = document.getElementById('edit_staff_id');
+        staffInput.value = staffName;
+        staffInput.setAttribute('data-staff-id', staffId);
+
+        const statusSelect = document.getElementById('statusSua');
+        statusSelect.value = status;
+
+        const paymentMethodSelect = document.getElementById('payment_method_id_sua');
+        paymentMethodSelect.value = paymentMethodId;
+
+        document.getElementById('note_sua').value = note;
+
+        // Xử lý địa chỉ (giả sử bạn có radio và các select trong modal sửa)
+        // Nếu shippingAddress trùng option địa chỉ đã lưu, chọn radio địa chỉ đã lưu và chọn đúng option
+        // Ngược lại chọn radio địa chỉ mới và phân tích shippingAddress để điền form
+
+        // Ví dụ đơn giản: nếu shippingAddress chứa dấu phẩy thì coi là nhập địa chỉ mới
+        if (shippingAddress && shippingAddress.includes(',')) {
+            document.getElementById('addr_new_sua').checked = true;
+            document.getElementById('saved-container-sua').style.display = 'none';
+            document.getElementById('new-container-sua').style.display = 'block';
+
+            // Cố gắng tách địa chỉ cụ thể, phường, quận, tỉnh
+            const parts = shippingAddress.split(',').map(p => p.trim());
+            const len = parts.length;
+            if (len >= 4) {
+                document.getElementById('specific-address-sua').value = parts[0] || '';
+                // Gán chọn province, district, ward nếu bạn có mã hoặc text tương ứng
+                // Ở đây bạn có thể cần map text -> value của select, hoặc bạn có dữ liệu mã rồi
+            }
+        } else {
+            document.getElementById('addr_saved_sua').checked = true;
+            document.getElementById('saved-container-sua').style.display = 'block';
+            document.getElementById('new-container-sua').style.display = 'none';
+
+            const savedAddrSelect = document.getElementById('saved-address-sua');
+            for (const option of savedAddrSelect.options) {
+                if (option.text.trim() === shippingAddress.trim()) {
+                    savedAddrSelect.value = option.value;
+                    break;
+                }
+            }
+        }
+
+        // Xóa sạch các chi tiết đơn hàng cũ trong modal sửa trước khi load lại
+        const tbody = document.getElementById('orderDetailQueue_sua');
+        tbody.innerHTML = '';
+
+        // Sau đó bạn nên fetch chi tiết đơn hàng qua AJAX để đổ chi tiết từng dòng sản phẩm (product, variant, qty, price) vào tbody
+        fetch('ajax/get_order_details.php?order_id=' + orderId)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.order_details)) {
+                    let totalPrice = 0;
+                    data.order_details.forEach(item => {
+                        const lineTotal = item.quantity * item.price;
+                        totalPrice += lineTotal;
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <input type="hidden" name="product_ids_sua[]" value="${item.product_id}">
+                                ${item.product_name}
+                            </td>
+                            <td>
+                                <input type="hidden" name="variant_ids_sua[]" value="${item.variant_id}">
+                                ${item.variant_name}
+                            </td>
+                            <td>
+                                <input type="hidden" name="quantities_sua[]" value="${item.quantity}">
+                                ${item.quantity}
+                            </td>
+                            <td>
+                                <input type="hidden" name="prices_sua[]" value="${item.price}">
+                                ${item.price.toLocaleString('vi-VN')} ₫
+                            </td>
+                            <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-danger btn-remove-row-sua">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    document.getElementById('tongTienDonHang_sua').textContent = totalPrice.toLocaleString('vi-VN') + ' ₫';
+                } else {
+                    console.error('Lỗi lấy chi tiết đơn hàng:', data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi fetch chi tiết đơn hàng:', err);
+            });
+
+        // Hiển thị modal sửa
+        previousModalId = 'modalSuaDonHang';
+        const modalSua = new bootstrap.Modal(document.getElementById('modalSuaDonHang'));
+        modalSua.show();
+    });
+
+
+    document.getElementById('btnChonSanPham_Sua').addEventListener('click', function() {
+        // Xóa dữ liệu biến thể trong modal sửa nếu chọn lại sản phẩm
+        const variantInputSua = document.getElementById('variant_id_sua');
+        if (variantInputSua) {
+            variantInputSua.value = "";
+            variantInputSua.dataset.variantId = "";
+        }
+
+        // Mở modal chọn sản phẩm, truyền id modal sửa để xử lý đúng
+        openModalChonSanPham('modalSuaDonHang');
+    });
+
+    document.getElementById('btnChonBienThe_Sua').addEventListener('click', function() {
+        openModalChonVariant('modalSuaDonHang');
+    });
+
+    function updateTongTien_Sua() {
+        let total = 0;
+        document.querySelectorAll('#orderDetailQueue_sua tr').forEach(row => {
+            const quantity = parseInt(row.querySelector('input[name="quantities_sua[]"]').value);
+            const price = parseFloat(row.querySelector('input[name="prices_sua[]"]').value);
+            total += quantity * price;
+        });
+
+        document.getElementById('tongTienDonHang_sua').textContent = total.toLocaleString('vi-VN') + ' ₫';
+    }
+
+
+    document.getElementById('btnThemChiTiet_Sua').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const productInput = document.querySelector('#product_id_sua');
+        const variantInput = document.querySelector('#variant_id_sua');
+        const quantityInput = document.getElementById('quantity_sua');
+        const priceInput = document.getElementById('price_sua');
+
+        const productId = productInput?.dataset.productId?.trim();
+        const productName = productInput?.value.trim();
+        const variantId = variantInput?.dataset.variantId?.trim();
+        const variantName = variantInput?.value.trim();
+        const quantity = parseInt(quantityInput?.value.trim());
+        const price = parseInt(priceInput?.dataset.price?.trim());
+
+        if (!productId || !variantId || !quantity || quantity <= 0) {
+            alert("Vui lòng nhập đầy đủ thông tin: Sản phẩm, Biến thể và Số lượng hợp lệ.");
+            return;
+        }
+
+        const tableBody = document.getElementById('orderDetailQueue_sua');
+        let existingRow = null;
+        let existingQuantity = 0;
+
+        // Tìm dòng trùng variant_id
+        tableBody.querySelectorAll('tr').forEach(row => {
+            const hiddenVariantIdInput = row.querySelector('input[name="variant_ids_sua[]"]');
+            if (hiddenVariantIdInput && hiddenVariantIdInput.value === variantId) {
+                existingRow = row;
+                existingQuantity = parseInt(row.querySelector('input[name="quantities_sua[]"]').value);
+            }
+        });
+
+        const totalQuantity = existingQuantity + quantity;
+
+        // Gọi kiểm tra tồn kho tổng
+        fetch('ajax/check_stock_variant.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    variant_id: variantId,
+                    quantity: totalQuantity
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Sản phẩm không đủ tồn kho, chỉ còn: " + data.message + " sản phẩm!");
+                    return;
+                }
+
+                // Nếu đã tồn tại dòng → cập nhật
+                if (existingRow) {
+                    const newTotal = totalQuantity * price;
+
+                    existingRow.querySelector('input[name="quantities_sua[]"]').value = totalQuantity;
+                    existingRow.querySelector('td:nth-child(3)').innerText = totalQuantity;
+
+                    existingRow.querySelector('input[name="prices_sua[]"]').value = price;
+                    existingRow.querySelector('td:nth-child(4)').innerHTML = `${price.toLocaleString('vi-VN')} ₫`;
+
+                    existingRow.querySelector('td:nth-child(5)').innerText = newTotal.toLocaleString('vi-VN') + " ₫";
+
+                    existingRow.dataset.price = price;
+                    existingRow.dataset.total = newTotal;
+                } else {
+                    // Thêm dòng mới nếu chưa có
+                    const totalPrice = quantity * price;
+                    const row = document.createElement('tr');
+                    row.dataset.price = price;
+                    row.dataset.total = totalPrice;
+
+                    row.innerHTML = `
+                    <td>
+                        <input type="hidden" name="product_ids_sua[]" value="${productId}">
+                        ${productName}
+                    </td>
+                    <td>
+                        <input type="hidden" name="variant_ids_sua[]" value="${variantId}">
+                        ${variantName}
+                    </td>
+                    <td>
+                        <input type="hidden" name="quantities_sua[]" value="${quantity}">
+                        ${quantity}
+                    </td>
+                    <td>
+                        <input type="hidden" name="prices_sua[]" value="${price}">
+                        ${price.toLocaleString('vi-VN')} ₫
+                    </td>
+                    <td>${totalPrice.toLocaleString('vi-VN')} ₫</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger btn-remove-row-sua">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+
+                    tableBody.appendChild(row);
+                    updateTongTien_Sua();
+                }
+
+                // Reset các ô nhập
+                productInput.value = "";
+                productInput.removeAttribute('data-product-id');
+                variantInput.value = "";
+                variantInput.removeAttribute('data-variant-id');
+                quantityInput.value = "";
+                priceInput.value = "";
+                priceInput.removeAttribute('data-price');
+            })
+            .catch(error => {
+                console.error('Lỗi khi kiểm tra tồn kho:', error);
+                alert("Đã xảy ra lỗi khi kiểm tra tồn kho.");
+            });
+    });
+
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-remove-row-sua');
+        if (!btn) return;
+
+        const row = btn.closest('tr');
+        if (row) row.remove();
+        updateTongTien_Sua();
+    });
+
+
+    document.getElementById('btnLuuDonHang_Sua').addEventListener('click', function() {
+        const userInput = document.querySelector('#edit_user_id');
+        const userId = userInput?.dataset.userId || userInput?.value.trim();
+        const staffInput = document.querySelector('#edit_staff_id');
+        const staffId = staffInput?.dataset.staffId || staffInput?.value.trim();
+        const status = document.querySelector('#statusSua').value;
+        const paymentMethodId = document.querySelector('#payment_method_id_sua').value;
+        const note = document.querySelector('#note_sua').value.trim();
+
+        if (!userId) {
+            alert("Vui lòng chọn khách hàng.");
+            return;
+        }
+
+        // Địa chỉ: xử lý theo radio trong modal sửa
+        let shippingAddress = '';
+        const savedAddrRadio = document.getElementById('addr_saved_sua');
+        const newAddrRadio = document.getElementById('addr_new_sua');
+        if (savedAddrRadio.checked) {
+            const savedAddrSelect = document.getElementById('saved-address-sua');
+            shippingAddress = savedAddrSelect?.selectedOptions[0]?.textContent || '';
+        } else if (newAddrRadio.checked) {
+            const specific = document.getElementById('specific-address-sua').value.trim();
+            const wardSelect = document.getElementById('ward-sua');
+            const districtSelect = document.getElementById('district-sua');
+            const provinceSelect = document.getElementById('province-sua');
+
+            if (!specific || !wardSelect.value || !districtSelect.value || !provinceSelect.value) {
+                alert("Vui lòng nhập đầy đủ địa chỉ mới.");
+                return;
+            }
+
+            const ward = wardSelect.selectedOptions[0].textContent;
+            const district = districtSelect.selectedOptions[0].textContent;
+            const province = provinceSelect.selectedOptions[0].textContent;
+
+            shippingAddress = `${specific}, ${ward}, ${district}, ${province}`;
+        }
+
+        // Chi tiết đơn hàng trong modal sửa
+        const rows = document.querySelectorAll('#orderDetailQueue_sua tr');
+        if (rows.length === 0) {
+            alert("Vui lòng thêm ít nhất 1 sản phẩm vào đơn hàng.");
+            return;
+        }
+
+        const orderDetails = [];
+        let totalPrice = 0;
+
+        rows.forEach(row => {
+            const product_id = row.querySelector('input[name="product_ids_sua[]"]').value;
+            const variant_id = row.querySelector('input[name="variant_ids_sua[]"]').value;
+            const quantity = parseInt(row.querySelector('input[name="quantities_sua[]"]').value);
+            const price = parseFloat(row.querySelector('input[name="prices_sua[]"]').value);
+            const lineTotal = quantity * price;
+
+            totalPrice += lineTotal;
+
+            orderDetails.push({
+                product_id,
+                variant_id,
+                quantity,
+                price,
+                total_price: lineTotal
+            });
+        });
+
+        // Gửi dữ liệu lên ajax xử lý cập nhật đơn hàng
+        fetch('ajax/update_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    staff_id: staffId,
+                    status,
+                    payment_method_id: paymentMethodId,
+                    note,
+                    shipping_address: shippingAddress,
+                    total_price: totalPrice,
+                    order_details: orderDetails,
+                    order_id: document.getElementById('edit_order_id').value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Cập nhật đơn hàng thành công!");
+
+                    // Đóng modal sửa đơn hàng
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalSuaDonHang'));
+                    if (modal) modal.hide();
+
+                    // Reset hoặc làm sạch dữ liệu modal sửa (nếu cần)
+                    const tbody = document.getElementById('orderDetailQueue_sua');
+                    if (tbody) tbody.innerHTML = '';
+
+                    const formSua = document.getElementById('formSuaDonHang');
+                    if (formSua) formSua.reset();
+
+                    // Reload lại danh sách đơn hàng
+                    loadOrders(1, currentFilterParams);
+                } else {
+                    alert("Cập nhật đơn hàng thất bại: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi gửi cập nhật đơn hàng:", err);
+                alert("Đã xảy ra lỗi khi cập nhật đơn hàng.");
+            });
+    });
 </script>

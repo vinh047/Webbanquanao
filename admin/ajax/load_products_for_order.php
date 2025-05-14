@@ -14,6 +14,7 @@ $params = [];
 
 // Chỉ chọn khách hàng
 $whereClauses[] = 'pv.is_deleted = 0';
+$whereClauses[] = 'pv.stock > 0';
 
 
 
