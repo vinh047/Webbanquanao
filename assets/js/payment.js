@@ -26,11 +26,12 @@ function gatherOrderData(paymentMethodId) {
     payment_method: paymentMethodId,
     discount: window.discount || 0,
     shipping_fee: window.shippingFee || 0,
-    total_price: document.getElementById('paid_price')?.textContent?.replace(/\D/g, '') || 0
+    total_price: parseFloat(document.getElementById('paid_price')?.textContent?.replace(/\D/g, '') || 0)
   };
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  localStorage.setItem('alertShown', 'false'); 
   const btnPay = document.getElementById('btnPay');
   const paidPriceEl = document.getElementById('paid_price');
   const qrSection = document.getElementById('qr-section');
@@ -90,34 +91,60 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       qrSection.innerHTML = '';
 
-      const method = document.querySelector("input[name='payment_method']:checked").value;
+const method = document.querySelector("input[name='payment_method']:checked").value;
 
-      if (method === '1') {
-        const orderData = gatherOrderData(method);
-      
-        try {
-          const res = await fetch('./ajax/save_order.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-          });
-      
-          const result = await res.json();
-          if (result.success) {
-            alert('Đặt hàng thành công');
-            localStorage.removeItem('cart');
-            sessionStorage.removeItem('selectedCartItems');
-            window.location.href = 'index.php';
-          } else {
-            alert('Lỗi đặt hàng: ' + (result.message || 'Không rõ nguyên nhân'));
-          }
-        } catch (err) {
-          console.error('Lỗi gửi đơn hàng:', err);
-          alert('Không thể gửi đơn hàng. Vui lòng thử lại sau.');
-        }
-      
-        return;
+if (method === '1') {
+  const orderData = gatherOrderData(method);
+
+  try {
+    const res = await fetch('./ajax/save_order.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+
+    if (!res.ok) {
+      const text = await res.text(); // Bắt lỗi HTML hoặc phản hồi sai JSON
+      console.error("❌ Server response is not OK:", text);
+      alert("Máy chủ trả về lỗi không hợp lệ. Xem console để biết thêm chi tiết.");
+      return;
+    }
+
+    const result = await res.json();
+
+    if (result.success) {
+      const isQR = method === '2'; // ⚠️ sửa: '2' là chuyển khoản QR
+    
+      // ✅ Cập nhật giỏ hàng cho cả QR và COD
+      const fullCart = JSON.parse(localStorage.getItem('cart')) || [];
+      const selected = JSON.parse(sessionStorage.getItem('selectedCartItems')) || [];
+      const remainingCart = fullCart.filter(item =>
+        !selected.some(sel =>
+          sel.product_id === item.product_id &&
+          sel.variant_id === item.variant_id
+        )
+      );
+      localStorage.setItem('cart', JSON.stringify(remainingCart));
+      sessionStorage.removeItem('selectedCartItems');
+    
+      if (!isQR && localStorage.getItem('alertShown') !== 'true') {
+        alert('Đặt hàng thành công');
+        localStorage.setItem('alertShown', 'true');
+        window.location.href = 'index.php'; // ✅ chuyển trang cho COD
       }
+    }
+    
+     else {
+      alert('Lỗi đặt hàng: ' + (result.message || 'Không rõ nguyên nhân'));
+    }
+
+  } catch (err) {
+    console.error('❌ Lỗi gửi đơn hàng:', err);
+    alert('Không thể gửi đơn hàng. Vui lòng thử lại sau.');
+  } 
+  return;
+}
+
       
 
       const raw = paidPriceEl.textContent || '';
@@ -143,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
 let is_success = false;
 let is_checking = false;
 let checkInterval;
-
 async function checkPaid(price) {
   if (is_success || is_checking) return;
 
@@ -155,10 +181,20 @@ async function checkPaid(price) {
     const lastPrice = lastPaid["Giá trị"];
 
     if (lastPrice >= price) {
-      alert("Đã thanh toán thành công");
+      const alreadyShown = localStorage.getItem('alertShown') === 'true';
+      if (!alreadyShown) {
+        alert("Đã thanh toán thành công");
+        localStorage.setItem('alertShown', 'true');
+    
+        // ✅ Chỉ chuyển trang tại đây
+        window.location.href = 'index.php';
+      }
+    
       is_success = true;
       clearInterval(checkInterval);
-    } else {
+    }
+      
+     else {
       console.log("Chưa thanh toán đủ");
     }
   } catch (err) {

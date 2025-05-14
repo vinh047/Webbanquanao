@@ -65,3 +65,8 @@
     margin: 5px 5px 0 0;
     cursor: pointer;
   }
+  body *:not(input):not(textarea):not(select) {
+    caret-color: transparent !important;
+    user-select: none !important;
+  }
+  

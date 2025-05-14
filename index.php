@@ -79,6 +79,5 @@ window.addEventListener('load', () => {
 });
 </script>
 <?php endif; ?>
-
 </body>
 </html>
