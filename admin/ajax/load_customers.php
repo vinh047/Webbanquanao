@@ -86,7 +86,7 @@ foreach ($customers as $c): ?>
             </button>
 
             <!-- nút chi tiết -->
-            <button class="btn btn-info btn-detail-customer mx-1"
+            <button style="color: white;" class="btn btn-info btn-detail-customer mx-1"
                 data-id="<?= $c['user_id']   ?>"
                 data-name="<?= htmlspecialchars($c['name'])     ?>"
                 data-email="<?= htmlspecialchars($c['email'])    ?>"
@@ -95,7 +95,7 @@ foreach ($customers as $c): ?>
                 data-status="<?= $c['status'] ?>"
                 data-bs-toggle="modal"
                 data-bs-target="#modalChiTietKH">
-                <i class="fas fa-info-circle"></i> Chi tiết
+                <i class="fa-regular fa-eye"></i> Chi tiết
 
             </button>
         </td>
