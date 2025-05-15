@@ -14,8 +14,7 @@ try {
 
     // Lấy chi tiết đơn hàng gồm sản phẩm, biến thể, số lượng, giá
     $sql = "
-        SELECT 
-            od.quantity, od.price, od.total_price,
+        SELECT od.*,
             p.name AS product_name,
             CONCAT(s.name, ' - ', c.name) AS variant_name
         FROM order_details od

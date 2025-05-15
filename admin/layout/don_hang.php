@@ -774,57 +774,33 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
                         <!-- Loại địa chỉ -->
                         <div class="col-md-6">
-                            <label class="form-label d-block">Loại địa chỉ</label>
-                            <div class="d-flex gap-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="address_option_sua" id="addr_saved_sua" value="saved" checked>
-                                    <label class="form-check-label" for="addr_saved_sua">Địa chỉ đã lưu</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="address_option_sua" id="addr_new_sua" value="new">
-                                    <label class="form-check-label" for="addr_new_sua">Nhập địa chỉ mới</label>
-                                </div>
-                            </div>
-
-                            <div id="saved-container-sua" class="form-floating mt-3">
-                                <select id="saved-address-sua" class="form-select">
-                                    <option selected disabled>Chọn địa chỉ</option>
-                                    <?php foreach ($user_addresses as $addr): ?>
-                                        <?php
-                                        $full = $addr['address_detail'] . ', ' . $addr['ward'] . ', ' . $addr['district'] . ', ' . $addr['province'];
-                                        ?>
-                                        <option value="<?= $addr['address_id'] ?>" <?= $addr['is_default'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($full) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <label for="saved-address-sua">Địa chỉ đã lưu</label>
-                            </div>
-
-                            <div id="new-container-sua" class="mt-3" style="display: none;">
-                                <label class="form-label fw-semibold mb-2">Địa chỉ mới</label>
+                            <div class="col-md-12 mt-3">
+                                <label class="form-label fw-semibold mb-2">Địa chỉ giao hàng</label>
                                 <div class="row g-2 mb-2">
                                     <div class="col-md-4 form-floating">
-                                        <select id="province-sua" class="form-select">
-                                            <option selected disabled>Tỉnh/TP</option>
+                                        <select id="province-sua" class="form-select" name="province" required>
+                                            <option selected disabled>Chọn Tỉnh/TP</option>
+                                            <!-- Option tỉnh/thành sẽ load JS -->
                                         </select>
                                         <label for="province-sua">Tỉnh/TP</label>
                                     </div>
                                     <div class="col-md-4 form-floating">
-                                        <select id="district-sua" class="form-select">
-                                            <option selected disabled>Quận/Huyện</option>
+                                        <select id="district-sua" class="form-select" name="district" required>
+                                            <option selected disabled>Chọn Quận/Huyện</option>
+                                            <!-- Option quận/huyện load JS -->
                                         </select>
                                         <label for="district-sua">Quận/Huyện</label>
                                     </div>
                                     <div class="col-md-4 form-floating">
-                                        <select id="ward-sua" class="form-select">
-                                            <option selected disabled>Phường/Xã</option>
+                                        <select id="ward-sua" class="form-select" name="ward" required>
+                                            <option selected disabled>Chọn Phường/Xã</option>
+                                            <!-- Option phường/xã load JS -->
                                         </select>
                                         <label for="ward-sua">Phường/Xã</label>
                                     </div>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="specific-address-sua" placeholder="Số nhà, đường...">
+                                    <input type="text" class="form-control" id="specific-address-sua" name="address_detail" placeholder="Số nhà, đường..." required>
                                     <label for="specific-address-sua">Địa chỉ cụ thể</label>
                                 </div>
                             </div>
@@ -1234,7 +1210,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
     setupProvinceDistrictWard('province', 'district', 'ward');
 
     // Gọi cho modal Sửa đơn hàng (nếu có)
-    setupAddressToggle('addr_saved_sua', 'addr_new_sua', 'saved-container-sua', 'new-container-sua');
+    // setupAddressToggle('addr_saved_sua', 'addr_new_sua', 'saved-container-sua', 'new-container-sua');
     setupProvinceDistrictWard('province_sua', 'district_sua', 'ward_sua');
 
 
@@ -2058,6 +2034,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         const shippingAddress = btn.getAttribute('data-shipping-address');
         // Có thể thêm created_at nếu cần
 
+
         // Đặt dữ liệu vào modal sửa
         document.getElementById('edit_order_id').value = orderId;
 
@@ -2077,35 +2054,23 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
         document.getElementById('note_sua').value = note;
 
-        // Xử lý địa chỉ (giả sử bạn có radio và các select trong modal sửa)
-        // Nếu shippingAddress trùng option địa chỉ đã lưu, chọn radio địa chỉ đã lưu và chọn đúng option
-        // Ngược lại chọn radio địa chỉ mới và phân tích shippingAddress để điền form
-
-        // Ví dụ đơn giản: nếu shippingAddress chứa dấu phẩy thì coi là nhập địa chỉ mới
-        if (shippingAddress && shippingAddress.includes(',')) {
-            document.getElementById('addr_new_sua').checked = true;
-            document.getElementById('saved-container-sua').style.display = 'none';
-            document.getElementById('new-container-sua').style.display = 'block';
-
-            // Cố gắng tách địa chỉ cụ thể, phường, quận, tỉnh
+        // Xử lý địa chỉ giao hàng
+        if (shippingAddress) {
+            // Tách địa chỉ thành các phần: địa chỉ cụ thể, xã, huyện, tỉnh
             const parts = shippingAddress.split(',').map(p => p.trim());
-            const len = parts.length;
-            if (len >= 4) {
-                document.getElementById('specific-address-sua').value = parts[0] || '';
-                // Gán chọn province, district, ward nếu bạn có mã hoặc text tương ứng
-                // Ở đây bạn có thể cần map text -> value của select, hoặc bạn có dữ liệu mã rồi
-            }
-        } else {
-            document.getElementById('addr_saved_sua').checked = true;
-            document.getElementById('saved-container-sua').style.display = 'block';
-            document.getElementById('new-container-sua').style.display = 'none';
+            if (parts.length >= 4) {
+                const specificAddress = parts[0];
+                const wardText = parts[1];
+                const districtText = parts[2];
+                const provinceText = parts[3];
 
-            const savedAddrSelect = document.getElementById('saved-address-sua');
-            for (const option of savedAddrSelect.options) {
-                if (option.text.trim() === shippingAddress.trim()) {
-                    savedAddrSelect.value = option.value;
-                    break;
-                }
+                // Điền địa chỉ cụ thể
+                document.getElementById('specific-address-sua').value = specificAddress;
+
+                // Chọn tỉnh, quận, xã
+                selectLocation(provinceText, districtText, wardText);
+            } else {
+                console.warn('Định dạng địa chỉ không hợp lệ:', shippingAddress);
             }
         }
 
@@ -2165,6 +2130,63 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         modalSua.show();
     });
 
+    // Hàm chọn tỉnh, quận, xã từ text
+    function selectLocation(provinceText, districtText, wardText) {
+        const provinceSelect = document.getElementById('province-sua');
+        const districtSelect = document.getElementById('district-sua');
+        const wardSelect = document.getElementById('ward-sua');
+
+        // Load tỉnh
+        fetch('https://provinces.open-api.vn/api/p/')
+            .then(res => res.json())
+            .then(data => {
+                provinceSelect.innerHTML = '<option selected disabled>Chọn Tỉnh/TP</option>';
+                let provinceCode = null;
+                data.forEach(p => {
+                    const name = p.name.replace(/^Tỉnh |^Thành phố /, '');
+                    provinceSelect.add(new Option(name, p.code));
+                    if (name === provinceText) {
+                        provinceCode = p.code;
+                        provinceSelect.value = p.code;
+                    }
+                });
+
+                if (provinceCode) {
+                    // Load quận/huyện
+                    fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+                        .then(res => res.json())
+                        .then(obj => {
+                            districtSelect.innerHTML = '<option selected disabled>Chọn Quận/Huyện</option>';
+                            let districtCode = null;
+                            obj.districts.forEach(d => {
+                                districtSelect.add(new Option(d.name, d.code));
+                                if (d.name === districtText) {
+                                    districtCode = d.code;
+                                    districtSelect.value = d.code;
+                                }
+                            });
+
+                            if (districtCode) {
+                                // Load phường/xã
+                                fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
+                                    .then(res => res.json())
+                                    .then(obj => {
+                                        wardSelect.innerHTML = '<option selected disabled>Chọn Phường/Xã</option>';
+                                        obj.wards.forEach(w => {
+                                            wardSelect.add(new Option(w.name, w.code));
+                                            if (w.name === wardText) {
+                                                wardSelect.value = w.code;
+                                            }
+                                        });
+                                    });
+                            }
+                        });
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi khi load địa chỉ:', err);
+            });
+    }
 
     document.getElementById('btnChonSanPham_Sua').addEventListener('click', function() {
         // Xóa dữ liệu biến thể trong modal sửa nếu chọn lại sản phẩm
@@ -2339,28 +2361,22 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
         // Địa chỉ: xử lý theo radio trong modal sửa
         let shippingAddress = '';
-        const savedAddrRadio = document.getElementById('addr_saved_sua');
-        const newAddrRadio = document.getElementById('addr_new_sua');
-        if (savedAddrRadio.checked) {
-            const savedAddrSelect = document.getElementById('saved-address-sua');
-            shippingAddress = savedAddrSelect?.selectedOptions[0]?.textContent || '';
-        } else if (newAddrRadio.checked) {
-            const specific = document.getElementById('specific-address-sua').value.trim();
-            const wardSelect = document.getElementById('ward-sua');
-            const districtSelect = document.getElementById('district-sua');
-            const provinceSelect = document.getElementById('province-sua');
+        const specific = document.getElementById('specific-address-sua').value.trim();
+        const wardSelect = document.getElementById('ward-sua');
+        const districtSelect = document.getElementById('district-sua');
+        const provinceSelect = document.getElementById('province-sua');
 
-            if (!specific || !wardSelect.value || !districtSelect.value || !provinceSelect.value) {
-                alert("Vui lòng nhập đầy đủ địa chỉ mới.");
-                return;
-            }
-
-            const ward = wardSelect.selectedOptions[0].textContent;
-            const district = districtSelect.selectedOptions[0].textContent;
-            const province = provinceSelect.selectedOptions[0].textContent;
-
-            shippingAddress = `${specific}, ${ward}, ${district}, ${province}`;
+        if (!specific || !wardSelect.value || !districtSelect.value || !provinceSelect.value) {
+            alert("Vui lòng nhập đầy đủ địa chỉ mới.");
+            return;
         }
+
+        const ward = wardSelect.selectedOptions[0].textContent;
+        const district = districtSelect.selectedOptions[0].textContent;
+        const province = provinceSelect.selectedOptions[0].textContent;
+
+        shippingAddress = `${specific}, ${ward}, ${district}, ${province}`;
+
 
         // Chi tiết đơn hàng trong modal sửa
         const rows = document.querySelectorAll('#orderDetailQueue_sua tr');
