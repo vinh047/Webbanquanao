@@ -118,13 +118,28 @@ $vouchers = $db->select($sql, $params);
                                         <input type="date" class="form-control" name="end_date" value="<?= $voucher['end_date'] ?>" required>
                                         <label>Ngày kết thúc</label>
                                     </div>
-                                    <div class="form-floating">
-                                        <select class="form-select" name="status">
-                                            <option value="active" <?= $voucher['status'] === 'active' ? 'selected' : '' ?>>Hiệu lực</option>
-                                            <option value="inactive" <?= $voucher['status'] === 'inactive' ? 'selected' : '' ?>>Hết hạn</option>
-                                        </select>
-                                        <label>Trạng thái</label>
-                                    </div>
+                                    <?php
+$today = date('Y-m-d');
+if ($voucher['end_date'] < $today) {
+    $status_text = 'Hết hạn';
+    $status_value = 'inactive';
+} elseif ($voucher['start_date'] > $today) {
+    $status_text = 'Chưa hiệu lực';
+    $status_value = 'inactive';
+} else {
+    $status_text = 'Hiệu lực';
+    $status_value = 'active';
+}
+?>
+<div class="form-floating">
+    <input type="text" class="form-control" value="<?= $status_text ?>" readonly>
+    <label>Trạng thái</label>
+</div>
+<input type="hidden" name="status" value="<?= $status_value ?>">
+<?php if ($voucher['end_date'] < $today): ?>
+    <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
+<?php endif; ?>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-success">Lưu thay đổi</button>
@@ -166,13 +181,34 @@ $vouchers = $db->select($sql, $params);
                         <input type="date" class="form-control" name="end_date" required>
                         <label>Ngày kết thúc</label>
                     </div>
-                    <div class="form-floating">
-                        <select class="form-select" name="status">
-                            <option value="active">Hiệu lực</option>
-                            <option value="inactive">Hết hạn</option>
-                        </select>
-                        <label>Trạng thái</label>
-                    </div>
+                    <?php
+$today = date('Y-m-d');
+
+if ($voucher['end_date'] < $today) {
+    $status_text = 'Hết hạn';
+    $status_value = 'inactive';
+    $is_disabled = true; // có thể dùng để disable các input khác nếu cần
+} elseif ($voucher['start_date'] > $today) {
+    $status_text = 'Chưa hiệu lực';
+    $status_value = 'inactive';
+    $is_disabled = true;
+} else {
+    $status_text = 'Hiệu lực';
+    $status_value = 'active';
+    $is_disabled = false;
+}
+?>
+
+<div class="form-floating">
+    <input type="text" class="form-control" value="<?= htmlspecialchars($status_text) ?>" readonly>
+    <label>Trạng thái</label>
+</div>
+<input type="hidden" name="status" value="<?= htmlspecialchars($status_value) ?>">
+
+<?php if ($voucher['end_date'] < $today): ?>
+    <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
+<?php endif; ?>
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Lưu</button>
