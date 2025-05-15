@@ -108,6 +108,12 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                 </li>
 
                 <li class="nav-item mb-2">
+                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'nhanvien' ? 'active' : '' ?>" href="index.php?page=nhanvien&pageadmin=1">
+                        <i class="fa-solid fa-user-tie"></i> <span>Nhân viên</span>
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
                     <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'taikhoannganhang' ? 'active' : '' ?>" href="index.php?page=taikhoannganhang&pageadmin=1">
                         <i class="fa-solid fa-credit-card"></i> <span>Tài khoản ngân hàng</span>
                     </a>
@@ -203,6 +209,9 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                         break;
                     case 'khachhang':
                         include '../admin/layout/khach_hang.php';
+                        break;
+                    case 'nhanvien':
+                        include '../admin/layout/nhan_vien.php';
                         break;
                     case 'taikhoannganhang':
                         include '../admin/layout/tai_khoan_ngan_hang.php';

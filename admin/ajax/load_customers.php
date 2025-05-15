@@ -57,19 +57,17 @@ foreach ($customers as $c): ?>
             <?= $c['status'] == 1 ? 'Hoạt động' : 'Khóa' ?>
         </td>
         <td>
-            <!-- nút Sửa -->
-            <button
-                class="btn btn-success btn-edit-customer mx-1"
-                data-id="<?= $c['user_id']   ?>"
-                data-name="<?= htmlspecialchars($c['name'])     ?>"
-                data-email="<?= htmlspecialchars($c['email'])    ?>"
-                data-password="<?= htmlspecialchars($c['password']) ?>"
-                data-phone="<?= htmlspecialchars($c['phone'])    ?>"
-                data-status="<?= $c['status'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalSuaKH">
-                <i class="fa-regular fa-pen-to-square"></i> Sửa
+            <!-- nút mở/khóa -->
+            <button class="btn btn-warning btn-toggle-status-customer mx-1"
+                data-id="<?= $c['user_id'] ?>"
+                data-status="<?= $c['status'] ?>">
+                <?php if ($c['status'] == 1): ?>
+                    <i class="fa-solid fa-lock"></i> Khóa tài khoản
+                <?php else: ?>
+                    <i class="fa-solid fa-lock-open"></i> Mở khóa tài khoản
+                <?php endif; ?>
             </button>
+
 
             <!-- nút Xóa -->
             <button

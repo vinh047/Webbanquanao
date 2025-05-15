@@ -4,7 +4,8 @@
     }
 
     .nav-tabs .nav-link.active {
-        color: #0d6efd; /* màu xanh Bootstrap */
+        color: #0d6efd;
+        /* màu xanh Bootstrap */
     }
 </style>
 
@@ -84,23 +85,25 @@
             <div class="modal-body">
                 <input type="hidden" id="idKhachSua" name="user_id">
                 <div class="mb-3"><label class="form-label">Tên khách hàng</label>
-                    <input type="text" class="form-control" id="tenKhachSua" name="name" required>
+                    <input type="text" class="form-control" id="tenKhachSua" name="name" readonly>
                 </div>
                 <div class="mb-3"><label class="form-label">Email</label>
-                    <input type="email" class="form-control" id="emailKhachSua" name="email" required>
+                    <input type="email" class="form-control" id="emailKhachSua" name="email" readonly>
                 </div>
                 <div class="mb-3"><label class="form-label">Mật khẩu</label>
-                    <input type="text" class="form-control" id="matkhauKhachSua" name="password" required>
+                    <input type="text" class="form-control" id="matkhauKhachSua" name="password" readonly>
                 </div>
                 <div class="mb-3"><label class="form-label">Số điện thoại</label>
-                    <input type="text" class="form-control" id="sdtKhachSua" name="phone" required>
+                    <input type="text" class="form-control" id="sdtKhachSua" name="phone" readonly>
                 </div>
+                <!-- Trạng thái vẫn cho sửa -->
                 <div class="mb-3"><label class="form-label">Trạng thái</label>
                     <select class="form-control" id="trangthaiKhachSua" name="status">
                         <option value="1">Hoạt động</option>
                         <option value="0">Khóa</option>
                     </select>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Lưu thay đổi</button>
@@ -271,5 +274,40 @@
                 document.getElementById('ct-addresses').innerHTML = data.addressesHtml || 'Không có địa chỉ.';
             });
 
+    });
+
+    document.querySelector('.customer-wrap').addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-toggle-status-customer');
+        if (!btn) return;
+
+        const userId = btn.dataset.id;
+        const currentStatus = btn.dataset.status;
+        const newStatus = currentStatus == "1" ? 0 : 1;
+
+        if (!confirm(`Bạn có chắc muốn ${newStatus == 1 ? 'mở' : 'khóa'} tài khoản này không?`)) {
+            return;
+        }
+
+        fetch('ajax/toggle_status_customer.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    status: newStatus
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    loadCustomers(1, currentFilterParams);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Lỗi kết nối máy chủ.');
+            });
     });
 </script>
