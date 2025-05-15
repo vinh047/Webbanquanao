@@ -1,1 +1,1 @@
-[]
+[{"product_id":23,"name":"Quần short nam cotton poly form straight","price":585000,"quantity":1,"image":"10s24psh003r1-safari-1-jpg-1ry0.jpg","variant_id":126,"color_id":2,"size":"L"}]

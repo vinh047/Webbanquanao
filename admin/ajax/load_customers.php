@@ -51,7 +51,7 @@ foreach ($customers as $c): ?>
         <td><?= htmlspecialchars($c['user_id']) ?></td>
         <td><?= htmlspecialchars($c['name'])    ?></td>
         <td><?= htmlspecialchars($c['email'])   ?></td>
-        <td><?= htmlspecialchars($c['password'])?></td>
+        <td><?= htmlspecialchars($c['password']) ?></td>
         <td><?= htmlspecialchars($c['phone'])   ?></td>
         <td>
             <?= $c['status'] == 1 ? 'Hoạt động' : 'Khóa' ?>
@@ -60,10 +60,10 @@ foreach ($customers as $c): ?>
             <!-- nút Sửa -->
             <button
                 class="btn btn-success btn-edit-customer mx-1"
-                data-id="<?=   $c['user_id']   ?>"
+                data-id="<?= $c['user_id']   ?>"
                 data-name="<?= htmlspecialchars($c['name'])     ?>"
                 data-email="<?= htmlspecialchars($c['email'])    ?>"
-                data-password="<?= htmlspecialchars($c['password'])?>"
+                data-password="<?= htmlspecialchars($c['password']) ?>"
                 data-phone="<?= htmlspecialchars($c['phone'])    ?>"
                 data-status="<?= $c['status'] ?>"
                 data-bs-toggle="modal"
@@ -74,15 +74,29 @@ foreach ($customers as $c): ?>
             <!-- nút Xóa -->
             <button
                 class="btn btn-danger btn-delete-customer mx-1"
-                data-id="<?=   $c['user_id']   ?>"
+                data-id="<?= $c['user_id']   ?>"
                 data-name="<?= htmlspecialchars($c['name'])  ?>"
                 data-email="<?= htmlspecialchars($c['email']) ?>"
-                data-password="<?= htmlspecialchars($c['password'])?>"
-                data-phone="<?= htmlspecialchars($c['phone'])?>"
+                data-password="<?= htmlspecialchars($c['password']) ?>"
+                data-phone="<?= htmlspecialchars($c['phone']) ?>"
                 data-status="<?= $c['status'] ?>"
                 data-bs-toggle="modal"
                 data-bs-target="#modalXoaKH">
                 <i class="fas fa-trash"></i> Xóa
+            </button>
+
+            <!-- nút chi tiết -->
+            <button class="btn btn-info btn-detail-customer mx-1"
+                data-id="<?= $c['user_id']   ?>"
+                data-name="<?= htmlspecialchars($c['name'])     ?>"
+                data-email="<?= htmlspecialchars($c['email'])    ?>"
+                data-password="<?= htmlspecialchars($c['password']) ?>"
+                data-phone="<?= htmlspecialchars($c['phone'])    ?>"
+                data-status="<?= $c['status'] ?>"
+                data-bs-toggle="modal"
+                data-bs-target="#modalChiTietKH">
+                <i class="fas fa-info-circle"></i> Chi tiết
+
             </button>
         </td>
     </tr>
