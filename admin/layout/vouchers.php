@@ -31,7 +31,7 @@ if (!empty($_GET['to'])) {
     $params[] = $_GET['to'];
 }
 
-$sql = "SELECT * FROM vouchers WHERE 1 $filter ORDER BY voucher_id DESC";
+$sql = "SELECT * FROM vouchers WHERE 1 $filter ORDER BY voucher_id ASC";
 $vouchers = $db->select($sql, $params);
 ?>
 

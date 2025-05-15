@@ -163,7 +163,7 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
           </li> -->
           <li class="list-group-item d-flex justify-content-between">
             <span>Giảm giá</span>
-            <span>0đ</span> <!-- payment.js lấy qua nth-child(3) -->
+            <span id="discountAmount">0đ</span>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <strong>Thành tiền</strong>
