@@ -140,7 +140,7 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
           <?php endforeach; ?>
         </div>
 
-        <h6 class="mt-4 d-flex justify-content-between">Voucher <a href="#" class="text-decoration-none">Xem tất cả</a></h6>
+        <h6 class="mt-4 d-flex justify-content-between">Voucher</h6>
         <div class="input-group">
           <input type="text" class="form-control" placeholder="Nhập mã giảm giá" id="voucher-code">
           <button class="btn btn-dark" id="apply-voucher-btn">Áp dụng</button>
