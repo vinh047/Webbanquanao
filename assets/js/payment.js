@@ -98,25 +98,43 @@ document.addEventListener('DOMContentLoaded', () => {
   subtotalEl.textContent = subtotal.toLocaleString() + 'đ';
   paidPriceEl.textContent = (subtotal - window.discount).toLocaleString() + 'đ';
   totalEl.textContent = paidPriceEl.textContent;
-
-  // Áp dụng voucher
-  voucherBtn.addEventListener('click', e => {
+  //áp dụng vouchers
+  voucherBtn.addEventListener('click', async e => {
     e.preventDefault();
     const code = voucherInput.value.trim().toUpperCase();
-    if (code === 'HUYDEPTRAI') window.discount = subtotal * 0.1;
-    else if (code === 'MINHHUY') window.discount = 0;
-    else { window.discount = 0; alert('Mã giảm giá không hợp lệ!'); }
+    if (!code) return;
+  
+    try {
+      const res = await fetch('./ajax/check_voucher.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      });
+      const data = await res.json();
+  
+      if (data.success) {
+        window.discount = subtotal * (data.discount / 100); // % -> tiền
+        alert(`Áp dụng mã ${data.code}: Giảm ${data.discount}%`);
+      } else {
+        window.discount = 0;
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error('Lỗi kiểm tra voucher:', err);
+      alert('Không thể kiểm tra mã giảm giá');
+      window.discount = 0;
+    }
+  
+    // Cập nhật lại UI
+    document.getElementById('discountAmount').textContent =
+  window.discount > 0 ? '-' + window.discount.toLocaleString() + 'đ' : '0đ';
 
-    // Cập nhật discount và total
-    document.querySelector('.list-group-item:nth-child(3) span:nth-child(2)').textContent =
-      window.discount > 0
-        ? '-' + window.discount.toLocaleString() + 'đ'
-        : '0đ';
-
+  
     const newTotal = (subtotal - window.discount).toLocaleString() + 'đ';
     paidPriceEl.textContent = newTotal;
     totalEl.textContent = newTotal;
   });
+  
 
   // Xử lý nút Đặt hàng
   if (btnPay && paidPriceEl && qrSection) {

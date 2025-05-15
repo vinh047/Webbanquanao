@@ -107,19 +107,54 @@ foreach ($orders as $order):
         <td><?= $order['created_at'] ?></td>
         <td><?= $payment_method['name'] ?></td>
         <td><?= $staff['name'] ?></td>
-        <td>
-            <button class="btn btn-success mx-1 btn-edit-order"
+        <td class="d-flex align-items-center">
+            <button class="btn btn-info mx-1 btn-view-order d-flex align-items-center" style="white-space: nowrap;"
+                data-order-id="<?= $order['order_id'] ?>"
+                data-user-id="<?= $user['user_id'] ?>"
+                data-user-name="<?= htmlspecialchars($user['name']) ?>"
+                data-status="<?= htmlspecialchars($order['status']) ?>"
+                data-total-price="<?= $order['total_price'] ?>"
+                data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
+                data-note="<?= htmlspecialchars($order['note']) ?>"
+                data-created-at="<?= $order['created_at'] ?>"
+                data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
+                data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
+                data-staff-id="<?= $staff['user_id'] ?>"
+                data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
+                <i class="fa-regular fa-eye me-1"></i>
+                Chi tiết
+            </button>
+            <button class="btn btn-success mx-1 btn-edit-order d-flex align-items-center"
 
-                data-bs-toggle="modal"
-                data-bs-target="#modalSuaNCC">
-                <i class="fa-regular fa-pen-to-square"></i>
+                data-order-id="<?= $order['order_id'] ?>"
+                data-user-id="<?= $user['user_id'] ?>"
+                data-user-name="<?= htmlspecialchars($user['name']) ?>"
+                data-status="<?= htmlspecialchars($order['status']) ?>"
+                data-total-price="<?= $order['total_price'] ?>"
+                data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
+                data-note="<?= htmlspecialchars($order['note']) ?>"
+                data-created-at="<?= $order['created_at'] ?>"
+                data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
+                data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
+                data-staff-id="<?= $staff['user_id'] ?>"
+                data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
+                <i class="fa-regular fa-pen-to-square me-1"></i>
                 Sửa
             </button>
-            <button class="btn btn-danger btn-delete-order mx-1"
-
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaNCC">
-                <i class="fas fa-trash"></i>
+            <button class="btn btn-danger btn-delete-order mx-1 d-flex align-items-center"
+                data-order-id="<?= $order['order_id'] ?>"
+                data-user-id="<?= $user['user_id'] ?>"
+                data-user-name="<?= htmlspecialchars($user['name']) ?>"
+                data-status="<?= htmlspecialchars($order['status']) ?>"
+                data-total-price="<?= $order['total_price'] ?>"
+                data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
+                data-note="<?= htmlspecialchars($order['note']) ?>"
+                data-created-at="<?= $order['created_at'] ?>"
+                data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
+                data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
+                data-staff-id="<?= $staff['user_id'] ?>"
+                data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
+                <i class="fas fa-trash me-1"></i>
                 Xóa
             </button>
         </td>

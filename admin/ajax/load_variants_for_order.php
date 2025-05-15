@@ -13,12 +13,12 @@ if (!$productId) {
 
 // Lấy danh sách biến thể của sản phẩm
 $variants = $db->select("
-    SELECT v.variant_id, c.name AS color, s.name AS size, v.stock, v.image, c.color_id, s.color_id
+    SELECT v.variant_id, c.name AS color, s.name AS size, v.stock, v.image
     FROM product_variants v
     JOIN products p ON p.product_id = v.product_id
     JOIN colors c ON v.color_id = c.color_id
     JOIN sizes s ON v.size_id = s.size_id
-    WHERE v.product_id = ? AND v.is_deleted = 0
+    WHERE v.product_id = ? AND v.is_deleted = 0 AND v.stock > 0
 ", [$productId]);
 
 // Tạo HTML bảng biến thể
@@ -41,8 +41,8 @@ foreach ($variants as $variant): ?>
             <button
                 class="btn btn-success btn-choose-variant"
                 data-variant-id="<?= $variant['variant_id'] ?>"
-                data-color="<?= htmlspecialchars($variant['color_id']) ?>"
-                data-size="<?= htmlspecialchars($variant['color_id']) ?>"
+                data-color="<?= htmlspecialchars($variant['color']) ?>"
+                data-size="<?= htmlspecialchars($variant['size']) ?>"
                 data-stock="<?$variant['stock']?>">
                 <i class="fa fa-check"></i> Chọn
             </button>

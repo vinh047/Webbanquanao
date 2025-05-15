@@ -50,17 +50,20 @@ try {
         user_id,
         total_price,
         shipping_address,
+        note,
         created_at,
         payment_method_id,
         staff_id
       ) VALUES (
-        ?, ?, ?, NOW(), ?, NULL
+        ?, ?, ?, ?, NOW(), ?, NULL
       )
     ");
+    $email = $data['email'] ?? ''; // lấy email từ payload
     $stmt->execute([
       $user_id,
       $total_price,
       $shipping_address,
+      $email,
       $payment_method_id
     ]);
     $order_id = $pdo->lastInsertId();

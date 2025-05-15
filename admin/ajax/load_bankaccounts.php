@@ -58,7 +58,7 @@ foreach ($accounts as $a): ?>
         </td>
         <td>
             <button class="btn btn-edit-bankaccount text-white me-1"
-                style="background-color: #28a745; border: none; border-radius: 12px; padding: 6px 12px;"
+                style="background-color: #198745; border: none; border-radius: 12px; padding: 6px 12px;"
                 data-id="<?= $a['account_id'] ?>"
                 data-bank-code="<?= htmlspecialchars($a['bank_code'], ENT_QUOTES) ?>"
                 data-account-number="<?= htmlspecialchars($a['account_number'], ENT_QUOTES) ?>"
