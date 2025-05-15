@@ -357,7 +357,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
             <div class="modal-footer">
                 <button type="button" id="btnLuuDonHang" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Lưu vào đơn hàng tạm thời
+                    <i class="fa fa-save"></i> Lưu đơn hàng
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
             </div>
@@ -501,12 +501,12 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 </div>
 
 
-<!-- Modal Xóa Đơn Hàng -->
+<!-- Modal Hủy Đơn Hàng -->
 <div class="modal fade" id="modalXoaDonHang" tabindex="-1" aria-labelledby="modalXoaDonHangLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Xóa Đơn Hàng</h5>
+                <h5 class="modal-title">Hủy Đơn Hàng</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
 
@@ -593,7 +593,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
             <div class="modal-footer">
                 <button type="button" id="btnConfirmDeleteOrder" class="btn btn-danger">
-                    <i class="fa fa-trash"></i> Xác nhận xóa
+                    <i class="fa fa-trash"></i> Xác nhận hủy đơn hàng
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
@@ -1244,7 +1244,6 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
         const userId = btn.getAttribute('data-user-id');
         const userName = btn.getAttribute('data-name');
-
         if (!previousModalId) return;
         const parentModal = document.getElementById(previousModalId);
         if (!parentModal) return;
@@ -1259,8 +1258,8 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
             userInput.setAttribute('data-user-id', userId);
         }
 
-        // Load địa chỉ khách hàng
-        loadUserAddresses(userId);
+        // Gọi loadUserAddresses với modalId truyền vào để cập nhật đúng select trong modal
+        loadUserAddresses(userId, previousModalId);
 
         // Đóng modal chọn user
         const modalUser = bootstrap.Modal.getInstance(document.getElementById('modalChonUser'));
@@ -1268,7 +1267,8 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
     });
 
 
-    function loadUserAddresses(userId) {
+
+    function loadUserAddresses(userId, modalId = 'modalThemDonHang') {
         fetch('ajax/get_user_address.php?user_id=' + userId)
             .then(res => res.json())
             .then(data => {
@@ -1277,7 +1277,27 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                     return;
                 }
 
-                const select = document.getElementById('saved-address');
+                // Tìm select địa chỉ đã lưu trong modal tương ứng
+                const modal = document.getElementById(modalId);
+                if (!modal) {
+                    console.warn(`Không tìm thấy modal với id=${modalId}`);
+                    return;
+                }
+
+                // Địa chỉ đã lưu trong modal thêm đơn hàng có id = saved-address
+                // Địa chỉ đã lưu trong modal sửa đơn hàng giả sử có id = saved-address-sua
+                // Tự động chọn đúng select trong modal
+                let selectId = 'saved-address';
+                if (modalId === 'modalSuaDonHang') {
+                    selectId = 'saved-address-sua';
+                }
+
+                const select = modal.querySelector(`#${selectId}`);
+                if (!select) {
+                    console.warn(`Không tìm thấy select #${selectId} trong modal ${modalId}`);
+                    return;
+                }
+
                 select.innerHTML = '';
 
                 data.data.forEach(addr => {
@@ -1294,6 +1314,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                 console.error('Lỗi khi lấy địa chỉ:', err);
             });
     }
+
 
     document.getElementById('btnChonSanPham').addEventListener('click', function() {
         // Xóa dữ liệu biến thể nếu chọn lại sản phẩm
@@ -1683,11 +1704,20 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
             return;
         }
 
-        // Địa chỉ: tự chọn xử lý thêm nếu có địa chỉ mới/lưu
+        // Xử lý địa chỉ
         let shippingAddress = '';
         const savedAddr = document.getElementById('saved-address');
         if (document.getElementById('addr_saved').checked) {
-            shippingAddress = savedAddr?.selectedOptions[0]?.textContent || '';
+            // Kiểm tra xem có chọn địa chỉ không (khác chuỗi rỗng)
+            if (!savedAddr?.value || savedAddr.value.trim() === '') {
+                alert("Vui lòng chọn địa chỉ đã lưu hợp lệ.");
+                return;
+            }
+            shippingAddress = savedAddr.selectedOptions[0]?.textContent || '';
+            if (!shippingAddress || shippingAddress.trim() === '') {
+                alert("Địa chỉ đã lưu không hợp lệ.");
+                return;
+            }
         } else {
             const specific = document.getElementById('specific-address').value.trim();
             const wardSelect = document.getElementById('ward');
@@ -1900,19 +1930,19 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Xóa đơn hàng thành công!');
+                    alert('Hủy đơn hàng thành công!');
                     const modalEl = document.getElementById('modalXoaDonHang');
                     const modal = bootstrap.Modal.getInstance(modalEl);
                     if (modal) modal.hide();
                     // Reload lại danh sách đơn hàng (nếu bạn có hàm loadOrders)
                     loadOrders(1, currentFilterParams);
                 } else {
-                    alert('Xóa đơn hàng thất bại: ' + data.message);
+                    alert('Hủy đơn hàng thất bại: ' + data.message);
                 }
             })
             .catch(err => {
-                console.error('Lỗi khi xóa đơn hàng:', err);
-                alert('Đã xảy ra lỗi khi xóa đơn hàng.');
+                console.error('Lỗi khi hủy đơn hàng:', err);
+                alert('Đã xảy ra lỗi khi hủy đơn hàng.');
             });
     });
 
@@ -1920,40 +1950,6 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
 
 
 
-    function showOrderDetails(data) {
-        document.getElementById('ct_user_name').value = data.user_name;
-        document.getElementById('ct_staff_name').value = data.staff_name;
-        document.getElementById('ct_status').value = data.status;
-        document.getElementById('ct_payment_method').value = data.payment_method_name;
-        document.getElementById('ct_note').value = data.note;
-        document.getElementById('ct_shipping_address').value = data.shipping_address;
-
-        const tbody = document.getElementById('ct_orderDetailQueue');
-        tbody.innerHTML = ''; // Xóa cũ
-
-        let totalPrice = 0;
-        data.order_details.forEach(item => {
-            const row = document.createElement('tr');
-
-            const lineTotal = item.quantity * item.price;
-            totalPrice += lineTotal;
-
-            row.innerHTML = `
-            <td>${item.product_name}</td>
-            <td>${item.variant_name}</td>
-            <td>${item.quantity}</td>
-            <td>${item.price.toLocaleString('vi-VN')} ₫</td>
-            <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
-        `;
-            tbody.appendChild(row);
-        });
-
-        document.getElementById('ct_tongTienDonHang').textContent = totalPrice.toLocaleString('vi-VN') + ' ₫';
-
-        // Hiện modal
-        const modal = new bootstrap.Modal(document.getElementById('modalXemChiTietDonHang'));
-        modal.show();
-    }
 
 
     document.addEventListener('click', function(e) {
@@ -1996,7 +1992,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                 <td>${item.product_name}</td>
                 <td>${item.variant_name}</td>
                 <td>${item.quantity}</td>
-                <td>${item.price.toLocaleString('vi-VN')} ₫</td>
+                <td>${Number(item.price).toLocaleString('vi-VN')} ₫</td>
                 <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
             `;
                 tbody.appendChild(tr);
@@ -2143,7 +2139,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                             </td>
                             <td>
                                 <input type="hidden" name="prices_sua[]" value="${item.price}">
-                                ${item.price.toLocaleString('vi-VN')} ₫
+                                ${Number(item.price).toLocaleString('vi-VN')} ₫
                             </td>
                             <td>${lineTotal.toLocaleString('vi-VN')} ₫</td>
                             <td>

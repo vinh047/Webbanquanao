@@ -101,13 +101,13 @@ foreach ($orders as $order):
         <td><?= $order['order_id'] ?></td>
         <td><?= $user['name'] ?></td>
         <td><?= $order['status'] ?></td>
-        <td><?= $order['total_price'] ?></td>
+        <td><?= number_format($order['total_price'], 0, ',', '.') ?> ₫</td>
         <td><?= $order['shipping_address'] ?></td>
         <td><?= $order['note'] ?></td>
         <td><?= $order['created_at'] ?></td>
         <td><?= $payment_method['name'] ?></td>
         <td><?= $staff['name'] ?></td>
-        <td class="d-flex align-items-center">
+        <td class="d-flex align-items-center justify-content-center">
             <button class="btn btn-info mx-1 btn-view-order d-flex align-items-center" style="white-space: nowrap;"
                 data-order-id="<?= $order['order_id'] ?>"
                 data-user-id="<?= $user['user_id'] ?>"
@@ -125,7 +125,7 @@ foreach ($orders as $order):
                 Chi tiết
             </button>
             <button class="btn btn-success mx-1 btn-edit-order d-flex align-items-center"
-
+                style="<?= ($order['status'] == 'Đã hủy') ? 'display:none !important;' : '' ?>"
                 data-order-id="<?= $order['order_id'] ?>"
                 data-user-id="<?= $user['user_id'] ?>"
                 data-user-name="<?= htmlspecialchars($user['name']) ?>"
@@ -142,6 +142,7 @@ foreach ($orders as $order):
                 Sửa
             </button>
             <button class="btn btn-danger btn-delete-order mx-1 d-flex align-items-center"
+                style="<?= ($order['status'] !== 'Chờ xác nhận') ? 'display:none !important;' : '' ?> white-space: nowrap;"
                 data-order-id="<?= $order['order_id'] ?>"
                 data-user-id="<?= $user['user_id'] ?>"
                 data-user-name="<?= htmlspecialchars($user['name']) ?>"
@@ -155,7 +156,7 @@ foreach ($orders as $order):
                 data-staff-id="<?= $staff['user_id'] ?>"
                 data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
                 <i class="fas fa-trash me-1"></i>
-                Xóa
+                Hủy đơn
             </button>
         </td>
     </tr>

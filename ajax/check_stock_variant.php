@@ -26,7 +26,7 @@ if ($variant_id == null) {
     $stmt = $conn->prepare("
         SELECT pv.variant_id
         FROM product_variants pv
-        WHERE pv.product_id = ? AND pv.color_id = ? AND s.size_id = ? AND pv.is_deleted = 0
+        WHERE pv.product_id = ? AND pv.color_id = ? AND pv.size_id = ? AND pv.is_deleted = 0
         LIMIT 1
     ");
     $stmt->execute([$product_id, $color_id, $size_id]);
