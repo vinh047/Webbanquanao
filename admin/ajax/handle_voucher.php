@@ -87,13 +87,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_voucher'])) {
     echo json_encode(['success' => true]);
     exit;
 }
-
-// Xoá voucher
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $voucherId = intval($_GET['delete']);
-    if ($voucherId > 0) {
-        $db->execute("DELETE FROM vouchers WHERE voucher_id = ?", [$voucherId]);
+//xóa
+if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
+    $voucher_id = intval($_GET['delete']);
+    
+    $result = $db->execute("DELETE FROM vouchers WHERE voucher_id = ?", [$voucher_id]);
+    
+    if ($result) {
+        echo json_encode(['success' => true, 'message' => 'Xóa voucher thành công']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Xóa voucher thất bại']);
     }
-    echo json_encode(['success' => true]);
     exit;
 }
+
+
+
+

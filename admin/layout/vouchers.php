@@ -86,61 +86,59 @@ $vouchers = $db->select($sql, $params);
                     </td>
                     <td>
                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal<?= $voucher['voucher_id'] ?>">Sửa</button>
-                        <a class="btn btn-sm btn-danger" href="ajax/handle_voucher.php?delete=<?= $voucher['voucher_id'] ?>" onclick="return confirm('Xác nhận xoá voucher này?')">Xoá</a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteVoucher(<?= $voucher['voucher_id'] ?>)">Xoá</button>
                     </td>
                 </tr>
-
-                <!-- Modal Sửa Voucher -->
-                <div class="modal fade" id="editModal<?= $voucher['voucher_id'] ?>" tabindex="-1">
-                    <div class="modal-dialog">
-                        <form method="POST" action="ajax/handle_voucher.php" class="voucher-form">
-                            <input type="hidden" name="voucher_id" value="<?= $voucher['voucher_id'] ?>">
-                            <input type="hidden" name="update_voucher" value="1">
-                            <div class="modal-content">
-                                <div class="modal-header bg-warning">
-                                    <h5 class="modal-title">Sửa Voucher</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" name="code" value="<?= htmlspecialchars($voucher['code']) ?>" required>
-                                        <label>Mã voucher</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" name="discount" value="<?= $voucher['discount'] ?>" min="1" max="100" required>
-                                        <label>Giảm giá (%)</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" name="start_date" value="<?= $voucher['start_date'] ?>" required>
-                                        <label>Ngày bắt đầu</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" name="end_date" value="<?= $voucher['end_date'] ?>" required>
-                                        <label>Ngày kết thúc</label>
-                                    </div>
-                                    <?php
-$today = date('Y-m-d');
-if ($voucher['end_date'] < $today) {
-    $status_text = 'Hết hạn';
-    $status_value = 'inactive';
-} elseif ($voucher['start_date'] > $today) {
-    $status_text = 'Chưa hiệu lực';
-    $status_value = 'inactive';
-} else {
-    $status_text = 'Hiệu lực';
-    $status_value = 'active';
-}
-?>
-<div class="form-floating">
-    <input type="text" class="form-control" value="<?= $status_text ?>" readonly>
-    <label>Trạng thái</label>
-</div>
-<input type="hidden" name="status" value="<?= $status_value ?>">
-<?php if ($voucher['end_date'] < $today): ?>
-    <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
-<?php endif; ?>
-
-                                </div>
+<!-- Modal Sửa Voucher -->
+<div class="modal fade" id="editModal<?= $voucher['voucher_id'] ?>" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="POST" action="ajax/handle_voucher.php" class="voucher-form">
+            <input type="hidden" name="voucher_id" value="<?= $voucher['voucher_id'] ?>">
+            <input type="hidden" name="update_voucher" value="1">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Sửa Voucher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="code" value="<?= htmlspecialchars($voucher['code']) ?>" required>
+                        <label>Mã voucher</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" name="discount" value="<?= $voucher['discount'] ?>" min="1" max="100" required>
+                        <label>Giảm giá (%)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" name="start_date" id="edit_start_date_<?= $voucher['voucher_id'] ?>" value="<?= $voucher['start_date'] ?>" required>
+                        <label>Ngày bắt đầu</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" name="end_date" id="edit_end_date_<?= $voucher['voucher_id'] ?>" value="<?= $voucher['end_date'] ?>" required>
+                        <label>Ngày kết thúc</label>
+                    </div>
+                    <?php
+                    $today = date('Y-m-d');
+                    if ($voucher['end_date'] < $today) {
+                        $status_text = 'Hết hạn';
+                        $status_value = 'inactive';
+                    } elseif ($voucher['start_date'] > $today) {
+                        $status_text = 'Chưa hiệu lực';
+                        $status_value = 'inactive';
+                    } else {
+                        $status_text = 'Hiệu lực';
+                        $status_value = 'active';
+                    }
+                    ?>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="edit_status_text_<?= $voucher['voucher_id'] ?>" value="<?= $status_text ?>" readonly>
+                        <label>Trạng thái</label>
+                    </div>
+                    <input type="hidden" name="status" id="edit_status_value_<?= $voucher['voucher_id'] ?>" value="<?= $status_value ?>">
+                    <?php if ($voucher['end_date'] < $today): ?>
+                        <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
+                    <?php endif; ?>
+                </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-success">Lưu thay đổi</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -153,7 +151,6 @@ if ($voucher['end_date'] < $today) {
         </tbody>
     </table>
 </div>
-
 <!-- Modal Thêm Voucher -->
 <div class="modal fade" id="modalThemVoucher" tabindex="-1">
     <div class="modal-dialog">
@@ -174,46 +171,25 @@ if ($voucher['end_date'] < $today) {
                         <label>Giảm giá (%)</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="date" class="form-control" name="start_date" required>
+                        <input type="date" class="form-control" name="start_date" id="add_start_date" required>
                         <label>Ngày bắt đầu</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="date" class="form-control" name="end_date" required>
+                        <input type="date" class="form-control" name="end_date" id="add_end_date" required>
                         <label>Ngày kết thúc</label>
                     </div>
-                    <?php
-$today = date('Y-m-d');
-
-if ($voucher['end_date'] < $today) {
-    $status_text = 'Hết hạn';
-    $status_value = 'inactive';
-    $is_disabled = true; // có thể dùng để disable các input khác nếu cần
-} elseif ($voucher['start_date'] > $today) {
-    $status_text = 'Chưa hiệu lực';
-    $status_value = 'inactive';
-    $is_disabled = true;
-} else {
-    $status_text = 'Hiệu lực';
-    $status_value = 'active';
-    $is_disabled = false;
-}
-?>
-
-<div class="form-floating">
-    <input type="text" class="form-control" value="<?= htmlspecialchars($status_text) ?>" readonly>
-    <label>Trạng thái</label>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="add_status_text" value="Hiệu lực" readonly>
+                        <label>Trạng thái</label>
+                    </div>
+                    <input type="hidden" name="status" id="add_status_value" value="active">
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
-<input type="hidden" name="status" value="<?= htmlspecialchars($status_value) ?>">
 
-<?php if ($voucher['end_date'] < $today): ?>
-    <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
-<?php endif; ?>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Lưu</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                </div>
+               
             </div>
         </form>
     </div>
@@ -269,5 +245,68 @@ document.querySelectorAll('.voucher-form').forEach(form => {
         }
     });
 });
+function updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput) {
+    const today = new Date();
+    const startDate = new Date(startInput.value);
+    const endDate = new Date(endInput.value);
+
+    if (!startInput.value || !endInput.value) {
+        statusTextInput.value = '';
+        statusValueInput.value = '';
+        return;
+    }
+
+    if (endDate < today) {
+        statusTextInput.value = 'Hết hạn';
+        statusValueInput.value = 'inactive';
+    } else if (startDate > today) {
+        statusTextInput.value = 'Chưa hiệu lực';
+        statusValueInput.value = 'inactive';
+    } else {
+        statusTextInput.value = 'Hiệu lực';
+        statusValueInput.value = 'active';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Cập nhật trạng thái tự động cho modal Thêm Voucher
+    const addStartDate = document.getElementById('add_start_date');
+    const addEndDate = document.getElementById('add_end_date');
+    const addStatusText = document.getElementById('add_status_text');
+    const addStatusValue = document.getElementById('add_status_value');
+
+    if (addStartDate && addEndDate && addStatusText && addStatusValue) {
+        addStartDate.addEventListener('change', () => updateVoucherStatus(addStartDate, addEndDate, addStatusText, addStatusValue));
+        addEndDate.addEventListener('change', () => updateVoucherStatus(addStartDate, addEndDate, addStatusText, addStatusValue));
+    }
+
+    // Cập nhật trạng thái tự động cho tất cả modal Sửa Voucher
+    document.querySelectorAll('div.modal[id^="editModal"]').forEach(modal => {
+        const voucherId = modal.id.replace('editModal', '');
+
+        const startInput = document.getElementById('edit_start_date_' + voucherId);
+        const endInput = document.getElementById('edit_end_date_' + voucherId);
+        const statusTextInput = document.getElementById('edit_status_text_' + voucherId);
+        const statusValueInput = document.getElementById('edit_status_value_' + voucherId);
+
+        if (startInput && endInput && statusTextInput && statusValueInput) {
+            startInput.addEventListener('change', () => updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput));
+            endInput.addEventListener('change', () => updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput));
+        }
+    });
+    
+});
+function deleteVoucher(id) {
+    if (!confirm("Xác nhận xoá voucher này?")) return;
+    fetch(`ajax/handle_voucher.php?delete=${id}`)
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(() => alert("Lỗi xóa voucher"));
+}
 
 </script>
