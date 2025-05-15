@@ -145,7 +145,7 @@
     position: fixed;
     top: 0;
     left: -500px;       /* Ẩn khỏi màn hình bên trái */
-    width: 500px;       /* Chiều rộng bar */
+    width: 300px;       /* Chiều rộng bar */
     max-width: 80%;     /* (Tuỳ chọn) để tránh tràn trên màn hình nhỏ hơn 500px */
     height: 100vh;
     background: #fff;
