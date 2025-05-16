@@ -169,7 +169,9 @@
 
 <section>
     <div class="container-md h-100">
-        <div class="row" id="product-list">
+        <div class="row" id="product-list" style="min-height: calc(100vh - 480px);">
+
+
             <!-- Kết quả sản phẩm từ AJAX -->
         </div>
     </div>

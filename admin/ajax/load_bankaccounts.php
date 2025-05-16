@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -57,25 +58,30 @@ foreach ($accounts as $a): ?>
             <?php endif; ?>
         </td>
         <td>
-            <button class="btn btn-edit-bankaccount text-white me-1"
-                style="background-color: #198745; border: none; border-radius: 12px; padding: 6px 12px;"
-                data-id="<?= $a['account_id'] ?>"
-                data-bank-code="<?= htmlspecialchars($a['bank_code'], ENT_QUOTES) ?>"
-                data-account-number="<?= htmlspecialchars($a['account_number'], ENT_QUOTES) ?>"
-                data-account-name="<?= htmlspecialchars($a['account_name'], ENT_QUOTES) ?>"
-                data-is-active="<?= $a['is_active'] ?>"
-                data-is-default="<?= $a['is_default'] ?>">
-                <i class="fas fa-pen-to-square me-1"></i> Sửa
-            </button>
+            <?php if (hasPermission('Quản lý tài khoản ngân hàng', 'write')): ?>
+                <button class="btn btn-edit-bankaccount text-white me-1"
+                    style="background-color: #198745; border: none; border-radius: 12px; padding: 6px 12px;"
+                    data-id="<?= $a['account_id'] ?>"
+                    data-bank-code="<?= htmlspecialchars($a['bank_code'], ENT_QUOTES) ?>"
+                    data-account-number="<?= htmlspecialchars($a['account_number'], ENT_QUOTES) ?>"
+                    data-account-name="<?= htmlspecialchars($a['account_name'], ENT_QUOTES) ?>"
+                    data-is-active="<?= $a['is_active'] ?>"
+                    data-is-default="<?= $a['is_default'] ?>">
+                    <i class="fas fa-pen-to-square me-1"></i> Sửa
+                </button>
+            <?php endif; ?>
 
-            <button class="btn btn-delete-bankaccount text-white"
-                style="background-color: #dc3545; border: none; border-radius: 12px; padding: 6px 12px;"
-                data-id="<?= $a['account_id'] ?>"
-                data-bank-code="<?= htmlspecialchars($a['bank_code'], ENT_QUOTES) ?>"
-                data-account-number="<?= htmlspecialchars($a['account_number'], ENT_QUOTES) ?>"
-                data-account-name="<?= htmlspecialchars($a['account_name'], ENT_QUOTES) ?>">
-                <i class="fas fa-trash me-1"></i> Xóa
-            </button>
+            <?php if (hasPermission('Quản lý tài khoản ngân hàng', 'delete')): ?>
+                <button class="btn btn-delete-bankaccount text-white"
+                    style="background-color: #dc3545; border: none; border-radius: 12px; padding: 6px 12px;"
+                    data-id="<?= $a['account_id'] ?>"
+                    data-bank-code="<?= htmlspecialchars($a['bank_code'], ENT_QUOTES) ?>"
+                    data-account-number="<?= htmlspecialchars($a['account_number'], ENT_QUOTES) ?>"
+                    data-account-name="<?= htmlspecialchars($a['account_name'], ENT_QUOTES) ?>">
+                    <i class="fas fa-trash me-1"></i> Xóa
+                </button>
+            <?php endif; ?>
+
         </td>
     </tr>
 <?php endforeach;

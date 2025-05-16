@@ -49,11 +49,14 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-auto" id="deleteRoleWrapper">
-                <button type="button" id="btnDeleteRole" class="btn btn-outline-danger">
-                    <i class="fa fa-trash me-1"></i> Xóa vai trò
-                </button>
-            </div>
+            <?php if (hasPermission('Quản lý quyền', 'delete')): ?>
+                <div class="col-auto" id="deleteRoleWrapper">
+                    <button type="button" id="btnDeleteRole" class="btn btn-outline-danger">
+                        <i class="fa fa-trash me-1"></i> Xóa vai trò
+                    </button>
+                </div>
+            <?php endif; ?>
+
 
         </div>
 
@@ -62,10 +65,13 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
                 <thead class="table-secondary">
                     <tr>
                         <th>Tên chức năng</th>
-                        <th>Read</th>
-                        <th>Write</th>
-                        <th>Delete</th>
-                        <th>Chức năng</th>
+                        <th>Đọc</th>
+                        <th>Sửa</th>
+                        <th>Xóa</th>
+                        <?php if (hasPermission('Quản lý quyền', 'delete')): ?>
+                            <th>Chức năng</th>
+                        <?php endif; ?>
+
                     </tr>
                 </thead>
                 <tbody id="permissionTable">
@@ -73,13 +79,15 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
                 </tbody>
             </table>
         </div>
+        <?php if (hasPermission('Quản lý quyền', 'write')): ?>
+            <div class="text-end mt-3" id="actionButtons">
+                <button type="button" id="btnEdit" class="btn btn-warning">Thay đổi</button>
 
-        <div class="text-end mt-3" id="actionButtons">
-            <button type="button" id="btnEdit" class="btn btn-warning">Thay đổi</button>
+                <button type="submit" id="btnSave" class="btn btn-primary d-none">Lưu phân quyền</button>
+                <button type="button" id="btnCancel" class="btn btn-secondary d-none">Hủy</button>
+            </div>
+        <?php endif; ?>
 
-            <button type="submit" id="btnSave" class="btn btn-primary d-none">Lưu phân quyền</button>
-            <button type="button" id="btnCancel" class="btn btn-secondary d-none">Hủy</button>
-        </div>
     </form>
 </div>
 
@@ -135,13 +143,13 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
         const btnEdit = document.getElementById('btnEdit');
 
         // Nếu là Admin (role_id = 2) → ẩn các nút
-        // if (selectedId === "2") {
-        //     deleteWrapper.classList.add('d-none');
-        //     btnEdit.classList.add('d-none');
-        // } else {
-        //     deleteWrapper.classList.remove('d-none');
-        //     btnEdit.classList.remove('d-none');
-        // }
+        if (selectedId === "2") {
+            deleteWrapper.classList.add('d-none');
+            btnEdit.classList.add('d-none');
+        } else {
+            deleteWrapper.classList.remove('d-none');
+            btnEdit.classList.remove('d-none');
+        }
 
     }
 

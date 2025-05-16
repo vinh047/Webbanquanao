@@ -15,9 +15,13 @@
 
 <!-- Thanh tìm kiếm -->
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalThemNV">
-        <i class="fa-solid fa-plus"></i> Thêm
-    </button>
+    <?php if (hasPermission('Quản lý nhân viên', 'write')): ?>
+
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalThemNV">
+            <i class="fa-solid fa-plus"></i> Thêm
+        </button>
+    <?php endif; ?>
+
 
     <div class="mx-auto w-25">
         <div class="input-group">

@@ -54,6 +54,7 @@
 
 .menu_header ul li a:hover {
   color: rgb(52, 164, 212);
+  transition: left 0.3s ease;
 }
 
 /* Ẩn submenu mặc định */
@@ -129,13 +130,22 @@
     border: none;
     cursor: pointer;
   }
+  .menu-title{
+    display: block;
+    margin-left:15px;
+    margin-top: 20px;
+    font-weight: 600;
+  }
 
+  .menu_header > ul {
+    margin: 40px 0 0;
+  }
   /* Menu dạng off-canvas: ban đầu ẩn ở bên trái */
   .menu_header {
     position: fixed;
     top: 0;
     left: -500px;       /* Ẩn khỏi màn hình bên trái */
-    width: 500px;       /* Chiều rộng bar */
+    width: 300px;       /* Chiều rộng bar */
     max-width: 80%;     /* (Tuỳ chọn) để tránh tràn trên màn hình nhỏ hơn 500px */
     height: 100vh;
     background: #fff;
@@ -165,17 +175,19 @@
   /* Menu xổ dọc */
   .menu_header ul {
     padding: 0;
-    margin: 40px 0 0; /* đẩy danh sách xuống dưới một chút 
-                         để tránh đè lên nút x */
   }
-  .menu_header ul li {
-    display: block;
+  .menu_header > ul{
+    border-top: 2px solid #ccc;
+  }
+  .submenu{
     border-bottom: 1px solid #ccc;
   }
-  .menu_header ul li a {
+  .submenu >li {
+    margin-left: 20px;
+  }
+  .menu_header ul > li {
     display: block;
-    padding: 10px 15px;
-    color: black;
+    
   }
 
   /* Submenu (nếu có) */
@@ -184,7 +196,7 @@
     box-shadow: none;
     display: none;
   }
-  .menu_header ul li:hover .submenu {
+  .menu_header ul li > .submenu {
     display: block;
   }
 }

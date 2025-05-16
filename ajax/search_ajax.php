@@ -1,4 +1,7 @@
 <?php
+// ajax/search_ajax.php
+header('Content-Type: text/html; charset=utf-8');
+
 $connection = mysqli_connect("localhost", "root", "", "db_web_quanao");
 if (!$connection) {
     echo 'Không thể kết nối đến database';
@@ -9,25 +12,29 @@ mysqli_set_charset($connection, 'utf8');
 require_once('product_filter_sort.php'); // Dùng để lọc nâng cao
 require_once('../layout/phantrang.php');
 
-// ✅ Gán q => tensp để locSanPham xử lý
+// Gán q ⇒ tensp để locSanPham xử lý
 if (isset($_GET['q']) && empty($_GET['tensp'])) {
     $_GET['tensp'] = $_GET['q'];
 }
 
 $limit = 8;
-$page = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
+$page  = isset($_GET['pageproduct']) ? (int)$_GET['pageproduct'] : 1;
 
-// Lọc nâng cao từ product_filter_sort
-$loc = locSanPham($connection);
+// Lọc nâng cao & sắp xếp
+$loc    = locSanPham($connection);
 $sapxep = str_replace("products.", "p.", sapXepSanPham());
 
 // WHERE mặc định
 $whereCondition = "v.is_deleted = 0 AND v.stock > 0";
 $loc = $loc
-    ? str_replace(["products.", "product_variants.", "WHERE"], ["p.", "v.", "WHERE $whereCondition AND"], $loc)
+    ? str_replace(
+        ["products.", "product_variants.", "WHERE"],
+        ["p.", "v.", "WHERE $whereCondition AND"],
+        $loc
+      )
     : "WHERE $whereCondition";
 
-// Đếm tổng
+// Đếm tổng kết quả
 $countSQL = "
 SELECT COUNT(*) AS total FROM (
     SELECT p.product_id
@@ -41,21 +48,27 @@ SELECT COUNT(*) AS total FROM (
     GROUP BY p.product_id
 ) AS t
 ";
-
 $countResult = mysqli_query($connection, $countSQL);
 if (!$countResult) {
-    echo "\u274c Lỗi truy vấn đếm sản phẩm: " . mysqli_error($connection);
+    echo "❌ Lỗi truy vấn đếm sản phẩm: " . mysqli_error($connection);
     exit;
 }
 $totalItems = mysqli_fetch_assoc($countResult)['total'];
 
+// Nếu không có kết quả → hiển thị no-results + nút quay lại
 if ($totalItems == 0) {
-    echo '<div class="col-12 text-center text-muted py-5">Không tìm thấy sản phẩm phù hợp.</div>';
+    echo '<div class="col-12 text-center text-muted py-5 no-results">';
+    echo '  <p class="mb-3">Không tìm thấy sản phẩm phù hợp.</p>';
+    echo '  <button class="btn btn-outline-primary" onclick="history.back()">';
+    echo '    <i class="fas fa-arrow-left me-1"></i> Quay về tìm kiếm';
+    echo '  </button>';
+    echo '</div>';
     exit;
 }
 
+// Tạo phân trang
 $pagination = new Pagination($totalItems, $limit, $page);
-$offset = $pagination->offset();
+$offset     = $pagination->offset();
 
 // Truy vấn chính
 $productSQL = "
@@ -70,14 +83,13 @@ $loc
 $sapxep
 LIMIT $limit OFFSET $offset
 ";
-
 $result = mysqli_query($connection, $productSQL);
 if (!$result) {
-    echo "\u274c Lỗi truy vấn sản phẩm: " . mysqli_error($connection);
+    echo "❌ Lỗi truy vấn sản phẩm: " . mysqli_error($connection);
     exit;
 }
 
-// Hiển thị từng sản phẩm
+// === Vòng lặp WHILE giữ nguyên ===
 while ($row = mysqli_fetch_assoc($result)) {
     $id = $row['product_id'];
     $name = $row['name'];
@@ -112,7 +124,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     class="img-fluid product-img w-100" 
                     style="transition:transform 0.4s ease, opacity 0.4s ease;">
                 <div class="size-group position-absolute start-0 end-0 d-flex justify-content-center gap-1 py-2 d-none"
-                    style="bottom: 0; background: rgba(255, 255, 255, 0.9); z-index: 2;"></div>
+                    style="bottom: 0; background: rgba(255,255,255,0.9); z-index:2;"></div>
             </div>
             <div class="mt-2 px-2">
                 <div class="color-group d-flex justify-content-start">' . $color_images_html . '</div>
@@ -132,6 +144,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
     </div>';
 }
+// === End WHILE ===
 
 // Phân trang
 $paddingTest = ($pagination->totalPages == 1) ? 'py-3' : 'py-0';

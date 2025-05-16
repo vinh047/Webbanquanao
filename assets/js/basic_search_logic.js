@@ -6,7 +6,11 @@ input.addEventListener("keyup", async (e) => {
 
   if (e.key === "Enter" && keyword) {
     addRecentSearch(keyword);
-    window.location.href = "/index.php?page=search&q=" + encodeURIComponent(keyword);
+
+    // ✅ Gửi người dùng tới trang tìm kiếm có pageproduct=1 rõ ràng
+    const searchURL = `/index.php?page=search&pageproduct=1&q=${encodeURIComponent(keyword)}`;
+    window.location.href = searchURL;
+
     return;
   }
 
@@ -27,12 +31,13 @@ input.addEventListener("keyup", async (e) => {
     if (data.length === 0) {
       resultBox.innerHTML = `<p class="text-muted">Không tìm thấy kết quả.</p>`;
     } else {
+      const encodedKeyword = encodeURIComponent(keyword);
       let html = `
         <div class="d-flex justify-content-between align-items-center mb-2">
           <p class="mb-0 fw-bold">Sản phẩm (${data.length} kết quả)</p>
           ${
             data.length > 10
-              ? `<a href="/index.php?page=search&q=${encodeURIComponent(keyword)}" class="text-muted small">Xem tất cả</a>`
+              ? `<a href="/index.php?page=search&pageproduct=1&q=${encodedKeyword}" class="text-muted small">Xem tất cả</a>`
               : ""
           }
         </div>
@@ -42,17 +47,17 @@ input.addEventListener("keyup", async (e) => {
             .map((html) => `<li class="mb-1">${html}</li>`)
             .join("")}
         </ul>
-
       `;
       resultBox.innerHTML = html;
     }
+
   } catch (err) {
     console.error("Lỗi khi tìm kiếm:", err);
     resultBox.innerHTML = `<p class="text-danger">Lỗi khi tìm kiếm.</p>`;
   }
 });
 
-// Xử lý khi người dùng click vào gợi ý tìm kiếm gần đây
+// Khi người dùng click từ gợi ý tìm kiếm gần đây
 document.addEventListener("click", function (e) {
   if (e.target.classList.contains("recent-key")) {
     const keyword = e.target.textContent;

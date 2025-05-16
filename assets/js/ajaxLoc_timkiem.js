@@ -1,151 +1,210 @@
+let currentFilterString = "";
+let lastFilterState = "";
+
 document.addEventListener("DOMContentLoaded", function () {
     const filterForm = document.querySelector(".filter_loc form");
     const productContainer = document.getElementById("product-list");
-    let currentSort = "";
+
+    // Helper: build a canonical “state” string of only the real filters
+    function getFilterState(form) {
+        const raw = new FormData(form);
+        const entries = Array.from(raw.entries())
+            .filter(([k, v]) =>
+                v.toString().trim() !== "" &&
+                !["page", "q", "pageproduct"].includes(k)
+            )
+            .sort(([a], [b]) => a.localeCompare(b));
+        return entries
+            .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+            .join("|");
+    }
 
     function fetchProducts(params = "", updateURL = true) {
         fetch("ajax/search_ajax.php?" + params)
-            .then(response => response.text())
-            .then(data => {
-                productContainer.innerHTML = data;
+            .then(r => r.text())
+            .then(html => {
+                // 1) render HTML
+                productContainer.innerHTML = html;
 
+                // 2) nếu .no-results xuất hiện => không gắn sự kiện, disable nút Lọc
+                const noRes = productContainer.querySelector(".no-results");
+                const filterBtn = filterForm.querySelector('[type="submit"]');
+                if (noRes) {
+                    filterBtn.disabled = true;
+                    return;
+                } else {
+                    filterBtn.disabled = false;
+                }
+
+                // 3) gắn lại các sự kiện tương tác
                 attachColorHoverEvents();
                 attachAddToCartEvents();
                 attachProductClickEvents();
 
-                // Gán lại sự kiện phân trang
+                // 4) phân trang
                 document.querySelectorAll(".page-link-custom").forEach(link => {
                     link.addEventListener("click", function (e) {
                         e.preventDefault();
                         const page = this.dataset.page;
-                        const query = new URLSearchParams(window.location.search);
-                        query.set("pageproduct", page);
-                        fetchProducts(query.toString());
-                        history.pushState(null, "", "search.php?" + query.toString());
+                        const q = new URLSearchParams(window.location.search);
+                        q.set("pageproduct", page);
+                        fetchProducts(q.toString());
+                        history.pushState(null, "", "index.php?page=search&" + q.toString());
                     });
                 });
 
-                // Gán lại enter input page
+                // 5) enter trên ô pageInput
                 const input = document.getElementById("pageInput");
                 if (input) {
                     input.addEventListener("keypress", function (e) {
                         if (e.key === "Enter") {
                             e.preventDefault();
-                            let page = parseInt(this.value);
+                            let p = parseInt(this.value);
                             const max = parseInt(this.max);
-                            if (page < 1) page = 1;
-                            if (page > max) page = max;
-                            const query = new URLSearchParams(window.location.search);
-                            query.set("pageproduct", page);
-                            fetchProducts(query.toString());
-                            history.pushState(null, "", "search.php?" + query.toString());
+                            p = Math.min(Math.max(p, 1), max);
+                            const q = new URLSearchParams(window.location.search);
+                            q.set("pageproduct", p);
+                            fetchProducts(q.toString());
+                            history.pushState(null, "", "index.php?page=search&" + q.toString());
                         }
                     });
                 }
-            });
+
+                // 6) cập nhật tracker
+                currentFilterString = params;
+                lastFilterState      = getFilterState(filterForm);
+
+                // 7) cập nhật URL nếu cần
+                if (updateURL) {
+                    history.pushState(null, "", "index.php?page=search&" + params);
+                }
+            })
+            .catch(console.error);
     }
 
-    // Khi submit lọc
+    // submit lọc
     filterForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const formData = new FormData(this);
-        formData.delete("page");
 
-        const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
-        formData.set("pageproduct", currentPage);
+        // ít nhất 1 tiêu chí
+        const hasFl = Array.from(new FormData(this).entries())
+            .some(([k, v]) => v.toString().trim() && !["page","q","pageproduct"].includes(k));
+        if (!hasFl) {
+            alert("Vui lòng chọn ít nhất một tiêu chí lọc trước khi nhấn Lọc");
+            return;
+        }
 
-        const queryString = formDataToQueryString(formData);
-        fetchProducts(queryString);
+        // filter state mới
+        const newState = getFilterState(this);
+        if (newState === lastFilterState) {
+            console.log("Không có thay đổi so với lựa chọn trước, không tải lại");
+            return;
+        }
+        lastFilterState = newState;
 
-        const newURL = "search.php?" + queryString;
-        history.replaceState(null, "", newURL);
+        // xây queryString
+        const fd = new FormData(this);
+        fd.set("pageproduct", new URLSearchParams(window.location.search).get("pageproduct")||"1");
+        const sq = new URLSearchParams(window.location.search).get("q");
+        if (sq) fd.set("q", sq);
+        const qs = formDataToQueryString(fd);
+
+        fetchProducts(qs);
     });
 
-    // Sắp xếp
+    // sort nút
     document.querySelectorAll(".sort-btn").forEach(btn => {
         btn.addEventListener("click", function () {
-            const sapxep = this.dataset.sort;
-
+            const sort = this.dataset.sort;
             document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
             this.classList.add("active");
 
-            const formData = new FormData(filterForm);
-            formData.set("sapxep", sapxep);
+            const fd = new FormData(filterForm);
+            fd.set("sapxep", sort);
+            fd.set("pageproduct", new URLSearchParams(window.location.search).get("pageproduct")||"1");
+            const sq = new URLSearchParams(window.location.search).get("q");
+            if (sq) fd.set("q", sq);
 
-            const currentPage = new URLSearchParams(window.location.search).get("pageproduct") || "1";
-            formData.set("pageproduct", currentPage);
-
-            const queryString = formDataToQueryString(formData);
-            fetchProducts(queryString);
-
-            const newURL = "search.php?" + queryString;
-            history.pushState(null, "", newURL);
+            const qs = formDataToQueryString(fd);
+            if (qs === currentFilterString) {
+                console.log("Sort trùng, không tải lại");
+                return;
+            }
+            currentFilterString = qs;
+            fetchProducts(qs);
         });
     });
 
-    // Gán lại giá trị từ URL khi F5
-    const urlParams = new URLSearchParams(window.location.search);
-    syncFilterWithURL(urlParams, filterForm);
-    if (urlParams.get("sapxep")) {
+    // sync form với URL
+    const up = new URLSearchParams(window.location.search);
+    syncFilterWithURL(up, filterForm);
+    if (up.get("sapxep")) {
         document.querySelectorAll(".sort-btn").forEach(btn => {
-            if (btn.dataset.sort === urlParams.get("sapxep")) {
-                btn.classList.add("active");
-            }
+            if (btn.dataset.sort === up.get("sapxep")) btn.classList.add("active");
         });
     }
 
-    const params = window.location.search.startsWith("?") ? window.location.search.substring(1) : "";
-    if (params) {
-        fetchProducts(params);
-    } else {
-        fetchProducts();
+    // fetch ban đầu
+    const init = window.location.search.startsWith("?")
+        ? window.location.search.slice(1)
+        : "";
+    fetchProducts(init, false);
+
+    // popstate
+    window.addEventListener("popstate", () => {
+        const p = window.location.search.startsWith("?")
+            ? window.location.search.slice(1)
+            : "";
+        fetchProducts(p, false);
+    });
+
+    // nút back tìm kiếm
+    const btnBack = document.getElementById("btn-back-home");
+    if (btnBack) {
+        btnBack.addEventListener("click", e => {
+            e.preventDefault();
+            if (window.history.length > 1) window.history.back();
+            else window.location.href = "index.php?page=search";
+        });
     }
 });
 
+// chuyển FormData→query string
 function formDataToQueryString(formData) {
-    const params = {};
-    for (const [key, value] of formData.entries()) {
-        if (value.trim() === "") continue;
-        const cleanKey = key.endsWith("[]") ? key.slice(0, -2) : key;
-        if (!params[cleanKey]) params[cleanKey] = [];
-        params[cleanKey].push(value);
+    const p = {};
+    for (const [k, v] of formData.entries()) {
+        if (!v.trim()) continue;
+        const key = k.endsWith("[]") ? k.slice(0,-2) : k;
+        if (!p[key]) p[key] = [];
+        p[key].push(v);
     }
-    return Object.entries(params)
-        .map(([key, values]) => `${encodeURIComponent(key)}=${encodeURIComponent(values.join(","))}`)
+    return Object.entries(p)
+        .map(([k, vs]) => `${encodeURIComponent(k)}=${encodeURIComponent(vs.join(","))}`)
         .join("&");
 }
 
-function syncFilterWithURL(urlParams, filterForm) {
-    for (const [key, value] of urlParams.entries()) {
-        if (key === 'colors') {
-            const values = value.split(',');
-            values.forEach(val => {
-                const checkbox = filterForm.querySelector(`input[name="colors[]"][value="${val}"]`);
-                if (checkbox) {
-                    checkbox.checked = true;
-                    const box = document.querySelector(`.color-option[data-color-id="${val}"]`);
-                    if (box) box.classList.add("selected");
-                }
-            });
-        } else if (key === 'sizes') {
-            const values = value.split(',');
-            values.forEach(val => {
-                const checkbox = filterForm.querySelector(`input[name="sizes[]"][value="${val}"]`);
-                if (checkbox) {
-                    checkbox.checked = true;
-                    const box = document.querySelector(`.size-option[data-size-id="${val}"]`);
+// sync URL→form
+function syncFilterWithURL(urlParams, form) {
+    for (const [k,v] of urlParams.entries()) {
+        if (["colors","sizes"].includes(k)) {
+            v.split(",").forEach(val => {
+                const cb = form.querySelector(`input[name="${k}[]"][value="${val}"]`);
+                if (cb) {
+                    cb.checked = true;
+                    const box = document.querySelector(`.${k.slice(0,-1)}-option[data-${k.slice(0,-1)}-id="${val}"]`);
                     if (box) box.classList.add("selected");
                 }
             });
         } else {
-            const input = filterForm.querySelector(`[name="${key}"]`);
-            if (input) {
-                input.value = value;
-            }
+            const inp = form.querySelector(`[name="${k}"]`);
+            if (inp) inp.value = v;
         }
     }
 }
+// Các hàm attachColorHoverEvents, attachAddToCartEvents, attachProductClickEvents, addToCart
+// giữ nguyên như trước...
 
+// Thêm sự kiện hover thay đổi ảnh màu sắc
 function attachColorHoverEvents() {
     document.querySelectorAll(".color-thumb").forEach(img => {
         const productId = img.dataset.productId;
@@ -173,6 +232,7 @@ function attachColorHoverEvents() {
     });
 }
 
+// Thêm sự kiện nút thêm vào giỏ hàng
 function attachAddToCartEvents() {
     document.querySelectorAll(".btn-add-to-cart").forEach(btn => {
         btn.addEventListener("click", function () {
@@ -193,6 +253,7 @@ function attachAddToCartEvents() {
     });
 }
 
+// Thêm sự kiện click ảnh sản phẩm để đi tới chi tiết
 function attachProductClickEvents() {
     document.querySelectorAll("img[id^='main-image-']").forEach(img => {
         img.addEventListener("click", function () {
@@ -203,4 +264,10 @@ function attachProductClickEvents() {
             }
         });
     });
+}
+
+// Hàm giả định addToCart (bạn cần implement riêng)
+function addToCart(id, name, price, image, variant_id, colorName, sizeName) {
+    // Thêm sản phẩm vào giỏ hàng logic ở đây
+    console.log(`Add to cart: ${name} - ${colorName} - ${sizeName} - ${price} VNĐ`);
 }

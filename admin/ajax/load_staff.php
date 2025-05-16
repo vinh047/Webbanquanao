@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -64,36 +65,42 @@ if (empty($staffs)) {
             <td><?= $s['status'] == 1 ? 'Hoạt động' : 'Khóa' ?></td>
             <td>
                 <!-- nút Sửa -->
-                <button class="btn btn-success btn-edit-staff mx-1"
-                    data-id="<?= $s['user_id'] ?>"
-                    data-name="<?= htmlspecialchars($s['name']) ?>"
-                    data-email="<?= htmlspecialchars($s['email']) ?>"
-                    data-password="<?= htmlspecialchars($s['password']) ?>"
-                    data-phone="<?= htmlspecialchars($s['phone']) ?>"
-                    data-province="<?= htmlspecialchars($s['province'] ?? '') ?>"
-                    data-district="<?= htmlspecialchars($s['district'] ?? '') ?>"
-                    data-ward="<?= htmlspecialchars($s['ward'] ?? '') ?>"
-                    data-address-detail="<?= htmlspecialchars($s['address_detail'] ?? '') ?>"
-                    data-status="<?= $s['status'] ?>"
-                    data-role="<?= roleName($s['role_id']) ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalSuaNV">
-                    <i class="fa-regular fa-pen-to-square"></i> Sửa
-                </button>
+                <?php if (hasPermission('Quản lý nhân viên', 'write')): ?>
+
+                    <button class="btn btn-success btn-edit-staff mx-1"
+                        data-id="<?= $s['user_id'] ?>"
+                        data-name="<?= htmlspecialchars($s['name']) ?>"
+                        data-email="<?= htmlspecialchars($s['email']) ?>"
+                        data-password="<?= htmlspecialchars($s['password']) ?>"
+                        data-phone="<?= htmlspecialchars($s['phone']) ?>"
+                        data-province="<?= htmlspecialchars($s['province'] ?? '') ?>"
+                        data-district="<?= htmlspecialchars($s['district'] ?? '') ?>"
+                        data-ward="<?= htmlspecialchars($s['ward'] ?? '') ?>"
+                        data-address-detail="<?= htmlspecialchars($s['address_detail'] ?? '') ?>"
+                        data-status="<?= $s['status'] ?>"
+                        data-role="<?= roleName($s['role_id']) ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalSuaNV">
+                        <i class="fa-regular fa-pen-to-square"></i> Sửa
+                    </button>
+                <?php endif; ?>
 
                 <!-- nút Xóa -->
-                <button class="btn btn-danger btn-delete-staff mx-1"
-                    data-id="<?= $s['user_id'] ?>"
-                    data-name="<?= htmlspecialchars($s['name']) ?>"
-                    data-email="<?= htmlspecialchars($s['email']) ?>"
-                    data-password="<?= htmlspecialchars($s['password']) ?>"
-                    data-phone="<?= htmlspecialchars($s['phone']) ?>"
-                    data-status="<?= $s['status'] ?>"
-                    data-role="<?= roleName($s['role_id']) ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalXoaNV">
-                    <i class="fas fa-trash"></i> Xóa
-                </button>
+                <?php if (hasPermission('Quản lý nhân viên', 'delete')): ?>
+
+                    <button class="btn btn-danger btn-delete-staff mx-1"
+                        data-id="<?= $s['user_id'] ?>"
+                        data-name="<?= htmlspecialchars($s['name']) ?>"
+                        data-email="<?= htmlspecialchars($s['email']) ?>"
+                        data-password="<?= htmlspecialchars($s['password']) ?>"
+                        data-phone="<?= htmlspecialchars($s['phone']) ?>"
+                        data-status="<?= $s['status'] ?>"
+                        data-role="<?= roleName($s['role_id']) ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalXoaNV">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                <?php endif; ?>
 
                 <!-- nút Chi tiết -->
                 <button style="color: white;" class="btn btn-info btn-detail-staff mx-1"

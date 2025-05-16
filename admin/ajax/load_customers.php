@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -58,30 +59,35 @@ foreach ($customers as $c): ?>
         </td>
         <td>
             <!-- nút mở/khóa -->
-            <button class="btn btn-warning btn-toggle-status-customer mx-1"
-                data-id="<?= $c['user_id'] ?>"
-                data-status="<?= $c['status'] ?>">
-                <?php if ($c['status'] == 1): ?>
-                    <i class="fa-solid fa-lock"></i> Khóa tài khoản
-                <?php else: ?>
-                    <i class="fa-solid fa-lock-open"></i> Mở khóa tài khoản
-                <?php endif; ?>
-            </button>
-
+            <?php if (hasPermission('Quản lý khách hàng', 'write')): ?>
+                <button class="btn btn-warning btn-toggle-status-customer mx-1"
+                    data-id="<?= $c['user_id'] ?>"
+                    data-status="<?= $c['status'] ?>">
+                    <?php if ($c['status'] == 1): ?>
+                        <i class="fa-solid fa-lock"></i> Khóa tài khoản
+                    <?php else: ?>
+                        <i class="fa-solid fa-lock-open"></i> Mở khóa tài khoản
+                    <?php endif; ?>
+                </button>
+            <?php endif; ?>
 
             <!-- nút Xóa -->
-            <button
-                class="btn btn-danger btn-delete-customer mx-1"
-                data-id="<?= $c['user_id']   ?>"
-                data-name="<?= htmlspecialchars($c['name'])  ?>"
-                data-email="<?= htmlspecialchars($c['email']) ?>"
-                data-password="<?= htmlspecialchars($c['password']) ?>"
-                data-phone="<?= htmlspecialchars($c['phone']) ?>"
-                data-status="<?= $c['status'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaKH">
-                <i class="fas fa-trash"></i> Xóa
-            </button>
+
+            <?php if (hasPermission('Quản lý khách hàng', 'delete')): ?>
+                <button
+                    class="btn btn-danger btn-delete-customer mx-1"
+                    data-id="<?= $c['user_id']   ?>"
+                    data-name="<?= htmlspecialchars($c['name'])  ?>"
+                    data-email="<?= htmlspecialchars($c['email']) ?>"
+                    data-password="<?= htmlspecialchars($c['password']) ?>"
+                    data-phone="<?= htmlspecialchars($c['phone']) ?>"
+                    data-status="<?= $c['status'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalXoaKH">
+                    <i class="fas fa-trash"></i> Xóa
+                </button>
+            <?php endif; ?>
+
 
             <!-- nút chi tiết -->
             <button style="color: white;" class="btn btn-info btn-detail-customer mx-1"
