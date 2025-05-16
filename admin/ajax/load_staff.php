@@ -84,6 +84,7 @@ if (empty($staffs)) {
                         data-address-detail="<?= htmlspecialchars($s['address_detail'] ?? '') ?>"
                         data-status="<?= $s['status'] ?>"
                         data-role="<?= htmlspecialchars($s['role_name']) ?>"
+                        data-role-id="<?= $s['role_id'] ?>"
                         data-bs-toggle="modal"
                         data-bs-target="#modalSuaNV">
                         <i class="fa-regular fa-pen-to-square"></i> Sửa

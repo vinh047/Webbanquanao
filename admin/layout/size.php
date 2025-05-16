@@ -18,7 +18,7 @@
             <i class="fa-solid fa-plus"></i> Thêm
         </button>
     <?php endif; ?>
-    
+
     <div class="mx-auto w-25">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Tìm kiếm size" id="searchSize">
@@ -38,7 +38,10 @@
             <tr>
                 <th style="width: 25%;">ID</th>
                 <th style="width: 35%;">Size</th>
-                <th style="width: 40%;">Chức năng</th>
+                <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
+
+                    <th style="width: 40%;">Chức năng</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody class="size-wrap">

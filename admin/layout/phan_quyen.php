@@ -144,11 +144,11 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
 
         // Nếu là Admin (role_id = 2) → ẩn các nút
         if (selectedId === "2") {
-            deleteWrapper.classList.add('d-none');
-            btnEdit.classList.add('d-none');
+            if (deleteWrapper) deleteWrapper.classList.add('d-none');
+            if (btnEdit) btnEdit.classList.add('d-none');
         } else {
-            deleteWrapper.classList.remove('d-none');
-            btnEdit.classList.remove('d-none');
+            if (deleteWrapper) deleteWrapper.classList.remove('d-none');
+            if (btnEdit) btnEdit.classList.remove('d-none');
         }
 
     }
@@ -162,7 +162,7 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
                 permissionTable.innerHTML = data.permissionHtml || '';
                 disableAllCheckboxes(); // sẽ thêm class readonly
                 // Giữ lại class nếu đang readonly
-                if (!btnEdit.classList.contains('d-none')) {
+                if (btnEdit && !btnEdit.classList.contains('d-none')) {
                     formPermission.classList.add('readonly-permission');
                 }
                 toggleRoleControls();
@@ -218,19 +218,24 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
         formPermission.classList.remove('readonly-permission');
     }
 
-    btnEdit.addEventListener('click', () => {
-        enableAllCheckboxes();
-        btnEdit.classList.add('d-none');
-        btnSave.classList.remove('d-none');
-        btnCancel.classList.remove('d-none');
-    });
+    if (btnEdit) {
+        btnEdit.addEventListener('click', () => {
+            enableAllCheckboxes();
+            btnEdit.classList.add('d-none');
+            btnSave.classList.remove('d-none');
+            btnCancel.classList.remove('d-none');
+        });
+    }
 
-    btnCancel.addEventListener('click', () => {
-        loadPermissions(); // Reload lại quyền gốc
-        btnEdit.classList.remove('d-none');
-        btnSave.classList.add('d-none');
-        btnCancel.classList.add('d-none');
-    });
+    if (btnCancel) {
+        btnCancel.addEventListener('click', () => {
+            loadPermissions(); // Reload lại quyền gốc
+            btnEdit.classList.remove('d-none');
+            btnSave.classList.add('d-none');
+            btnCancel.classList.add('d-none');
+        });
+
+    }
 
     function handlePermissionSubmit(e) {
         e.preventDefault();
@@ -272,61 +277,67 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
 
     let selectedRoleId = null;
     let selectedRoleName = '';
+    if (document.getElementById('btnDeleteRole')) {
+        document.getElementById('btnDeleteRole').addEventListener('click', () => {
+            const roleSelect = document.getElementById('roleSelect');
+            selectedRoleId = roleSelect.value;
+            selectedRoleName = roleSelect.selectedOptions[0].text;
 
-    document.getElementById('btnDeleteRole').addEventListener('click', () => {
-        const roleSelect = document.getElementById('roleSelect');
-        selectedRoleId = roleSelect.value;
-        selectedRoleName = roleSelect.selectedOptions[0].text;
+            // Gán tên vào modal đầu tiên
+            document.getElementById('roleName1').textContent = selectedRoleName;
 
-        // Gán tên vào modal đầu tiên
-        document.getElementById('roleName1').textContent = selectedRoleName;
+            // Hiện modal đầu
+            const modal1 = new bootstrap.Modal(document.getElementById('modalConfirmDelete1'));
+            modal1.show();
+        });
+    }
 
-        // Hiện modal đầu
-        const modal1 = new bootstrap.Modal(document.getElementById('modalConfirmDelete1'));
-        modal1.show();
-    });
+    if (document.getElementById('btnNextConfirm')) {
+        document.getElementById('btnNextConfirm').addEventListener('click', () => {
+            // Ẩn modal đầu và mở modal cảnh báo cuối
+            const modal1El = bootstrap.Modal.getInstance(document.getElementById('modalConfirmDelete1'));
+            modal1El.hide();
 
-    document.getElementById('btnNextConfirm').addEventListener('click', () => {
-        // Ẩn modal đầu và mở modal cảnh báo cuối
-        const modal1El = bootstrap.Modal.getInstance(document.getElementById('modalConfirmDelete1'));
-        modal1El.hide();
+            document.getElementById('roleName2').textContent = selectedRoleName;
 
-        document.getElementById('roleName2').textContent = selectedRoleName;
+            const modal2 = new bootstrap.Modal(document.getElementById('modalConfirmDelete2'));
+            modal2.show();
+        });
+    }
 
-        const modal2 = new bootstrap.Modal(document.getElementById('modalConfirmDelete2'));
-        modal2.show();
-    });
+    if (document.getElementById('btnConfirmDeleteFinal')) {
 
-    document.getElementById('btnConfirmDeleteFinal').addEventListener('click', () => {
-        const input = document.getElementById('confirmRoleInput').value.trim();
-        const errorEl = document.getElementById('confirmError');
+        document.getElementById('btnConfirmDeleteFinal').addEventListener('click', () => {
+            const input = document.getElementById('confirmRoleInput').value.trim();
+            const errorEl = document.getElementById('confirmError');
 
-        if (input !== selectedRoleName) {
-            errorEl.classList.remove('d-none');
-            return;
-        }
+            if (input !== selectedRoleName) {
+                errorEl.classList.remove('d-none');
+                return;
+            }
 
-        errorEl.classList.add('d-none');
+            errorEl.classList.add('d-none');
 
-        fetch('ajax/delete_role.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    role_id: selectedRoleId
+            fetch('ajax/delete_role.php', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        role_id: selectedRoleId
+                    })
                 })
-            })
-            .then(res => res.json())
-            .then(data => {
-                const modal2 = bootstrap.Modal.getInstance(document.getElementById('modalConfirmDelete2'));
-                modal2.hide();
+                .then(res => res.json())
+                .then(data => {
+                    const modal2 = bootstrap.Modal.getInstance(document.getElementById('modalConfirmDelete2'));
+                    modal2.hide();
 
-                alert(data.message);
-                if (data.success) {
-                    window.location.reload();
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Xảy ra lỗi khi xóa vai trò.');
-            });
-    });
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Xảy ra lỗi khi xóa vai trò.');
+                });
+        });
+    }
 </script>

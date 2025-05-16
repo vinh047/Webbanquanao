@@ -25,7 +25,9 @@
                 <th>Tên nhà cung cấp</th>
                 <th>Email</th>
                 <th>Địa chỉ</th>
-                <th>Chức năng</th>
+                <?php if (hasPermission('Quản lý nhà cung cấp', 'write') || hasPermission('Quản lý nhà cung cấp', 'delete')): ?>
+                    <th>Chức năng</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody class="supplier-wrap">

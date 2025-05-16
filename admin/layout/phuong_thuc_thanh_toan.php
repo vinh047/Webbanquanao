@@ -36,7 +36,9 @@
             <tr>
                 <th>ID</th>
                 <th>Tên phương thức</th>
-                <th>Chức năng</th>
+                <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                    <th>Chức năng</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody class="payment-method-wrap">

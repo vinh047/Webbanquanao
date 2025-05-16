@@ -48,32 +48,35 @@ foreach ($suppliers as $supplier): ?>
         <td><?= $supplier['name'] ?></td>
         <td><?= $supplier['email'] ?></td>
         <td><?= $supplier['address'] ?></td>
-        <td>
-            <?php if (hasPermission('Quản lý nhà cung cấp', 'write')): ?>
-                <button class="btn btn-success mx-1 btn-edit-supplier"
-                    data-id="<?= $supplier['supplier_id'] ?>"
-                    data-name="<?= $supplier['name'] ?>"
-                    data-email="<?= $supplier['email'] ?>"
-                    data-address="<?= $supplier['address'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalSuaNCC">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                    Sửa
-                </button>
-            <?php endif; ?>
-            <?php if (hasPermission('Quản lý nhà cung cấp', 'delete')): ?>
-            <button class="btn btn-danger btn-delete-supplier mx-1"
-                data-supplier-id="<?= $supplier['supplier_id'] ?>"
-                data-name="<?= $supplier['name'] ?>"
-                data-email="<?= $supplier['email'] ?>"
-                data-address="<?= $supplier['address'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaNCC">
-                <i class="fas fa-trash"></i>
-                Xóa
-            </button>
-            <?php endif; ?>
-        </td>
+        <?php if (hasPermission('Quản lý nhà cung cấp', 'write') || hasPermission('Quản lý nhà cung cấp', 'delete')): ?>
+            <td>
+                <?php if (hasPermission('Quản lý nhà cung cấp', 'write')): ?>
+                    <button class="btn btn-success mx-1 btn-edit-supplier"
+                        data-id="<?= $supplier['supplier_id'] ?>"
+                        data-name="<?= $supplier['name'] ?>"
+                        data-email="<?= $supplier['email'] ?>"
+                        data-address="<?= $supplier['address'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalSuaNCC">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                        Sửa
+                    </button>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý nhà cung cấp', 'delete')): ?>
+                    <button class="btn btn-danger btn-delete-supplier mx-1"
+                        data-supplier-id="<?= $supplier['supplier_id'] ?>"
+                        data-name="<?= $supplier['name'] ?>"
+                        data-email="<?= $supplier['email'] ?>"
+                        data-address="<?= $supplier['address'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalXoaNCC">
+                        <i class="fas fa-trash"></i>
+                        Xóa
+                    </button>
+                <?php endif; ?>
+            </td>
+        <?php endif; ?>
+
     </tr>
 <?php endforeach;
 
