@@ -1,4 +1,4 @@
-    <?php
+<?php
     require_once(__DIR__ . '/../../database/DBConnection.php');
     require_once(__DIR__ . '/../../layout/phantrang.php');
     require_once('functionLoc.php');
@@ -75,19 +75,11 @@
         $pttg = $row['pttg'];
         echo "
             <tr class='text-center'>
-<<<<<<< HEAD
-                <td class='hienthiid'>$id</td>
-                <td class='tensp giaodienmb'>$ten</td>
-                <td class='hienthiloai giaodienmb'>$loai</td>
-                <td class='mota giaodienmb'>$mota</td>
-                <td class='hienthigia giaodienmb'>$giaban đ</td>
-=======
                 <td class='hienthiid align-middle'>$id</td>
                 <td class='tensp giaodienmb align-middle'>$ten</td>
                 <td class='hienthiloai giaodienmb align-middle'>$loai</td>
                 <td class='mota giaodienmb align-middle'>$mota</td>
                 <td class='hienthigia giaodienmb align-middle'>$giaban đ</td>
->>>>>>> 7451e49ac3130ec823b71d2fcd079384bdae4301
     " . ($hasAnyActionPermission ? "
     <td>
         <div class='d-flex justify-content-center gap-3'>

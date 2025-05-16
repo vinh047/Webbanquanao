@@ -40,11 +40,9 @@ if (!$details) {
             <th>Size</th>
             <th>Màu</th>
             <th>Số lượng</th>
-<<<<<<< HEAD
             <th>Đơn giá (đ)</th>
-=======
-            <th>Đơn giá</th>
->>>>>>> 7451e49ac3130ec823b71d2fcd079384bdae4301
+
+
         </tr>
     </thead>
     <tbody>

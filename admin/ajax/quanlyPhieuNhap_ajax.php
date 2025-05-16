@@ -79,19 +79,11 @@ foreach ($data as $row) {
     $tenncc = $row['ncc_name'];
     echo "
     <tr class='text-center'>
-<<<<<<< HEAD
-        <td class='hienthiid'>$idpn</td>
-        <td class='hienthigia giaodienmb'>$tennv</td>
-        <td class='tensp giaodienmb'>$tenncc</td>
-        <td class='tensp giaodienmb'>$gia đ</td>
-        <td class='tensp giaodienmb'>$ngaylap</td>
-=======
         <td class='hienthiid align-middle'>$idpn</td>
         <td class='hienthigia giaodienmb align-middle'>$tennv</td>
         <td class='tensp giaodienmb align-middle'>$tenncc</td>
         <td class='tensp giaodienmb align-middle'>$gia đ</td>
         <td class='tensp giaodienmb align-middle'>$ngaylap</td>
->>>>>>> 7451e49ac3130ec823b71d2fcd079384bdae4301
         <td class='tensp'>
             " . ($row['status'] == 1
                 ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6 text-dark' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"
