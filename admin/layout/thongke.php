@@ -581,10 +581,9 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
     </div>
 </div>
 <!-- Modal xem chi tiết đơn hàng -->
-<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true"
-     data-bs-backdrop="static"
-     data-bs-keyboard="false"
+<div class="modal fade" id="orderDetailModal" tabindex="-1"
      aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
