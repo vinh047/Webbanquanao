@@ -613,7 +613,7 @@
             }
 
             // ✅ Không có lỗi → tiếp tục thanh toán
-            window.location.href = 'pay.php';
+            window.location.href = '/index.php?page=pay';
 
         } catch (err) {
             console.error('Lỗi khi kiểm tra tồn kho:', err);
