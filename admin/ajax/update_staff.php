@@ -15,12 +15,13 @@ $province       = trim($_POST['province'] ?? '');
 $district       = trim($_POST['district'] ?? '');
 $ward           = trim($_POST['ward'] ?? '');
 $address_detail = trim($_POST['address_detail'] ?? '');
+$role_id  = isset($_POST['role_id']) ? (int)$_POST['role_id'] : null;
 
 $province_name  = trim($_POST['province_name'] ?? '');
 $district_name  = trim($_POST['district_name'] ?? '');
 $ward_name      = trim($_POST['ward_name'] ?? '');
 
-if ($user_id === '' || $name === '' || $phone === '' || $province === '' || $district === '' || $ward === '' || $address_detail === '') {
+if ($user_id === '' || $name === '' || $phone === '' || $province === '' || $district === '' || $ward === '' || $address_detail === '' || $role_id === null) {
     echo json_encode(['success' => false, 'message' => 'Vui lòng điền đầy đủ thông tin.']);
     exit;
 }
@@ -29,12 +30,12 @@ try {
     // Nếu có mật khẩu thì cập nhật
     if ($password !== '') {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $db->execute("UPDATE users SET name = ?, password = ?, phone = ?, status = ? WHERE user_id = ?", [
-            $name, $hashedPassword, $phone, $status, $user_id
+        $db->execute("UPDATE users SET name = ?, password = ?, phone = ?, status = ?, role_id = ? WHERE user_id = ?", [
+            $name, $hashedPassword, $phone, $status, $role_id, $user_id
         ]);
     } else {
-        $db->execute("UPDATE users SET name = ?, phone = ?, status = ? WHERE user_id = ?", [
-            $name, $phone, $status, $user_id
+        $db->execute("UPDATE users SET name = ?, phone = ?, status = ?, role_id = ? WHERE user_id = ?", [
+            $name, $phone, $status,$role_id, $user_id
         ]);
     }
 

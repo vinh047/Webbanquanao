@@ -1,5 +1,9 @@
 <?php
-// Nếu là file PHP thuần, bạn có thể thêm phần head, link css/js nếu cần
+require_once '../database/DBConnection.php';
+
+$db = DBConnect::getInstance();
+
+$roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0', []);
 ?>
 
 <style>
@@ -7,7 +11,7 @@
         color: black;
     }
 
-    .nav-tabs .nav-link.active {
+    .nav-tabs .nav-lin k.active {
         color: #0d6efd;
         /* màu xanh Bootstrap */
     }
@@ -78,6 +82,16 @@
                     <input type="text" class="form-control" id="phoneNV" name="phone" required>
                 </div>
                 <div class="mb-3">
+                    <label for="roleNV" class="form-label">Vai trò</label>
+                    <select class="form-select" id="roleNV" name="role_id" required>
+                        <option value="" disabled selected>Chọn vai trò</option>
+                        <?php foreach ($roles as $role): ?>
+                            <option value="<?= $role['role_id'] ?>"><?= htmlspecialchars($role['name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label for="statusNV" class="form-label">Trạng thái</label>
                     <select class="form-control" id="statusNV" name="status" required>
                         <option value="1">Hoạt động</option>
@@ -144,6 +158,15 @@
                 <div class="mb-3">
                     <label for="phoneNhanVienSua" class="form-label">Số điện thoại</label>
                     <input type="text" class="form-control" id="phoneNhanVienSua" name="phone" required>
+                </div>
+                <div class="mb-3">
+                    <label for="roleNhanVienSua" class="form-label">Vai trò</label>
+                    <select class="form-select" id="roleNhanVienSua" name="role_id" required>
+                        <option value="" disabled selected>Chọn vai trò</option>
+                        <?php foreach ($roles as $role): ?>
+                            <option value="<?= $role['role_id'] ?>"><?= htmlspecialchars($role['name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="statusNhanVienSua" class="form-label">Trạng thái</label>
@@ -275,6 +298,7 @@
         const password = form.password.value.trim();
         const phone = form.phone.value.trim();
         const status = form.status.value;
+        const role_id = form.role_id.value;
 
         const province = form.province.value;
         const district = form.district.value;
@@ -286,7 +310,7 @@
         const district_name = form.district.options[form.district.selectedIndex].text;
         const ward_name = form.ward.options[form.ward.selectedIndex].text;
 
-        if (!name || !email || !password || !phone || !province || !district || !ward || !address_detail) {
+        if (!name || !email || !password || !phone || !province || !district || !ward || !address_detail || !role_id) {
             alert("Vui lòng nhập đầy đủ thông tin nhân viên.");
             return;
         }
@@ -295,6 +319,7 @@
         formData.append('province_name', province_name);
         formData.append('district_name', district_name);
         formData.append('ward_name', ward_name);
+        formData.append('role_id', role_id);
 
         fetch('ajax/add_staff.php', {
                 method: 'POST',
@@ -359,6 +384,7 @@
         document.getElementById("phoneNhanVienSua").value = btn.dataset.phone || "";
         document.getElementById("statusNhanVienSua").value = btn.dataset.status || "1";
         document.getElementById("addressDetailNVEdit").value = btn.dataset.addressDetail || "";
+        document.getElementById("roleNhanVienSua").value = btn.dataset.roleId || "";
 
         const provinceCode = btn.dataset.province || "";
         const districtCode = btn.dataset.district || "";
@@ -431,7 +457,11 @@
         const password = form.password.value.trim();
         const phone = form.phone.value.trim();
         const status = form.status.value;
-
+        const role_id = form.role_id.value;
+        if (!role_id) {
+            alert("Vui lòng chọn vai trò.");
+            return;
+        }
         const province = form.province.value;
         const district = form.district.value;
         const ward = form.ward.value;
@@ -451,6 +481,7 @@
         formData.append('province_name', province_name);
         formData.append('district_name', district_name);
         formData.append('ward_name', ward_name);
+        formData.append('role_id', role_id);
 
         fetch('ajax/update_staff.php', {
                 method: 'POST',

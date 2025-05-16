@@ -17,10 +17,13 @@ $address_detail = trim($_POST['address_detail'] ?? '');
 $province_name  = trim($_POST['province_name'] ?? '');
 $district_name  = trim($_POST['district_name'] ?? '');
 $ward_name      = trim($_POST['ward_name'] ?? '');
+$role_id = isset($_POST['role_id']) ? (int)$_POST['role_id'] : 4;
 
 // Validate bắt buộc
-if ($name === '' || $email === '' || $password === '' || $phone === '' ||
-    $province === '' || $district === '' || $ward === '' || $address_detail === '') {
+if (
+    $name === '' || $email === '' || $password === '' || $phone === '' ||
+    $province === '' || $district === '' || $ward === '' || $address_detail === ''
+) {
     echo json_encode([
         'success' => false,
         'message' => 'Vui lòng cung cấp đầy đủ tất cả các trường thông tin.'
@@ -55,8 +58,8 @@ try {
     // Thêm user vào bảng users
     $ok = $db->execute(
         'INSERT INTO users (name, email, password, phone, status, role_id)
-         VALUES (?, ?, ?, ?, ?, 4)',
-        [$name, $email, $hashedPassword, $phone, $status]
+            VALUES (?, ?, ?, ?, ?, ?)',
+        [$name, $email, $hashedPassword, $phone, $status, $role_id]
     );
 
     if (!$ok) {
@@ -100,4 +103,3 @@ try {
         ]);
     }
 }
-?>
