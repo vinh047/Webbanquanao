@@ -35,60 +35,66 @@ $sql = "SELECT * FROM vouchers WHERE 1 $filter ORDER BY voucher_id ASC";
 $vouchers = $db->select($sql, $params);
 ?>
 <style>
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-}
+    .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+    }
 
-/* Khung chứa nhóm tìm kiếm + filter + xóa lọc */
-.search-filter-group {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  width: 420px;  /* bạn chỉnh phù hợp */
-  margin: 0 auto;
-}
+    /* Khung chứa nhóm tìm kiếm + filter + xóa lọc */
+    .search-filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        width: 420px;
+        /* bạn chỉnh phù hợp */
+        margin: 0 auto;
+    }
 
-/* Input tìm kiếm chiếm hết chỗ còn lại */
-#searchVoucher {
-  flex: 1;
-}
+    /* Input tìm kiếm chiếm hết chỗ còn lại */
+    #searchVoucher {
+        flex: 1;
+    }
 
-/* Để nút Thêm ở bên trái, nhóm tìm kiếm nằm giữa, bên phải giữ khoảng trống */
-.left-group {
-  flex-shrink: 0;
-}
-.right-group {
-  flex-shrink: 0;
-  width: 100px; /* khoảng trống bên phải nếu cần */
-}
+    /* Để nút Thêm ở bên trái, nhóm tìm kiếm nằm giữa, bên phải giữ khoảng trống */
+    .left-group {
+        flex-shrink: 0;
+    }
+
+    .right-group {
+        flex-shrink: 0;
+        width: 100px;
+        /* khoảng trống bên phải nếu cần */
+    }
 </style>
 
 <div class="top-bar">
-  <div class="left-group">
-    <button class="btn btn-primary rounded-2" data-bs-toggle="modal" data-bs-target="#modalThemVoucher">
-      <i class="fa-solid fa-plus me-1"></i> Thêm voucher
-    </button>
-  </div>
+    <div class="left-group">
+        <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+            <button class="btn btn-primary rounded-2" data-bs-toggle="modal" data-bs-target="#modalThemVoucher">
+                <i class="fa-solid fa-plus me-1"></i> Thêm voucher
+            </button>
+        <?php endif; ?>
 
-  <div class="search-filter-group">
-    <input type="text" class="form-control" placeholder="Tìm kiếm mã voucher" id="searchVoucher" />
-    <button class="btn btn-secondary" id="btnSearchVoucher" type="button" style="pointer-events:auto;">
-      <i class="fa-solid fa-search"></i>
-    </button>
-    <button class="btn btn-outline-secondary rounded" id="btnToggleFilterVoucher">
-      <i class="fa fa-filter"></i>
-    </button>
-    <button type="button" class="btn btn-outline-secondary" id="btnClearFilterVoucher">
-      <i class="fa-solid fa-rotate-left me-1"></i> Xóa lọc
-    </button>
-  </div>
+    </div>
 
-  <div class="right-group">
-    <!-- Bạn có thể đặt thêm nút hoặc giữ khoảng trống -->
-  </div>
+    <div class="search-filter-group">
+        <input type="text" class="form-control" placeholder="Tìm kiếm mã voucher" id="searchVoucher" />
+        <button class="btn btn-secondary" id="btnSearchVoucher" type="button" style="pointer-events:auto;">
+            <i class="fa-solid fa-search"></i>
+        </button>
+        <button class="btn btn-outline-secondary rounded" id="btnToggleFilterVoucher">
+            <i class="fa fa-filter"></i>
+        </button>
+        <button type="button" class="btn btn-outline-secondary" id="btnClearFilterVoucher">
+            <i class="fa-solid fa-rotate-left me-1"></i> Xóa lọc
+        </button>
+    </div>
+
+    <div class="right-group">
+        <!-- Bạn có thể đặt thêm nút hoặc giữ khoảng trống -->
+    </div>
 </div>
 
 
@@ -103,7 +109,7 @@ $vouchers = $db->select($sql, $params);
         </div>
         <div class="col-md-2">
             <div class="form-floating">
-            <input type="date" class="form-control" id="to_date_voucher" name="to_date" value="<?= isset($_GET['to']) ? htmlspecialchars($_GET['to']) : '' ?>">
+                <input type="date" class="form-control" id="to_date_voucher" name="to_date" value="<?= isset($_GET['to']) ? htmlspecialchars($_GET['to']) : '' ?>">
                 <label for="to_date_voucher">Đến ngày</label>
             </div>
         </div>
@@ -150,65 +156,71 @@ $vouchers = $db->select($sql, $params);
                         ?>
                     </td>
                     <td class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-success rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#editModal<?= $voucher['voucher_id'] ?>">
-                            <i class="fa-solid fa-pen-to-square me-1"></i> Sửa
-                        </button>
-                        <button class="btn btn-danger rounded-2 px-3" onclick="deleteVoucher(<?= $voucher['voucher_id'] ?>)">
-                            <i class="fa-solid fa-trash me-1"></i> Xoá
-                        </button>
+                        <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+                            <button class="btn btn-success rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#editModal<?= $voucher['voucher_id'] ?>">
+                                <i class="fa-solid fa-pen-to-square me-1"></i> Sửa
+                            </button>
+                        <?php endif; ?>
+
+                        <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                            <button class="btn btn-danger rounded-2 px-3" onclick="deleteVoucher(<?= $voucher['voucher_id'] ?>)">
+                                <i class="fa-solid fa-trash me-1"></i> Xoá
+                            </button>
+                        <?php endif; ?>
+
                     </td>
                 </tr>
-<!-- Modal Sửa Voucher -->
-<div class="modal fade" id="editModal<?= $voucher['voucher_id'] ?>" tabindex="-1">
-    <div class="modal-dialog">
-        <form method="POST" action="ajax/handle_voucher.php" class="voucher-form">
-            <input type="hidden" name="voucher_id" value="<?= $voucher['voucher_id'] ?>">
-            <input type="hidden" name="update_voucher" value="1">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title">Sửa Voucher</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="code" value="<?= htmlspecialchars($voucher['code']) ?>" required>
-                        <label>Mã voucher</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" name="discount" value="<?= $voucher['discount'] ?>" min="1" max="100" required>
-                        <label>Giảm giá (%)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="date" class="form-control" name="start_date" id="edit_start_date_<?= $voucher['voucher_id'] ?>" value="<?= $voucher['start_date'] ?>" required>
-                        <label>Ngày bắt đầu</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="date" class="form-control" name="end_date" id="edit_end_date_<?= $voucher['voucher_id'] ?>" value="<?= $voucher['end_date'] ?>" required>
-                        <label>Ngày kết thúc</label>
-                    </div>
-                    <?php
-                    $today = date('Y-m-d');
-                    if ($voucher['end_date'] < $today) {
-                        $status_text = 'Hết hạn';
-                        $status_value = 'inactive';
-                    } elseif ($voucher['start_date'] > $today) {
-                        $status_text = 'Chưa hiệu lực';
-                        $status_value = 'inactive';
-                    } else {
-                        $status_text = 'Hiệu lực';
-                        $status_value = 'active';
-                    }
-                    ?>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="edit_status_text_<?= $voucher['voucher_id'] ?>" value="<?= $status_text ?>" readonly>
-                        <label>Trạng thái</label>
-                    </div>
-                    <input type="hidden" name="status" id="edit_status_value_<?= $voucher['voucher_id'] ?>" value="<?= $status_value ?>">
-                    <?php if ($voucher['end_date'] < $today): ?>
-                        <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
-                    <?php endif; ?>
-                </div>
-                                                <div class="modal-footer d-flex justify-content-between">
+                <!-- Modal Sửa Voucher -->
+                <div class="modal fade" id="editModal<?= $voucher['voucher_id'] ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <form method="POST" action="ajax/handle_voucher.php" class="voucher-form">
+                            <input type="hidden" name="voucher_id" value="<?= $voucher['voucher_id'] ?>">
+                            <input type="hidden" name="update_voucher" value="1">
+                            <div class="modal-content">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title">Sửa Voucher</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" name="code" value="<?= htmlspecialchars($voucher['code']) ?>" required>
+                                        <label>Mã voucher</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" name="discount" value="<?= $voucher['discount'] ?>" min="1" max="100" required>
+                                        <label>Giảm giá (%)</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" name="start_date" id="edit_start_date_<?= $voucher['voucher_id'] ?>" value="<?= $voucher['start_date'] ?>" required>
+                                        <label>Ngày bắt đầu</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" name="end_date" id="edit_end_date_<?= $voucher['voucher_id'] ?>" value="<?= $voucher['end_date'] ?>" required>
+                                        <label>Ngày kết thúc</label>
+                                    </div>
+                                    <?php
+                                    $today = date('Y-m-d');
+                                    if ($voucher['end_date'] < $today) {
+                                        $status_text = 'Hết hạn';
+                                        $status_value = 'inactive';
+                                    } elseif ($voucher['start_date'] > $today) {
+                                        $status_text = 'Chưa hiệu lực';
+                                        $status_value = 'inactive';
+                                    } else {
+                                        $status_text = 'Hiệu lực';
+                                        $status_value = 'active';
+                                    }
+                                    ?>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="edit_status_text_<?= $voucher['voucher_id'] ?>" value="<?= $status_text ?>" readonly>
+                                        <label>Trạng thái</label>
+                                    </div>
+                                    <input type="hidden" name="status" id="edit_status_value_<?= $voucher['voucher_id'] ?>" value="<?= $status_value ?>">
+                                    <?php if ($voucher['end_date'] < $today): ?>
+                                        <div class="form-text text-danger">Voucher đã hết hạn, không thể sửa trạng thái.</div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-between">
                                     <button type="submit" class="btn btn-outline-warning rounded-2">
                                         <i class="fa-solid fa-pen-to-square me-1"></i> Lưu thay đổi
                                     </button>
@@ -255,199 +267,199 @@ $vouchers = $db->select($sql, $params);
                         <input type="text" class="form-control" id="add_status_text" value="Hiệu lực" readonly>
                         <label>Trạng thái</label>
                     </div>
-                        <input type="hidden" name="status" id="add_status_value" value="active">
-                    </div>
-                    <div class="modal-footer d-flex justify-content-between">
-                        <button type="submit" class="btn btn-outline-primary rounded-2">
-                            <i class="fa-solid fa-floppy-disk me-1"></i> Thêm
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary rounded-2" data-bs-dismiss="modal">
-                            <i class="fa-solid fa-xmark me-1"></i> Hủy
-                        </button>
-                    </div>
-            </form>
-        </div>
-    </div>
-    </div>
-    </form>
+                    <input type="hidden" name="status" id="add_status_value" value="active">
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="submit" class="btn btn-outline-primary rounded-2">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Thêm
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-2" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark me-1"></i> Hủy
+                    </button>
+                </div>
+        </form>
     </div>
 </div>
+</div>
+</form>
+</div>
+</div>
 <script>
-document.querySelectorAll('.voucher-form').forEach(form => {
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault(); // chặn submit mặc định (reload trang)
-        
-        if (!form.action) {
-            alert('Form chưa có action, vui lòng kiểm tra!');
+    document.querySelectorAll('.voucher-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); // chặn submit mặc định (reload trang)
+
+            if (!form.action) {
+                alert('Form chưa có action, vui lòng kiểm tra!');
+                return;
+            }
+
+            let submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            let formData = new FormData(form);
+            try {
+                let res = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) {
+                    alert('Lỗi kết nối đến server!');
+                    return;
+                }
+
+                let data;
+                try {
+                    data = await res.json();
+                } catch {
+                    alert('Phản hồi từ server không hợp lệ!');
+                    return;
+                }
+
+                if (data.success) {
+                    // Ẩn modal
+                    let modalEl = form.closest('.modal');
+                    let modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    if (modalInstance) modalInstance.hide();
+
+                    // Reload lại trang để cập nhật data mới
+                    location.reload();
+                } else {
+                    alert(data.message || 'Lỗi xảy ra, vui lòng thử lại!');
+                }
+            } catch (err) {
+                alert('Lỗi hệ thống, vui lòng thử lại!');
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        });
+    });
+
+    function updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput) {
+        const today = new Date();
+        const startDate = new Date(startInput.value);
+        const endDate = new Date(endInput.value);
+
+        if (!startInput.value || !endInput.value) {
+            statusTextInput.value = '';
+            statusValueInput.value = '';
             return;
         }
 
-        let submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) submitBtn.disabled = true;
-
-        let formData = new FormData(form);
-        try {
-            let res = await fetch(form.action, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!res.ok) {
-                alert('Lỗi kết nối đến server!');
-                return;
-            }
-
-            let data;
-            try {
-                data = await res.json();
-            } catch {
-                alert('Phản hồi từ server không hợp lệ!');
-                return;
-            }
-
-            if (data.success) {
-                // Ẩn modal
-                let modalEl = form.closest('.modal');
-                let modalInstance = bootstrap.Modal.getInstance(modalEl);
-                if (modalInstance) modalInstance.hide();
-
-                // Reload lại trang để cập nhật data mới
-                location.reload();
-            } else {
-                alert(data.message || 'Lỗi xảy ra, vui lòng thử lại!');
-            }
-        } catch (err) {
-            alert('Lỗi hệ thống, vui lòng thử lại!');
-        } finally {
-            if (submitBtn) submitBtn.disabled = false;
-        }
-    });
-});
-function updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput) {
-    const today = new Date();
-    const startDate = new Date(startInput.value);
-    const endDate = new Date(endInput.value);
-
-    if (!startInput.value || !endInput.value) {
-        statusTextInput.value = '';
-        statusValueInput.value = '';
-        return;
-    }
-
-    if (endDate < today) {
-        statusTextInput.value = 'Hết hạn';
-        statusValueInput.value = 'inactive';
-    } else if (startDate > today) {
-        statusTextInput.value = 'Chưa hiệu lực';
-        statusValueInput.value = 'inactive';
-    } else {
-        statusTextInput.value = 'Hiệu lực';
-        statusValueInput.value = 'active';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Cập nhật trạng thái tự động cho modal Thêm Voucher
-    const addStartDate = document.getElementById('add_start_date');
-    const addEndDate = document.getElementById('add_end_date');
-    const addStatusText = document.getElementById('add_status_text');
-    const addStatusValue = document.getElementById('add_status_value');
-
-    if (addStartDate && addEndDate && addStatusText && addStatusValue) {
-        addStartDate.addEventListener('change', () => updateVoucherStatus(addStartDate, addEndDate, addStatusText, addStatusValue));
-        addEndDate.addEventListener('change', () => updateVoucherStatus(addStartDate, addEndDate, addStatusText, addStatusValue));
-    }
-
-    // Cập nhật trạng thái tự động cho tất cả modal Sửa Voucher
-    document.querySelectorAll('div.modal[id^="editModal"]').forEach(modal => {
-        const voucherId = modal.id.replace('editModal', '');
-
-        const startInput = document.getElementById('edit_start_date_' + voucherId);
-        const endInput = document.getElementById('edit_end_date_' + voucherId);
-        const statusTextInput = document.getElementById('edit_status_text_' + voucherId);
-        const statusValueInput = document.getElementById('edit_status_value_' + voucherId);
-
-        if (startInput && endInput && statusTextInput && statusValueInput) {
-            startInput.addEventListener('change', () => updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput));
-            endInput.addEventListener('change', () => updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput));
-        }
-    });
-    
-});
-function deleteVoucher(id) {
-    if (!confirm("Xác nhận xoá voucher này?")) return;
-    fetch(`ajax/handle_voucher.php?delete=${id}`)
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message);
-            if (data.success) {
-                location.reload();
-            }
-        })
-        .catch(() => alert("Lỗi xóa voucher"));
-}
-let currentVoucherFilter = '';
-
-function handleVoucherFilter() {
-    const keyword = document.getElementById('searchVoucher').value.trim();
-    const from = document.getElementById('from_date_voucher').value;
-    const to = document.getElementById('to_date_voucher').value;
-    const status = document.getElementById('status_voucher').value;
-
-    const query = new URLSearchParams();
-    if (keyword) query.append('search', keyword);
-    if (from) query.append('from', from);
-    if (to) query.append('to', to);
-    if (status) query.append('status', status);
-
-    window.location.href = `index.php?page=vouchers&${query.toString()}`;
-}
-
-// Sự kiện:
-// document.getElementById('searchVoucher').addEventListener('input', handleVoucherFilter);
-document.getElementById('btnSearchVoucher').addEventListener('click', handleVoucherFilter);
-['from_date_voucher', 'to_date_voucher', 'status_voucher'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', handleVoucherFilter);
-});
-
-document.getElementById('btnClearFilterVoucher').addEventListener('click', () => {
-    const form = document.querySelector('.form-voucher-search');
-    form.reset();
-    document.getElementById('searchVoucher').value = '';
-
-    // Reset các select thủ công nếu cần (một số trình duyệt không reset mặc định)
-    ['status_voucher'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-
-    handleVoucherFilter();
-
-    // Ẩn phần lọc nâng cao
-    form.classList.add('d-none');
-    localStorage.setItem('voucherFilterVisible', '0');
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('.form-voucher-search');
-
-    // Lấy trạng thái từ localStorage
-    const visible = localStorage.getItem('voucherFilterVisible') === '1';
-    if (visible) form.classList.remove('d-none');
-
-    document.getElementById('btnToggleFilterVoucher').addEventListener('click', () => {
-        const isVisible = !form.classList.contains('d-none');
-        if (isVisible) {
-            form.classList.add('d-none');
-            localStorage.setItem('voucherFilterVisible', '0');
+        if (endDate < today) {
+            statusTextInput.value = 'Hết hạn';
+            statusValueInput.value = 'inactive';
+        } else if (startDate > today) {
+            statusTextInput.value = 'Chưa hiệu lực';
+            statusValueInput.value = 'inactive';
         } else {
-            form.classList.remove('d-none');
-            localStorage.setItem('voucherFilterVisible', '1');
+            statusTextInput.value = 'Hiệu lực';
+            statusValueInput.value = 'active';
         }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cập nhật trạng thái tự động cho modal Thêm Voucher
+        const addStartDate = document.getElementById('add_start_date');
+        const addEndDate = document.getElementById('add_end_date');
+        const addStatusText = document.getElementById('add_status_text');
+        const addStatusValue = document.getElementById('add_status_value');
+
+        if (addStartDate && addEndDate && addStatusText && addStatusValue) {
+            addStartDate.addEventListener('change', () => updateVoucherStatus(addStartDate, addEndDate, addStatusText, addStatusValue));
+            addEndDate.addEventListener('change', () => updateVoucherStatus(addStartDate, addEndDate, addStatusText, addStatusValue));
+        }
+
+        // Cập nhật trạng thái tự động cho tất cả modal Sửa Voucher
+        document.querySelectorAll('div.modal[id^="editModal"]').forEach(modal => {
+            const voucherId = modal.id.replace('editModal', '');
+
+            const startInput = document.getElementById('edit_start_date_' + voucherId);
+            const endInput = document.getElementById('edit_end_date_' + voucherId);
+            const statusTextInput = document.getElementById('edit_status_text_' + voucherId);
+            const statusValueInput = document.getElementById('edit_status_value_' + voucherId);
+
+            if (startInput && endInput && statusTextInput && statusValueInput) {
+                startInput.addEventListener('change', () => updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput));
+                endInput.addEventListener('change', () => updateVoucherStatus(startInput, endInput, statusTextInput, statusValueInput));
+            }
+        });
+
     });
-});
+
+    function deleteVoucher(id) {
+        if (!confirm("Xác nhận xoá voucher này?")) return;
+        fetch(`ajax/handle_voucher.php?delete=${id}`)
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(() => alert("Lỗi xóa voucher"));
+    }
+    let currentVoucherFilter = '';
+
+    function handleVoucherFilter() {
+        const keyword = document.getElementById('searchVoucher').value.trim();
+        const from = document.getElementById('from_date_voucher').value;
+        const to = document.getElementById('to_date_voucher').value;
+        const status = document.getElementById('status_voucher').value;
+
+        const query = new URLSearchParams();
+        if (keyword) query.append('search', keyword);
+        if (from) query.append('from', from);
+        if (to) query.append('to', to);
+        if (status) query.append('status', status);
+
+        window.location.href = `index.php?page=vouchers&${query.toString()}`;
+    }
+
+    // Sự kiện:
+    // document.getElementById('searchVoucher').addEventListener('input', handleVoucherFilter);
+    document.getElementById('btnSearchVoucher').addEventListener('click', handleVoucherFilter);
+    ['from_date_voucher', 'to_date_voucher', 'status_voucher'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', handleVoucherFilter);
+    });
+
+    document.getElementById('btnClearFilterVoucher').addEventListener('click', () => {
+        const form = document.querySelector('.form-voucher-search');
+        form.reset();
+        document.getElementById('searchVoucher').value = '';
+
+        // Reset các select thủ công nếu cần (một số trình duyệt không reset mặc định)
+        ['status_voucher'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+
+        handleVoucherFilter();
+
+        // Ẩn phần lọc nâng cao
+        form.classList.add('d-none');
+        localStorage.setItem('voucherFilterVisible', '0');
+    });
 
 
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('.form-voucher-search');
+
+        // Lấy trạng thái từ localStorage
+        const visible = localStorage.getItem('voucherFilterVisible') === '1';
+        if (visible) form.classList.remove('d-none');
+
+        document.getElementById('btnToggleFilterVoucher').addEventListener('click', () => {
+            const isVisible = !form.classList.contains('d-none');
+            if (isVisible) {
+                form.classList.add('d-none');
+                localStorage.setItem('voucherFilterVisible', '0');
+            } else {
+                form.classList.remove('d-none');
+                localStorage.setItem('voucherFilterVisible', '1');
+            }
+        });
+    });
 </script>

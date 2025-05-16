@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -47,22 +48,27 @@ foreach ($sizes as $size): ?>
         <td><?= $size['size_id'] ?></td>
         <td><?= $size['name'] ?></td>
         <td>
-            <button class="btn btn-success mx-1 btn-edit-size"
-                data-id="<?= $size['size_id'] ?>"
-                data-name="<?= $size['name'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalSuaSize">
-                <i class="fa-regular fa-pen-to-square"></i>
-                Sửa
-            </button>
-            <button class="btn btn-danger btn-delete-size mx-1"
-                data-id="<?= $size['size_id'] ?>"
-                data-name="<?= $size['name'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaSize">
-                <i class="fas fa-trash"></i>
-                Xóa
-            </button>
+            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+                <button class="btn btn-success mx-1 btn-edit-size"
+                    data-id="<?= $size['size_id'] ?>"
+                    data-name="<?= $size['name'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalSuaSize">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Sửa
+                </button>
+            <?php endif; ?>
+            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                <button class="btn btn-danger btn-delete-size mx-1"
+                    data-id="<?= $size['size_id'] ?>"
+                    data-name="<?= $size['name'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalXoaSize">
+                    <i class="fas fa-trash"></i>
+                    Xóa
+                </button>
+            <?php endif; ?>
+
         </td>
     </tr>
 <?php endforeach;

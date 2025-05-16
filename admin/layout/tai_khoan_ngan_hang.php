@@ -1,7 +1,9 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemTKNH">
-        <i class="fa-solid fa-plus"></i> Thêm
-    </button>
+    <?php if (hasPermission('Quản lý tài khoản ngân hàng', 'write')): ?>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemTKNH">
+            <i class="fa-solid fa-plus"></i> Thêm
+        </button>
+    <?php endif; ?>
 
     <div class="mx-auto w-25">
         <div class="input-group">

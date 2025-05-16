@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -47,22 +48,28 @@ foreach ($categories as $category): ?>
         <td><?= $category['category_id'] ?></td>
         <td><?= $category['name'] ?></td>
         <td>
-            <button class="btn btn-success mx-1 btn-edit-category"
-                data-id="<?= $category['category_id'] ?>"
-                data-name="<?= $category['name'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalSuaTheLoai">
-                <i class="fa-regular fa-pen-to-square"></i>
-                Sửa
-            </button>
-            <button class="btn btn-danger btn-delete-category mx-1"
-                data-id="<?= $category['category_id'] ?>"
-                data-name="<?= $category['name'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaTheLoai">
-                <i class="fas fa-trash"></i>
-                Xóa
-            </button>
+            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+
+                <button class="btn btn-success mx-1 btn-edit-category"
+                    data-id="<?= $category['category_id'] ?>"
+                    data-name="<?= $category['name'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalSuaTheLoai">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Sửa
+                </button>
+            <?php endif; ?>
+            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+
+                <button class="btn btn-danger btn-delete-category mx-1"
+                    data-id="<?= $category['category_id'] ?>"
+                    data-name="<?= $category['name'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalXoaTheLoai">
+                    <i class="fas fa-trash"></i>
+                    Xóa
+                </button>
+            <?php endif; ?>
         </td>
     </tr>
 <?php endforeach;

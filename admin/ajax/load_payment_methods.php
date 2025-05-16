@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -47,22 +48,29 @@ foreach ($payment_methods as $payment_method): ?>
         <td><?= $payment_method['payment_method_id'] ?></td>
         <td><?= $payment_method['name'] ?></td>
         <td>
-            <button class="btn btn-success mx-1 btn-edit-payment-method"
-                data-id="<?= $payment_method['payment_method_id'] ?>"
-                data-name="<?= $payment_method['name'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalSuaPTTT">
-                <i class="fa-regular fa-pen-to-square"></i>
-                Sửa
-            </button>
-            <button class="btn btn-danger btn-delete-payment-method mx-1"
-                data-id="<?= $payment_method['payment_method_id'] ?>"
-                data-name="<?= $payment_method['name'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaPTTT">
-                <i class="fas fa-trash"></i>
-                Xóa
-            </button>
+            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+
+                <button class="btn btn-success mx-1 btn-edit-payment-method"
+                    data-id="<?= $payment_method['payment_method_id'] ?>"
+                    data-name="<?= $payment_method['name'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalSuaPTTT">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Sửa
+                </button>
+            <?php endif; ?>
+            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+
+                <button class="btn btn-danger btn-delete-payment-method mx-1"
+                    data-id="<?= $payment_method['payment_method_id'] ?>"
+                    data-name="<?= $payment_method['name'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalXoaPTTT">
+                    <i class="fas fa-trash"></i>
+                    Xóa
+                </button>
+            <?php endif; ?>
+
         </td>
     </tr>
 <?php endforeach;

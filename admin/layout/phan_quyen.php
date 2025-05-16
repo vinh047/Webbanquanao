@@ -135,13 +135,13 @@ $roles = $db->select('SELECT * FROM roles WHERE role_id != 1 AND is_deleted = 0'
         const btnEdit = document.getElementById('btnEdit');
 
         // Nếu là Admin (role_id = 2) → ẩn các nút
-        if (selectedId === "2") {
-            deleteWrapper.classList.add('d-none');
-            btnEdit.classList.add('d-none');
-        } else {
-            deleteWrapper.classList.remove('d-none');
-            btnEdit.classList.remove('d-none');
-        }
+        // if (selectedId === "2") {
+        //     deleteWrapper.classList.add('d-none');
+        //     btnEdit.classList.add('d-none');
+        // } else {
+        //     deleteWrapper.classList.remove('d-none');
+        //     btnEdit.classList.remove('d-none');
+        // }
 
     }
 
