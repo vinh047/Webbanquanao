@@ -155,6 +155,7 @@ document.querySelector(".buynow").addEventListener("click", function (e) {
 
     const colorId = activeColor.dataset.colorId;
     const sizeId = activeSize.dataset.sizeId;
+    const sizeName = activeSize.textContent;
 
     fetch('../ajax/check_stock_variant.php', {
         method: 'POST',
@@ -185,22 +186,47 @@ document.querySelector(".buynow").addEventListener("click", function (e) {
     if (user_id == null) {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Kiểm tra trùng sản phẩm
-        const index = cart.findIndex(item => item.productId === productId && item.colorId === colorId && item.sizeId === sizeId);
-        if (index !== -1) {
-            cart[index].quantity += quantity;
-        } else {
-            cart.push({ productId, quantity, colorId, sizeId });
-        }
+        let variant = null;
 
-        localStorage.setItem('cart', JSON.stringify(cart));
+        fetch('../ajax/get_variant.php', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                color_id: colorId,
+                size_id: sizeId
+            })
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (result) {
+                if (!result.success) {
+                    alert(result.message);
+                    return;
+                }
+                else {
+                    variant = result.data;
+                    // Kiểm tra trùng sản phẩm
+                    const index = cart.findIndex(item => item.variant_id === variant['variant_id']);
+                    if (index !== -1) {
+                        cart[index].quantity += quantity;
+                    } else {
+                        cart.push({ id: productId, quantity, color_id: colorId, size: sizeName, variant_id: variant[0]['variant_id'], image: variant[0]['image'], price: Number(variant[0]['price']), name: variant[0]['product_name'] });
+                    }
 
-        // Hiển thị popup thông báo
-        let popup = document.querySelector(".notice-add-to-cart");
-        popup.classList.add("opacity-100", "translate-middle");
-        setTimeout(() => {
-            popup.classList.remove("opacity-100", "translate-middle");
-        }, 2000);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    window.location.href = "/index.php?page=giohang";
+                }
+            })
+            .catch(function (error) {
+                console.error("Lỗi fetch:", error);
+                alert("Có lỗi khi thêm vào giỏ hàng.");
+            });
+
+
     }
 
     else {
@@ -237,7 +263,6 @@ document.querySelector(".buynow").addEventListener("click", function (e) {
 document.querySelector(".add-to-cart").addEventListener("click", function () {
     const productId = document.body.dataset.productId;
     const quantity = parseInt(document.getElementById("count").value.trim());
-
     const activeColor = document.querySelector(".color-option.active");
     const activeSize = document.querySelector(".size-option.active");
 
@@ -283,7 +308,7 @@ document.querySelector(".add-to-cart").addEventListener("click", function () {
 
         let variant = null;
 
-        fetch('../ajax/get_variant_id.php', {
+        fetch('../ajax/get_variant.php', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -303,29 +328,33 @@ document.querySelector(".add-to-cart").addEventListener("click", function () {
                     return;
                 }
                 else {
-                    variant = data.message;
+                    variant = result.data;
+                    // Kiểm tra trùng sản phẩm
+                    const index = cart.findIndex(item => item.variant_id === variant['variant_id']);
+                    if (index !== -1) {
+                        cart[index].quantity += quantity;
+                    } else {
+                        cart.push({ id: productId, quantity, color_id: colorId, size: sizeName, variant_id: variant[0]['variant_id'], image: variant[0]['image'], price: Number(variant[0]['price']), name: variant[0]['product_name'] });
+                    }
+
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    console.log('Cart sau khi thêm:', variant);
+
+                    // Hiển thị popup thông báo
+                    let popup = document.querySelector(".notice-add-to-cart");
+                    popup.classList.add("opacity-100", "translate-middle");
+                    setTimeout(() => {
+                        popup.classList.remove("opacity-100", "translate-middle");
+                    }, 2000);
                 }
             })
             .catch(function (error) {
                 console.error("Lỗi fetch:", error);
                 alert("Có lỗi khi thêm vào giỏ hàng.");
             });
-        // Kiểm tra trùng sản phẩm
-        const index = cart.findIndex(item => item.variant_id === variant['variant_id']);
-        if (index !== -1) {
-            cart[index].quantity += quantity;
-        } else {
-            cart.push({ product_id: productId, quantity, color_id:colorId, size_id: sizeName, variant_id: variant_id, image: variant['image'], price: variant['price'], });
-        }
 
-        localStorage.setItem('cart', JSON.stringify(cart));
 
-        // Hiển thị popup thông báo
-        let popup = document.querySelector(".notice-add-to-cart");
-        popup.classList.add("opacity-100", "translate-middle");
-        setTimeout(() => {
-            popup.classList.remove("opacity-100", "translate-middle");
-        }, 2000);
     }
 
     else {

@@ -8,7 +8,7 @@ if (
     !$input ||
     empty($input['order_id']) ||
     empty($input['user_id']) ||
-    empty($input['staff_id']) ||
+
     empty($input['order_details']) ||
     !is_array($input['order_details'])
 ) {
@@ -26,14 +26,18 @@ try {
     $pdo->beginTransaction();
 
     // 1. Lấy các chi tiết đơn hàng cũ để cập nhật lại tồn kho
-    $oldDetails = $db->select("SELECT variant_id, quantity FROM order_details WHERE order_id = ?", [$orderId]);
+    $oldDetails = $db->select("SELECT variant_id,product_id, quantity FROM order_details WHERE order_id = ?", [$orderId]);
 
     // Cộng tồn kho lại cho các variant_id trong đơn hàng cũ (đảo ngược lượng đã trừ trước đó)
     foreach ($oldDetails as $old) {
         $variantId = $old['variant_id'];
+        $productId = (int)$old['product_id'];
         $qty = (int)$old['quantity'];
         $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?")
             ->execute([$qty, $variantId]);
+        // Giảm sold_count sản phẩm
+        $pdo->prepare("UPDATE products SET sold_count = sold_count - ? WHERE product_id = ? AND sold_count >= ?")
+            ->execute([$qty, $productId, $qty]); // tránh bị âm
     }
 
     // 2. Xóa hết chi tiết đơn hàng cũ
@@ -42,7 +46,7 @@ try {
     // 3. Cập nhật đơn hàng (bảng orders)
     $orderData = [
         'user_id'           => $input['user_id'],
-        'staff_id'          => $input['staff_id'],
+        
         'status'            => $input['status'] ?? 'Chờ xác nhận',
         'total_price'       => $input['total_price'] ?? 0,
         'note'              => $input['note'] ?? '',
@@ -50,6 +54,11 @@ try {
         'payment_method_id' => $input['payment_method_id'] ?? null,
     ];
 
+    // 👉 Thêm staff_id nếu có
+    if (!isset($input['staff_id'])) {
+        
+        $orderData['staff_id'] = $input['staff_id'];
+    }
     $setPart = [];
     $values = [];
     foreach ($orderData as $key => $value) {
@@ -80,6 +89,10 @@ try {
         $variantId = $item['variant_id'];
         $pdo->prepare("UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?")
             ->execute([$qty, $variantId]);
+
+        // Cộng sold_count sản phẩm
+        $pdo->prepare("UPDATE products SET sold_count = sold_count + ? WHERE product_id = ?")
+            ->execute([$qty, $productId]);
     }
 
     // Commit transaction

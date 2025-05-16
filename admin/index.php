@@ -1,5 +1,7 @@
 <?php
 require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout khi close tab, ấn nút , không đăng nhập
+
+require_once __DIR__ . '/ajax/permission_helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +31,7 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
         $user_id = $_SESSION['admin_id'] ?? null;
 
         $role_id = $_SESSION['role_id'] ?? null;
+        
 
         if ($user_id) {
             // Kết nối đến cơ sở dữ liệu và lấy thông tin người dùng nếu cần
@@ -56,74 +59,106 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
             </div>
 
             <ul class="nav flex-column">
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phieunhap' ? 'active' : '' ?>" href="index.php?page=phieunhap&pageadmin=1">
-                        <i class="fa-solid fa-file-import"></i> <span>Phiếu nhập</span>
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap&pageadmin=1">
-                        <i class="fa-solid fa-list"></i> <span>Chi tiết phiếu nhập</span>
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'sanpham' ? 'active' : '' ?>" href="index.php?page=sanpham&pageadmin=1">
-                        <i class="fa-solid fa-box-open"></i> <span>Sản phẩm</span>
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'bienthe' ? 'active' : '' ?>" href="index.php?page=bienthe&pageadmin=1">
-                        <i class="fa-solid fa-cubes"></i> <span>Biến thể sản phẩm</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý đơn nhập')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phieunhap' ? 'active' : '' ?>" href="index.php?page=phieunhap&pageadmin=1">
+                            <i class="fa-solid fa-file-import"></i> <span>Phiếu nhập</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý đơn nhập')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap&pageadmin=1">
+                            <i class="fa-solid fa-list"></i> <span>Chi tiết phiếu nhập</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý sản phẩm')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'sanpham' ? 'active' : '' ?>" href="index.php?page=sanpham&pageadmin=1">
+                            <i class="fa-solid fa-box-open"></i> <span>Sản phẩm</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý sản phẩm')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'bienthe' ? 'active' : '' ?>" href="index.php?page=bienthe&pageadmin=1">
+                            <i class="fa-solid fa-cubes"></i> <span>Biến thể sản phẩm</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'nhacungcap' ? 'active' : '' ?>" href="index.php?page=nhacungcap&pageadmin=1">
-                        <i class="fas fa-truck"></i> <span>Nhà cung cấp</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý nhà cung cấp')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'nhacungcap' ? 'active' : '' ?>" href="index.php?page=nhacungcap&pageadmin=1">
+                            <i class="fas fa-truck"></i> <span>Nhà cung cấp</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'thuoctinh' ? 'active' : '' ?>" href="index.php?page=thuoctinh&pageadmin=1">
-                        <i class="fas fa-sliders-h"></i> <span>Thuộc tính</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý thuộc tính')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'thuoctinh' ? 'active' : '' ?>" href="index.php?page=thuoctinh&pageadmin=1">
+                            <i class="fas fa-sliders-h"></i> <span>Thuộc tính</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phanquyen' ? 'active' : '' ?>" href="index.php?page=phanquyen&pageadmin=1">
-                        <i class="fas fa-user-shield"></i> <span>Phân quyền</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý quyền')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phanquyen' ? 'active' : '' ?>" href="index.php?page=phanquyen&pageadmin=1">
+                            <i class="fas fa-user-shield"></i> <span>Phân quyền</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'donhang' ? 'active' : '' ?>" href="index.php?page=donhang&pageadmin=1">
-                        <i class="fa fa-cart-plus"></i> <span>Đơn hàng</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý đơn hàng')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'donhang' ? 'active' : '' ?>" href="index.php?page=donhang&pageadmin=1">
+                            <i class="fa fa-cart-plus"></i> <span>Đơn hàng</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'khachhang' ? 'active' : '' ?>" href="index.php?page=khachhang&pageadmin=1">
-                        <i class="fa-solid fa-users"></i> <span>Khách hàng</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý khách hàng')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'khachhang' ? 'active' : '' ?>" href="index.php?page=khachhang&pageadmin=1">
+                            <i class="fa-solid fa-users"></i> <span>Khách hàng</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'taikhoannganhang' ? 'active' : '' ?>" href="index.php?page=taikhoannganhang&pageadmin=1">
-                        <i class="fa-solid fa-credit-card"></i> <span>Tài khoản ngân hàng</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý nhân viên')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'nhanvien' ? 'active' : '' ?>" href="index.php?page=nhanvien&pageadmin=1">
+                            <i class="fa-solid fa-user-tie"></i> <span>Nhân viên</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'vouchers' ? 'active' : '' ?>" href="index.php?page=vouchers&pageadmin=1">
-                        <i class="fa-solid fa-ticket"></i> <span>Vouchers</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý tài khoản ngân hàng')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'taikhoannganhang' ? 'active' : '' ?>" href="index.php?page=taikhoannganhang&pageadmin=1">
+                            <i class="fa-solid fa-credit-card"></i> <span>Tài khoản ngân hàng</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'thongke' ? 'active' : '' ?>" href="index.php?page=thongke&pageadmin=1">
-                        <i class="fas fa-chart-line"></i> <span>Thống kê</span>
-                    </a>
-                </li>
+                <?php if (hasPermission('Quản lý thuộc tính')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'vouchers' ? 'active' : '' ?>" href="index.php?page=vouchers&pageadmin=1">
+                            <i class="fa-solid fa-ticket"></i> <span>Vouchers</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if (hasPermission('Xem báo cáo')): ?>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'thongke' ? 'active' : '' ?>" href="index.php?page=thongke&pageadmin=1">
+                            <i class="fas fa-chart-line"></i> <span>Thống kê</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
                 <li class="nav-item mb-2">
                     <a class="nav-link text-white d-flex align-items-center gap-2" href="index.php?action=logout">
@@ -203,6 +238,9 @@ require_once  'Admin-form/Login_Form/Logout/admin_auth.php'; // Chuc nang logout
                         break;
                     case 'khachhang':
                         include '../admin/layout/khach_hang.php';
+                        break;
+                    case 'nhanvien':
+                        include '../admin/layout/nhan_vien.php';
                         break;
                     case 'taikhoannganhang':
                         include '../admin/layout/tai_khoan_ngan_hang.php';

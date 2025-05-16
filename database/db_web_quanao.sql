@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2025 at 07:52 PM
+-- Generation Time: May 16, 2025 at 02:17 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -438,10 +438,14 @@ CREATE TABLE `permissions` (
 INSERT INTO `permissions` (`permission_id`, `name`, `is_deleted`) VALUES
 (1, 'Quản lý sản phẩm', 0),
 (2, 'Quản lý đơn hàng', 0),
-(3, 'Quản lý người dùng', 0),
+(3, 'Quản lý khách hàng', 0),
 (4, 'Quản lý đơn nhập', 0),
 (5, 'Xem báo cáo', 0),
-(6, 'Quản lý quyền', 0);
+(6, 'Quản lý quyền', 0),
+(7, 'Quản lý nhà cung cấp', 0),
+(8, 'Quản lý thuộc tính', 0),
+(9, 'Quản lý nhân viên', 0),
+(10, 'Quản lý tài khoản ngân hàng', 0);
 
 -- --------------------------------------------------------
 
@@ -727,37 +731,55 @@ CREATE TABLE `role_permission_details` (
 --
 
 INSERT INTO `role_permission_details` (`role_permission_detail_id`, `role_id`, `permission_id`, `action`) VALUES
-(1, 2, 1, 'read'),
-(2, 2, 1, 'write'),
-(3, 2, 1, 'delete'),
-(4, 2, 2, 'read'),
-(5, 2, 2, 'write'),
-(6, 2, 2, 'delete'),
-(7, 2, 3, 'read'),
-(8, 2, 3, 'write'),
-(9, 2, 3, 'delete'),
-(10, 2, 4, 'read'),
-(11, 2, 4, 'write'),
-(12, 2, 4, 'delete'),
-(13, 2, 5, 'read'),
-(14, 2, 5, 'write'),
-(15, 2, 5, 'delete'),
-(16, 2, 6, 'read'),
-(17, 2, 6, 'write'),
-(18, 2, 6, 'delete'),
-(19, 3, 1, 'read'),
-(20, 3, 1, 'write'),
-(21, 3, 2, 'read'),
-(22, 3, 2, 'write'),
-(23, 3, 3, 'read'),
-(24, 3, 3, 'write'),
-(25, 3, 4, 'read'),
-(26, 3, 4, 'write'),
-(27, 3, 5, 'read'),
-(28, 4, 1, 'read'),
-(29, 4, 2, 'read'),
-(30, 4, 2, 'write'),
-(31, 4, 4, 'read');
+(32, 2, 1, 'read'),
+(33, 2, 1, 'write'),
+(34, 2, 1, 'delete'),
+(35, 2, 2, 'read'),
+(36, 2, 2, 'write'),
+(37, 2, 2, 'delete'),
+(38, 2, 3, 'read'),
+(39, 2, 3, 'write'),
+(40, 2, 3, 'delete'),
+(41, 2, 4, 'read'),
+(42, 2, 4, 'write'),
+(43, 2, 4, 'delete'),
+(44, 2, 5, 'read'),
+(45, 2, 5, 'write'),
+(46, 2, 5, 'delete'),
+(47, 2, 6, 'read'),
+(48, 2, 6, 'write'),
+(49, 2, 6, 'delete'),
+(50, 2, 7, 'read'),
+(51, 2, 7, 'write'),
+(52, 2, 7, 'delete'),
+(53, 2, 8, 'read'),
+(54, 2, 8, 'write'),
+(55, 2, 8, 'delete'),
+(56, 2, 9, 'read'),
+(57, 2, 9, 'write'),
+(58, 2, 9, 'delete'),
+(59, 2, 10, 'read'),
+(60, 2, 10, 'write'),
+(61, 2, 10, 'delete'),
+(62, 3, 1, 'read'),
+(63, 3, 1, 'write'),
+(64, 3, 2, 'read'),
+(65, 3, 2, 'write'),
+(66, 3, 3, 'read'),
+(67, 3, 3, 'write'),
+(68, 3, 4, 'read'),
+(69, 3, 4, 'write'),
+(70, 3, 5, 'read'),
+(71, 3, 7, 'read'),
+(72, 3, 8, 'read'),
+(73, 3, 8, 'write'),
+(74, 3, 9, 'read'),
+(75, 4, 1, 'read'),
+(76, 4, 2, 'read'),
+(77, 4, 2, 'write'),
+(78, 4, 4, 'read'),
+(79, 4, 7, 'read'),
+(80, 4, 8, 'read');
 
 -- --------------------------------------------------------
 
@@ -1170,7 +1192,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permission_details`
 --
 ALTER TABLE `role_permission_details`
-  MODIFY `role_permission_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `role_permission_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `sizes`

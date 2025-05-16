@@ -1,0 +1,132 @@
+<?php
+require_once '../../database/DBConnection.php';
+require_once '../../layout/phantrang.php';
+
+$db = DBConnect::getInstance();
+
+$limit  = 10;
+$page   = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+$whereClauses = [];
+$params       = [];
+
+// Lọc nhân viên theo role_id 2 hoặc 4
+$whereClauses[] = 'u.role_id IN (2,4)';
+
+// Tìm kiếm theo tên (nếu có)
+$search_name = trim($_GET['search_name'] ?? '');
+if ($search_name !== '') {
+    $whereClauses[] = 'u.name LIKE ?';
+    $params[]       = "%{$search_name}%";
+}
+
+// Ghép WHERE
+$whereSql = count($whereClauses)
+    ? 'WHERE ' . implode(' AND ', $whereClauses)
+    : '';
+
+// Query chính, JOIN với user_addresses lấy địa chỉ mặc định
+$sql = "
+    SELECT SQL_CALC_FOUND_ROWS
+           u.user_id, u.name, u.email, u.password, u.phone, u.status, u.role_id,
+           ua.province, ua.district, ua.ward, ua.address_detail
+      FROM users u
+ LEFT JOIN user_addresses ua ON u.user_id = ua.user_id AND ua.is_default = 1
+    {$whereSql}
+     LIMIT {$limit}
+    OFFSET {$offset}
+";
+$staffs = $db->select($sql, $params);
+
+// Lấy tổng số dòng
+$totalResult = $db->select("SELECT FOUND_ROWS()");
+$totalStaff  = $totalResult[0]['FOUND_ROWS()'];
+$totalPages  = ceil($totalStaff / $limit);
+$pagination  = new Pagination($totalStaff, $limit, $page);
+
+function roleName($role_id)
+{
+    return $role_id == 2 ? 'Admin' : ($role_id == 4 ? 'Nhân viên' : 'Khác');
+}
+
+ob_start();
+if (empty($staffs)) {
+    echo '<tr><td colspan="7">Không có nhân viên nào được tìm thấy.</td></tr>';
+} else {
+    foreach ($staffs as $s): ?>
+        <tr>
+            <td><?= htmlspecialchars($s['user_id']) ?></td>
+            <td><?= htmlspecialchars($s['name']) ?></td>
+            <td><?= htmlspecialchars($s['email']) ?></td>
+            <td><?= htmlspecialchars($s['phone']) ?></td>
+            <td><?= roleName($s['role_id']) ?></td>
+            <td><?= $s['status'] == 1 ? 'Hoạt động' : 'Khóa' ?></td>
+            <td>
+                <!-- nút Sửa -->
+                <button class="btn btn-success btn-edit-staff mx-1"
+                    data-id="<?= $s['user_id'] ?>"
+                    data-name="<?= htmlspecialchars($s['name']) ?>"
+                    data-email="<?= htmlspecialchars($s['email']) ?>"
+                    data-password="<?= htmlspecialchars($s['password']) ?>"
+                    data-phone="<?= htmlspecialchars($s['phone']) ?>"
+                    data-province="<?= htmlspecialchars($s['province'] ?? '') ?>"
+                    data-district="<?= htmlspecialchars($s['district'] ?? '') ?>"
+                    data-ward="<?= htmlspecialchars($s['ward'] ?? '') ?>"
+                    data-address-detail="<?= htmlspecialchars($s['address_detail'] ?? '') ?>"
+                    data-status="<?= $s['status'] ?>"
+                    data-role="<?= roleName($s['role_id']) ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalSuaNV">
+                    <i class="fa-regular fa-pen-to-square"></i> Sửa
+                </button>
+
+                <!-- nút Xóa -->
+                <button class="btn btn-danger btn-delete-staff mx-1"
+                    data-id="<?= $s['user_id'] ?>"
+                    data-name="<?= htmlspecialchars($s['name']) ?>"
+                    data-email="<?= htmlspecialchars($s['email']) ?>"
+                    data-password="<?= htmlspecialchars($s['password']) ?>"
+                    data-phone="<?= htmlspecialchars($s['phone']) ?>"
+                    data-status="<?= $s['status'] ?>"
+                    data-role="<?= roleName($s['role_id']) ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalXoaNV">
+                    <i class="fas fa-trash"></i> Xóa
+                </button>
+
+                <!-- nút Chi tiết -->
+                <button style="color: white;" class="btn btn-info btn-detail-staff mx-1"
+                    data-id="<?= $s['user_id'] ?>"
+                    data-name="<?= htmlspecialchars($s['name']) ?>"
+                    data-email="<?= htmlspecialchars($s['email']) ?>"
+                    data-phone="<?= htmlspecialchars($s['phone']) ?>"
+                    data-role="<?= roleName($s['role_id']) ?>"
+                    data-status="<?= $s['status'] ?>"
+                    data-password="<?= htmlspecialchars($s['password']) ?>"
+                    data-province="<?= htmlspecialchars($s['province'] ?? '') ?>"
+                    data-district="<?= htmlspecialchars($s['district'] ?? '') ?>"
+                    data-ward="<?= htmlspecialchars($s['ward'] ?? '') ?>"
+                    data-address-detail="<?= htmlspecialchars($s['address_detail'] ?? '') ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalChiTietNV">
+                    <i class="fa-regular fa-eye"></i> Chi tiết
+                </button>
+            </td>
+        </tr>
+<?php endforeach;
+}
+$staffHtml = ob_get_clean();
+
+$paginationHtml = '';
+if ($totalPages > 1) {
+    ob_start();
+    $pagination->render([]);
+    $paginationHtml = ob_get_clean();
+}
+
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode([
+    'staffHtml'  => $staffHtml,
+    'pagination' => $paginationHtml
+]);

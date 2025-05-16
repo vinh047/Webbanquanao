@@ -94,6 +94,7 @@ try {
     $stmtUpdateStock = $pdo->prepare("
       UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?
     ");
+    $stmtUpdateSoldCount = $pdo->prepare("UPDATE products SET sold_count = sold_count + ? WHERE product_id = ?");
 
     foreach ($data['cart'] as $item) {
       $product_id = intval($item['product_id']);
@@ -120,6 +121,9 @@ try {
 
       // Trừ kho
       $stmtUpdateStock->execute([$qty, $variant_id]);
+
+      // Tăng số lượng đã bán
+        $stmtUpdateSoldCount->execute([$qty, $product_id]);
     }
 
     $pdo->commit();

@@ -1,8 +1,9 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemNCC">
-        <i class="fa-solid fa-plus"></i> Thêm
-    </button>
-
+    <?php if (hasPermission('Quản lý nhà cung cấp', 'write')): ?>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemNCC">
+            <i class="fa-solid fa-plus"></i> Thêm
+        </button>
+    <?php endif; ?>
     <div class="mx-auto w-25">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Tìm kiếm nhà cung cấp" id="searchSupplier">
@@ -157,7 +158,7 @@
 
     function phantrang() {
         document.querySelectorAll(".page-link-custom").forEach(btn => {
-            btn.addEventListener("click", function (e) {
+            btn.addEventListener("click", function(e) {
                 e.preventDefault();
                 currentPage = parseInt(this.dataset.page);
                 loadSuppliers(currentPage);
@@ -165,7 +166,7 @@
         });
         const input = document.getElementById("pageInput");
         if (input) {
-            input.addEventListener("keypress", function (e) {
+            input.addEventListener("keypress", function(e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     let page = parseInt(this.value);
@@ -184,7 +185,7 @@
     }
 
     // Thêmm nhà cung cấp
-    document.getElementById("formThemNCC").addEventListener("submit", function (e) {
+    document.getElementById("formThemNCC").addEventListener("submit", function(e) {
         e.preventDefault();
 
         const form = e.target;
@@ -201,9 +202,9 @@
         const formData = new FormData(form);
 
         fetch('ajax/add_supplier.php', {
-            method: 'POST',
-            body: formData
-        })
+                method: 'POST',
+                body: formData
+            })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -247,7 +248,7 @@
         }
     });
 
-    document.getElementById('formXoaNCC').addEventListener('submit', function (e) {
+    document.getElementById('formXoaNCC').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const supplier_id = document.querySelector('#maNCCXoa').value;
@@ -255,9 +256,9 @@
         formData.append('supplier_id', supplier_id);
 
         fetch('ajax/delete_supplier.php', {
-            method: 'POST',
-            body: formData
-        })
+                method: 'POST',
+                body: formData
+            })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -268,15 +269,14 @@
                     alert(data.message);
 
                     loadSuppliers(1, currentFilterParams);
-                }
-                else {
+                } else {
                     alert(data.message);
                 }
             })
     });
 
     // Sửa nhà cung cấp
-    document.querySelector('.supplier-wrap').addEventListener('click', function (e) {
+    document.querySelector('.supplier-wrap').addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-edit-supplier');
         if (!btn) return;
 
@@ -293,16 +293,16 @@
         document.getElementById('diachiNCCSua').value = address || '';
     });
 
-    document.getElementById('formSuaNCC').addEventListener('submit', function (e) {
+    document.getElementById('formSuaNCC').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const form = e.target;
         const formData = new FormData(form);
 
         fetch('ajax/update_supplier.php', {
-            method: 'POST',
-            body: formData
-        })
+                method: 'POST',
+                body: formData
+            })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -313,15 +313,14 @@
                     alert(data.message);
 
                     loadSuppliers(1, currentFilterParams);
-                }
-                else {
+                } else {
                     alert(data.message);
                 }
             })
     });
 
     // Xử lý tìm kiểm tên nhà cung cấp
-    document.querySelector('#searchSupplier').addEventListener('input', function () {
+    document.querySelector('#searchSupplier').addEventListener('input', function() {
         const keyword = this.value.trim();
         currentFilterParams = keyword ? `&search_name=${encodeURIComponent(keyword)}` : '';
         loadSuppliers(1, currentFilterParams);

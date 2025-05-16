@@ -179,6 +179,9 @@ if (!empty($_SESSION['user_id'])) {
 </header>
 
 <!-- Các script quản lý giỏ hàng và menu -->
+<script>
+	const user_id = <?= isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null ?>
+</script>
 <script src="/ajax/generate_color_map.php"></script>
 <script src="/assets/js/cart.js"         defer></script>
 <script src="/assets/js/header.js"       defer></script>
