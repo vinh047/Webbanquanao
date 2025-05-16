@@ -106,7 +106,7 @@ foreach ($doanhThuTheoNgay as $row) {
     $vonData[] = (float)$row['von'];
     $loinhuanData[] = (float)$row['doanhthu'] - (float)$row['von'];
 }
-
+$limitSanPham = isset($_GET['limit_sanpham']) ? (int)$_GET['limit_sanpham'] : 5;
 // --- Top 5 sản phẩm bán chạy ---
 $topSanPham = $db->select("
     SELECT p.name, p.price_sale AS price, SUM(od.quantity) AS soluong
@@ -116,8 +116,9 @@ $topSanPham = $db->select("
     $whereSql
     GROUP BY p.product_id
     ORDER BY soluong DESC
-    LIMIT 5
+    LIMIT $limitSanPham
 ", $params);
+
 
 // --- Lấy danh sách đơn hàng mới nhất (limit 10) ---
 // Lọc không dựa trên trạng thái (nên không thêm điều kiện $status)
@@ -174,6 +175,7 @@ if ($to_date !== '') {
 
 $whereOrderSql = count($whereOrderClauses) > 0 ? "WHERE " . implode(' AND ', $whereOrderClauses) : '';
 
+$limitKhach = isset($_GET['limit_khach']) ? (int)$_GET['limit_khach'] : 5;
 $topUsers = $db->select("
     SELECT u.user_id, u.name, SUM(o.total_price) AS tong_tien_mua
     FROM users u
@@ -181,7 +183,7 @@ $topUsers = $db->select("
     $whereOrderSql
     GROUP BY u.user_id, u.name
     ORDER BY tong_tien_mua DESC
-    LIMIT 5
+    LIMIT $limitKhach
 ", $orderParams);
 
 $userIds = array_column($topUsers, 'user_id');
@@ -372,7 +374,23 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
     </div>
 </div>
 <div class="card p-3 shadow-sm mb-4" id="topKhachHangContainer">
-    <h5>Top 5 khách hàng mua nhiều nhất</h5>
+  <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-2 mb-0">
+      <h5 class="mb-0">Top khách hàng mua nhiều nhất</h5>
+      <form method="GET" class="d-flex align-items-center gap-2 mb-0">
+        <?php foreach ($_GET as $k => $v): if ($k !== 'limit_khach') : ?>
+            <input type="hidden" name="<?= htmlspecialchars($k) ?>" value="<?= htmlspecialchars($v) ?>">
+        <?php endif; endforeach; ?>
+        <label for="limit_khach" class="mb-0">Hiển thị:</label>
+        <input type="number" name="limit_khach" id="limit_khach"
+                class="form-control form-control-sm w-auto"
+                value="<?= htmlspecialchars($_GET['limit_khach'] ?? 5) ?>"
+                min="1" max="100"
+                onchange="this.form.submit()">
+        </form>
+    </div>
+  </div>
+
     <?php if (count($topKhachHangGroup) > 0): ?>
         <table class="table table-striped table-bordered align-middle mb-0">
     <thead>
@@ -503,27 +521,61 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
     </div>
     <!-- Top 5 sản phẩm bán chạy -->
     <div class="col-md-4">
-        <div class="card p-3 shadow-sm h-100" id="topSanPhamContainer">
-            <h5>Top 5 sản phẩm bán chạy</h5>
-            <div class="table-responsive">
-                <table class="table table-striped align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Lượt mua</th>
-                            <th>Giá (VNĐ)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($topSanPham as $sp): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($sp['name']) ?></td>
-                            <td><?= intval($sp['soluong']) ?></td>
-                            <td><?= number_format($sp['price'] ?? 0) ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <div class="card p-3 shadow-sm h-100" id="topSanPhamContainer">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+            <h5 class="mb-0">Top sản phẩm bán chạy</h5>
+            <form method="GET" class="d-flex align-items-center gap-2 mb-0">
+                <?php foreach ($_GET as $k => $v): if ($k !== 'limit_sanpham') : ?>
+                    <input type="hidden" name="<?= htmlspecialchars($k) ?>" value="<?= htmlspecialchars($v) ?>">
+                <?php endif; endforeach; ?>
+                <label class="mb-0" for="limit_sanpham">Hiển thị:</label>
+                <input type="number" name="limit_sanpham" id="limit_sanpham"
+                    class="form-control form-control-sm w-auto"
+                    value="<?= htmlspecialchars($_GET['limit_sanpham'] ?? 5) ?>"
+                    min="1" max="100"
+                    onchange="this.form.submit()">
+            </form>
+        </div>
+        <style>
+#scrollable-product-table-wrapper {
+    max-height: 480px;
+    overflow-y: auto;
+    display: block;
+}
+
+#scrollable-product-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#scrollable-product-table th,
+#scrollable-product-table td {
+    padding: 8px;
+    word-wrap: break-word;
+}
+</style>
+
+<div id="scrollable-product-table-wrapper">
+  <table id="scrollable-product-table" class="table table-striped align-middle mb-0">
+    <thead class="bg-light sticky-top">
+        <tr>
+            <th style="width: 50%;">Tên sản phẩm</th>
+            <th style="width: 20%;">Lượt mua</th>
+            <th style="width: 30%;">Giá (VNĐ)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($topSanPham as $sp): ?>
+        <tr>
+            <td class="text-center"><?= htmlspecialchars($sp['name']) ?></td>
+            <td class="text-center"><?= intval($sp['soluong']) ?></td>
+            <td><?= number_format($sp['price'] ?? 0) ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+  </table>
+</div>
+
             </div>
         </div>
     </div>
@@ -677,16 +729,19 @@ function resetFilter() {
   });
 });
 document.querySelector('#filterModal form').addEventListener('submit', function(e) {
-  // Không cần e.preventDefault() vì ta muốn reload trang
   const fromDate = this.from_date.value;
   const toDate = this.to_date.value;
-  // Build lại URL với các tham số GET
-  const url = new URL(window.location.href);
-  if (fromDate) url.searchParams.set('from_date', fromDate);
-  if (toDate) url.searchParams.set('to_date', toDate);
-  // Chuyển hướng lại trang với các tham số lọc
-  window.location.href = url.toString();
+
+  if (fromDate && toDate && new Date(toDate) < new Date(fromDate)) {
+    e.preventDefault();
+    alert('Ngày kết thúc không được nhỏ hơn ngày bắt đầu.');
+    this.to_date.focus();
+    return;
+  }
+
+  // Cho phép submit nếu hợp lệ
 });
+
 let lastOpenedCollapseId = null;
 
 document.querySelectorAll('.btn-view-order').forEach(button => {
@@ -720,7 +775,38 @@ orderModal.addEventListener('hidden.bs.modal', function () {
     collapse.show();
   }
 });
+document.addEventListener('DOMContentLoaded', function () {
+  const inputLimitKhach = document.getElementById('limit_khach');
 
+  // Submit khi nhấn Enter
+  inputLimitKhach.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Ngăn form reload nếu cần
+      this.form.submit();
+    }
+  });
+
+  // Submit khi mất focus (blur)
+  inputLimitKhach.addEventListener('blur', function () {
+    this.form.submit();
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const inputLimitSanPham = document.getElementById('limit_sanpham');
+
+  if (inputLimitSanPham) {
+    inputLimitSanPham.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.form.submit();
+      }
+    });
+
+    inputLimitSanPham.addEventListener('blur', function () {
+      this.form.submit();
+    });
+  }
+});
 
 // Cập nhật ngay khi tải trang
 updateSummary();
