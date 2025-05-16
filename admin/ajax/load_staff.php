@@ -1,4 +1,7 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
 require_once 'permission_helper.php';
@@ -13,7 +16,7 @@ $whereClauses = [];
 $params       = [];
 
 // Lọc nhân viên theo role_id 2 hoặc 4
-$whereClauses[] = 'u.role_id IN (2,4)';
+$whereClauses[] = 'u.role_id != 1';
 
 // Tìm kiếm theo tên (nếu có)
 $search_name = trim($_GET['search_name'] ?? '');
@@ -31,9 +34,10 @@ $whereSql = count($whereClauses)
 $sql = "
     SELECT SQL_CALC_FOUND_ROWS
            u.user_id, u.name, u.email, u.password, u.phone, u.status, u.role_id,
-           ua.province, ua.district, ua.ward, ua.address_detail
+           ua.province, ua.district, ua.ward, ua.address_detail, r.name as role_name
       FROM users u
- LEFT JOIN user_addresses ua ON u.user_id = ua.user_id AND ua.is_default = 1
+    LEFT JOIN user_addresses ua ON u.user_id = ua.user_id AND ua.is_default = 1
+    JOIN roles r ON r.role_id = u.role_id
     {$whereSql}
      LIMIT {$limit}
     OFFSET {$offset}
@@ -46,11 +50,6 @@ $totalStaff  = $totalResult[0]['FOUND_ROWS()'];
 $totalPages  = ceil($totalStaff / $limit);
 $pagination  = new Pagination($totalStaff, $limit, $page);
 
-function roleName($role_id)
-{
-    return $role_id == 2 ? 'Admin' : ($role_id == 4 ? 'Nhân viên' : 'Khác');
-}
-
 ob_start();
 if (empty($staffs)) {
     echo '<tr><td colspan="7">Không có nhân viên nào được tìm thấy.</td></tr>';
@@ -61,11 +60,17 @@ if (empty($staffs)) {
             <td><?= htmlspecialchars($s['name']) ?></td>
             <td><?= htmlspecialchars($s['email']) ?></td>
             <td><?= htmlspecialchars($s['phone']) ?></td>
-            <td><?= roleName($s['role_id']) ?></td>
+            <td><?= htmlspecialchars($s['role_name']) ?></td>
             <td><?= $s['status'] == 1 ? 'Hoạt động' : 'Khóa' ?></td>
             <td>
                 <!-- nút Sửa -->
-                <?php if (hasPermission('Quản lý nhân viên', 'write')): ?>
+                <?php if (
+                    hasPermission('Quản lý nhân viên', 'write') &&
+                    (
+                        $s['role_id'] != 2 || // Cho phép sửa nếu KHÔNG phải là admin
+                        ($_SESSION['role_id'] == 2 && $s['role_id'] == 2) // Nếu là admin thì được sửa admin
+                    )
+                ): ?>
 
                     <button class="btn btn-success btn-edit-staff mx-1"
                         data-id="<?= $s['user_id'] ?>"
@@ -78,7 +83,7 @@ if (empty($staffs)) {
                         data-ward="<?= htmlspecialchars($s['ward'] ?? '') ?>"
                         data-address-detail="<?= htmlspecialchars($s['address_detail'] ?? '') ?>"
                         data-status="<?= $s['status'] ?>"
-                        data-role="<?= roleName($s['role_id']) ?>"
+                        data-role="<?= htmlspecialchars($s['role_name']) ?>"
                         data-bs-toggle="modal"
                         data-bs-target="#modalSuaNV">
                         <i class="fa-regular fa-pen-to-square"></i> Sửa
@@ -86,8 +91,14 @@ if (empty($staffs)) {
                 <?php endif; ?>
 
                 <!-- nút Xóa -->
-                <?php if (hasPermission('Quản lý nhân viên', 'delete')): ?>
-
+                <?php if (
+                    hasPermission('Quản lý nhân viên', 'delete') &&
+                    (
+                        $s['role_id'] != 2 ||
+                        ($_SESSION['role_id'] == 2 && $s['role_id'] == 2)
+                    )
+                    && $_SESSION['admin_id'] != $s['user_id']
+                ): ?>
                     <button class="btn btn-danger btn-delete-staff mx-1"
                         data-id="<?= $s['user_id'] ?>"
                         data-name="<?= htmlspecialchars($s['name']) ?>"
@@ -95,7 +106,7 @@ if (empty($staffs)) {
                         data-password="<?= htmlspecialchars($s['password']) ?>"
                         data-phone="<?= htmlspecialchars($s['phone']) ?>"
                         data-status="<?= $s['status'] ?>"
-                        data-role="<?= roleName($s['role_id']) ?>"
+                        data-role="<?= htmlspecialchars($s['role_name']) ?>"
                         data-bs-toggle="modal"
                         data-bs-target="#modalXoaNV">
                         <i class="fas fa-trash"></i> Xóa
@@ -108,7 +119,7 @@ if (empty($staffs)) {
                     data-name="<?= htmlspecialchars($s['name']) ?>"
                     data-email="<?= htmlspecialchars($s['email']) ?>"
                     data-phone="<?= htmlspecialchars($s['phone']) ?>"
-                    data-role="<?= roleName($s['role_id']) ?>"
+                    data-role="<?= htmlspecialchars($s['role_name']) ?>"
                     data-status="<?= $s['status'] ?>"
                     data-password="<?= htmlspecialchars($s['password']) ?>"
                     data-province="<?= htmlspecialchars($s['province'] ?? '') ?>"
