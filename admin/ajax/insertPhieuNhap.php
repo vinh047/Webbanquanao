@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'success' => true,
             'message' => 'Lưu phiếu nhập thành công!',
             'importreceipt_id' => $importreceipt_id,
-            'total_price' => number_format($total_price_all, 0, ',', '.') . ' VNĐ'
+            'total_price' => number_format($total_price_all, 0, ',', '.') . ' đ'
         ]);
 
     } catch (Exception $e) {

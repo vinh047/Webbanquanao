@@ -517,7 +517,7 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
           <p><strong>Nhà cung cấp:</strong> <span id="tenNCCPN"></span></p>
           <p><strong>Nhân viên lập phiếu:</strong> <span id="tenNVPN"></span></p>
           <p><strong>Tổng số lượng:</strong> <span id="tongSoLuongPN"></span></p>
-          <p><strong>Tổng giá trị:</strong> <span id="tongGiaTriPN"></span> VNĐ</p>
+          <p><strong>Tổng giá trị:</strong> <span id="tongGiaTriPN"></span> đ</p>
         </div>
 
         <table class="table table-bordered" id="chitiet-phieunhap">

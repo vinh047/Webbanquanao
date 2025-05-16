@@ -79,7 +79,7 @@
                 <td class='tensp giaodienmb'>$ten</td>
                 <td class='hienthiloai giaodienmb'>$loai</td>
                 <td class='mota giaodienmb'>$mota</td>
-                <td class='hienthigia giaodienmb'>$giaban VNĐ</td>
+                <td class='hienthigia giaodienmb'>$giaban đ</td>
     " . ($hasAnyActionPermission ? "
     <td>
         <div class='d-flex justify-content-center gap-3'>

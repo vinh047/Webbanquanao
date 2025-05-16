@@ -362,8 +362,8 @@ $product = $dbInstance->select("
           <p><strong>Tên sản phẩm:</strong> <span id="tenNSP"></span></p>
           <p><strong>Loại sản phẩm:</strong> <span id="loaiSP"></span></p>
           <p><strong>Mô tả sản phẩm:</strong> <span id="motaSP"></span></p>
-          <p><strong>Giá nhập:</strong> <span id="gianhapSP"></span> VNĐ</p>
-          <p><strong>Giá bán:</strong> <span id="giabanSP"></span> VNĐ</p>
+          <p><strong>Giá nhập:</strong> <span id="gianhapSP"></span> đ</p>
+          <p><strong>Giá bán:</strong> <span id="giabanSP"></span> đ</p>
           <p><strong>Phần trăm tăng giá:</strong> <span id="pttgSP"></span>%</p>
         </div>
 

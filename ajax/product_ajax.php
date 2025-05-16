@@ -132,7 +132,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             <!-- Nội dung -->
             <div class="mt-2 p-2 pt-1">
                 <p class="mb-0 fw-lighter">Nam</p>
-                <p class="mb-0">' . $gia . ' VNĐ</p>
+                <p class="mb-0">' . $gia . ' đ</p>
                 <p class="mb-0 limit-text">' . $name . '</p>
                 <button 
                     class="btn btn-dark btn-sm mt-2 w-100 add-to-cart-btn" 

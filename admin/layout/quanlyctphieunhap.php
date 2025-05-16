@@ -339,8 +339,8 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             <p style="font-size: 17px;"><strong>Màu sắc:</strong> <span id="ctbt_mau"></span></p>
             <p style="font-size: 17px;"><strong>Size:</strong> <span id="ctbt_size"></span></p>
             <p><strong>Số lượng nhập:</strong> <span id="ctbt_sl"></span></p>
-            <p><strong>Giá nhập:</strong> <span id="ctbt_gia"></span> VNĐ</p>
-            <p><strong>Tổng tiền:</strong> <span id="ctbt_thanhtien"></span> VNĐ</p>
+            <p><strong>Giá nhập:</strong> <span id="ctbt_gia"></span> đ</p>
+            <p><strong>Tổng tiền:</strong> <span id="ctbt_thanhtien"></span> đ</p>
             <p><strong>Ngày lập:</strong> <span id="ctbt_ngay"></span></p>
           </div>
         </div>

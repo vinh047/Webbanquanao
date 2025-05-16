@@ -40,7 +40,7 @@ if (!$details) {
             <th>Size</th>
             <th>Màu</th>
             <th>Số lượng</th>
-            <th>Đơn giá (VNĐ)</th>
+            <th>Đơn giá (đ)</th>
         </tr>
     </thead>
     <tbody>

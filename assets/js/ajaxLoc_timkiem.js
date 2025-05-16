@@ -269,5 +269,5 @@ function attachProductClickEvents() {
 // Hàm giả định addToCart (bạn cần implement riêng)
 function addToCart(id, name, price, image, variant_id, colorName, sizeName) {
     // Thêm sản phẩm vào giỏ hàng logic ở đây
-    console.log(`Add to cart: ${name} - ${colorName} - ${sizeName} - ${price} VNĐ`);
+    console.log(`Add to cart: ${name} - ${colorName} - ${sizeName} - ${price} đ`);
 }
