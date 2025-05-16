@@ -97,6 +97,7 @@ if (empty($staffs)) {
                         $s['role_id'] != 2 ||
                         ($_SESSION['role_id'] == 2 && $s['role_id'] == 2)
                     )
+                    && $_SESSION['admin_id'] != $s['user_id']
                 ): ?>
                     <button class="btn btn-danger btn-delete-staff mx-1"
                         data-id="<?= $s['user_id'] ?>"
