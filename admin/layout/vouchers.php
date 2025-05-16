@@ -136,7 +136,9 @@ $vouchers = $db->select($sql, $params);
                 <th>Ngày bắt đầu</th>
                 <th>Ngày kết thúc</th>
                 <th>Trạng thái</th>
-                <th>Chức năng</th>
+                <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                    <th>Chức năng</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -155,20 +157,22 @@ $vouchers = $db->select($sql, $params);
                             : '<span class="badge bg-success">Hiệu lực</span>';
                         ?>
                     </td>
-                    <td class="d-flex justify-content-center gap-2">
-                        <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
-                            <button class="btn btn-success rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#editModal<?= $voucher['voucher_id'] ?>">
-                                <i class="fa-solid fa-pen-to-square me-1"></i> Sửa
-                            </button>
-                        <?php endif; ?>
+                    <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                        <td class="d-flex justify-content-center gap-2">
+                            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+                                <button class="btn btn-success rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#editModal<?= $voucher['voucher_id'] ?>">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i> Sửa
+                                </button>
+                            <?php endif; ?>
 
-                        <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
-                            <button class="btn btn-danger rounded-2 px-3" onclick="deleteVoucher(<?= $voucher['voucher_id'] ?>)">
-                                <i class="fa-solid fa-trash me-1"></i> Xoá
-                            </button>
-                        <?php endif; ?>
+                            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                                <button class="btn btn-danger rounded-2 px-3" onclick="deleteVoucher(<?= $voucher['voucher_id'] ?>)">
+                                    <i class="fa-solid fa-trash me-1"></i> Xoá
+                                </button>
+                            <?php endif; ?>
 
-                    </td>
+                        </td>
+                    <?php endif; ?>
                 </tr>
                 <!-- Modal Sửa Voucher -->
                 <div class="modal fade" id="editModal<?= $voucher['voucher_id'] ?>" tabindex="-1">

@@ -47,29 +47,32 @@ foreach ($sizes as $size): ?>
     <tr>
         <td><?= $size['size_id'] ?></td>
         <td><?= $size['name'] ?></td>
-        <td>
-            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
-                <button class="btn btn-success mx-1 btn-edit-size"
-                    data-id="<?= $size['size_id'] ?>"
-                    data-name="<?= $size['name'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalSuaSize">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                    Sửa
-                </button>
-            <?php endif; ?>
-            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
-                <button class="btn btn-danger btn-delete-size mx-1"
-                    data-id="<?= $size['size_id'] ?>"
-                    data-name="<?= $size['name'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalXoaSize">
-                    <i class="fas fa-trash"></i>
-                    Xóa
-                </button>
-            <?php endif; ?>
+        <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
 
-        </td>
+            <td>
+                <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+                    <button class="btn btn-success mx-1 btn-edit-size"
+                        data-id="<?= $size['size_id'] ?>"
+                        data-name="<?= $size['name'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalSuaSize">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                        Sửa
+                    </button>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                    <button class="btn btn-danger btn-delete-size mx-1"
+                        data-id="<?= $size['size_id'] ?>"
+                        data-name="<?= $size['name'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalXoaSize">
+                        <i class="fas fa-trash"></i>
+                        Xóa
+                    </button>
+                <?php endif; ?>
+
+            </td>
+        <?php endif; ?>
     </tr>
 <?php endforeach;
 

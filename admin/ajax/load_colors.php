@@ -48,30 +48,32 @@ foreach ($colors as $color): ?>
         <td><?= $color['color_id'] ?></td>
         <td><?= $color['name'] ?></td>
         <td><?= $color['hex_code'] ?></td>
-        <td>
-            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
-                <button class="btn btn-success mx-1 btn-edit-color"
-                    data-id="<?= $color['color_id'] ?>"
-                    data-name="<?= $color['name'] ?>"
-                    data-hex-code="<?= $color['hex_code'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalSuaMauSac">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                    Sửa
-                </button>
-            <?php endif; ?>
-            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
-                <button class="btn btn-danger btn-delete-color mx-1"
-                    data-id="<?= $color['color_id'] ?>"
-                    data-name="<?= $color['name'] ?>"
-                    data-hex-code="<?= $color['hex_code'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalXoaMauSac">
-                    <i class="fas fa-trash"></i>
-                    Xóa
-                </button>
-            <?php endif; ?>
-        </td>
+        <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
+            <td>
+                <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+                    <button class="btn btn-success mx-1 btn-edit-color"
+                        data-id="<?= $color['color_id'] ?>"
+                        data-name="<?= $color['name'] ?>"
+                        data-hex-code="<?= $color['hex_code'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalSuaMauSac">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                        Sửa
+                    </button>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                    <button class="btn btn-danger btn-delete-color mx-1"
+                        data-id="<?= $color['color_id'] ?>"
+                        data-name="<?= $color['name'] ?>"
+                        data-hex-code="<?= $color['hex_code'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalXoaMauSac">
+                        <i class="fas fa-trash"></i>
+                        Xóa
+                    </button>
+                <?php endif; ?>
+            </td>
+        <?php endif; ?>
     </tr>
 <?php endforeach;
 

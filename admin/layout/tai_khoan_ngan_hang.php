@@ -28,7 +28,9 @@
                 <th>Chủ tài khoản</th>
                 <th>Trạng thái</th>
                 <th>Mặc định</th>
-                <th>Chức năng</th>
+                <?php if (hasPermission('Quản lý tài khoản ngân hàng', 'write') || hasPermission('Quản lý tài khoản ngân hàng', 'delete')): ?>
+                    <th>Chức năng</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody class="accountbank-wrap">

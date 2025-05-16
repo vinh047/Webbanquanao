@@ -47,30 +47,33 @@ foreach ($categories as $category): ?>
     <tr>
         <td><?= $category['category_id'] ?></td>
         <td><?= $category['name'] ?></td>
-        <td>
-            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+        <?php if (hasPermission('Quản lý thuộc tính', 'write') || hasPermission('Quản lý thuộc tính', 'delete')): ?>
+            <td>
+                <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
 
-                <button class="btn btn-success mx-1 btn-edit-category"
-                    data-id="<?= $category['category_id'] ?>"
-                    data-name="<?= $category['name'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalSuaTheLoai">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                    Sửa
-                </button>
-            <?php endif; ?>
-            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                    <button class="btn btn-success mx-1 btn-edit-category"
+                        data-id="<?= $category['category_id'] ?>"
+                        data-name="<?= $category['name'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalSuaTheLoai">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                        Sửa
+                    </button>
+                <?php endif; ?>
+                <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
 
-                <button class="btn btn-danger btn-delete-category mx-1"
-                    data-id="<?= $category['category_id'] ?>"
-                    data-name="<?= $category['name'] ?>"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalXoaTheLoai">
-                    <i class="fas fa-trash"></i>
-                    Xóa
-                </button>
-            <?php endif; ?>
-        </td>
+                    <button class="btn btn-danger btn-delete-category mx-1"
+                        data-id="<?= $category['category_id'] ?>"
+                        data-name="<?= $category['name'] ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalXoaTheLoai">
+                        <i class="fas fa-trash"></i>
+                        Xóa
+                    </button>
+                <?php endif; ?>
+            </td>
+
+        <?php endif; ?>
     </tr>
 <?php endforeach;
 
