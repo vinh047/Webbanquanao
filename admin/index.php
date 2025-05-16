@@ -117,7 +117,7 @@ function hasPermission($role_id, $permission_name, $action = 'read')
                     </li>
                 <?php endif; ?>
 
-                <?php if (hasPermission($role_id, 'Quản lý phân quyền')): ?>
+                <?php if (hasPermission($role_id, 'Quản lý quyền')): ?>
                     <li class="nav-item mb-2">
                         <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'phanquyen' ? 'active' : '' ?>" href="index.php?page=phanquyen&pageadmin=1">
                             <i class="fas fa-user-shield"></i> <span>Phân quyền</span>
