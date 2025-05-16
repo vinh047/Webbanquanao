@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset alertShown
   localStorage.setItem('alertShown', 'false');
 
-  // Các phần tử DOM
+  // DOM elements
   const btnPay = document.getElementById('btnPay');
   const paidPriceEl = document.getElementById('paid_price');
   const qrSection = document.getElementById('qr-section');
@@ -70,40 +70,68 @@ document.addEventListener('DOMContentLoaded', () => {
   const voucherInput = document.querySelector('.input-group input');
   const voucherBtn = document.querySelector('.input-group button');
 
-  // Lấy cart và tính subtotal
-  const cart = JSON.parse(sessionStorage.getItem('selectedCartItems')) || [];
   let subtotal = 0;
   window.discount = 0;
 
-  orderItemsEl.innerHTML = '';
-  cart.forEach(item => {
-    subtotal += item.price * item.quantity;
-    const div = document.createElement('div');
-    div.className = 'd-flex border-bottom py-2 align-items-center';
-    const imgSrc = item.image?.includes('/')
-      ? item.image
-      : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
-    div.innerHTML = `
-      <img src="${imgSrc}" class="me-2 rounded" style="width:60px;height:60px;object-fit:cover;">
-      <div class="flex-grow-1">
-        <p class="mb-0 fw-bold">${item.name}</p>
-        <small>${item.color || 'Màu'} - ${item.size || 'Size'}</small>
-        <div><small><strong>Số lượng: ${item.quantity}</strong></small></div>
-        <p class="text-danger fw-bold mb-0">${(item.price * item.quantity).toLocaleString()}đ</p>
-      </div>`;
-    orderItemsEl.appendChild(div);
-  });
+  // ✅ Lấy cart từ DB
+  async function loadCartFromDB() {
+    try {
+      const res = await fetch('./ajax/get_cart.php');
+      const result = await res.json();
 
-  // Hiển thị subtotal và total lúc đầu
-  subtotalEl.textContent = subtotal.toLocaleString() + 'đ';
-  paidPriceEl.textContent = (subtotal - window.discount).toLocaleString() + 'đ';
-  totalEl.textContent = paidPriceEl.textContent;
-  //áp dụng vouchers
+      if (!result.success || !Array.isArray(result.data)) {
+        orderItemsEl.innerHTML = '<p class="text-danger">Không thể tải giỏ hàng</p>';
+        subtotalEl.textContent = '0đ';
+        totalEl.textContent = '0đ';
+        paidPriceEl.textContent = '0đ';
+        return;
+      }
+
+      const cart = result.data;
+      subtotal = 0;
+      orderItemsEl.innerHTML = '';
+
+      cart.forEach(item => {
+        const imgSrc = item.image?.includes('/')
+          ? item.image
+          : `/assets/img/sanpham/${item.image || 'sp1.jpg'}`;
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        const div = document.createElement('div');
+        div.className = 'd-flex border-bottom py-2 align-items-center';
+        div.innerHTML = `
+        <img src="${imgSrc}" class="me-2 rounded" style="width:60px;height:60px;object-fit:cover;">
+        <div class="flex-grow-1">
+          <p class="mb-0 fw-bold">${item.name}</p>
+          <small>${item.color || 'Màu'} - ${item.size || 'Size'}</small>
+          <div><small><strong>Số lượng: ${item.quantity}</strong></small></div>
+          <p class="text-danger fw-bold mb-0">${itemTotal.toLocaleString()}đ</p>
+        </div>`;
+        orderItemsEl.appendChild(div);
+      });
+
+      // Cập nhật UI
+      subtotalEl.textContent = subtotal.toLocaleString() + 'đ';
+      const finalTotal = subtotal - window.discount;
+      paidPriceEl.textContent = finalTotal.toLocaleString() + 'đ';
+      totalEl.textContent = finalTotal.toLocaleString() + 'đ';
+
+    } catch (err) {
+      console.error('❌ Lỗi tải giỏ hàng:', err);
+      orderItemsEl.innerHTML = '<p class="text-danger">Lỗi kết nối máy chủ</p>';
+    }
+  }
+
+  // Gọi lúc đầu
+  loadCartFromDB();
+
+  // ✅ Áp dụng voucher
   voucherBtn.addEventListener('click', async e => {
     e.preventDefault();
     const code = voucherInput.value.trim().toUpperCase();
     if (!code) return;
-  
+
     try {
       const res = await fetch('./ajax/check_voucher.php', {
         method: 'POST',
@@ -111,9 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ code })
       });
       const data = await res.json();
-  
+
       if (data.success) {
-        window.discount = subtotal * (data.discount / 100); // % -> tiền
+        window.discount = subtotal * (data.discount / 100);
         alert(`Áp dụng mã ${data.code}: Giảm ${data.discount}%`);
       } else {
         window.discount = 0;
@@ -124,23 +152,51 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Không thể kiểm tra mã giảm giá');
       window.discount = 0;
     }
-  
-    // Cập nhật lại UI
-    document.getElementById('discountAmount').textContent =
-  window.discount > 0 ? '-' + window.discount.toLocaleString() + 'đ' : '0đ';
 
-  
+    // Cập nhật UI
+    document.getElementById('discountAmount').textContent =
+      window.discount > 0 ? '-' + window.discount.toLocaleString() + 'đ' : '0đ';
+
     const newTotal = (subtotal - window.discount).toLocaleString() + 'đ';
     paidPriceEl.textContent = newTotal;
     totalEl.textContent = newTotal;
   });
-  
+
 
   // Xử lý nút Đặt hàng
   if (btnPay && paidPriceEl && qrSection) {
     btnPay.addEventListener('click', async e => {
       e.preventDefault();
       qrSection.innerHTML = '';
+
+      const addressOption = document.querySelector('input[name="address_option"]:checked')?.value;
+
+      if (addressOption === 'saved') {
+        const savedAddress = document.getElementById('saved-address').value;
+        if (!savedAddress) {
+          alert('Vui lòng chọn địa chỉ đã lưu để giao hàng.');
+          document.getElementById('saved-address').focus();
+          return;
+        }
+      }
+
+      if (addressOption === 'new') {
+        const province = document.getElementById('province').value;
+        const district = document.getElementById('district').value;
+        const ward = document.getElementById('ward').value;
+        const specific = document.getElementById('specific-address').value.trim();
+
+
+        if (!province || !district || !ward) {
+          alert('Vui lòng chọn đầy đủ Tỉnh/Thành, Quận/Huyện và Phường/Xã.');
+          return;
+        }
+        if (!specific) {
+          alert('Vui lòng nhập địa chỉ cụ thể.');
+          document.getElementById('specific-address').focus();
+          return;
+        }
+      }
 
       const method = document.querySelector("input[name='payment_method']:checked").value;
       const orderData = gatherOrderData(method);

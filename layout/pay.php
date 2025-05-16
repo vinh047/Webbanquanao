@@ -77,7 +77,7 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
 
           <div id="saved-container" class="mb-3">
             <select id="saved-address" class="form-select">
-              <option selected disabled>Chọn địa chỉ đã lưu</option>
+              <option value="" selected disabled>Chọn địa chỉ đã lưu</option>
               <?php foreach ($user_addresses as $addr): ?>
                 <?php
                 $full = $addr['address_detail'] . ', ' . $addr['ward'] . ', ' . $addr['district'] . ', ' . $addr['province'];
@@ -94,19 +94,19 @@ $payment_methods = $db->select("SELECT * FROM payment_method", []);
             <div class="row g-2 mb-2">
               <div class="col-md-4">
                 <select id="province" class="form-select" required>
-                  <option selected disabled>Tỉnh/TP</option>
+                  <option value="" selected disabled>Tỉnh/TP</option>
                 </select>
                 <div class="invalid-feedback">Tỉnh/TP là bắt buộc</div>
               </div>
               <div class="col-md-4">
                 <select id="district" class="form-select" required>
-                  <option selected disabled>Quận/Huyện</option>
+                  <option value="" selected disabled>Quận/Huyện</option>
                 </select>
                 <div class="invalid-feedback">Quận/Huyện là bắt buộc</div>
               </div>
               <div class="col-md-4">
                 <select id="ward" class="form-select" required>
-                  <option selected disabled>Phường/Xã</option>
+                  <option value="" selected disabled>Phường/Xã</option>
                 </select>
                 <div class="invalid-feedback">Phường/Xã là bắt buộc</div>
               </div>
