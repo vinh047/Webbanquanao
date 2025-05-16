@@ -197,8 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
-
 function syncFilterWithURL(urlParams, filterForm) {
     for (const [key, value] of urlParams.entries()) {
         if (key === 'colors') {

@@ -65,7 +65,7 @@ echo '<section class="d-md-block d-none">
 
     <div class="container-md">
 
-        <a href="#">
+        <a href="index.php?page=sanpham&pageproduct=1">
             <img src="./assets/img/banner/group-60-png-w0pw.jpg" alt="" class="img-fluid">
         </a>
 

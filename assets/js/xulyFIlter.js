@@ -204,4 +204,15 @@ document.body.addEventListener("click", function (e) {
     }
   });
   
+  const btnTatBoLoc = document.getElementById('btn-tatboloc');
+if (btnTatBoLoc) {
+  btnTatBoLoc.addEventListener('click', function (e) {
+    e.stopPropagation(); // ⛔ Ngăn sự kiện lan ra ngoài
+    const filterBox = document.querySelector('.filter_loc');
+    if (filterBox) {
+      filterBox.classList.remove('show'); // ✅ Ẩn bộ lọc
+    }
+  });
+}
+
 

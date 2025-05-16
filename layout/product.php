@@ -71,11 +71,14 @@
                 <div class="boloc">
                     <div class="position-relative">
                         <span class="fs-3"><i class="fa-solid fa-filter boloc_icon" id="filter-icon"></i></span>
-                        <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1">
+                        <div class="filter_loc position-absolute text-bg-light end-md-100 end-0 rounded-1 mt-md-0">
                             <form action="index.php" method="GET">
                                 <input type="hidden" name="page" value="sanpham">
                                 <div class="p-3">
-                                    <p class="mb-2">Bộ lọc</p>
+                                    <div class="d-flex">
+                                       <p class="mb-2 me-auto">Bộ lọc</p>   
+                                       <button class="btn btn-sm btn-outline-dark mb-2 d-md-none d-block" type="button" id="btn-tatboloc">X</button>                 
+                                    </div>
                                     <div class="px-2">
                                         <div class="row">
                                             <div class="col-md px-1">
