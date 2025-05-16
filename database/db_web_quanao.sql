@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 11:37 AM
+-- Generation Time: May 16, 2025 at 12:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -155,20 +155,21 @@ CREATE TABLE `importreceipt` (
   `user_id` int(11) DEFAULT NULL,
   `total_price` decimal(12,2) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
-  `status` tinyint(4) DEFAULT 1
+  `status` tinyint(4) DEFAULT 1,
+  `is_deleted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `importreceipt`
 --
 
-INSERT INTO `importreceipt` (`ImportReceipt_id`, `supplier_id`, `user_id`, `total_price`, `created_at`, `status`) VALUES
-(1, 20, 3, 823000000.00, '2025-04-12 18:57:21', 0),
-(2, 12, 3, 615650000.00, '2025-04-13 19:01:31', 0),
-(3, 10, 3, 549150000.00, '2025-04-17 10:02:26', 0),
-(4, 2, 3, 322500000.00, '2025-04-18 12:34:56', 0),
-(5, 19, 3, 271200000.00, '2025-04-19 19:03:03', 0),
-(6, 8, 3, 689250000.00, '2025-04-20 21:17:15', 0);
+INSERT INTO `importreceipt` (`ImportReceipt_id`, `supplier_id`, `user_id`, `total_price`, `created_at`, `status`, `is_deleted`) VALUES
+(1, 20, 3, 823000000.00, '2025-04-12 18:57:21', 0, 0),
+(2, 12, 3, 615650000.00, '2025-04-13 19:01:31', 0, 0),
+(3, 10, 3, 549150000.00, '2025-04-17 10:02:26', 0, 0),
+(4, 2, 3, 322500000.00, '2025-04-18 12:34:56', 0, 0),
+(5, 19, 3, 271200000.00, '2025-04-19 19:03:03', 0, 0),
+(6, 8, 3, 689250000.00, '2025-04-20 21:17:15', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -491,7 +492,7 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `category_id`, `pri
 (17, 'Áo polo nam premium 100% cotton phối sọc form fitt', 'Đẳng cấp đến từ sự tinh tế – áo polo nam premium 100% cotton phối sọc form fitted là lựa chọn lý tưởng cho những quý ông hiện đại yêu thích phong cách gọn gàng, lịch thiệp nhưng vẫn thoải mái. Sản phẩm được may từ 100% cotton cao cấp, mềm mịn, thoáng khí, thân thiện với làn da và giữ form cực tốt.\r\n\r\nThiết kế phối sọc tinh tế chạy dọc hoặc ngang tùy phiên bản, giúp tạo điểm nhấn bắt mắt mà không làm mất đi sự tối giản sang trọng. Phom fitted ôm nhẹ, tôn dáng và giúp tổng thể trở nên gọn gàng, hiện đại hơn. Phù hợp cho cả đi làm, gặp gỡ đối tác, hoặc những buổi dạo phố, cafe cuối tuần.\r\n\r\n✔️ 100% cotton cao cấp – mềm mát, thấm hút vượt trội\r\n✔️ Form fitted – ôm nhẹ, tôn dáng sang trọng\r\n✔️ Thiết kế phối sọc thanh lịch – không phô trương nhưng nổi bật\r\n✔️ Cổ polo chuẩn – giữ form, không bị bai nhão\r\n\r\nChiếc polo cao cấp giúp bạn nâng tầm phong cách – tinh gọn, lịch lãm, đầy khí chất.', 4, 589000.00, 0, 0, 0, 765700.00, 30.00, 0),
 (18, 'Áo polo nam tay ngắn cotton sọc ngang form loose', 'Tự do thể hiện phong cách cá nhân với áo polo nam tay ngắn cotton sọc ngang form loose – lựa chọn lý tưởng cho những ai yêu thích sự thoải mái, trẻ trung mà vẫn giữ nét chỉn chu của chiếc áo cổ bẻ truyền thống. Thiết kế sọc ngang nổi bật, mang lại cảm giác năng động, khỏe khoắn và phù hợp với nhiều phong cách từ basic đến streetwear.\r\n\r\nChất liệu cotton mềm mại, thấm hút tốt, tạo cảm giác dễ chịu cả ngày dài. Phom áo loose rộng rãi, phù hợp với nhiều vóc dáng, dễ mix cùng jeans, quần short hay kaki để đi chơi, dạo phố hoặc hoạt động ngoài trời.\r\n\r\n✔️ Vải cotton cao cấp – thoáng khí, thấm hút mồ hôi\r\n✔️ Họa tiết sọc ngang – trẻ trung, cá tính\r\n✔️ Dáng loose – rộng rãi, thoải mái mọi chuyển động\r\n✔️ Cổ polo lịch sự – dễ mặc, dễ phối\r\n\r\nChiếc áo hoàn hảo cho những ngày muốn', 4, 540000.00, 0, 0, 0, 702000.00, 30.00, 0),
 (19, 'Áo khoác denim nam form regular', 'Mạnh mẽ – cá tính – không bao giờ lỗi mốt. Áo khoác denim nam form regular là item kinh điển trong tủ đồ phái mạnh, giúp bạn dễ dàng tạo dấu ấn riêng với phong cách bụi bặm và nam tính. Thiết kế form regular vừa vặn, không quá ôm cũng không quá rộng, phù hợp với nhiều vóc dáng và dễ phối đồ trong mọi hoàn cảnh.\r\n\r\nSản phẩm sử dụng chất liệu denim dày dặn, bền màu, giúp giữ form tốt và mang lại cảm giác chắc chắn khi mặc. Đường may tỉ mỉ, chi tiết túi trước ngực và khuy kim loại tạo nên sự cân đối giữa cổ điển và hiện đại. Dễ dàng kết hợp với áo thun, hoodie hoặc sơ mi bên trong – từ dạo phố, đi làm đến đi chơi đều phù hợp.\r\n\r\n✔️ Denim cao cấp – đứng dáng, chắc tay, lâu phai màu\r\n✔️ Form regular – dễ mặc, dễ phối\r\n✔️ Thiết kế cổ điển – cá tính, nam tính, thời trang\r\n✔️ Tính ứng dụng cao – mặc quanh năm, phối được nhiều phong cách\r\n\r\nChiếc áo khoác denim', 5, 736000.00, 0, 0, 0, 956800.00, 30.00, 0),
-(20, 'Quần lót nam organic cotton .Boxer', 'Thoải mái từ bên trong – quần lót nam organic cotton .Boxer mang đến cảm giác dễ chịu tối đa cho những chuyển động cả ngày dài. Được làm từ cotton hữu cơ (organic cotton) thân thiện với làn da và môi trường, chất vải mềm mịn, co giãn vừa phải, giúp ôm nhẹ nhưng không gây bó sát hay khó chịu.\r\n\r\nThiết kế dạng boxer suông nhẹ, thoáng khí, phù hợp cho những ai yêu thích sự thoải mái và tự do trong từng bước di chuyển. Cạp thun mềm, đàn hồi tốt, không để lại vết hằn trên da. Màu sắc tối giản, dễ sử dụng hàng ngày.\r\n\r\n✔️ Organic cotton – an toàn cho da, thân thiện môi trường\r\n✔️ Dáng boxer – thoáng mát, không bó sát\r\n✔️ Cạp thun mềm – co giãn tốt, giữ form ổn định\r\n✔️ Thiết kế đơn giản – tiện dụng, tinh tế\r\n\r\nSự lựa chọn hoàn hảo cho những quý ông đề cao cảm giác thoải mái và chất lượng bền vững.', 6, 10000.00, 0, 0, 0, 13000.00, 30.00, 0),
+(20, 'Quần lót nam organic cotton .Boxer', 'Thoải mái từ bên trong – quần lót nam organic cotton .Boxer mang đến cảm giác dễ chịu tối đa cho những chuyển động cả ngày dài. Được làm từ cotton hữu cơ (organic cotton) thân thiện với làn da và môi trường, chất vải mềm mịn, co giãn vừa phải, giúp ôm nhẹ nhưng không gây bó sát hay khó chịu.\r\n\r\nThiết kế dạng boxer suông nhẹ, thoáng khí, phù hợp cho những ai yêu thích sự thoải mái và tự do trong từng bước di chuyển. Cạp thun mềm, đàn hồi tốt, không để lại vết hằn trên da. Màu sắc tối giản, dễ sử dụng hàng ngày.\r\n\r\n✔️ Organic cotton – an toàn cho da, thân thiện môi trường\r\n✔️ Dáng boxer – thoáng mát, không bó sát\r\n✔️ Cạp thun mềm – co giãn tốt, giữ form ổn định\r\n✔️ Thiết kế đơn giản – tiện dụng, tinh tế\r\n\r\nSự lựa chọn hoàn hảo cho những quý ông đề cao cảm giác thoải mái và chất lượng bền vững.', 6, 117000.00, 0, 0, 0, 80000.00, 30.00, 0),
 (21, 'Quần lót nam organic cotton phối lưng.Brief', 'Gọn gàng – thoải mái – chuẩn tinh tế. Quần lót nam organic cotton phối lưng.Brief được thiết kế dành riêng cho những quý ông ưu tiên cảm giác dễ chịu mà vẫn chú trọng đến phom dáng. Với chất liệu organic cotton thân thiện với làn da, sản phẩm mang lại độ mềm mại, thoáng khí và thấm hút mồ hôi hiệu quả – lý tưởng để mặc hằng ngày.\r\n\r\nKiểu dáng brief ôm gọn, hỗ trợ tốt mà không gây cấn hoặc khó chịu. Phần lưng thun phối màu hoặc họa tiết, đàn hồi tốt, tạo điểm nhấn cá tính nhưng không kém phần sang trọng. Sự kết hợp giữa tính năng và thiết kế giúp chiếc brief này vừa tiện dụng, vừa thời trang.\r\n\r\n✔️ Vải cotton hữu cơ – mềm mịn, lành tính, bảo vệ môi trường\r\n✔️ Dáng brief – ôm gọn, hỗ trợ tối đa\r\n✔️ Lưng phối nổi bật – cạp thun chắc chắn, không hằn da\r\n✔️ Phù hợp mặc hằng ngày – từ đi làm, thể thao đến nghỉ ngơi\r\n\r\nMột chiếc quần lót không chỉ để mặc – mà để bạn cảm thấy tự tin & thoải mái suốt cả ngày.', 6, 98000.00, 0, 0, 0, 127400.00, 30.00, 0),
 (22, 'Quần Lót Nam Organic Cotton Trơn phối lưng. Boxer', 'Tối giản nhưng chuẩn mực – quần lót nam Organic Cotton trơn phối lưng .Boxer là lựa chọn hoàn hảo cho những chàng trai yêu thích cảm giác thoải mái, nhẹ nhàng và an toàn cho làn da. Sử dụng chất liệu organic cotton cao cấp, quần mang đến sự mềm mại, thoáng khí và thấm hút mồ hôi tốt – thích hợp để mặc suốt cả ngày dài, kể cả khi vận động nhiều.\r\n\r\nKiểu dáng boxer suông nhẹ, giúp ôm vừa vặn cơ thể mà không gây bí bách hay hằn da. Phần lưng thun bản to phối màu/hoạ tiết, tạo điểm nhấn tinh tế và giúp quần giữ form tốt, không bị cuộn hay xô lệch khi mặc.\r\n\r\n✔️ 100% organic cotton – an toàn, không gây kích ứng\r\n✔️ Dáng boxer – thoáng mát, không bó sát\r\n✔️ Thiết kế trơn – đơn giản, tinh tế\r\n✔️ Cạp thun phối – chắc chắn, tôn vẻ hiện đại\r\n\r\nMặc đơn giản nhưng cảm nhận sự chỉn chu từ bên trong – lựa chọn xứng tầm cho phái mạnh đề cao chất lượng và sự thoải mái.', 6, 94000.00, 0, 0, 0, 122200.00, 30.00, 0),
 (23, 'Quần short nam cotton poly form straight', 'Quần short nam chất liệu cotton pha poly mềm mại, thoáng khí nhưng vẫn giữ form tốt\r\nThiết kế form straight đứng dáng, phù hợp nhiều vóc dáng và dễ phối đồ\r\nPhong cách tối giản, dễ ứng dụng trong cả sinh hoạt hàng ngày lẫn khi đi chơi\r\n\r\n✔️ Chất liệu: Cotton + Polyester bền nhẹ, co giãn nhẹ\r\n✔️ Kiểu dáng: Form straight – đứng dáng gọn gàng\r\n✔️ Lưng quần: Chun co giãn hoặc cài nút tuỳ mẫu\r\n✔️ Túi: Có túi hai bên tiện dụng\r\n✔️ Thích hợp: Đi học, đi làm, đi chơi', 2, 450000.00, 0, 0, 0, 585000.00, 30.00, 0),
