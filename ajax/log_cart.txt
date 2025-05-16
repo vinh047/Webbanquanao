@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-[{"product_id":23,"name":"Quần short nam cotton poly form straight","price":585000,"quantity":1,"image":"10s24psh003r1-safari-1-jpg-1ry0.jpg","variant_id":126,"color_id":2,"size":"L"}]
-=======
-[{"product_id":2,"variant_id":6,"quantity":8,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":7,"size":"M","price":637000,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg"},{"product_id":2,"variant_id":7,"quantity":4,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":2,"size":"L","price":637000,"image":"10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg"}]
->>>>>>> b8dba060b48c8fb764ed5b641eec25c82a662829
+[{"product_id":23,"variant_id":126,"quantity":1,"name":"Quần short nam cotton poly form straight","color_id":2,"size":"L","price":585000,"image":"10s24psh003r1-safari-1-jpg-1ry0.jpg"},{"product_id":15,"name":"Áo thun nam cotton tay ngắn trơn regular","price":445900,"quantity":2,"image":"10s25tss003-white-1-jpg-hp1y.jpg","variant_id":74,"color_id":8,"size":"L"}]
