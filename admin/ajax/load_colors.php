@@ -1,6 +1,7 @@
 <?php
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
@@ -48,24 +49,28 @@ foreach ($colors as $color): ?>
         <td><?= $color['name'] ?></td>
         <td><?= $color['hex_code'] ?></td>
         <td>
-            <button class="btn btn-success mx-1 btn-edit-color"
-                data-id="<?= $color['color_id'] ?>"
-                data-name="<?= $color['name'] ?>"
-                data-hex-code="<?= $color['hex_code'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalSuaMauSac">
-                <i class="fa-regular fa-pen-to-square"></i>
-                Sửa
-            </button>
-            <button class="btn btn-danger btn-delete-color mx-1"
-                data-id="<?= $color['color_id'] ?>"
-                data-name="<?= $color['name'] ?>"
-                data-hex-code="<?= $color['hex_code'] ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#modalXoaMauSac">
-                <i class="fas fa-trash"></i>
-                Xóa
-            </button>
+            <?php if (hasPermission('Quản lý thuộc tính', 'write')): ?>
+                <button class="btn btn-success mx-1 btn-edit-color"
+                    data-id="<?= $color['color_id'] ?>"
+                    data-name="<?= $color['name'] ?>"
+                    data-hex-code="<?= $color['hex_code'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalSuaMauSac">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Sửa
+                </button>
+            <?php endif; ?>
+            <?php if (hasPermission('Quản lý thuộc tính', 'delete')): ?>
+                <button class="btn btn-danger btn-delete-color mx-1"
+                    data-id="<?= $color['color_id'] ?>"
+                    data-name="<?= $color['name'] ?>"
+                    data-hex-code="<?= $color['hex_code'] ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalXoaMauSac">
+                    <i class="fas fa-trash"></i>
+                    Xóa
+                </button>
+            <?php endif; ?>
         </td>
     </tr>
 <?php endforeach;
