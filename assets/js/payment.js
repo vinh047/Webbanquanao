@@ -40,7 +40,6 @@ function gatherOrderData(paymentMethodId) {
     const totalPrice = parseFloat(
         document.getElementById('paid_price')?.textContent.replace(/\D/g, '') || 0
     );
-    console.log(totalPrice)
 
     return {
         name,
@@ -225,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (localStorage.getItem('alertShown') !== 'true') {
                             alert('Đặt hàng thành công');
                             localStorage.setItem('alertShown', 'true');
-                            window.location.href = 'index.php';
+                            window.location.href = '/index.php?page=donhang';
                         }
                     } else {
                         alert('Lỗi đặt hàng: ' + (result.message || 'Không rõ nguyên nhân'));
@@ -336,7 +335,7 @@ async function checkPaid(price, orderData) {
                     });
 
                     alert("✅ Đã thanh toán thành công");
-                    window.location.href = 'index.php';
+                    window.location.href = '/index.php?page=donhang';
                 } else {
                     alert("❌ Thanh toán xong nhưng không lưu được đơn hàng: " + result.message);
                 }
