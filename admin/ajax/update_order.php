@@ -31,9 +31,13 @@ try {
     // Cộng tồn kho lại cho các variant_id trong đơn hàng cũ (đảo ngược lượng đã trừ trước đó)
     foreach ($oldDetails as $old) {
         $variantId = $old['variant_id'];
+        $productId = (int)$old['product_id'];
         $qty = (int)$old['quantity'];
         $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?")
             ->execute([$qty, $variantId]);
+        // Giảm sold_count sản phẩm
+        $pdo->prepare("UPDATE products SET sold_count = sold_count - ? WHERE product_id = ? AND sold_count >= ?")
+            ->execute([$qty, $productId, $qty]); // tránh bị âm
     }
 
     // 2. Xóa hết chi tiết đơn hàng cũ
@@ -80,6 +84,10 @@ try {
         $variantId = $item['variant_id'];
         $pdo->prepare("UPDATE product_variants SET stock = stock - ? WHERE variant_id = ?")
             ->execute([$qty, $variantId]);
+
+        // Cộng sold_count sản phẩm
+        $pdo->prepare("UPDATE products SET sold_count = sold_count + ? WHERE product_id = ?")
+            ->execute([$qty, $productId]);
     }
 
     // Commit transaction

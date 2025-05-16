@@ -18,13 +18,18 @@ try {
     $pdo->beginTransaction();
 
     // Lấy chi tiết đơn hàng (variant_id, quantity)
-    $orderDetails = $db->select("SELECT variant_id, quantity FROM order_details WHERE order_id = ?", [$order_id]);
+    $orderDetails = $db->select("SELECT variant_id, product_id, quantity FROM order_details WHERE order_id = ?", [$order_id]);
 
     // Cập nhật lại tồn kho product_variants (cộng lại số lượng)
     $updateStockSql = "UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?";
     $updateStockStmt = $pdo->prepare($updateStockSql);
     foreach ($orderDetails as $detail) {
         $updateStockStmt->execute([$detail['quantity'], $detail['variant_id']]);
+        // ✅ Cập nhật số lượng bán (giảm sold_count)
+        $db->execute(
+            "UPDATE products SET sold_count = sold_count - ? WHERE product_id = ? AND sold_count >= ?",
+            [$detail['quantity'], $detail['product_id'], $detail['quantity']]
+        );
     }
 
     // Cập nhật trạng thái đơn hàng thành 'Đã huỷ'

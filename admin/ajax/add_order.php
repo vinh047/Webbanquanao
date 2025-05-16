@@ -56,6 +56,12 @@ try {
             "UPDATE product_variants SET stock = stock - ? WHERE variant_id = ? AND is_deleted = 0",
             [$item['quantity'], $item['variant_id']]
         );
+
+        // Cập nhật số lượng đã bán của sản phẩm
+        $db->execute(
+            "UPDATE products SET sold_count = sold_count + ? WHERE product_id = ?",
+            [$item['quantity'], $item['product_id']]
+        );
     }
 
     // Commit dữ liệu
