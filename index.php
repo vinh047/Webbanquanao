@@ -46,7 +46,6 @@ if (isset($_GET['page'])) {
             case 'taikhoan':
             case 'danhsachdiachi':
             case 'donhang':
-            case 'lichsumuahang':
                 include('./layout/info_user.php');
                 break;
             case 'search':

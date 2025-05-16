@@ -17,6 +17,8 @@
 <?php
 require_once '../database/DBConnection.php';
 $db = DBConnect::getInstance();
+$pdo = $db->getConnection();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -26,6 +28,12 @@ $user_id = $_SESSION['user_id'] ?? null;
 $product_id = isset($_GET['product_id']) ? (int)$_GET['product_id'] : '';
 
 $product = $db->selectOne("SELECT * FROM products WHERE product_id = ?", [$product_id]);
+
+$stmt = $pdo->prepare("SELECT ROUND(AVG(rating), 1) AS rating_avg, COUNT(*) AS total_reviews FROM reviews WHERE product_id = ?");
+$stmt->execute([$product['product_id']]);
+$stats = $stmt->fetch(PDO::FETCH_ASSOC);
+$product['rating_avg'] = $stats['rating_avg'] ?? 0;
+$product['total_reviews'] = $stats['total_reviews'] ?? 0;
 
 $category = $db->selectOne("SELECT * FROM categories WHERE category_id = ?", [$product['category_id']]);
 

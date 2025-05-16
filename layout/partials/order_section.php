@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_order_id'])) {
         // Giảm sold_count nếu đang lớn hơn hoặc bằng số cần giảm
         $pdo->prepare("UPDATE products SET sold_count = sold_count - ? WHERE product_id = ? AND sold_count >= ?")
             ->execute([$qty, $product_id, $qty]);
-    }   
+    }
 }
 
 // --- 2) Phân trang ---
@@ -87,7 +87,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Trạng thái</th>
                 <th>Thanh toán</th>
                 <th>Tổng tiền</th>
-                <th>Hành động</th>
+                <th>Chức năng</th>
             </tr>
         </thead>
         <tbody>
@@ -119,6 +119,12 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <i class="fa-solid fa-trash"></i> Hủy đơn
                                 </button>
                             </form>
+                        <?php endif; ?>
+                        <!-- Nút đánh giá (chỉ khi giao thành công) -->
+                        <?php if ($o['status'] === 'Giao thành công'): ?>
+                            <a href="/layout/danhgia.php?order_id=<?= $o['order_id'] ?>" class="btn btn-sm btn-warning ms-1">
+                                <i class="fa-solid fa-star-half-stroke me-1"></i> Đánh giá
+                            </a>
                         <?php endif; ?>
                     </td>
                 </tr>

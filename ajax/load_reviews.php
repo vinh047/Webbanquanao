@@ -46,7 +46,7 @@
     foreach($reviews as $r): ?>
         <div class="mt-3 px-4 border-bottom">
                                 
-            <div class="fw-semibold fs-6"><?= $r['uname'] ?></div>
+            <div class="fw-semibold fs-6"><?= $r['name'] ?></div>
             <div class="ms-1 mt-1" style="font-size: 12px;">
                 <?php for($i = 1; $i <= 5; $i++) {
                     if($i <= $r['rating'])

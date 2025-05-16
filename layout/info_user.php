@@ -40,11 +40,6 @@ $currentPage = $_GET['page'] ?? 'taikhoan';
           <span><i class="fa-solid fa-receipt me-2"></i>Đơn hàng của bạn</span>
           <i class="fa-solid fa-chevron-right"></i>
         </a>
-        <a href="/index.php?page=lichsumuahang"
-           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center<?php if ($currentPage==='lichsumuahang') echo ' active'; ?>">
-          <span><i class="fa-solid fa-clock-rotate-left me-2"></i>Lịch sử mua hàng</span>
-          <i class="fa-solid fa-chevron-right"></i>
-        </a>
         <a href="/index.php?page=danhsachdiachi"
            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center<?php if ($currentPage==='danhsachdiachi') echo ' active'; ?>">
           <span><i class="fa-solid fa-location-dot me-2"></i>Danh sách địa chỉ</span>
@@ -64,7 +59,6 @@ $currentPage = $_GET['page'] ?? 'taikhoan';
         $pageMap = [
           'taikhoan'        => 'partials/account_section.php',
           'donhang'         => 'partials/order_section.php',
-          'lichsumuahang'   => 'partials/history_section.php',
           'danhsachdiachi'  => 'partials/address_section.php',
         ];
         $includeFile = $pageMap[$currentPage] ?? 'partials/account_section.php';
