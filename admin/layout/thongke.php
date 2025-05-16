@@ -215,6 +215,17 @@ foreach ($ordersOfTopUsers as $order) {
         'created_at' => $order['created_at']
     ];
 }
+// ✅ Sắp xếp đơn hàng của từng khách theo tổng tiền giảm dần
+foreach ($topKhachHangGroup as &$khach) {
+    usort($khach['don_hang'], function ($a, $b) {
+        if ($b['total_price'] == $a['total_price']) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        }
+        return $b['total_price'] - $a['total_price'];
+    });
+}
+
+unset($khach); // Xóa biến tham chiếu
 
 // --- Thống kê số lượng đơn theo trạng thái ---
 $whereStatus = [];
@@ -298,7 +309,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
         <button type="submit" class="btn btn-primary">Lọc</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
       </div>
-    </>
+    </form>
   </div>
 </div>
 
@@ -401,7 +412,8 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($kh['don_hang'] as $dh): ?>
+                            <?php 
+                            foreach ($kh['don_hang'] as $dh): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($dh['order_id']) ?></td>
                                     <td><?= number_format($dh['total_price']) ?></td>
