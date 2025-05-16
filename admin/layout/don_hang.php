@@ -1,5 +1,6 @@
 <?php
 require_once '../database/DBConnection.php';
+require_once 'ajax/permission_helper.php';
 $db = DBConnect::getInstance();
 
 $statuses = $db->getEnumValues('orders', 'status');
@@ -14,9 +15,11 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
     }
 </style>
 <div class="d-flex align-items-center justify-content-between mt-3 mb-4">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemDonHang">
-        <i class="fa-solid fa-plus"></i> Thêm
-    </button>
+    <?php if (hasPermission('Quản lý đơn hàng', 'write')): ?>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalThemDonHang">
+            <i class="fa-solid fa-plus"></i> Thêm
+        </button>
+    <?php endif; ?>
 
     <div class="mx-auto w-25">
         <div class="input-group">
@@ -2034,6 +2037,35 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         const shippingAddress = btn.getAttribute('data-shipping-address');
         // Có thể thêm created_at nếu cần
 
+        // Sau khi đặt trạng thái:
+        const isCustomerOrder = !staffId || staffId.trim() === '';
+        const isEditable = status === "Chờ xác nhận" && !isCustomerOrder;
+        const canEditStatusOnly = isCustomerOrder;
+
+        document.getElementById('edit_user_id').readOnly = !isEditable;
+        document.getElementById('btnChonKhachHang_Sua').disabled = !isEditable;
+
+        document.getElementById('edit_staff_id').readOnly = true; // luôn readonly
+        document.getElementById('payment_method_id_sua').disabled = !isEditable;
+        document.getElementById('note_sua').readOnly = !isEditable;
+        document.getElementById('specific-address-sua').readOnly = !isEditable;
+        document.getElementById('province-sua').disabled = !isEditable;
+        document.getElementById('district-sua').disabled = !isEditable;
+        document.getElementById('ward-sua').disabled = !isEditable;
+
+        document.getElementById('product_id_sua').readOnly = !isEditable;
+        document.getElementById('variant_id_sua').readOnly = !isEditable;
+        document.getElementById('quantity_sua').disabled = !isEditable;
+        document.getElementById('price_sua').readOnly = !isEditable;
+        document.getElementById('btnThemChiTiet_Sua').disabled = !isEditable;
+
+        // Nếu là đơn khách hàng tạo, chỉ cho phép sửa trạng thái => ẩn nút xóa chi tiết
+        document.querySelectorAll('#orderDetailQueue_sua .btn-remove-row-sua').forEach(btn => {
+            btn.style.display = (isEditable || canEditStatusOnly) ? 'none' : 'inline-block';
+        });
+
+        document.getElementById('btnChonSanPham_Sua').disabled = isCustomerOrder;
+        document.getElementById('btnChonBienThe_Sua').disabled = isCustomerOrder;
 
         // Đặt dữ liệu vào modal sửa
         document.getElementById('edit_order_id').value = orderId;
@@ -2137,6 +2169,10 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                                 </button>
                             </td>
                         `;
+
+                        const btnRemove = row.querySelector('.btn-remove-row-sua');
+                        btnRemove.disabled = !isEditable;
+
                         tbody.appendChild(row);
                     });
                     document.getElementById('tongTienDonHang_sua').textContent = totalPrice.toLocaleString('vi-VN') + ' ₫';

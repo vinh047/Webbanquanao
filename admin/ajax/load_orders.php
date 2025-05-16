@@ -1,9 +1,12 @@
 <?php
+
 require_once '../../database/DBConnection.php';
 require_once '../../layout/phantrang.php';
+require_once 'permission_helper.php';
+
+
 
 $db = DBConnect::getInstance();
-
 
 $limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -122,45 +125,49 @@ foreach ($orders as $order):
                 data-created-at="<?= $order['created_at'] ?>"
                 data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
                 data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
-                data-staff-id="<?= $staff['user_id'] ?>"
-                <?= $staff ? htmlspecialchars($staff['name']) : '' ?>>
+                data-staff-id="<?= $staff ? htmlspecialchars($staff['user_id']) : '' ?>"
+                data-staff-name=" <?= $staff ? htmlspecialchars($staff['name']) : '' ?>">
                 <i class="fa-regular fa-eye me-1"></i>
                 Chi tiết
             </button>
-            <button class="btn btn-success mx-1 btn-edit-order d-flex align-items-center"
-                style="<?= ($order['status'] == 'Đã hủy') ? 'display:none !important;' : '' ?>"
-                data-order-id="<?= $order['order_id'] ?>"
-                data-user-id="<?= $user['user_id'] ?>"
-                data-user-name="<?= htmlspecialchars($user['name']) ?>"
-                data-status="<?= htmlspecialchars($order['status']) ?>"
-                data-total-price="<?= $order['total_price'] ?>"
-                data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
-                data-note="<?= htmlspecialchars($order['note']) ?>"
-                data-created-at="<?= $order['created_at'] ?>"
-                data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
-                data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
-                data-staff-id="<?= $staff['user_id'] ?>"
-                <?= $staff ? htmlspecialchars($staff['name']) : '' ?>>
-                <i class="fa-regular fa-pen-to-square me-1"></i>
-                Sửa
-            </button>
-            <button class="btn btn-danger btn-delete-order mx-1 d-flex align-items-center"
-                style="<?= ($order['status'] !== 'Chờ xác nhận') ? 'display:none !important;' : '' ?> white-space: nowrap;"
-                data-order-id="<?= $order['order_id'] ?>"
-                data-user-id="<?= $user['user_id'] ?>"
-                data-user-name="<?= htmlspecialchars($user['name']) ?>"
-                data-status="<?= htmlspecialchars($order['status']) ?>"
-                data-total-price="<?= $order['total_price'] ?>"
-                data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
-                data-note="<?= htmlspecialchars($order['note']) ?>"
-                data-created-at="<?= $order['created_at'] ?>"
-                data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
-                data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
-                data-staff-id="<?= $staff['user_id'] ?>"
-                <?= $staff ? htmlspecialchars($staff['name']) : '' ?>>
-                <i class="fas fa-trash me-1"></i>
-                Hủy đơn
-            </button>
+            <?php if (hasPermission('Quản lý đơn hàng', 'write')): ?>
+                <button class="btn btn-success mx-1 btn-edit-order d-flex align-items-center"
+                    style="<?= ($order['status'] == 'Đã hủy') ? 'display:none !important;' : '' ?>"
+                    data-order-id="<?= $order['order_id'] ?>"
+                    data-user-id="<?= $user['user_id'] ?>"
+                    data-user-name="<?= htmlspecialchars($user['name']) ?>"
+                    data-status="<?= htmlspecialchars($order['status']) ?>"
+                    data-total-price="<?= $order['total_price'] ?>"
+                    data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
+                    data-note="<?= htmlspecialchars($order['note']) ?>"
+                    data-created-at="<?= $order['created_at'] ?>"
+                    data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
+                    data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
+                    data-staff-id="<?= $staff ? htmlspecialchars($staff['user_id']) : '' ?>"
+                    data-staff-name=" <?= $staff ? htmlspecialchars($staff['name']) : '' ?>">
+                    <i class="fa-regular fa-pen-to-square me-1"></i>
+                    Sửa
+                </button>
+            <?php endif; ?>
+            <?php if (hasPermission('Quản lý đơn hàng', 'delete')): ?>
+                <button class="btn btn-danger btn-delete-order mx-1 d-flex align-items-center"
+                    style="<?= ($order['status'] !== 'Chờ xác nhận') ? 'display:none !important;' : '' ?> white-space: nowrap;"
+                    data-order-id="<?= $order['order_id'] ?>"
+                    data-user-id="<?= $user['user_id'] ?>"
+                    data-user-name="<?= htmlspecialchars($user['name']) ?>"
+                    data-status="<?= htmlspecialchars($order['status']) ?>"
+                    data-total-price="<?= $order['total_price'] ?>"
+                    data-shipping-address="<?= htmlspecialchars($order['shipping_address']) ?>"
+                    data-note="<?= htmlspecialchars($order['note']) ?>"
+                    data-created-at="<?= $order['created_at'] ?>"
+                    data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
+                    data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
+                    data-staff-id="<?= $staff ? htmlspecialchars($staff['user_id']) : '' ?>"
+                    data-staff-name=" <?= $staff ? htmlspecialchars($staff['name']) : '' ?>">
+                    <i class="fas fa-trash me-1"></i>
+                    Hủy đơn
+                </button>
+            <?php endif; ?>
         </td>
     </tr>
 <?php endforeach;
