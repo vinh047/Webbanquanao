@@ -113,6 +113,44 @@ function locCTPN($connection)
 }
 
 
+// function locPhieuNhap($connection)
+// {
+//     $where = [];
+
+//     if (!empty($_POST['txtIDpn'])) {
+//         $idpn = (int)$_POST['txtIDpn'];
+//         $where[] = "im.ImportReceipt_id = $idpn";
+//     }
+
+//     if (!empty($_POST['txtIDncc'])) {
+//         $idncc = (int)$_POST['txtIDncc'];
+//         $where[] = "im.supplier_id = $idncc";
+//     }
+
+//     if (!empty($_POST['txtIDnv'])) {
+//         $idnv = (int)$_POST['txtIDnv'];
+//         $where[] = "im.user_id = $idnv";
+//     }
+
+//     if (!empty($_POST['dateNhap'])) {
+//         $ngaybd = trim($_POST['dateNhap']);
+//         $where[] = "DATE(im.created_at) >= '$ngaybd'";
+//     }
+    
+
+//     if (!empty($_POST['dateKT'])) {
+//         $ngaykt = trim($_POST['dateKT']);
+//         $where[] = "DATE(im.created_at) <= '$ngaykt'";
+//     }
+    
+
+//     if (isset($_POST['txtTrangThai']) && $_POST['txtTrangThai'] !== '') {
+//         $status = (int)$_POST['txtTrangThai'];
+//         $where[] = "im.status = $status";
+//     }
+
+//     return (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "WHERE 1";
+// }
 function locPhieuNhap($connection)
 {
     $where = [];
@@ -136,19 +174,18 @@ function locPhieuNhap($connection)
         $ngaybd = trim($_POST['dateNhap']);
         $where[] = "DATE(im.created_at) >= '$ngaybd'";
     }
-    
 
     if (!empty($_POST['dateKT'])) {
         $ngaykt = trim($_POST['dateKT']);
         $where[] = "DATE(im.created_at) <= '$ngaykt'";
     }
-    
 
     if (isset($_POST['txtTrangThai']) && $_POST['txtTrangThai'] !== '') {
         $status = (int)$_POST['txtTrangThai'];
         $where[] = "im.status = $status";
     }
 
-    return (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "WHERE 1";
+    return (count($where) > 0) ? " AND " . implode(" AND ", $where) : "";
 }
+
 ?>

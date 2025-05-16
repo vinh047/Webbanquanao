@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     guiFormPhieuNhap();
     resetForm();
     xuLyAnh();
-    loadPhieuNhap();
+        dongBoVaLoadPhieuNhap();
+    // loadPhieuNhap();
     loadFiltersFromURL();
         const btnThemSanPhamMoi = document.getElementById('btnThemSanPhamMoi');
         if (btnThemSanPhamMoi) {
@@ -108,7 +109,9 @@ function loadFiltersFromURL() {
 
     const pageadmin = parseInt(params.get('pageadmin')) || 1;
     currentPage = pageadmin;
-    loadPhieuNhap(currentPage);
+    // loadPhieuNhap(currentPage);
+    dongBoVaLoadPhieuNhap(currentPage);
+
 }
 
 function xuLyLoc()
@@ -137,7 +140,9 @@ function xuLyLoc()
         const newUrl = `${location.pathname}?${queryParts.join('&')}`;
         window.history.pushState({}, '', newUrl);
     
-        loadPhieuNhap(currentPage);
+        // loadPhieuNhap(currentPage);
+        dongBoVaLoadPhieuNhap(currentPage);
+
     });
     
     
@@ -323,8 +328,12 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
 
     const variantKeys = new Set();
     let isValid = true;
+    let dkTrung = false;
     let firstErrorRow = null;
+    let firstDuplicateRow = null;
     const errorRows = [];
+    const variantKeyMap = new Map(); // lưu để biết dòng nào đã dùng key
+
 
     for (let row of rows) {
         const color = row.querySelector('[name="colors[]"]').value;
@@ -340,21 +349,40 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
             continue;
         }
 
-        const filename = file.name.trim().toLowerCase();
-        const key = `${productId}_${color}_${size}_${filename}`;
+        const key = `${productId}_${color}_${size}`;
 
-        // ❌ Trùng hàng đợi
-        if (variantKeys.has(key)) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Biến thể trùng',
-                text: 'Biến thể (màu, size, ảnh) đã tồn tại trong hàng đợi.',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+            if (variantKeyMap.has(key)) {
+        // 🔴 Nếu key đã tồn tại => trùng
+        dkTrung = true;
+        const otherRow = variantKeyMap.get(key); // dòng trước đó đã dùng key này
+        if (!firstDuplicateRow) firstDuplicateRow = row;
 
-        variantKeys.add(key);
+        errorRows.push(row);      // dòng hiện tại
+        errorRows.push(otherRow); // dòng bị trùng trước đó
+        continue;
+    }
+
+        // variantKeyMap.add(key);
+        variantKeyMap.set(key, row);
+    }
+
+        if (dkTrung) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Đã tồn tại biến thể trong hàng đợi',
+            text: 'Vui lòng kiểm tra lại thông tin bị trùng.',
+            confirmButtonText: 'OK',
+            didClose: () => {
+                firstDuplicateRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                errorRows.forEach(row => {
+                    row.classList.add('row-error-highlight');
+                    setTimeout(() => {
+                        row.classList.remove('row-error-highlight');
+                    }, 3000);
+                });
+            }
+        });
+        return;
     }
 
     if (!isValid) {
@@ -385,10 +413,7 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     .then(res => res.json())
     .then(res => {
         if (res.success) {
-            // const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
-            // tbTC.style.display = 'block';
-            // tbTC.classList.add('show');
-            // setTimeout(() => tbTC.classList.remove('show'), 2000);
+
             alert('Lưu biến thể thành công');
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
             if (modal) modal.hide();
@@ -412,7 +437,33 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
 
             if (typeof reloadVariantsInPhieuNhap === 'function') reloadVariantsInPhieuNhap();
         } else {
-            showModalThongBao(res.message || 'Đã tồn tại biến thể trong hệ thống.');
+            const duplicate = res.duplicate;
+if (duplicate) {
+    const { color_id, size_id } = duplicate;
+    const matchedRow = Array.from(document.querySelectorAll('.variant-row')).find(row => {
+        const c = row.querySelector('[name="colors[]"]').value;
+        const s = row.querySelector('[name="sizes[]"]').value;
+        return c == color_id && s == size_id;
+    });
+
+    if (matchedRow) {
+        matchedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        matchedRow.classList.add('row-error-highlight');
+        setTimeout(() => {
+            matchedRow.classList.remove('row-error-highlight');
+        }, 3000);
+    }
+}
+
+Swal.fire({
+    icon: 'error',
+    title: 'Biến thể đã tồn tại',
+    text: res.message || 'Vui lòng chọn màu và size khác.',
+    timer: 2500,
+    timerProgressBar: true,
+    showConfirmButton: false
+});
+
         }
     })
     .catch(err => {
@@ -465,7 +516,7 @@ function luuSanPham()
         const description = document.getElementById('txtMota').value.trim();
         const category_id = document.getElementById('cbLoai').value;
         const ptgg = document.getElementById('txtPT').value.trim().replace('%', '');
-        const regexCheck = /[`~+=\-\/;'\><\\|@#$%^&*()]/; 
+        const regexCheck = /[`~+=\\/;'\><\\|@#$%^&*()]/; 
 
         if (!permissions.includes('write')) {
             const tBquyen = document.querySelector('.thongBaoQuyen');
@@ -823,6 +874,38 @@ document.addEventListener('click', function (e) {
     }
 });
 
+const productPriceMap = {}; // Lưu {product_id: unit_price}
+
+// Khi thay đổi giá nhập → lưu vào map
+document.addEventListener('input', function (e) {
+  if (e.target.classList.contains('input-unit-price')) {
+    const formRow = e.target.closest('.product-row');
+    const productSelect = formRow.querySelector('select[name*="[product_id]"]');
+    const productId = productSelect?.value?.trim();
+    const price = e.target.value.trim();
+
+    if (productId && price) {
+      productPriceMap[productId] = price;
+    }
+  }
+});
+
+// Khi chọn sản phẩm → nếu đã có giá thì tự điền
+document.addEventListener('change', function (e) {
+  if (e.target.matches('select[name*="[product_id]"]')) {
+    // Fix cho select2: phải delay 1 chút để value được cập nhật
+    setTimeout(() => {
+      const productId = e.target.value;
+      const formRow = e.target.closest('.product-row');
+      const priceInput = formRow.querySelector('.input-unit-price');
+
+      if (productPriceMap[productId] && priceInput.value.trim() === '') {
+        priceInput.value = productPriceMap[productId];
+      }
+    }, 50); // nhỏ thôi, đủ để đảm bảo DOM được cập nhật
+  }
+});
+
 
 function generateProductForm(index) {
     const productOptions = generateOptions(productListFromPHP, 'product_id', 'name');
@@ -888,20 +971,50 @@ function formatCurrency(value) {
 }
 
 
+// async function handleProductChange(selectEl, row) {
+//     const productId = selectEl.value;
+//     const unitPriceInput = row.querySelector('.input-unit-price');
+
+//     if (!productId) return;
+
+//     try {
+//         const resPrice = await fetch(`./ajax/get_product_price.php?product_id=${productId}`);
+//         const dataPrice = await resPrice.json();
+//         unitPriceInput.value = dataPrice.unit_price ? formatCurrency(dataPrice.unit_price) : '';
+//     } catch (err) {
+//         console.error("Lỗi khi xử lý sản phẩm:", err);
+//     }
+// }
 async function handleProductChange(selectEl, row) {
     const productId = selectEl.value;
     const unitPriceInput = row.querySelector('.input-unit-price');
 
     if (!productId) return;
 
+    // ✅ Nếu đã lưu rồi thì ưu tiên dùng giá đã nhập trước đó
+    if (productPriceMap.hasOwnProperty(productId)) {
+        unitPriceInput.value = productPriceMap[productId];
+        return; // không gọi API nữa
+    }
+
+    // ❌ Nếu chưa từng nhập giá → mới gọi lên server
     try {
         const resPrice = await fetch(`./ajax/get_product_price.php?product_id=${productId}`);
         const dataPrice = await resPrice.json();
-        unitPriceInput.value = dataPrice.unit_price ? formatCurrency(dataPrice.unit_price) : '';
+
+        const unitPrice = dataPrice.unit_price ? formatCurrency(dataPrice.unit_price) : '';
+        unitPriceInput.value = unitPrice;
+
+        // ✅ Ghi lại để sau dòng khác có thể dùng
+        if (unitPrice) {
+            productPriceMap[productId] = unitPrice;
+        }
+
     } catch (err) {
         console.error("Lỗi khi xử lý sản phẩm:", err);
     }
 }
+
 
 async function handleVariantChange(selectEl, row) {
     const variantId = selectEl.value;
@@ -1178,7 +1291,9 @@ if (errorType === 'missing') {
                     document.getElementById('formNhapPhieuNhap').reset();
                     document.getElementById('dynamic-product-forms').innerHTML = '';
                     bootstrap.Modal.getInstance(document.getElementById('modalCreatePN')).hide();
-                    loadPhieuNhap(currentPage);
+                    // loadPhieuNhap(currentPage);
+                    dongBoVaLoadPhieuNhap(currentPage);
+
                 } else {
                     alert("❌ " + res.message);
                 }
@@ -1222,6 +1337,22 @@ function xuLyAnh()
         }
       });
 }
+
+
+function dongBoVaLoadPhieuNhap(page = 1) {
+    fetch('./ajax/dongbo_trangthai_importreceipt.php')
+        .then(res => res.json())
+        .then(() => {
+            loadPhieuNhap(page); // Sau khi đồng bộ thì load bình thường
+        })
+        .catch(err => {
+            console.error('❌ Lỗi khi đồng bộ trạng thái phiếu nhập:', err);
+            loadPhieuNhap(page); // Nếu lỗi vẫn cố gắng load giao diện
+        });
+}
+
+
+
 function loadPhieuNhap(page = 1) {
     const formData = new FormData(formLoc);
     formData.append("pageproduct", page);
@@ -1247,6 +1378,38 @@ function loadPhieuNhap(page = 1) {
         console.error('Lỗi khi tải phiếu nhập:', error);
     });
 }
+// function loadPhieuNhap(page = 1) {
+//     const formData = new FormData(formLoc);
+//     formData.append("pageproduct", page);
+    
+//     fetch(`./ajax/quanlyPhieuNhap_ajax.php`, {
+//         method: "POST",
+//         body: formData
+//     })
+//     .then(res => res.text()) // Lấy text để kiểm tra trước khi parse JSON
+//     .then(text => {
+//         console.log('Phản hồi từ PHP:', text); // ✅ In ra nội dung thật để xem có lỗi gì không
+
+//         try {
+//             const data = JSON.parse(text); // Thử parse JSON
+//             document.getElementById('product-list').innerHTML = data.products;
+//             document.getElementById('pagination').innerHTML = data.pagination;
+
+//             phantrang();
+//             xacNhanCho();
+//             xemChiTiet();
+//             xoaPhieuNhap();
+//             suaPhieuNhap();
+//             anBtnXuLy();
+//         } catch (e) {
+//             console.error('❌ JSON parse thất bại:', e.message);
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Lỗi khi gọi fetch:', error);
+//     });
+// }
+
 function updateUrlWithPage(page) {
     const url = new URL(window.location.href);
     url.searchParams.set('pageadmin', page); // cập nhật hoặc thêm mới
@@ -1259,7 +1422,9 @@ function phantrang() {
             e.preventDefault();
             currentPage = parseInt(this.dataset.page);
             updateUrlWithPage(currentPage);
-            loadPhieuNhap(currentPage);
+            // loadPhieuNhap(currentPage);
+            dongBoVaLoadPhieuNhap(currentPage);
+
         });
     });
 
@@ -1277,7 +1442,9 @@ function phantrang() {
                 if (page >= 1 && page <= max) {
                     currentPage = page;
                     updateUrlWithPage(currentPage);
-                    loadPhieuNhap(page);
+                    // loadPhieuNhap(page);
+                    dongBoVaLoadPhieuNhap(currentPage);
+
                 }
             }
         });
@@ -1469,7 +1636,9 @@ function xacNhanCho() {
                     document.getElementById('xacNhanCho').style.display = 'none';
                     document.querySelector('.overlay').style.display = 'none';
                     alert('Xác nhận phiếu nhập thành công');
-                    loadPhieuNhap(currentPage);
+                    // loadPhieuNhap(currentPage);
+                    dongBoVaLoadPhieuNhap(currentPage);
+
                 } else {
                     alert("❌ Đóng thất bại: " + data.message);
                 }
@@ -1754,7 +1923,9 @@ document.addEventListener('click', function (e) {
                 .then(data => {
                     if (data.success) {
                         e.target.closest('tr').remove();
-                        loadPhieuNhap(currentPage);
+                        // loadPhieuNhap(currentPage);
+                        dongBoVaLoadPhieuNhap(currentPage);
+
                         // const tbXoaTC = document.querySelector('.thongbaoXoaThanhCong');
                         // tbXoaTC.style.display = 'block';
                         // tbXoaTC.classList.add('show');
@@ -1799,7 +1970,9 @@ document.addEventListener('click', function (e) {
 
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalXoaChiTietPN'));
                         modal.hide();
-                        loadPhieuNhap(currentPage);
+                        // loadPhieuNhap(currentPage);
+                        dongBoVaLoadPhieuNhap(currentPage);
+
                     } else {
                         // const tbXoaTC = document.querySelector('.thongbaoXoaPNKhongThanhCong');
                         // tbXoaTC.style.display = 'block';
@@ -2029,7 +2202,9 @@ document.getElementById('btn_sua_pn').addEventListener('click', function () {
 
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalSuaPhieuNhap'));
             modal.hide();
-            loadPhieuNhap(currentPage);
+            // loadPhieuNhap(currentPage);
+            dongBoVaLoadPhieuNhap(currentPage);
+
         } else {
             // const TBtb = document.querySelector('.thongbaoUpdateKhongThanhCong');
             // TBtb.style.display = 'block';

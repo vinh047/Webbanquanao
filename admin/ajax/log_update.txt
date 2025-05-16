@@ -1,8 +1,16 @@
 Array
 (
-    [txtMaBt] => 15
-    [tenAnhCu] => 10f24jac005-black-ao-khoac-nam-1-jpg-x1gs.jpg
+    [txtMaBt] => 5
 )
 Array
 (
+    [fileAnhSua] => Array
+        (
+            [name] => 10f24jac004-black-ao-khoac-nam-5-jpg-g0vc.jpg
+            [type] => image/jpeg
+            [tmp_name] => C:\xampp\tmp\phpA1AC.tmp
+            [error] => 0
+            [size] => 300969
+        )
+
 )

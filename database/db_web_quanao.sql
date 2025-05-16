@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 12:52 PM
+-- Generation Time: May 16, 2025 at 03:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -169,7 +169,12 @@ INSERT INTO `importreceipt` (`ImportReceipt_id`, `supplier_id`, `user_id`, `tota
 (3, 10, 3, 549150000.00, '2025-04-17 10:02:26', 0, 0),
 (4, 2, 3, 322500000.00, '2025-04-18 12:34:56', 0, 0),
 (5, 19, 3, 271200000.00, '2025-04-19 19:03:03', 0, 0),
-(6, 8, 3, 689250000.00, '2025-04-20 21:17:15', 0, 0);
+(6, 8, 3, 689250000.00, '2025-04-20 21:17:15', 0, 0),
+(7, 1, 1, 24000000.00, '2025-05-16 19:27:47', 0, 0),
+(8, 1, 1, 8000000.00, '2025-05-16 19:37:27', 0, 0),
+(9, 8, 1, 14400000.00, '2025-05-16 19:48:56', 0, 0),
+(10, 9, 1, 39350000.00, '2025-05-16 20:01:39', 0, 0),
+(11, 11, 1, 40950000.00, '2025-05-16 20:11:05', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -338,7 +343,65 @@ INSERT INTO `importreceipt_details` (`importreceipt_details_id`, `importreceipt_
 (144, 6, 24, 144, 50, '2025-04-20 21:17:15', 0, 470000.00, 23500000.00, 0),
 (145, 6, 24, 145, 50, '2025-04-20 21:17:15', 0, 470000.00, 23500000.00, 0),
 (146, 6, 24, 146, 50, '2025-04-20 21:17:15', 0, 470000.00, 23500000.00, 0),
-(147, 6, 24, 147, 50, '2025-04-20 21:17:15', 0, 470000.00, 23500000.00, 0);
+(147, 6, 24, 147, 50, '2025-04-20 21:17:15', 0, 470000.00, 23500000.00, 0),
+(148, 7, 25, 148, 50, '2025-05-16 19:27:47', 0, 80000.00, 4000000.00, 0),
+(149, 7, 25, 149, 50, '2025-05-16 19:27:47', 0, 80000.00, 4000000.00, 0),
+(150, 7, 25, 150, 50, '2025-05-16 19:27:47', 0, 80000.00, 4000000.00, 0),
+(151, 7, 25, 151, 50, '2025-05-16 19:27:47', 0, 80000.00, 4000000.00, 0),
+(152, 7, 25, 152, 50, '2025-05-16 19:27:47', 0, 80000.00, 4000000.00, 0),
+(153, 7, 25, 153, 50, '2025-05-16 19:27:47', 0, 80000.00, 4000000.00, 0),
+(154, 8, 26, 154, 50, '2025-05-16 19:37:27', 0, 80000.00, 4000000.00, 0),
+(155, 8, 26, 155, 50, '2025-05-16 19:37:27', 0, 80000.00, 4000000.00, 0),
+(156, 9, 27, 156, 50, '2025-05-16 19:48:56', 0, 20000.00, 1000000.00, 0),
+(157, 9, 27, 157, 50, '2025-05-16 19:48:56', 0, 20000.00, 1000000.00, 0),
+(158, 9, 27, 158, 50, '2025-05-16 19:48:56', 0, 20000.00, 1000000.00, 0),
+(159, 9, 28, 160, 50, '2025-05-16 19:48:56', 0, 22000.00, 1100000.00, 0),
+(160, 9, 27, 158, 50, '2025-05-16 19:48:56', 0, 20000.00, 1000000.00, 0),
+(161, 9, 27, 159, 50, '2025-05-16 19:48:56', 0, 20000.00, 1000000.00, 0),
+(162, 9, 28, 161, 50, '2025-05-16 19:48:56', 0, 22000.00, 1100000.00, 0),
+(163, 9, 28, 162, 50, '2025-05-16 19:48:56', 0, 22000.00, 1100000.00, 0),
+(164, 9, 28, 163, 50, '2025-05-16 19:48:56', 0, 22000.00, 1100000.00, 0),
+(165, 9, 29, 164, 50, '2025-05-16 19:48:56', 0, 25000.00, 1250000.00, 0),
+(166, 9, 29, 165, 50, '2025-05-16 19:48:56', 0, 25000.00, 1250000.00, 0),
+(167, 9, 29, 166, 50, '2025-05-16 19:48:56', 0, 25000.00, 1250000.00, 0),
+(168, 9, 29, 167, 50, '2025-05-16 19:48:56', 0, 25000.00, 1250000.00, 0),
+(169, 10, 30, 168, 50, '2025-05-16 20:01:39', 0, 55000.00, 2750000.00, 0),
+(170, 10, 30, 169, 50, '2025-05-16 20:01:39', 0, 55000.00, 2750000.00, 0),
+(171, 10, 30, 170, 30, '2025-05-16 20:01:39', 0, 55000.00, 1650000.00, 0),
+(172, 10, 30, 170, 20, '2025-05-16 20:01:39', 0, 55000.00, 1100000.00, 0),
+(173, 10, 30, 171, 30, '2025-05-16 20:01:39', 0, 55000.00, 1650000.00, 0),
+(174, 10, 30, 171, 20, '2025-05-16 20:01:39', 0, 55000.00, 1100000.00, 0),
+(175, 10, 30, 172, 30, '2025-05-16 20:01:39', 0, 55000.00, 1650000.00, 0),
+(176, 10, 30, 172, 20, '2025-05-16 20:01:39', 0, 55000.00, 1100000.00, 0),
+(177, 10, 30, 172, 20, '2025-05-16 20:01:39', 0, 55000.00, 1100000.00, 0),
+(178, 10, 30, 173, 10, '2025-05-16 20:01:39', 0, 55000.00, 550000.00, 0),
+(179, 10, 30, 173, 20, '2025-05-16 20:01:39', 0, 55000.00, 1100000.00, 0),
+(180, 10, 30, 173, 20, '2025-05-16 20:01:39', 0, 55000.00, 1100000.00, 0),
+(181, 10, 31, 174, 50, '2025-05-16 20:01:39', 0, 56000.00, 2800000.00, 0),
+(182, 10, 31, 175, 50, '2025-05-16 20:01:39', 0, 56000.00, 2800000.00, 0),
+(183, 10, 31, 176, 50, '2025-05-16 20:01:39', 0, 56000.00, 2800000.00, 0),
+(184, 10, 31, 177, 50, '2025-05-16 20:01:39', 0, 56000.00, 2800000.00, 0),
+(185, 10, 31, 178, 50, '2025-05-16 20:01:39', 0, 56000.00, 2800000.00, 0),
+(186, 10, 31, 179, 50, '2025-05-16 20:01:39', 0, 56000.00, 2800000.00, 0),
+(187, 10, 32, 180, 10, '2025-05-16 20:01:39', 0, 45000.00, 450000.00, 0),
+(188, 10, 32, 180, 20, '2025-05-16 20:01:39', 0, 45000.00, 900000.00, 0),
+(189, 10, 32, 180, 30, '2025-05-16 20:01:39', 0, 45000.00, 1350000.00, 0),
+(190, 10, 32, 181, 50, '2025-05-16 20:01:39', 0, 45000.00, 2250000.00, 0),
+(191, 11, 33, 182, 70, '2025-05-16 20:11:05', 0, 22000.00, 1540000.00, 0),
+(192, 11, 33, 183, 70, '2025-05-16 20:11:05', 0, 22000.00, 1540000.00, 0),
+(193, 11, 33, 184, 70, '2025-05-16 20:11:05', 0, 22000.00, 1540000.00, 0),
+(194, 11, 33, 185, 70, '2025-05-16 20:11:05', 0, 22000.00, 1540000.00, 0),
+(195, 11, 34, 186, 70, '2025-05-16 20:11:05', 0, 40000.00, 2800000.00, 0),
+(196, 11, 34, 187, 70, '2025-05-16 20:11:05', 0, 40000.00, 2800000.00, 0),
+(197, 11, 35, 188, 70, '2025-05-16 20:11:05', 0, 42000.00, 2940000.00, 0),
+(198, 11, 35, 189, 70, '2025-05-16 20:11:05', 0, 42000.00, 2940000.00, 0),
+(199, 11, 35, 190, 70, '2025-05-16 20:11:05', 0, 42000.00, 2940000.00, 0),
+(200, 11, 35, 191, 70, '2025-05-16 20:11:05', 0, 42000.00, 2940000.00, 0),
+(201, 11, 35, 192, 70, '2025-05-16 20:11:05', 0, 42000.00, 2940000.00, 0),
+(202, 11, 35, 193, 70, '2025-05-16 20:11:05', 0, 42000.00, 2940000.00, 0),
+(203, 11, 36, 194, 70, '2025-05-16 20:11:05', 0, 55000.00, 3850000.00, 0),
+(204, 11, 36, 196, 70, '2025-05-16 20:11:05', 0, 55000.00, 3850000.00, 0),
+(205, 11, 36, 195, 70, '2025-05-16 20:11:05', 0, 55000.00, 3850000.00, 0);
 
 -- --------------------------------------------------------
 
@@ -496,7 +559,19 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `category_id`, `pri
 (21, 'Quần lót nam organic cotton phối lưng.Brief', 'Gọn gàng – thoải mái – chuẩn tinh tế. Quần lót nam organic cotton phối lưng.Brief được thiết kế dành riêng cho những quý ông ưu tiên cảm giác dễ chịu mà vẫn chú trọng đến phom dáng. Với chất liệu organic cotton thân thiện với làn da, sản phẩm mang lại độ mềm mại, thoáng khí và thấm hút mồ hôi hiệu quả – lý tưởng để mặc hằng ngày.\r\n\r\nKiểu dáng brief ôm gọn, hỗ trợ tốt mà không gây cấn hoặc khó chịu. Phần lưng thun phối màu hoặc họa tiết, đàn hồi tốt, tạo điểm nhấn cá tính nhưng không kém phần sang trọng. Sự kết hợp giữa tính năng và thiết kế giúp chiếc brief này vừa tiện dụng, vừa thời trang.\r\n\r\n✔️ Vải cotton hữu cơ – mềm mịn, lành tính, bảo vệ môi trường\r\n✔️ Dáng brief – ôm gọn, hỗ trợ tối đa\r\n✔️ Lưng phối nổi bật – cạp thun chắc chắn, không hằn da\r\n✔️ Phù hợp mặc hằng ngày – từ đi làm, thể thao đến nghỉ ngơi\r\n\r\nMột chiếc quần lót không chỉ để mặc – mà để bạn cảm thấy tự tin & thoải mái suốt cả ngày.', 6, 98000.00, 0, 0, 0, 127400.00, 30.00, 0),
 (22, 'Quần Lót Nam Organic Cotton Trơn phối lưng. Boxer', 'Tối giản nhưng chuẩn mực – quần lót nam Organic Cotton trơn phối lưng .Boxer là lựa chọn hoàn hảo cho những chàng trai yêu thích cảm giác thoải mái, nhẹ nhàng và an toàn cho làn da. Sử dụng chất liệu organic cotton cao cấp, quần mang đến sự mềm mại, thoáng khí và thấm hút mồ hôi tốt – thích hợp để mặc suốt cả ngày dài, kể cả khi vận động nhiều.\r\n\r\nKiểu dáng boxer suông nhẹ, giúp ôm vừa vặn cơ thể mà không gây bí bách hay hằn da. Phần lưng thun bản to phối màu/hoạ tiết, tạo điểm nhấn tinh tế và giúp quần giữ form tốt, không bị cuộn hay xô lệch khi mặc.\r\n\r\n✔️ 100% organic cotton – an toàn, không gây kích ứng\r\n✔️ Dáng boxer – thoáng mát, không bó sát\r\n✔️ Thiết kế trơn – đơn giản, tinh tế\r\n✔️ Cạp thun phối – chắc chắn, tôn vẻ hiện đại\r\n\r\nMặc đơn giản nhưng cảm nhận sự chỉn chu từ bên trong – lựa chọn xứng tầm cho phái mạnh đề cao chất lượng và sự thoải mái.', 6, 94000.00, 0, 0, 0, 122200.00, 30.00, 0),
 (23, 'Quần short nam cotton poly form straight', 'Quần short nam chất liệu cotton pha poly mềm mại, thoáng khí nhưng vẫn giữ form tốt\r\nThiết kế form straight đứng dáng, phù hợp nhiều vóc dáng và dễ phối đồ\r\nPhong cách tối giản, dễ ứng dụng trong cả sinh hoạt hàng ngày lẫn khi đi chơi\r\n\r\n✔️ Chất liệu: Cotton + Polyester bền nhẹ, co giãn nhẹ\r\n✔️ Kiểu dáng: Form straight – đứng dáng gọn gàng\r\n✔️ Lưng quần: Chun co giãn hoặc cài nút tuỳ mẫu\r\n✔️ Túi: Có túi hai bên tiện dụng\r\n✔️ Thích hợp: Đi học, đi làm, đi chơi', 2, 450000.00, 0, 0, 0, 585000.00, 30.00, 0),
-(24, 'Quần short nam vải texture lưng chun loose', 'Quần short nam chất liệu vải texture độc đáo, tạo hiệu ứng bề mặt nhẹ nhàng và phong cách\r\nThiết kế lưng chun co giãn, thoải mái cho mọi dáng người, dễ dàng điều chỉnh\r\nForm dáng loose rộng rãi, mang lại sự thoải mái khi vận động hoặc mặc hàng ngày', 2, 470000.00, 0, 0, 0, 611000.00, 30.00, 0);
+(24, 'Quần short nam vải texture lưng chun loose', 'Quần short nam chất liệu vải texture độc đáo, tạo hiệu ứng bề mặt nhẹ nhàng và phong cách\r\nThiết kế lưng chun co giãn, thoải mái cho mọi dáng người, dễ dàng điều chỉnh\r\nForm dáng loose rộng rãi, mang lại sự thoải mái khi vận động hoặc mặc hàng ngày', 2, 470000.00, 0, 0, 0, 600000.00, 30.00, 0),
+(25, 'Nón lưỡi trai hình thêu. Freesize', 'Khám phá sự kết hợp hoàn hảo giữa phong cách năng động và tinh thần trẻ trung với chiếc nón lưỡi trai hình thêu freesize – phụ kiện không thể thiếu cho mọi tín đồ thời trang. Được thiết kế với phom dáng ôm vừa vặn, nón mang đến cảm giác đội nhẹ nhàng, thoáng mát suốt cả ngày. Họa tiết thêu nổi bật giúp tạo điểm nhấn cá tính, dễ dàng mix cùng áo thun, sơ mi hay hoodie cho nhiều phong cách từ dạo phố đến du lịch.\r\n\r\n✔️ Chất liệu bền đẹp – giữ form tốt qua thời gian\r\n✔️ Họa tiết thêu sắc nét – nổi bật cá tính riêng\r\n✔️ Dây điều chỉnh linh hoạt – phù hợp mọi kích cỡ đầu\r\n✔️ Freesize – dễ dàng sử dụng cho cả nam và nữ\r\n\r\nSở hữu ngay chiếc nón \"must-have\" này để hoàn thiện outfit mỗi ngày thêm ấn tượng!', 7, NULL, 0, 0, 0, 104000.00, 30.00, 0),
+(26, 'Nón bucket denim.Freesize', 'Khám phá nét phá cách đầy cá tính với chiếc nón bucket denim freesize – điểm nhấn hoàn hảo cho phong cách đường phố hiện đại. Thiết kế dáng tròn cổ điển kết hợp cùng chất liệu denim bền bỉ mang đến vẻ ngoài năng động, trẻ trung và không kém phần thời thượng. Phù hợp cho cả nam và nữ, nón dễ dàng phối cùng áo thun, sơ mi oversized hay set đồ streetwear để tạo nên một diện mạo đậm chất riêng.\r\n\r\n✔️ Chất liệu denim cao cấp – bền màu, giữ form tốt\r\n✔️ Thiết kế freesize – phù hợp nhiều kích cỡ đầu\r\n✔️ Phom nón ôm nhẹ – thoải mái khi đội lâu\r\n✔️ Dễ phối đồ – nâng tầm mọi outfit thường ngày\r\n\r\nThêm ngay vào tủ đồ để sẵn sàng “bung chất” cá tính ở bất cứ đâu!', 7, NULL, 0, 0, 0, 104000.00, 30.00, 0),
+(27, 'Vớ hài dệt logo Routine', 'Hoàn thiện phong cách năng động và tinh tế với Pack 3 đôi vớ hài dệt logo Routine – phụ kiện nhỏ nhưng đóng vai trò lớn trong tủ đồ của bạn. Thiết kế cổ thấp trẻ trung, ôm chân vừa vặn, giúp bạn tự tin trong từng bước đi. Chất vải cotton pha sợi co giãn tạo cảm giác thoáng mát, mềm mại, thấm hút mồ hôi hiệu quả – lý tưởng cho cả ngày dài hoạt động.\r\n\r\nLogo Routine được dệt nổi bật, tinh tế ở phần mu bàn chân, tạo điểm nhấn cá tính khi kết hợp cùng sneaker hoặc giày thể thao.\r\n\r\n✔️ Thiết kế cổ thấp – giấu vớ khéo léo trong giày\r\n✔️ Co giãn linh hoạt – mang êm chân, không bị tuột\r\n✔️ Chất liệu thoáng khí – hạn chế mùi, khô thoáng suốt ngày dài\r\n✔️ Mỗi pack gồm 3 đôi – tiện lợi, dễ phối màu\r\n\r\nChọn vớ Routine – chọn sự chỉn chu đến từng chi tiết!', 7, 20000.00, 0, 0, 0, 29000.00, 30.00, 0),
+(28, 'Vớ dài dệt icon. Freesize', 'Thể hiện phong cách cá nhân một cách tinh tế với vớ dài dệt icon – freesize, phụ kiện thời trang không thể thiếu trong tủ đồ của các tín đồ streetwear hiện đại. Thiết kế cổ cao cùng họa tiết icon dệt sắc nét giúp đôi vớ trở thành điểm nhấn đầy cá tính cho mỗi outfit, dù là đi học, đi làm hay dạo phố cuối tuần.\r\n\r\nSử dụng chất liệu cotton pha spandex mềm mại, co giãn tốt và thấm hút hiệu quả, vớ mang đến cảm giác thoải mái suốt ngày dài – ngay cả trong điều kiện vận động nhiều.\r\n\r\n✔️ Dệt icon tinh xảo – nổi bật cá tính riêng\r\n✔️ Chất vải dày dặn – hạn chế xù lông, giữ dáng lâu dài\r\n✔️ Co giãn 4 chiều – ôm vừa vặn, không bó chân\r\n✔️ Phù hợp mọi size – thiết kế freesize linh hoạt\r\n\r\nLựa chọn hoàn hảo để hoàn thiện set đồ năng động, chất riêng không trộn lẫn!', 7, 22000.00, 0, 0, 0, 29000.00, 30.00, 0),
+(29, 'Vớ ngắn sọc ngang. Freesize', 'Thể hiện cá tính và gu thẩm mỹ độc đáo với vớ dài dệt icon – Freesize, phụ kiện không thể thiếu cho những ai yêu thích phong cách streetwear hiện đại. Với thiết kế cổ cao kết hợp cùng icon dệt sắc nét, đôi vớ giúp outfit thêm phần nổi bật dù chỉ là chi tiết nhỏ.\r\n\r\nChất vải cotton pha co giãn cao cấp mang đến cảm giác êm ái, thấm hút mồ hôi tốt và hạn chế mùi hiệu quả – lý tưởng để mang cả ngày dài mà vẫn khô thoáng, thoải mái.\r\n\r\n✔️ Thiết kế unisex – dễ phối với sneaker, boot, giày thể thao\r\n✔️ Dệt icon sắc sảo – nổi bật cá tính riêng\r\n✔️ Chất vải dày dặn – không xù, không chảy nhão\r\n✔️ Freesize – phù hợp với hầu hết kích thước chân\r\n\r\nTạo điểm nhấn khác biệt cho phong cách thường ngày của bạn chỉ với một đôi vớ!', 7, 25000.00, 0, 0, 0, 39000.00, 30.00, 0),
+(30, 'Nón lưỡi trai phối màu. Freesize', 'Tạo điểm nhấn cá tính và năng động cho outfit mỗi ngày với nón lưỡi trai phối màu – freesize, phụ kiện thời trang không thể thiếu cho mọi phong cách đường phố. Thiết kế phối màu hài hòa cùng form nón cứng cáp giúp tổng thể trở nên thu hút hơn mà vẫn đảm bảo sự thoải mái khi đội.\r\n\r\nSản phẩm được may từ chất liệu vải dày dặn, thấm hút tốt, mang lại cảm giác thoáng mát trong cả ngày dài. Phần dây khóa phía sau dễ dàng điều chỉnh phù hợp với nhiều kích cỡ đầu, giúp ôm gọn và giữ form nón tốt trong thời gian dài sử dụng.\r\n\r\n✔️ Thiết kế phối màu hiện đại – nổi bật cá tính\r\n✔️ Form nón cứng cáp – không bị móp hay xệ\r\n✔️ Freesize – dễ dàng điều chỉnh theo vòng đầu\r\n✔️ Phù hợp nhiều phong cách – từ sporty đến casual\r\n\r\nMột item đơn giản nhưng đủ sức nâng tầm outfit hằng ngày của bạn!', 7, 55000.00, 0, 0, 0, 72000.00, 30.00, 0),
+(31, 'Nón lưỡi trai hình thêu .Freesize', 'Hoàn thiện outfit với điểm nhấn ấn tượng từ nón lưỡi trai hình thêu – freesize, món phụ kiện tối giản nhưng đầy tinh tế cho những ai yêu thích sự năng động và cá tính. Phần hình thêu sắc nét ở mặt trước mang đến dấu ấn riêng biệt, dễ dàng kết hợp cùng nhiều phong cách từ đường phố đến thể thao.\r\n\r\nSản phẩm được làm từ chất liệu vải bền màu, thoáng khí, form nón chắc chắn cùng khóa điều chỉnh phía sau linh hoạt phù hợp với mọi kích cỡ đầu. Dù là đi học, đi chơi hay dạo phố, chiếc nón này đều là lựa chọn lý tưởng để hoàn thiện phong cách của bạn.\r\n\r\n✔️ Hình thêu nổi bật – tạo điểm nhấn tinh tế\r\n✔️ Vải dày thoáng – không xù lông, không bí da đầu\r\n✔️ Freesize – dễ dàng điều chỉnh kích cỡ\r\n✔️ Phối đồ linh hoạt – từ basic đến streetwear\r\n\r\nSở hữu ngay chiếc nón cực “chất” này để thể hiện phong cách riêng của bạn!', 7, NULL, 0, 0, 0, 72800.00, 30.00, 0),
+(32, 'Nón lưỡi trai denim. Freesize', 'Tạo điểm nhấn cá tính với nón lưỡi trai denim – freesize, item không thể thiếu cho những tín đồ thời trang yêu thích chất liệu denim bụi bặm và phong cách đường phố. Với gam màu trung tính dễ phối, chiếc nón này giúp bạn “lên đồ” nhanh gọn mà vẫn nổi bật.\r\n\r\nThiết kế bo tròn ôm đầu, chất liệu denim mềm mại nhưng vẫn giữ form tốt, cùng phần khóa gài linh hoạt phía sau giúp điều chỉnh vừa vặn với mọi kích cỡ đầu. Dù là outfit đơn giản hay mix và match phá cách, chiếc nón này đều mang đến điểm nhấn trẻ trung, năng động.\r\n\r\n✔️ Chất liệu denim cao cấp – bền màu, lên form đẹp\r\n✔️ Form chuẩn – ôm đầu, thoải mái suốt ngày dài\r\n✔️ Freesize – dễ điều chỉnh, phù hợp mọi dáng đầu\r\n✔️ Dễ phối – hợp với jeans, áo thun, sơ mi, hoodie,...\r\n\r\nMua ngay để hoàn thiện phong cách denim bụi bặm và đầy cá tính!', 7, NULL, 0, 0, 0, 63000.00, 40.00, 0),
+(33, 'Vớ dài .Freesize', 'Đôi vớ dài với dòng chữ Vớ Va Vớ Vẩn độc đáo không chỉ là một món phụ kiện giữ ấm mà còn thể hiện cá tính hài hước, chất chơi và khác biệt của bạn. Thiết kế unisex phù hợp cả nam và nữ, kiểu dáng cổ điển dễ phối cùng sneaker, giày thể thao hay thậm chí giày tây cho outfit thêm phần nổi bật.\r\n\r\n✔️ Chất liệu cotton co giãn – thoáng khí, thấm hút tốt\r\n✔️ In dệt chữ sắc nét – không bong tróc, bền màu\r\n✔️ Freesize – ôm chân thoải mái, không bị tuột\r\n✔️ Phối được nhiều phong cách – từ basic đến phá cách', 7, 22000.00, 0, 0, 0, 33000.00, 50.00, 0),
+(34, 'Túi Tote hình in .Freesize', 'Túi Tote hình in – Đơn giản mà nổi bật!\r\nMang đậm tinh thần tối giản nhưng không kém phần cá tính, chiếc túi tote với họa tiết hình in độc đáo là điểm nhấn hoàn hảo cho mọi outfit hàng ngày. Thiết kế freesize rộng rãi, phù hợp để mang theo sách vở, laptop, hay vật dụng cá nhân khi đi học, đi làm hay dạo phố.\r\n\r\n✔️ Vải canvas dày dặn – bền bỉ, không xù lông\r\n✔️ Hình in sắc nét – trẻ trung, khó phai màu\r\n✔️ Dây đeo chắc chắn – thoải mái mang cả ngày dài\r\n✔️ Phối được nhiều phong cách – từ streetwear đến casual\r\n\r\nLựa chọn lý tưởng cho những ai yêu thích sự tiện lợi pha chút nghệ thuật!', 7, NULL, 0, 0, 0, 60000.00, 50.00, 0),
+(35, 'Túi tote jean recycled. Freesize', 'Túi Tote Jean Recycled – Thời trang bền vững, phong cách khác biệt\r\nMang hơi thở của xu hướng sống xanh, túi tote jean recycled không chỉ là phụ kiện tiện dụng mà còn thể hiện cá tính và trách nhiệm với môi trường. Được làm từ chất liệu denim tái chế, túi giữ được độ bền, dày dặn và form đứng tự nhiên – phù hợp cho cả đi học, đi làm hay dạo phố.\r\n\r\n✔️ Chất liệu jean tái chế thân thiện môi trường – bền đẹp theo thời gian\r\n✔️ Thiết kế tối giản – dễ phối với mọi outfit từ năng động đến vintage\r\n✔️ Dây đeo chắc chắn – chịu lực tốt, tiện mang theo nhiều vật dụng\r\n✔️ Freesize – đựng thoải mái sách, vở, laptop hoặc đồ cá nhân\r\n\r\nLựa chọn hoàn hảo cho người trẻ yêu thời trang và quan tâm đến môi trường!', 7, NULL, 0, 0, 0, 63000.00, 50.00, 0),
+(36, 'Túi Tote Bag', 'Túi Tote Đựng Cả Vũ Trụ – Cứu cánh cho mọi ngày bận rộn\r\nKhông chỉ là chiếc túi, đây là một tuyên ngôn cá tính. Với thiết kế slogan nổi bật \"Đựng Cả Vũ Trụ\", chiếc tote này mang đến sự kết hợp hoàn hảo giữa thời trang và tính ứng dụng. Chất vải canvas dày dặn, freesize thoải mái chứa cả laptop, tài liệu, đồ dùng cá nhân – sẵn sàng đồng hành từ sáng đến tối.\r\n\r\n✔️ In chữ nổi bật, chất vải canvas cứng cáp\r\n✔️ Kích thước lớn – đựng \"cả vũ trụ\" thật sự\r\n✔️ Quai đeo chắc chắn, may viền tỉ mỉ\r\n✔️ Phù hợp mọi phong cách – đi học, đi làm hay dạo phố\r\n\r\nTúi tiện dụng – thần thái cực chất, dành riêng cho những tâm hồn rộng lớn!', 7, 55000.00, 0, 0, 0, 82500.00, 50.00, 0);
 
 -- --------------------------------------------------------
 
@@ -662,7 +737,56 @@ INSERT INTO `product_variants` (`variant_id`, `product_id`, `image`, `stock`, `c
 (144, 24, '10s25psh051-tea-quan-short-nam-1-jpg-4ix2.jpg', 50, 6, 3, 0),
 (145, 24, '10s25psh051-tea-quan-short-nam-1-jpg-4ix2.jpg', 50, 6, 4, 0),
 (146, 24, '10s25psh051-tea-quan-short-nam-1-jpg-4ix2.jpg', 50, 6, 5, 0),
-(147, 24, '10s25psh051-tea-quan-short-nam-1-jpg-4ix2.jpg', 50, 6, 6, 0);
+(147, 24, '10s25psh051-tea-quan-short-nam-1-jpg-4ix2.jpg', 50, 6, 6, 0),
+(148, 25, '10s25cap011-black-1-jpg-7snu.jpg', 50, 1, 1, 0),
+(149, 25, '10s25cap011-black-1-jpg-7snu.jpg', 50, 1, 2, 0),
+(150, 25, '10s25cap011-red-1-jpg-wqkn.jpg', 50, 9, 1, 0),
+(151, 25, '10s25cap011-red-1-jpg-wqkn.jpg', 50, 9, 2, 0),
+(152, 25, 'flatlay21-34958-jpg-89xt.jpg', 50, 12, 1, 0),
+(153, 25, 'flatlay21-34958-jpg-89xt.jpg', 50, 12, 2, 0),
+(154, 26, '10s25hat001-blue-2-jpg-pfmm.jpg', 50, 1, 1, 0),
+(155, 26, '10s25hat001-blue-2-jpg-pfmm.jpg', 50, 1, 2, 0),
+(156, 27, '10s25soc022-2-jpg-qe2d.jpg', 50, 8, 1, 0),
+(157, 27, '10s25soc022-2-jpg-qe2d.jpg', 50, 8, 2, 0),
+(158, 27, '10s25soc022-4-jpg-gthi.jpg', 100, 1, 1, 0),
+(159, 27, '10s25soc022-4-jpg-gthi.jpg', 50, 1, 2, 0),
+(160, 28, '10s25soc006-black-1-jpg-oa1z.jpg', 50, 1, 1, 0),
+(161, 28, '10s25soc006-black-1-jpg-oa1z.jpg', 50, 1, 2, 0),
+(162, 28, '10s25soc006-white-1-jpg-beqq.jpg', 50, 8, 1, 0),
+(163, 28, '10s25soc006-white-1-jpg-beqq.jpg', 50, 8, 2, 0),
+(164, 29, '10s25soc009-white-1-jpg-z7bk.jpg', 50, 8, 1, 0),
+(165, 29, '10s25soc009-white-1-jpg-z7bk.jpg', 50, 8, 2, 0),
+(166, 29, '10s25soc009-black-1-jpg-qhim.jpg', 50, 1, 1, 0),
+(167, 29, '10s25soc009-black-1-jpg-qhim.jpg', 50, 1, 2, 0),
+(168, 30, '10s25cap012-beige-1-jpg-w4ht.jpg', 50, 8, 1, 0),
+(169, 30, '10s25cap012-beige-1-jpg-w4ht.jpg', 50, 8, 2, 0),
+(170, 30, '10s25cap012-green-1-jpg-vbj3.jpg', 50, 6, 1, 0),
+(171, 30, '10s25cap012-green-1-jpg-vbj3.jpg', 50, 6, 2, 0),
+(172, 30, '10s25cap012-navy-1-jpg-kdoz.jpg', 70, 12, 1, 0),
+(173, 30, '10s25cap012-navy-1-jpg-kdoz.jpg', 50, 12, 2, 0),
+(174, 31, '10s25cap003-oatmilk-1-jpg-qwv8.jpg', 50, 8, 1, 0),
+(175, 31, '10s25cap003-oatmilk-1-jpg-qwv8.jpg', 50, 8, 2, 0),
+(176, 31, '10s25cap003-ca-phe-sua-da-1-jpg-1sa5.jpg', 50, 2, 1, 0),
+(177, 31, '10s25cap003-ca-phe-sua-da-1-jpg-1sa5.jpg', 50, 2, 2, 0),
+(178, 31, '10s25cap003-americano-1-jpg-nrfv.jpg', 50, 1, 1, 0),
+(179, 31, '10s25cap003-americano-1-jpg-nrfv.jpg', 50, 1, 2, 0),
+(180, 32, '10s25cap001-non-luoi-trai-1-jpg-4zjw.jpg', 60, 1, 1, 0),
+(181, 32, '10s25cap001-non-luoi-trai-1-jpg-4zjw.jpg', 50, 1, 2, 0),
+(182, 33, '10f24soc028-beige-vo-dai-1-jpg-9mbo.jpg', 70, 2, 1, 0),
+(183, 33, '10f24soc028-beige-vo-dai-1-jpg-9mbo.jpg', 70, 2, 2, 0),
+(184, 33, '10f24soc028-green-vo-dai-1-jpg-dm24.jpg', 70, 6, 1, 0),
+(185, 33, '10f24soc028-green-vo-dai-1-jpg-dm24.jpg', 70, 6, 2, 0),
+(186, 34, '10s25bagu002-blue-1-jpg-ax9o.jpg', 70, 7, 2, 0),
+(187, 34, '10s25bagu002-blue-1-jpg-ax9o.jpg', 70, 7, 3, 0),
+(188, 35, '10s25bagu010-black-1-jpg-moot.jpg', 70, 1, 2, 0),
+(189, 35, '10s25bagu010-black-1-jpg-moot.jpg', 70, 1, 3, 0),
+(190, 35, '10s25bagu010-black-1-jpg-moot.jpg', 70, 1, 1, 0),
+(191, 35, '10s25bagu010-blue-1-jpg-yx14.jpg', 70, 7, 1, 0),
+(192, 35, '10s25bagu010-blue-1-jpg-yx14.jpg', 70, 7, 2, 0),
+(193, 35, '10s25bagu010-blue-1-jpg-yx14.jpg', 70, 7, 3, 0),
+(194, 36, '10f24bagu006-green-tui-tote-1-jpg.jpg', 70, 6, 1, 0),
+(195, 36, '10f24bagu006-green-tui-tote-1-jpg.jpg', 70, 6, 2, 0),
+(196, 36, '10f24bagu006-green-tui-tote-1-jpg.jpg', 70, 6, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -1127,13 +1251,13 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT for table `importreceipt`
 --
 ALTER TABLE `importreceipt`
-  MODIFY `ImportReceipt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ImportReceipt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `importreceipt_details`
 --
 ALTER TABLE `importreceipt_details`
-  MODIFY `importreceipt_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `importreceipt_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=206;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -1163,13 +1287,13 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  MODIFY `variant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `variant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=197;
 
 --
 -- AUTO_INCREMENT for table `rates`

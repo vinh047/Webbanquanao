@@ -75,11 +75,11 @@
         $pttg = $row['pttg'];
         echo "
             <tr class='text-center'>
-                <td class='hienthiid'>$id</td>
-                <td class='tensp giaodienmb'>$ten</td>
-                <td class='hienthiloai giaodienmb'>$loai</td>
-                <td class='mota giaodienmb'>$mota</td>
-                <td class='hienthigia giaodienmb'>$giaban đ</td>
+                <td class='hienthiid align-middle'>$id</td>
+                <td class='tensp giaodienmb align-middle'>$ten</td>
+                <td class='hienthiloai giaodienmb align-middle'>$loai</td>
+                <td class='mota giaodienmb align-middle'>$mota</td>
+                <td class='hienthigia giaodienmb align-middle'>$giaban đ</td>
     " . ($hasAnyActionPermission ? "
     <td>
         <div class='d-flex justify-content-center gap-3'>

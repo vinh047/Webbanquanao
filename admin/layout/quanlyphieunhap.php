@@ -94,7 +94,12 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
         $tensp = $db->select("SELECT * FROM products WHERE is_deleted=0",[]);
         $color = $db->select("SELECT * FROM colors",[]);
         $size = $db->select("SELECT * FROM sizes ORDER BY size_id ASC",[]);
-        $nhanvien = $db->select("SELECT * FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.role_id > 1",[]);
+$nhanvien = $db->select("
+    SELECT u.user_id, u.name 
+    FROM users u 
+    JOIN roles r ON u.role_id = r.role_id 
+    WHERE u.status != 0
+", []);
     ?>
 </head>
 <body> 
@@ -217,12 +222,13 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
                                 <?php endforeach ?>
                             </select>
                             <label for="txtIDnv" class="mt-2">Nhân viên : </label>
-                            <select name="txtIDnv" id="txtIDnv" class="form-select select2">
-                                <option value="">Chọn nhân viên</option>
-                                <?php foreach($nhanvien as $n): ?>
-                                <option value="<?=$n['user_id']?>"><?=$n['name']?></option>
-                                <?php endforeach ?>
-                            </select>
+<select name="txtIDnv" id="txtIDnv" class="form-select select2">
+    <option value="">Chọn nhân viên</option>
+    <?php foreach($nhanvien as $n): ?>
+        <option value="<?=$n['user_id']?>"><?=$n['name']?></option>
+    <?php endforeach ?>
+</select>
+
 
                             <div class="d-flex gap-3 mt-2">
                                 <div class="me-auto">
@@ -252,22 +258,22 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             </section>
                                     <!-- phần xử lý danh sách phiêu nhập -->
                     <div class="hienthi">
-                        <div class="d-flex justify-content-center border border-3 border-bottom-0 p-2 bg-light">
+                        <!-- <div class="d-flex justify-content-center border border-3 border-bottom-0 p-2 bg-light">
                             <p class="mb-0 fs-3">
                                 Danh sách phiếu nhập
                             </p>
-                        </div>
-                    <table class="table table-striped table-sm border-start border-end">
-                        <thead>
+                        </div> -->
+                    <table class="table table-bordered border-start border-end table-sm">
+                        <thead class="table-light">
                             <tr class="text-center">
-                                <th class="bg-secondary text-white hienthiid">ID PN</th>
-                                <th class="bg-secondary text-white hienthigia giaodienmb">Tên NV</th>
-                                <th class="bg-secondary text-white tensp giaodienmb">Tên NCC</th>
-                                <th class="bg-secondary text-white tensp giaodienmb">Tổng tiền</th>
-                                <th class="bg-secondary text-white tensp giaodienmb">Ngày lập</th>
-                                <th class="bg-secondary text-white tensp">Trạng thái</th>
+                                <th class="fs-6 hienthiid">ID PN</th>
+                                <th class="fs-6 hienthigia giaodienmb">Tên NV</th>
+                                <th class="fs-6 tensp giaodienmb">Tên NCC</th>
+                                <th class="fs-6 tensp giaodienmb">Tổng tiền</th>
+                                <th class="fs-6 tensp giaodienmb">Ngày lập</th>
+                                <th class="fs-6 tensp">Trạng thái</th>
 <?php if ($hasAnyActionPermission): ?>
-    <th class="bg-secondary text-white hienthibtn-ne">Xử lý</th>
+    <th class="fs-6 hienthibtn-ne">Xử lý</th>
 <?php endif; ?>
                             </tr>
                         </thead>

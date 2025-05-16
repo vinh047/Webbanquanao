@@ -460,7 +460,7 @@ function themsanpham()
         // const price = document.getElementById('txtGia').value.trim().replace(/\./g, '').replace(',', '.');
         const ptgg = document.getElementById('txtPT').value.trim().replace('%','');
     
-        const regexCheck = /[`~+=\-\/;'\><\\|@#$%^&*()]/; 
+        const regexCheck = /[`~+=\\/;'\><\\|@#$%^&*()]/; 
 
         if (!permissions.includes('write')) {
             const tBquyen = document.querySelector('.thongBaoQuyen');
@@ -609,7 +609,7 @@ function suasanpham()
         const loiTB = tbLoi.querySelector("p");
         let loi = "";
         const ptgg = document.getElementById('txtPttg').value.trim().replace('%', '');
-
+        const regexCheck = /[`~+=\\/;'\><\\|@#$%^&*()"]/; 
 
 
         if(!ten)
@@ -620,12 +620,28 @@ function suasanpham()
             return;
         }
 
+        if(regexCheck.test(ten))
+        {
+            loi = "Tên không được để ký tự đặc biệt";
+            document.getElementById('txtTenSua').focus();
+            alert(loi);
+            return; 
+        }
+
         if(!mota)
         {
             loi = "Không được để trống mô tả phẩm";
             document.getElementById("txtMotaSua").focus();
             alert(loi);
             return;
+        }
+
+        if(regexCheck.test(mota))
+        {
+            loi = "Mô tả không được để ký tự đặc biệt";
+            document.getElementById("txtMotaSua").focus();
+            alert(loi);
+            return; 
         }
 
         if(!cbLoai)
@@ -637,13 +653,13 @@ function suasanpham()
         }
 
 
-        if(!giaBanDau)
-        {
-            loi = "Không được để trống giá nhập";
-            alert(loi);
-            document.getElementById("txtGiaSua").focus();
-            return;
-        }
+        // if(!giaBanDau)
+        // {
+        //     loi = "Không được để trống giá nhập";
+        //     alert(loi);
+        //     document.getElementById("txtGiaSua").focus();
+        //     return;
+        // }
         if(!ptgg)
         {
             document.getElementById('txtPttg').focus();
@@ -907,13 +923,19 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     const rows = document.querySelectorAll('.variant-row');
 
     if (rows.length === 0) {
+        // return showError("Lưu biến thể thất bại");
         alert('Không có danh sách để lưu biến thể');
-        return;    }
+        return;
+    }
 
     const variantKeys = new Set();
     let isValid = true;
+    let dkTrung = false;
     let firstErrorRow = null;
+    let firstDuplicateRow = null;
     const errorRows = [];
+    const variantKeyMap = new Map(); // lưu để biết dòng nào đã dùng key
+
 
     for (let row of rows) {
         const color = row.querySelector('[name="colors[]"]').value;
@@ -929,21 +951,40 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
             continue;
         }
 
-        const filename = file.name.trim().toLowerCase();
-        const key = `${productId}_${color}_${size}_${filename}`;
+        const key = `${productId}_${color}_${size}`;
 
-        // ❌ Trùng hàng đợi
-        if (variantKeys.has(key)) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Biến thể trùng',
-                text: 'Biến thể (màu, size, ảnh) đã tồn tại trong hàng đợi.',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+            if (variantKeyMap.has(key)) {
+        // 🔴 Nếu key đã tồn tại => trùng
+        dkTrung = true;
+        const otherRow = variantKeyMap.get(key); // dòng trước đó đã dùng key này
+        if (!firstDuplicateRow) firstDuplicateRow = row;
 
-        variantKeys.add(key);
+        errorRows.push(row);      // dòng hiện tại
+        errorRows.push(otherRow); // dòng bị trùng trước đó
+        continue;
+    }
+
+        // variantKeyMap.add(key);
+        variantKeyMap.set(key, row);
+    }
+
+        if (dkTrung) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Đã tồn tại biến thể trong hàng đợi',
+            text: 'Vui lòng kiểm tra lại thông tin bị trùng.',
+            confirmButtonText: 'OK',
+            didClose: () => {
+                firstDuplicateRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                errorRows.forEach(row => {
+                    row.classList.add('row-error-highlight');
+                    setTimeout(() => {
+                        row.classList.remove('row-error-highlight');
+                    }, 3000);
+                });
+            }
+        });
+        return;
     }
 
     if (!isValid) {
@@ -974,12 +1015,8 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
     .then(res => res.json())
     .then(res => {
         if (res.success) {
-            // const tbTC = document.querySelector('.thongbaoThemBTThanhCong');
-            // tbTC.style.display = 'block';
-            // tbTC.classList.add('show');
-            // setTimeout(() => tbTC.classList.remove('show'), 2000);
-                        alert('Lưu biến thể thành công');
 
+            alert('Lưu biến thể thành công');
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
             if (modal) modal.hide();
 
@@ -1002,7 +1039,33 @@ document.getElementById('btnAddVariantRow').addEventListener('click', () => {
 
             if (typeof reloadVariantsInPhieuNhap === 'function') reloadVariantsInPhieuNhap();
         } else {
-            showModalThongBao(res.message || 'Đã tồn tại biến thể trong hệ thống.');
+            const duplicate = res.duplicate;
+if (duplicate) {
+    const { color_id, size_id } = duplicate;
+    const matchedRow = Array.from(document.querySelectorAll('.variant-row')).find(row => {
+        const c = row.querySelector('[name="colors[]"]').value;
+        const s = row.querySelector('[name="sizes[]"]').value;
+        return c == color_id && s == size_id;
+    });
+
+    if (matchedRow) {
+        matchedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        matchedRow.classList.add('row-error-highlight');
+        setTimeout(() => {
+            matchedRow.classList.remove('row-error-highlight');
+        }, 3000);
+    }
+}
+
+Swal.fire({
+    icon: 'error',
+    title: 'Biến thể đã tồn tại',
+    text: res.message || 'Vui lòng chọn màu và size khác.',
+    timer: 2500,
+    timerProgressBar: true,
+    showConfirmButton: false
+});
+
         }
     })
     .catch(err => {

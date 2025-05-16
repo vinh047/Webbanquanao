@@ -67,7 +67,7 @@ require_once __DIR__ . '/ajax/permission_helper.php';
                     </li>
                 <?php endif; ?>
                 <?php if (hasPermission('Quản lý đơn nhập')): ?>
-                    <li class="nav-item mb-2">
+                    <li class="nav-item mb-2 d-none">
                         <a class="nav-link text-white d-flex align-items-center gap-2 <?= $currentPage === 'ctphieunhap' ? 'active' : '' ?>" href="index.php?page=ctphieunhap&pageadmin=1">
                             <i class="fa-solid fa-list"></i> <span>Chi tiết phiếu nhập</span>
                         </a>
