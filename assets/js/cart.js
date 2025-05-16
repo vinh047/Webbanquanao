@@ -575,14 +575,21 @@
             const product_name = itemDiv.querySelector('h6')?.textContent || 'Không rõ tên';
             const size = itemDiv.querySelector('p:nth-child(3)')?.textContent.replace('Size:', '').trim();
             const color = itemDiv.querySelector('p:nth-child(2)')?.textContent.replace('Color:', '').trim();
+            const priceText = itemDiv.querySelector('.text-danger')?.textContent || '0';
+            const price = parseInt(priceText.replace(/[₫.,]/g, '')) || 0;
+
+            const image = itemDiv.querySelector('img')?.getAttribute('src') || '';
 
             if (variant_id && quantity > 0) {
                 checkData.push({
+                    product_id: parseInt(product_id),
                     variant_id: parseInt(variant_id),
                     quantity,
                     product_name,
                     size,
-                    color
+                    color,
+                    price,
+                    image
                 });
             }
         });
@@ -611,6 +618,10 @@
                 alert(message);
                 return;
             }
+
+            // ✅ Lưu vào localStorage để dùng ở trang pay
+            localStorage.setItem('alertShown', 'false');
+            sessionStorage.setItem('selectedCartItems', JSON.stringify(checkData));
 
             // ✅ Không có lỗi → tiếp tục thanh toán
             window.location.href = '/index.php?page=pay';
