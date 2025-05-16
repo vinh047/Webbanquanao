@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 [{"product_id":2,"name":"Áo polo nam phối màu tay và cổ form fitted","price":637000,"quantity":1,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg","variant_id":6,"color_id":7,"size":"M"}]
+=======
+[{"product_id":2,"variant_id":6,"quantity":8,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":7,"size":"M","price":637000,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg"},{"product_id":2,"variant_id":7,"quantity":4,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":2,"size":"L","price":637000,"image":"10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg"},{"product_id":1,"variant_id":1,"quantity":1,"name":"Áo polo nam dệt kim tay ngắn form regular","color_id":8,"size":"X","price":702000,"image":"10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg"}]
+>>>>>>> Stashed changes

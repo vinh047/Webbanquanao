@@ -7,17 +7,56 @@ $thang = isset($_GET['thang']) && $_GET['thang'] !== '' ? (int)$_GET['thang'] : 
 $nam = $_GET['nam'] ?? date('Y');
 $from_date = $_GET['from_date'] ?? '';
 $to_date = $_GET['to_date'] ?? '';
-$status = $_GET['status'] ?? 'Giao thành công'; // Mặc định lấy đơn đã giao thành công
+$category_id = $_GET['category_id'] ?? '';
+$status = $_GET['status'] ?? '';
+
+// $status = $_GET['status'] ?? ''; // Khai báo trước khi dùng
+// $status = ''; 
+$whereClausesDoanhThu = [];
+$paramsDoanhThu = [];
+
+// if ($status !== '') {
+//     $whereClausesDoanhThu[] = "o.status = ?";
+//     $paramsDoanhThu[] = $status;
+// }
+
+$whereClausesDoanhThu = [];
+$paramsDoanhThu = [];
+
+// if ($status !== '') {
+//     $whereClausesDoanhThu[] = "o.status = ?";
+//     $paramsDoanhThu[] = $status;
+// }
+if ($thang !== '') {
+    $whereClausesDoanhThu[] = "MONTH(o.created_at) = ?";
+    $paramsDoanhThu[] = $thang;
+}
+if ($nam !== '') {
+    $whereClausesDoanhThu[] = "YEAR(o.created_at) = ?";
+    $paramsDoanhThu[] = $nam;
+}
+if ($from_date !== '') {
+    $whereClausesDoanhThu[] = "DATE(o.created_at) >= ?";
+    $paramsDoanhThu[] = $from_date;
+}
+if ($to_date !== '') {
+    $whereClausesDoanhThu[] = "DATE(o.created_at) <= ?";
+    $paramsDoanhThu[] = $to_date;
+}
+if ($category_id !== '') {
+    $whereClausesDoanhThu[] = "p.category_id = ?";
+    $paramsDoanhThu[] = $category_id;
+}
+
+$whereSqlDoanhThu = count($whereClausesDoanhThu) > 0
+    ? "WHERE " . implode(' AND ', $whereClausesDoanhThu)
+    : '';
+
 $category_id = $_GET['category_id'] ?? '';
 
 // Build điều kiện lọc chung (áp dụng cho đa số truy vấn)
 $whereClauses = [];
 $params = [];
-
-if ($status !== '') {
-    $whereClauses[] = "o.status = ?";
-    $params[] = $status;
-}
 if ($thang !== '') {
     $whereClauses[] = "MONTH(o.created_at) = ?";
     $params[] = $thang;
@@ -49,11 +88,11 @@ $doanhThuTheoNgay = $db->select("
     FROM orders o
     JOIN order_details od ON o.order_id = od.order_id
     JOIN products p ON p.product_id = od.product_id
-    $whereSql
+    $whereSqlDoanhThu
     GROUP BY ngay
     ORDER BY ngay ASC
     LIMIT 31
-", $params);
+", $paramsDoanhThu);
 
 // Xử lý dữ liệu biểu đồ
 $labels = [];
@@ -112,7 +151,10 @@ $donHangMoi = $db->select("
     SELECT o.order_id, u.name as customer_name, o.total_price, o.status, o.created_at
     FROM orders o
     JOIN users u ON u.user_id = o.user_id
+    JOIN order_details od ON od.order_id = o.order_id
+    JOIN products p ON p.product_id = od.product_id
     $whereSqlDonHangMoi
+    GROUP BY o.order_id
     ORDER BY o.created_at DESC
     LIMIT 10
 ", $paramsDonHangMoi);
@@ -175,11 +217,37 @@ foreach ($ordersOfTopUsers as $order) {
 }
 
 // --- Thống kê số lượng đơn theo trạng thái ---
-$statusCounts = $db->select("
-    SELECT status, COUNT(*) AS count
-    FROM orders
-    GROUP BY status
-");
+$whereStatus = [];
+$statusParams = [];
+
+if ($from_date !== '') {
+    $whereStatus[] = "DATE(created_at) >= ?";
+    $statusParams[] = $from_date;
+}
+if ($to_date !== '') {
+    $whereStatus[] = "DATE(created_at) <= ?";
+    $statusParams[] = $to_date;
+}
+$whereStatusSql = count($whereStatus) ? 'WHERE ' . implode(' AND ', $whereStatus) : '';
+
+if ($category_id !== '') {
+    $statusCounts = $db->select("
+        SELECT o.status, COUNT(DISTINCT o.order_id) AS count
+        FROM orders o
+        JOIN order_details od ON od.order_id = o.order_id
+        JOIN products p ON p.product_id = od.product_id
+        $whereStatusSql
+        GROUP BY o.status
+    ", $statusParams);
+} else {
+    $statusCounts = $db->select("
+        SELECT o.status, COUNT(*) AS count
+        FROM orders o
+        $whereStatusSql
+        GROUP BY o.status
+    ", $statusParams);
+}
+
 
 // Tạo mảng labels và data cho biểu đồ trạng thái
 $statusLabels = [];
@@ -191,60 +259,8 @@ foreach ($statusCounts as $row) {
 
 // Lấy 5 khách hàng đầu tiên (nếu cần)
 $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
+
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dashboard Thống kê hệ thống</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-    <style>
-        /* Hiệu ứng hover cho box thống kê */
-        .stat-box:hover {
-            box-shadow: 0 0 15px rgba(0,0,0,0.15);
-            cursor: pointer;
-        }
-        .table tbody tr td {
-            vertical-align: middle;
-        }
-        .row.align-items-stretch {
-            align-items: stretch;  
-        }
-        .card.h-100 {
-            height: 100%;
-        }
-        .col-md-auto {
-            flex: 0 0 auto;
-            width: auto;
-        }
-        .card h5 {
-        margin-bottom: 0rem;
-        }
-        .table thead th {
-        background-color: #f8f9fa;
-        }
-        .card.mb-0 {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-        }
-
-        .card.mb-0 h5 {
-            margin-bottom: 0.25rem; /* hoặc 0 */
-        }
-
-        .card.mb-0 table {
-            margin-top: 0;
-        }
-        /* Tách style ra đây thay vì inline */
-        #filterButton {
-        margin-bottom: 20px;
-        }
-
-    </style>
-</head>
-<body>
 <div class="container my-4">
 
     <h1 class="mb-4">Thống kê hệ thống</h1>
@@ -259,9 +275,11 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
 <!-- Modal lọc sản phẩm -->
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form method="GET" class="modal-content">
+    <form method="GET" action="index.php" class="modal-content">
+    <input type="hidden" name="page" value="thongke">
+
       <div class="modal-header">
-        <h5 class="modal-title" id="filterModalLabel">Lọc sản phẩm</h5>
+        <h5 class="modal-title" id="filterModalLabel">Lọc</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>
       <div class="modal-body">
@@ -280,7 +298,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
         <button type="submit" class="btn btn-primary">Lọc</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
       </div>
-    </form>
+    </>
   </div>
 </div>
 
@@ -389,7 +407,12 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                                     <td><?= number_format($dh['total_price']) ?></td>
                                     <td><?= htmlspecialchars($dh['created_at']) ?></td>
                                     <td>
-                                        <a href="order_detail.php?order_id=<?= htmlspecialchars($dh['order_id']) ?>" class="btn btn-sm btn-primary" target="_blank">Xem</a>
+                                    <button type="button" class="btn btn-sm btn-primary btn-view-order"
+                                            data-order-id="<?= $dh['order_id'] ?>"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#orderDetailModal">
+                                            Xem
+                                    </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -400,12 +423,10 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
         <?php endforeach; ?>
     </tbody>
 </table>
-
     <?php else: ?>
         <p>Không có dữ liệu khách hàng mua nhiều nhất trong khoảng thời gian này.</p>
     <?php endif; ?>
 </div>
-
 <!-- Bảng danh sách đơn hàng mới và bảng top 5 sản phẩm bán chạy -->
 <div class="row mb-5">
     <!-- Danh sách đơn hàng mới -->
@@ -432,13 +453,33 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                             <td><?= number_format($dh['total_price']) ?></td>
                             <td>
                                 <?php
-                                $st = $dh['status'];
-                                $class = 'badge bg-secondary';
-                                if ($st == 'completed') $class = 'badge bg-success';
-                                elseif ($st == 'pending') $class = 'badge bg-warning text-dark';
-                                elseif ($st == 'canceled') $class = 'badge bg-danger';
+                                // Làm sạch dữ liệu trạng thái
+                                $st = mb_strtolower(trim($dh['status']), 'UTF-8'); // dùng mb_strtolower để xử lý tiếng Việt
+                                $class = 'badge';
+                                $style = '';
+                                $displayText = trim($dh['status']); // Mặc định hiển thị nguyên bản
+
+                                switch ($st) {
+                                    case 'chờ xác nhận':
+                                        $style = 'background-color: #f1c40f; color: #000;';
+                                        break;
+                                    case 'đã thanh toán, chờ giao hàng':
+                                        $style = 'background-color: #3498db; color: #fff;';
+                                        break;
+                                    case 'đang giao hàng':
+                                        $style = 'background-color: #e67e22; color: #fff;';
+                                        break;
+                                    case 'giao thành công':
+                                        $style = 'background-color: #2ecc71; color: #fff;';
+                                        break;
+                                    case 'đã huỷ':
+                                        $style = 'background-color: #e74c3c; color: #fff;';
+                                        break;
+                                    default:
+                                        $style = 'background-color: #ccc; color: #000;';
+                                }
                                 ?>
-                                <span class="<?= $class ?>"><?= ucfirst($st) ?></span>
+                                <span class="<?= $class ?>" style="<?= $style ?>"><?= htmlspecialchars($displayText) ?></span>
                             </td>
                             <td><?= htmlspecialchars($dh['created_at']) ?></td>
                         </tr>
@@ -448,7 +489,6 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
             </div>
         </div>
     </div>
-
     <!-- Top 5 sản phẩm bán chạy -->
     <div class="col-md-4">
         <div class="card p-3 shadow-sm h-100" id="topSanPhamContainer">
@@ -475,13 +515,28 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
             </div>
         </div>
     </div>
-
 </div>
-
+<!-- Modal xem chi tiết đơn hàng -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderDetailModalLabel">Chi tiết đơn hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div id="orderDetailContent">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Biểu đồ doanh thu theo ngày
-    const revenueLabels = <?= json_encode($labels) ?>;
+    const revenueLabels = <?= json_encode($labels ?: ["Không có dữ liệu"]) ?>;
     const doanhthuData = <?= json_encode($doanhthuData) ?>;
     const vonData = <?= json_encode($vonData) ?>;
     const loinhuanData = <?= json_encode($loinhuanData) ?>;
@@ -510,8 +565,6 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
             }
         }
     });
-
-
     const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
     new Chart(ctxRevenue, {
         type: 'line',
@@ -560,7 +613,6 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
             }
         }
     });
-
     function updateSummary() {
     fetch('ajax/get_summary.php')
         .then(response => {
@@ -593,14 +645,10 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
 //             form.style.display = 'none';
 //         }
 //     });
-    function resetFilter() {
-    // Xóa hết giá trị trong form lọc rồi submit để load lại trang ko có filter
-    const form = document.querySelector('#filterModal form');
-    form.querySelectorAll('input, select').forEach(el => {
-      el.value = '';
-    });
-    form.submit();
-  }
+function resetFilter() {
+    // Trở lại trang mặc định mà không có tham số GET
+    window.location.href = 'index.php?page=thongke';
+}
   document.addEventListener('click', function(e) {
   // Tìm tất cả các collapse đang mở
   const openCollapses = document.querySelectorAll('tr.collapse.show');
@@ -616,24 +664,51 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
     }
   });
 });
-
 document.querySelector('#filterModal form').addEventListener('submit', function(e) {
-  e.preventDefault(); // ngăn submit mặc định (reload trang)
-
+  // Không cần e.preventDefault() vì ta muốn reload trang
   const fromDate = this.from_date.value;
   const toDate = this.to_date.value;
-
-  // Thêm các tham số lọc khác nếu cần
-  // Gửi AJAX
-  fetch(`dashboard.php?from_date=${encodeURIComponent(fromDate)}&to_date=${encodeURIComponent(toDate)}`)
-    .then(res => res.text()) // hoặc res.json() nếu PHP trả JSON
-    .then(html => {
-      // Cập nhật vùng dữ liệu trên trang (ví dụ phần danh sách đơn hàng)
-      document.querySelector('#donHangMoiContainer').innerHTML = html;
-      // Có thể gọi lại hàm vẽ biểu đồ hoặc update lại số liệu ở đây nếu cần
-    })
-    .catch(err => console.error(err));
+  // Build lại URL với các tham số GET
+  const url = new URL(window.location.href);
+  if (fromDate) url.searchParams.set('from_date', fromDate);
+  if (toDate) url.searchParams.set('to_date', toDate);
+  // Chuyển hướng lại trang với các tham số lọc
+  window.location.href = url.toString();
 });
+let lastOpenedCollapseId = null;
+
+document.querySelectorAll('.btn-view-order').forEach(button => {
+  button.addEventListener('click', function () {
+    const orderId = this.getAttribute('data-order-id');
+    const contentDiv = document.getElementById('orderDetailContent');
+    contentDiv.innerHTML = 'Đang tải...';
+
+    // Lưu lại collapse đang mở (parent row có id bắt đầu bằng 'orders-')
+    const parentRow = this.closest('tr').closest('tr.collapse');
+    if (parentRow && parentRow.id) {
+      lastOpenedCollapseId = parentRow.id;
+    }
+
+    fetch('ajax/get_order_detail_modal.php?order_id=' + orderId)
+      .then(response => response.text())
+      .then(html => {
+        contentDiv.innerHTML = html;
+      })
+      .catch(error => {
+        contentDiv.innerHTML = '<div class="text-danger">Lỗi tải dữ liệu</div>';
+        console.error(error);
+      });
+  });
+});
+const orderModal = document.getElementById('orderDetailModal');
+orderModal.addEventListener('hidden.bs.modal', function () {
+  if (lastOpenedCollapseId) {
+    const target = document.getElementById(lastOpenedCollapseId);
+    const collapse = new bootstrap.Collapse(target, { toggle: false });
+    collapse.show();
+  }
+});
+
 
 // Cập nhật ngay khi tải trang
 updateSummary();
