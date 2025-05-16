@@ -2047,7 +2047,31 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
         staffInput.setAttribute('data-staff-id', staffId);
 
         const statusSelect = document.getElementById('statusSua');
-        statusSelect.value = status;
+        // Danh sách trạng thái theo thứ tự tiến trình (chỉnh theo enum bạn dùng)
+        const statusList = [
+            "Chờ xác nhận",
+            "Đã thanh toán, chờ giao hàng",
+            "Đang giao hàng",
+            "Giao thành công",
+            "Đã huỷ"
+        ];
+
+        // Tìm vị trí trạng thái hiện tại
+        const currentIndex = statusList.indexOf(status);
+
+        // Xoá hết option cũ
+        statusSelect.innerHTML = "";
+
+        // Chỉ thêm các trạng thái từ currentIndex trở về sau
+        statusList.forEach((s, index) => {
+            if (index >= currentIndex) {
+                const opt = document.createElement("option");
+                opt.value = s;
+                opt.textContent = s;
+                if (s === status) opt.selected = true;
+                statusSelect.appendChild(opt);
+            }
+        });
 
         const paymentMethodSelect = document.getElementById('payment_method_id_sua');
         paymentMethodSelect.value = paymentMethodId;

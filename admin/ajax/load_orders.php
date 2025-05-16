@@ -75,7 +75,7 @@ $whereSql = count($whereClauses) > 0 ? 'WHERE ' . implode(' AND ', $whereClauses
 $sql = "SELECT SQL_CALC_FOUND_ROWS o.*
         FROM orders o
         JOIN users u1 ON o.user_id = u1.user_id
-        JOIN users u2 ON o.staff_id = u2.user_id
+        LEFT JOIN users u2 ON o.staff_id = u2.user_id
         $whereSql
         ORDER BY o.created_at DESC
         LIMIT $limit OFFSET $offset";
@@ -95,7 +95,10 @@ ob_start();
 foreach ($orders as $order):
     $user = $db->selectOne('SELECT * FROM users WHERE user_id = ?', [$order['user_id']]);
     $payment_method = $db->selectOne('SELECT * FROM payment_method WHERE payment_method_id = ?', [$order['payment_method_id']]);
-    $staff = $db->selectOne('SELECT * FROM users WHERE user_id = ?', [$order['staff_id']]);
+    $staff = null;
+    if (!empty($order['staff_id'])) {
+        $staff = $db->selectOne('SELECT * FROM users WHERE user_id = ?', [$order['staff_id']]);
+    }
 ?>
     <tr>
         <td><?= $order['order_id'] ?></td>
@@ -106,7 +109,7 @@ foreach ($orders as $order):
         <td><?= $order['note'] ?></td>
         <td><?= $order['created_at'] ?></td>
         <td><?= $payment_method['name'] ?></td>
-        <td><?= $staff['name'] ?></td>
+        <td><?= $staff ? htmlspecialchars($staff['name']) : '' ?></td>
         <td class="d-flex align-items-center justify-content-center">
             <button class="btn btn-info mx-1 btn-view-order d-flex align-items-center" style="white-space: nowrap;"
                 data-order-id="<?= $order['order_id'] ?>"
@@ -120,7 +123,7 @@ foreach ($orders as $order):
                 data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
                 data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
                 data-staff-id="<?= $staff['user_id'] ?>"
-                data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
+                <?= $staff ? htmlspecialchars($staff['name']) : '' ?>>
                 <i class="fa-regular fa-eye me-1"></i>
                 Chi tiết
             </button>
@@ -137,7 +140,7 @@ foreach ($orders as $order):
                 data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
                 data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
                 data-staff-id="<?= $staff['user_id'] ?>"
-                data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
+                <?= $staff ? htmlspecialchars($staff['name']) : '' ?>>
                 <i class="fa-regular fa-pen-to-square me-1"></i>
                 Sửa
             </button>
@@ -154,7 +157,7 @@ foreach ($orders as $order):
                 data-payment-method-id="<?= $payment_method['payment_method_id'] ?>"
                 data-payment-method-name="<?= htmlspecialchars($payment_method['name']) ?>"
                 data-staff-id="<?= $staff['user_id'] ?>"
-                data-staff-name="<?= htmlspecialchars($staff['name']) ?>">
+                <?= $staff ? htmlspecialchars($staff['name']) : '' ?>>
                 <i class="fas fa-trash me-1"></i>
                 Hủy đơn
             </button>

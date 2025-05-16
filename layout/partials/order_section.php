@@ -22,6 +22,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_order_id'])) {
   ");
     $stmtCancel->execute([$cancelId, $user_id]);
     // Sau khi xong, tiếp tục render lại danh sách (no redirect)
+    // Lấy lại chi tiết đơn hàng để hoàn kho và giảm sold_count
+    $stmtItems = $pdo->prepare("
+        SELECT variant_id, product_id, quantity
+        FROM order_details
+        WHERE order_id = ?
+    ");
+    $stmtItems->execute([$cancelId]);
+    $details = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+
+    // Cập nhật lại tồn kho và sold_count
+    foreach ($details as $item) {
+        $variant_id = (int)$item['variant_id'];
+        $product_id = (int)$item['product_id'];
+        $qty        = (int)$item['quantity'];
+
+        // Cộng lại stock
+        $pdo->prepare("UPDATE product_variants SET stock = stock + ? WHERE variant_id = ?")
+            ->execute([$qty, $variant_id]);
+
+        // Giảm sold_count nếu đang lớn hơn hoặc bằng số cần giảm
+        $pdo->prepare("UPDATE products SET sold_count = sold_count - ? WHERE product_id = ? AND sold_count >= ?")
+            ->execute([$qty, $product_id, $qty]);
+    }   
 }
 
 // --- 2) Phân trang ---
