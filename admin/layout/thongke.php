@@ -397,7 +397,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
         <tr>
             <th>#</th>
             <th>Khách hàng</th>
-            <th>Tổng tiền mua (VNĐ)</th>
+            <th>Tổng tiền mua (đ)</th>
             <th>Chi tiết đơn hàng</th>
         </tr>
     </thead>
@@ -424,7 +424,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                         <thead>
                             <tr>
                                 <th>Mã đơn hàng</th>
-                                <th>Tổng tiền (VNĐ)</th>
+                                <th>Tổng tiền (đ)</th>
                                 <th>Ngày đặt</th>
                                 <th>Xem chi tiết</th>
                             </tr>
@@ -470,7 +470,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                         <tr>
                             <th>ID</th>
                             <th>Khách hàng</th>
-                            <th>Tổng tiền (VNĐ)</th>
+                            <th>Tổng tiền (đ)</th>
                             <th>Trạng thái</th>
                             <th>Ngày đặt</th>
                         </tr>
@@ -561,7 +561,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
         <tr>
             <th style="width: 50%;">Tên sản phẩm</th>
             <th style="width: 20%;">Lượt mua</th>
-            <th style="width: 30%;">Giá (VNĐ)</th>
+            <th style="width: 30%;">Giá (đ)</th>
         </tr>
     </thead>
     <tbody>
@@ -635,7 +635,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
             labels: revenueLabels,
             datasets: [
                 {
-                    label: 'Doanh thu (VNĐ)',
+                    label: 'Doanh thu (đ)',
                     data: doanhthuData,
                     fill: true,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -644,7 +644,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                     pointRadius: 3
                 },
                 {
-                    label: 'Tiền vốn (VNĐ)',
+                    label: 'Tiền vốn (đ)',
                     data: vonData,
                     fill: true,
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -653,7 +653,7 @@ $topKhachHangGroup = array_slice($topKhachHangGroup, 0, 5, true);
                     pointRadius: 3
                 },
                 {
-                    label: 'Lợi nhuận (VNĐ)',
+                    label: 'Lợi nhuận (đ)',
                     data: loinhuanData,
                     fill: true,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',

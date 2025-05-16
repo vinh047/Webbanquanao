@@ -402,7 +402,7 @@ $totalPage = ceil($totalSach / $limit);
                                 <div class="mt-2 p-2 pt-1">
                                     <div class="">
                                         <p class="mb-0 fw-lighter">Nam</p>
-                                        <p class="mb-0">' . $gia . ' VNĐ</p>   
+                                        <p class="mb-0">' . $gia . ' đ</p>   
                                         <p class="mb-0">' . $name . '</p>
                                     </div>
                                 </div>

@@ -65,7 +65,7 @@ foreach ($data as $row) {
         <td class='hienthiid'>$idpn</td>
         <td class='hienthigia giaodienmb'>$tennv</td>
         <td class='tensp giaodienmb'>$tenncc</td>
-        <td class='tensp giaodienmb'>$gia VNĐ</td>
+        <td class='tensp giaodienmb'>$gia đ</td>
         <td class='tensp giaodienmb'>$ngaylap</td>
         <td class='tensp'>
             " . ($row['status'] == 1
