@@ -7,7 +7,9 @@ $conn = $db->getConnection();
 $locRaw = locPhieuNhap($conn);
 $loc = $locRaw ?: "";
 // Tổng sản phẩm
-$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt im $loc", []);
+// $total = $db->select("SELECT COUNT(*) AS total FROM importreceipt im $loc", []);
+$total = $db->select("SELECT COUNT(*) AS total FROM importreceipt im WHERE im.is_deleted = 0 $loc", []);
+
 $totalItems = $total[0]['total'];
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -32,6 +34,21 @@ $pagination = new Pagination($totalItems, $limit, $page);
 $offset = $pagination->offset();
 
 // Truy vấn sản phẩm theo trang
+// $data = $db->select("SELECT 
+//     im.ImportReceipt_id,
+//     im.created_at,
+//     im.status,
+//     im.supplier_id,
+//     im.user_id,
+//     im.total_price,
+//     s.name AS ncc_name,
+//     u.name AS nv_name
+// FROM importreceipt im
+// JOIN supplier s ON im.supplier_id = s.supplier_id 
+// JOIN users u ON im.user_id = u.user_id
+// $loc
+// ORDER BY im.ImportReceipt_id ASC
+// LIMIT $limit OFFSET $offset", []);
 $data = $db->select("SELECT 
     im.ImportReceipt_id,
     im.created_at,
@@ -44,7 +61,7 @@ $data = $db->select("SELECT
 FROM importreceipt im
 JOIN supplier s ON im.supplier_id = s.supplier_id 
 JOIN users u ON im.user_id = u.user_id
-$loc
+WHERE im.is_deleted = 0 $loc
 ORDER BY im.ImportReceipt_id ASC
 LIMIT $limit OFFSET $offset", []);
 
@@ -62,11 +79,19 @@ foreach ($data as $row) {
     $tenncc = $row['ncc_name'];
     echo "
     <tr class='text-center'>
+<<<<<<< HEAD
         <td class='hienthiid'>$idpn</td>
         <td class='hienthigia giaodienmb'>$tennv</td>
         <td class='tensp giaodienmb'>$tenncc</td>
         <td class='tensp giaodienmb'>$gia đ</td>
         <td class='tensp giaodienmb'>$ngaylap</td>
+=======
+        <td class='hienthiid align-middle'>$idpn</td>
+        <td class='hienthigia giaodienmb align-middle'>$tennv</td>
+        <td class='tensp giaodienmb align-middle'>$tenncc</td>
+        <td class='tensp giaodienmb align-middle'>$gia đ</td>
+        <td class='tensp giaodienmb align-middle'>$ngaylap</td>
+>>>>>>> 7451e49ac3130ec823b71d2fcd079384bdae4301
         <td class='tensp'>
             " . ($row['status'] == 1
                 ? "<button class='btn btn-warning btn-sm btn-toggle-status rounded-4 fs-6 text-dark' data-idpn='$idpn'><i class='fa-solid fa-hourglass-half'></i> Chờ Xác nhận</button>"

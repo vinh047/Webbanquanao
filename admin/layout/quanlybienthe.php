@@ -154,18 +154,18 @@ $permissionsJson = json_encode($_SESSION['permissions'] ?? []);
             </div>
 
             <div class="hienthi">
-                <table class="table border-start border-end table-striped table-sm">
-                    <thead>
+                <table class="table border-start border-end table-bordered table-sm">
+                    <thead class="table-light">
                         <tr class="text-center">
-                            <th class="bg-secondary text-white hienthiidbt">ID BT</th>
-                            <th class="bg-secondary text-white hienthianh">ID SP</th>
-                            <th class="bg-secondary text-white hienthiidsp">Hình ảnh</th>
-                            <th class="bg-secondary text-white hienthisize">Size</th>
-                            <th class="bg-secondary text-white hienthigia">Số lượng</th>
-                            <th class="bg-secondary text-white hienthimau">Màu</th>
+                            <th class="hienthiidbt">ID BT</th>
+                            <th class="hienthianh">ID SP</th>
+                            <th class="hienthiidsp">Hình ảnh</th>
+                            <th class="hienthisize">Size</th>
+                            <th class="hienthigia">Số lượng</th>
+                            <th class="hienthimau">Màu</th>
                             
 <?php if ($hasAnyActionPermission): ?>
-    <th class="bg-secondary text-white hienthibtn">Xử lý</th>
+    <th class="hienthibtn">Xử lý</th>
 <?php endif; ?>
                         </tr>
                     </thead>

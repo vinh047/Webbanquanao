@@ -5,15 +5,26 @@ document.getElementById('filter-icon').addEventListener('click', function () {
     filterBox.classList.toggle('show');
 });
 
+// document.addEventListener('click', function (e) {
+//     const filterBox = document.querySelector('.filter_loc');
+//     const icon = document.getElementById('filter-icon');
+
+//     if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+//         filterBox.classList.remove('show');
+//     }
+// });
+
 document.addEventListener('click', function (e) {
-    const filterBox = document.querySelector('.filter_loc');
-    const icon = document.getElementById('filter-icon');
+  const filterBox = document.querySelector('.filter_loc');
+  const icon = document.getElementById('filter-icon');
 
-    if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
-        filterBox.classList.remove('show');
-    }
+  // Nếu click không nằm trong filterBox, icon, hoặc dropdown của Select2 thì mới tắt
+  const isInSelect2 = e.target.closest('.select2-container') !== null;
+
+  if (!filterBox.contains(e.target) && !icon.contains(e.target) && !isInSelect2) {
+    filterBox.classList.remove('show');
+  }
 });
-
 
 // const selectItem = document.querySelectorAll('.selectable');
 // selectItem.forEach(item =>{
@@ -151,24 +162,29 @@ document.body.addEventListener("click", function (e) {
   
     // 🟦 Click vào nút thêm vào giỏ
     if (e.target.closest(".add-to-cart-btn")) {
-      const btn = e.target.closest(".add-to-cart-btn");
-      if (btn.disabled) return;
-  
-      const container = btn.closest('.border.rounded-1');
-      const productId = btn.dataset.productId;
-      const productName = btn.dataset.productName;
-      const productPrice = btn.dataset.productPrice;
-  
-      const color = container.querySelector('.color-thumb.selected');
-      const size = container.querySelector('.size-thumb.selected');
-  
-      if (!color || !size) return;
-  
-      const variantImage = color.dataset.image;
-      const sizeId = size.dataset.sizeId;
-  
-      addToCart(productId, productName, productPrice, variantImage, sizeId);
-    }
+    const btn = e.target.closest(".add-to-cart-btn");
+    if (btn.disabled) return;
+
+    const container = btn.closest('.border.rounded-1');
+    const color = container.querySelector('.color-thumb.selected');
+
+    const productId = color.dataset.productId;
+    const productName = color.dataset.productName;
+    const productPrice = color.dataset.price;
+    const colorId = color.dataset.colorId;
+    const colorName = color.dataset.colorName;
+    const image = color.dataset.image.split('/').pop();
+
+    const variantId = color.dataset.variantId;
+
+    const size = container.querySelector('.size-thumb.selected');
+
+    if (!color || !size) return;
+    const sizeId = size.dataset.sizeId;
+    const sizeName = size.dataset.sizeName;
+
+    addToCart(productId, productName, productPrice, colorId, colorName, image, variantId, sizeId, sizeName);
+  }
   });
   
   // 🟦 Hỗ trợ: Bật / tắt nút thêm giỏ
@@ -204,4 +220,13 @@ document.body.addEventListener("click", function (e) {
     }
   });
   
-
+  const btnTatBoLoc = document.getElementById('btn-tatboloc');
+if (btnTatBoLoc) {
+  btnTatBoLoc.addEventListener('click', function (e) {
+    e.stopPropagation(); // ⛔ Ngăn sự kiện lan ra ngoài
+    const filterBox = document.querySelector('.filter_loc');
+    if (filterBox) {
+      filterBox.classList.remove('show'); // ✅ Ẩn bộ lọc
+    }
+  });
+}

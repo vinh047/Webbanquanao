@@ -104,7 +104,11 @@ while ($row = mysqli_fetch_assoc($result)) {
         $color_images_html .= '<img src="../assets/img/sanpham/' . $color['image'] . '" 
         data-product-id="' . $id . '" 
         data-color-id="' . $color['color_id'] . '"
+        data-color-name="'.$color['color_name'].'"
         data-image="../assets/img/sanpham/' . $color['image'] . '"
+        data-variant-id="'.$row['variant_id'].'"
+        data-product-name="'.$row['name'].'"
+        data-price="'.$row['price'].'"
         title="' . htmlspecialchars($color['color_name'], ENT_QUOTES) . '"
         class="color-thumb"
         style="width:28px;height:28px;object-fit:cover;border-radius:3px;border:1px solid #ccc;margin-right:4px;cursor:pointer;">';

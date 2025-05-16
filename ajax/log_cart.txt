@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 [{"product_id":1,"name":"Áo polo nam dệt kim tay ngắn form regular","price":702000,"quantity":1,"image":"10f24kni004-ivory-ao-len-tay-ngan-nam-1-jpg-uz8v.jpg","variant_id":1,"color_id":8,"size":"X"}]
+=======
+[{"product_id":2,"variant_id":6,"quantity":8,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":7,"size":"M","price":637000,"image":"10f24pol023-d-sapphire-rainy-day-ao-polo-nam-1-jpg-4u8s.jpg"},{"product_id":2,"variant_id":7,"quantity":4,"name":"Áo polo nam phối màu tay và cổ form fitted","color_id":2,"size":"L","price":637000,"image":"10f24pol023-rainy-day-covert-green-ao-polo-nam-1-jpg-qcn0.jpg"},{"id":"20","quantity":1,"color_id":"8","size":"S","variant_id":"94","image":"10s25und001-white-jpg-um7a.jpg","price":117000,"name":"Quần lót nam organic cotton .Boxer"},{"product_id":20,"name":"Quần lót nam organic cotton .Boxer","price":80000,"quantity":1,"image":"10s25und001-white-jpg-um7a.jpg","variant_id":94,"color_id":8,"size":"S"}]
+>>>>>>> 7451e49ac3130ec823b71d2fcd079384bdae4301

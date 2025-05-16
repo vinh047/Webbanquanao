@@ -61,13 +61,17 @@ $product = $dbInstance->select("
 
 
 
-        <section class="py-3">
-                <div class="boloc ms-5 position-relative">
-                    <div class="">
-                    <button type="button" class="btn btn-secondary" id="btnThemSanPhamMoi">
+  <div class="mt-3">
+                        <button type="button" class="btn btn-secondary" id="btnThemSanPhamMoi">
     <i class="fa fa-plus"></i> Thêm SP mới
   </button>
     <button id="btnMoModalBienThe" class="btn btn-warning text-white"><i class="fa fa-plus"></i> Thêm biến thể</button>
+  </div>
+                                <hr class="mt-5">
+
+        <section class="py-3">
+                <div class="boloc ms-5 position-relative">
+                    <div class="">
                     </div>
                     <span class="fs-3"><i class="fa-solid fa-filter filter-icon" id="filter-icon" title="Lọc sản phẩm"></i> <span class="fs-5">Lọc danh sách sản phẩm</span> </span>
                     <div class="filter-loc position-absolute bg-light p-3 rounded-2 d-none" style="width:270px;z-index : 2000;border:1px solid black;">
@@ -94,11 +98,11 @@ $product = $dbInstance->select("
                             <div class="d-flex gap-2 mt-2">
                                 <div class="">
                                 <label for="txtGiaMin">Giá min : </label>
-                                <input type="text" name="txtGiaMin" id="txtGiaMin" class="form-control form-control-sm">
+                                <input type="number" name="txtGiaMin" id="txtGiaMin" class="form-control form-control-sm">
                                 </div>
                                 <div class="">
                                 <label for="txtGiaMax">Giá max : </label>
-                                <input type="text" name="txtGiaMax" id="txtGiaMax" class="form-control form-control-sm">
+                                <input type="number" name="txtGiaMax" id="txtGiaMax" class="form-control form-control-sm">
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center gap-2 pt-2">
@@ -162,17 +166,17 @@ $product = $dbInstance->select("
 
 
             <div class="hienthi">
-                <table class="table border-start border-end table-striped table-sm">
-                    <thead>
+                <table class="table table-bordered border-start border-end table-sm">
+                    <thead class="table-light">
                         <tr class="text-center">
-                            <th class="bg-secondary text-white hienthiid">ID</th>
-                            <th class="bg-secondary text-white tensp giaodienmb">Tên sản phẩm</th>
-                            <th class="bg-secondary text-white hienthiloai giaodienmb">Loại</th>
-                            <th class="bg-secondary text-white mota giaodienmb">Mô tả Sản phẩm</th>
+                            <th class="hienthiid">ID</th>
+                            <th class="tensp giaodienmb">Tên sản phẩm</th>
+                            <th class="hienthiloai giaodienmb">Loại</th>
+                            <th class="mota giaodienmb">Mô tả Sản phẩm</th>
                             <!-- <th class="bg-secondary text-white hienthigia">Giá nhập</th> -->
-                            <th class="bg-secondary text-white hienthigia giaodienmb">Giá bán</th>
+                            <th class="hienthigia giaodienmb">Giá bán</th>
                             <?php if ($hasAnyActionPermission): ?>
-                            <th class="bg-secondary text-white hienthibtn">Xử lý</th>
+                            <th class="hienthibtn">Xử lý</th>
                             <?php endif; ?>
                         </tr>
                     </thead>

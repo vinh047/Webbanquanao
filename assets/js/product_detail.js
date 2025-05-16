@@ -210,11 +210,11 @@ document.querySelector(".buynow").addEventListener("click", function (e) {
                 else {
                     variant = result.data;
                     // Kiểm tra trùng sản phẩm
-                    const index = cart.findIndex(item => item.variant_id === variant['variant_id']);
+                    const index = cart.findIndex(item => item.variant_id == variant[0]['variant_id']);
                     if (index !== -1) {
                         cart[index].quantity += quantity;
                     } else {
-                        cart.push({ id: productId, quantity, color_id: colorId, size: sizeName, variant_id: variant[0]['variant_id'], image: variant[0]['image'], price: Number(variant[0]['price']), name: variant[0]['product_name'] });
+                        cart.push({ id: productId, quantity, color_id: colorId,size_id:sizeId, size: sizeName, variant_id: variant[0]['variant_id'], image: variant[0]['image'], price: Number(variant[0]['price']), name: variant[0]['product_name'] });
                     }
 
                     localStorage.setItem('cart', JSON.stringify(cart));
@@ -330,16 +330,15 @@ document.querySelector(".add-to-cart").addEventListener("click", function () {
                 else {
                     variant = result.data;
                     // Kiểm tra trùng sản phẩm
-                    const index = cart.findIndex(item => item.variant_id === variant['variant_id']);
+                    const index = cart.findIndex(item => item.variant_id == variant[0]['variant_id']);
                     if (index !== -1) {
                         cart[index].quantity += quantity;
                     } else {
-                        cart.push({ id: productId, quantity, color_id: colorId, size: sizeName, variant_id: variant[0]['variant_id'], image: variant[0]['image'], price: Number(variant[0]['price']), name: variant[0]['product_name'] });
+                        cart.push({ id: productId, quantity, color_id: colorId,size_id: sizeId,  size: sizeName, variant_id: variant[0]['variant_id'], image: variant[0]['image'], price: Number(variant[0]['price']), name: variant[0]['product_name'] });
                     }
 
                     localStorage.setItem('cart', JSON.stringify(cart));
 
-                    console.log('Cart sau khi thêm:', variant);
 
                     // Hiển thị popup thông báo
                     let popup = document.querySelector(".notice-add-to-cart");

@@ -164,7 +164,7 @@
         transform: translate(-50%, -10px); /* căn giữa ngang */
         width: 90vw !important;
         max-width: 400px;
-        z-index: 999;
+        z-index: 9999;
         position: fixed !important;
         top: 30px;
         
@@ -227,3 +227,12 @@
 .row-error-highlight {
     border: 2px solid red !important;
   }
+
+  .select2-container {
+    z-index: 9999 !important;
+    position: relative;
+}
+
+.select2-container--default .select2-dropdown {
+    z-index: 99999 !important;
+}
