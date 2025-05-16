@@ -550,6 +550,77 @@
             }
         }
     }
+
+    document.addEventListener('click', async function (e) {
+        const btn = e.target.closest('#btn-checkout');
+        if (!btn) return;
+
+        e.preventDefault();
+
+        const selectedItems = document.querySelectorAll('.select-item:checked');
+        if (selectedItems.length === 0) {
+            alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+            return;
+        }
+
+        const checkData = [];
+
+        selectedItems.forEach(cb => {
+            const itemDiv = cb.closest('.cart-item-wrap');
+            const qtyEl = itemDiv.querySelector('.qty');
+            const quantity = parseInt(qtyEl?.textContent || '0');
+
+            const product_id = itemDiv.getAttribute('data-product-id') || qtyEl?.getAttribute('data-product-id');
+            const variant_id = itemDiv.getAttribute('data-variant-id') || qtyEl?.getAttribute('data-variant-id');
+            const product_name = itemDiv.querySelector('h6')?.textContent || 'Không rõ tên';
+            const size = itemDiv.querySelector('p:nth-child(3)')?.textContent.replace('Size:', '').trim();
+            const color = itemDiv.querySelector('p:nth-child(2)')?.textContent.replace('Color:', '').trim();
+
+            if (variant_id && quantity > 0) {
+                checkData.push({
+                    variant_id: parseInt(variant_id),
+                    quantity,
+                    product_name,
+                    size,
+                    color
+                });
+            }
+        });
+
+        if (checkData.length === 0) return;
+
+        try {
+            const res = await fetch('ajax/check_inventory.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: checkData })
+            });
+
+            const result = await res.json();
+
+            if (!result.success) {
+                alert('Đã xảy ra lỗi khi kiểm tra tồn kho!');
+                return;
+            }
+
+            if (result.errors && result.errors.length > 0) {
+                let message = '❌ Một số sản phẩm không đủ tồn kho:\n\n';
+                result.errors.forEach(err => {
+                    message += `• ${err.product_name} - ${err.color} - ${err.size} chỉ còn lại ${err.stock} sản phẩm\n`;
+                });
+                alert(message);
+                return;
+            }
+
+            // ✅ Không có lỗi → tiếp tục thanh toán
+            window.location.href = 'pay.php';
+
+        } catch (err) {
+            console.error('Lỗi khi kiểm tra tồn kho:', err);
+            alert('Không thể kiểm tra tồn kho. Vui lòng thử lại.');
+        }
+    });
+
     window.addToCart = addToCart;
     renderCartPage();
 })();
