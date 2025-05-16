@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./assets/css/footer.css">
     <link rel="stylesheet" href="./assets/css/mini_cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <?php
     require_once './database/DBConnection.php';
@@ -130,7 +131,7 @@
                                     <div class="mt-1">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <select name="selectTheloai" id="selectTheloai" class="form-select">
+                                                <select name="selectTheloai" id="selectTheloai" class="form-select select2">
                                                     <option value="">Chọn thể loại</option>
 
                                                     <?php foreach ($product_theloai as $dl): ?>
@@ -246,6 +247,25 @@
 <script src="./assets/js/product_color_size.js"></script>
 <script src="./assets/js/xulyFIlter.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+    $('#selectTheloai').select2({
+        placeholder: 'Chọn thể loại',
+        width: '100%' // ✅ quan trọng để khớp với Bootstrap form
+    });
+});
+document.querySelector('form').addEventListener('reset', function () {
+    // Chờ reset hoàn tất, rồi reset lại giao diện của Select2
+    setTimeout(function () {
+        $('#selectTheloai').val('').trigger('change');
+    }, 0);
+});
+
+</script>
 </body>
 
 </html>

@@ -227,3 +227,12 @@
 .row-error-highlight {
     border: 2px solid red !important;
   }
+
+  .select2-container {
+    z-index: 9999 !important;
+    position: relative;
+}
+
+.select2-container--default .select2-dropdown {
+    z-index: 99999 !important;
+}

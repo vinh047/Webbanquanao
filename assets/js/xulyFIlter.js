@@ -5,15 +5,26 @@ document.getElementById('filter-icon').addEventListener('click', function () {
     filterBox.classList.toggle('show');
 });
 
+// document.addEventListener('click', function (e) {
+//     const filterBox = document.querySelector('.filter_loc');
+//     const icon = document.getElementById('filter-icon');
+
+//     if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
+//         filterBox.classList.remove('show');
+//     }
+// });
+
 document.addEventListener('click', function (e) {
-    const filterBox = document.querySelector('.filter_loc');
-    const icon = document.getElementById('filter-icon');
+  const filterBox = document.querySelector('.filter_loc');
+  const icon = document.getElementById('filter-icon');
 
-    if (!filterBox.contains(e.target) && !icon.contains(e.target)) {
-        filterBox.classList.remove('show');
-    }
+  // Nếu click không nằm trong filterBox, icon, hoặc dropdown của Select2 thì mới tắt
+  const isInSelect2 = e.target.closest('.select2-container') !== null;
+
+  if (!filterBox.contains(e.target) && !icon.contains(e.target) && !isInSelect2) {
+    filterBox.classList.remove('show');
+  }
 });
-
 
 // const selectItem = document.querySelectorAll('.selectable');
 // selectItem.forEach(item =>{
