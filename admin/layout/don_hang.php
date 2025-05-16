@@ -127,10 +127,7 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
                 <th>Khách hàng</th>
                 <th>Tình trạng</th>
                 <th>Tổng tiền</th>
-                <th>Địa chỉ giao hàng</th>
-                <th>Ghi chú</th>
                 <th>Ngày tạo</th>
-                <th>Phương thức thanh toán</th>
                 <th>Nhân viên tạo đơn</th>
                 <th>Chức năng</th>
 

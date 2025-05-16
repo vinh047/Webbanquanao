@@ -108,10 +108,7 @@ foreach ($orders as $order):
         <td><?= $user['name'] ?></td>
         <td><?= $order['status'] ?></td>
         <td><?= number_format($order['total_price'], 0, ',', '.') ?> ₫</td>
-        <td><?= $order['shipping_address'] ?></td>
-        <td><?= $order['note'] ?></td>
         <td><?= $order['created_at'] ?></td>
-        <td><?= $payment_method['name'] ?></td>
         <td><?= $staff ? htmlspecialchars($staff['name']) : '' ?></td>
         <td class="d-flex align-items-center justify-content-center">
             <button class="btn btn-info mx-1 btn-view-order d-flex align-items-center" style="white-space: nowrap;"
