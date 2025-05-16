@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 02:17 AM
+-- Generation Time: May 16, 2025 at 11:37 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -472,7 +472,7 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `category_id`, `price`, `rating_avg`, `rating_count`, `sold_count`, `price_sale`, `pttg`, `is_deleted`) VALUES
-(1, 'Áo polo nam dệt kim tay ngắn form regular', 'Khám phá phong cách lịch lãm và thoải mái tuyệt đối với chiếc áo polo nam dệt kim tay ngắn form regular – lựa chọn hoàn hảo cho mọi chàng trai hiện đại. Được làm từ chất liệu cotton cao cấp pha sợi spandex, áo mang đến cảm giác mềm mại, thoáng khí nhưng vẫn giữ được form dáng chuẩn sau nhiều lần giặt. Thiết kế tinh tế với cổ áo bo gân, tay áo ôm nhẹ tạo điểm nhấn năng động, dễ dàng phối cùng quần jean, kaki hoặc short cho nhiều phong cách từ công sở đến dạo phố.\r\n\r\n✔️ Chất vải dày dặn – không bai xù\r\n✔️ Đường may chắc chắn – tỉ mỉ đến từng chi tiết\r\n✔️ Dễ phối đồ – phù hợp mọi hoàn cảnh\r\n✔️ Size đa dạng – phù hợp mọi vóc dáng\r\n\r\nSở hữu ngay để nâng tầm phong cách cùng sự thoải mái suốt cả ngày!', 1, 540000.00, 0, 0, 0, 702000.00, 30.00, 0),
+(1, 'Áo polo nam dệt kim tay ngắn form regular', 'Khám phá phong cách lịch lãm và thoải mái tuyệt đối với chiếc áo polo nam dệt kim tay ngắn form regular – lựa chọn hoàn hảo cho mọi chàng trai hiện đại. Được làm từ chất liệu cotton cao cấp pha sợi spandex, áo mang đến cảm giác mềm mại, thoáng khí nhưng vẫn giữ được form dáng chuẩn sau nhiều lần giặt. Thiết kế tinh tế với cổ áo bo gân, tay áo ôm nhẹ tạo điểm nhấn năng động, dễ dàng phối cùng quần jean, kaki hoặc short cho nhiều phong cách từ công sở đến dạo phố.\r\n\r\n✔️ Chất vải dày dặn – không bai xù\r\n✔️ Đường may chắc chắn – tỉ mỉ đến từng chi tiết\r\n✔️ Dễ phối đồ – phù hợp mọi hoàn cảnh\r\n✔️ Size đa dạng – phù hợp mọi vóc dáng\r\n\r\nSở hữu ngay để nâng tầm phong cách cùng sự thoải mái suốt cả ngày!', 4, 540000.00, 0, 0, 0, 702000.00, 30.00, 0),
 (2, 'Áo polo nam phối màu tay và cổ form fitted', 'Tạo điểm nhấn cá tính trong tủ đồ của bạn với áo polo nam phối màu tay và cổ form fitted – thiết kế vừa vặn tôn dáng, chuẩn xu hướng thời trang hiện đại. Phần cổ áo và tay áo phối màu tinh tế mang lại cảm giác trẻ trung, năng động nhưng vẫn giữ được vẻ lịch lãm đặc trưng của dòng áo polo cổ điển.\r\n\r\nÁo được may từ chất liệu cotton co giãn 4 chiều, cho cảm giác mặc thoải mái, thấm hút mồ hôi tốt – lý tưởng cho các hoạt động thường ngày hay khi di chuyển ngoài trời. Đường may ôm nhẹ phần vai và thân, tôn lên vóc dáng săn chắc, phù hợp với các chàng trai yêu thích sự gọn gàng và phong cách.\r\n\r\n✔️ Form fitted – ôm nhẹ body, tôn dáng\r\n✔️ Cổ & tay áo phối màu nổi bật – tạo điểm nhấn phong cách\r\n✔️ Vải mềm, thoáng khí – mặc thoải mái cả ngày\r\n✔️ Phối đồ dễ dàng – phù hợp từ công sở đến cafe cuối tuần\r\n\r\nMột chiếc polo không chỉ đơn thuần là áo – mà là tuyên ngôn thời trang của bạn!', 4, 490000.00, 0, 0, 0, 637000.00, 30.00, 0),
 (3, 'Áo sơ mi nam tay dài vải Nano Non Iron fitted', 'Đẳng cấp đến từ sự đơn giản – áo sơ mi nam tay dài vải Nano Non Iron form fitted là lựa chọn lý tưởng cho những quý ông hiện đại, bận rộn nhưng vẫn yêu cầu cao về phong cách. Với chất liệu vải Nano công nghệ cao, áo sở hữu khả năng chống nhăn vượt trội, giữ form chuẩn suốt cả ngày mà không cần ủi – giúp bạn tiết kiệm thời gian mà vẫn luôn chỉn chu.\r\n\r\nThiết kế form fitted ôm gọn vừa vặn, tôn dáng và mang lại sự thoải mái tối đa nhờ độ co giãn nhẹ. Cổ áo cứng cáp, tay áo sắc sảo, đường may tinh tế – chiếc sơ mi này phù hợp từ văn phòng công sở đến những buổi họp quan trọng hay sự kiện cần sự chuyên nghiệp.\r\n\r\n✔️ Chống nhăn – không cần ủi, mặc là phẳng\r\n✔️ Form fitted – ôm dáng vừa vặn, hiện đại\r\n✔️ Chất vải Nano mềm mại, thoáng khí, không gây bí\r\n✔️ Phối đồ linh hoạt – dễ dàng kết hợp với quần tây, jean hoặc kaki\r\n\r\nSở hữu ngay để nâng tầm phong thái chuyên nghiệp và tinh tế mỗi ngày!', 3, 540000.00, 0, 0, 0, 702000.00, 30.00, 0),
 (4, 'Áo khoác gile nam chần bông có túi form regular', 'Giữ ấm đầy phong cách với áo khoác gile nam chần bông có túi form regular – thiết kế không tay hiện đại, thích hợp cho những ngày se lạnh nhưng vẫn cần sự linh hoạt trong di chuyển. Áo được chần bông nhẹ, êm ái, giúp giữ nhiệt tốt mà không gây nặng nề hay cồng kềnh.\r\n\r\nChất liệu vải dù chống nước nhẹ, dễ vệ sinh, kết hợp với lớp lót mềm mại bên trong mang đến cảm giác ấm áp và thoải mái khi mặc. Form regular vừa vặn với hầu hết vóc dáng, không kén người mặc. Hai túi tiện lợi hai bên, có thể giữ tay ấm hoặc đựng các vật dụng cá nhân như điện thoại, ví, tai nghe,...\r\n\r\n✔️ Chần bông giữ ấm – nhẹ, không dày cộm\r\n✔️ Kiểu dáng gọn gàng – dễ phối áo thun, sơ mi hoặc hoodie bên trong\r\n✔️ Túi tiện lợi – vừa thời trang vừa thực dụng\r\n✔️ Form regular – phù hợp với nhiều vóc dáng và phong cách\r\n\r\nChiếc gile lý tưởng để bạn kết hợp linh hoạt từ đi làm, đi chơi đến dạo phố mỗi ngày!', 5, 785000.00, 0, 0, 0, 1020500.00, 30.00, 0),
@@ -1210,7 +1210,7 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_addresses`
