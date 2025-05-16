@@ -48,15 +48,15 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="tenNCC" class="form-label">Tên nhà cung cấp</label>
-                    <input type="text" class="form-control" id="tenNCC" name="name" required>
+                    <input type="text" class="form-control" id="tenNCC" name="name">
                 </div>
                 <div class="mb-3">
                     <label for="emailNCC" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="emailNCC" name="email" required>
+                    <input type="text" class="form-control" id="emailNCC" name="email">
                 </div>
                 <div class="mb-3">
                     <label for="diachiNCC" class="form-label">Địa chỉ</label>
-                    <input type="text" class="form-control" id="diachiNCC" name="address" required>
+                    <input type="text" class="form-control" id="diachiNCC" name="address">
                 </div>
             </div>
             <div class="modal-footer">
@@ -119,17 +119,17 @@
 
                 <div class="mb-3">
                     <label for="tenNCCSua" class="form-label">Tên nhà cung cấp</label>
-                    <input type="text" class="form-control" id="tenNCCSua" name="name" required>
+                    <input type="text" class="form-control" id="tenNCCSua" name="name">
                 </div>
 
                 <div class="mb-3">
                     <label for="emailNCCSua" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="emailNCCSua" name="email" required>
+                    <input type="text" class="form-control" id="emailNCCSua" name="email">
                 </div>
 
                 <div class="mb-3">
                     <label for="diachiNCCSua" class="form-label">Địa chỉ</label>
-                    <input type="text" class="form-control" id="diachiNCCSua" name="address" required>
+                    <input type="text" class="form-control" id="diachiNCCSua" name="address">
                 </div>
             </div>
             <div class="modal-footer">
@@ -195,9 +195,17 @@
         const email = form.email.value.trim();
         const address = form.address.value.trim();
 
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
         // Kiểm tra rỗng
         if (!name || !email || !address) {
             alert("Vui lòng nhập đầy đủ thông tin nhà cung cấp.");
+            return;
+        }
+
+        // Kiểm tra định dạng email
+        if (!emailRegex.test(email)) {
+            alert("Email không hợp lệ. Vui lòng nhập đúng định dạng.");
             return;
         }
 
@@ -297,8 +305,26 @@
 
     document.getElementById('formSuaNCC').addEventListener('submit', function(e) {
         e.preventDefault();
-
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const form = e.target;
+
+        // Lấy giá trị các input
+        const name = form.querySelector('#tenNCCSua').value.trim();
+        const email = form.querySelector('#emailNCCSua').value.trim();
+        const address = form.querySelector('#diachiNCCSua').value.trim();
+
+        // Kiểm tra rỗng
+        if (!name || !email || !address) {
+            alert("Vui lòng nhập đầy đủ thông tin nhà cung cấp.");
+            return;
+        }
+
+        // Kiểm tra định dạng email
+        if (!emailRegex.test(email)) {
+            alert("Email không hợp lệ. Vui lòng nhập đúng định dạng.");
+            return;
+        }
+
         const formData = new FormData(form);
 
         fetch('ajax/update_supplier.php', {
