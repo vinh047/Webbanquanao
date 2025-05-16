@@ -68,7 +68,21 @@ try {
     }
 
     // Lấy user_id vừa thêm
-    $user_id = $db->lastInsertId();
+   // Lấy mảng các user_id, sắp xếp tăng dần
+    $userIds = $db->select(
+        "SELECT user_id 
+        FROM users 
+        ORDER BY user_id ASC"
+    );
+
+    // Nếu bạn chỉ cần ID lớn nhất (giá trị AUTO_INCREMENT gần nhất)
+    $row = $db->selectOne(
+        "SELECT MAX(user_id) AS user_id 
+        FROM users"
+    );
+    $maxUserId = $row['user_id'];
+
+    $user_id = $maxUserId;
 
     // Ghép tên tỉnh, quận, phường vào address_detail
     $full_address = trim($address_detail);
