@@ -46,7 +46,7 @@ foreach ($products as $product): ?>
     <tr>
         <td><?= $product['product_id'] ?></td>
         <td><?= $product['name'] ?></td>
-        <td><?= $product['price_sale'] ?></td>
+        <td><?= number_format($product['price_sale'], 0, ',', '.') ?>đ</td>
         <td>
             <button
                 class="btn btn-success mx-1 btn-choose-product"
