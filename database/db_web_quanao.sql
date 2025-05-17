@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2025 at 03:19 AM
+-- Generation Time: May 17, 2025 at 03:24 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -82,7 +82,7 @@ CREATE TABLE `cart_details` (
 --
 
 INSERT INTO `cart_details` (`cart_detail_id`, `cart_id`, `product_id`, `variant_id`, `quantity`) VALUES
-(33, 2, 2, 6, 8),
+(33, 2, 2, 6, 13),
 (34, 2, 2, 7, 4);
 
 -- --------------------------------------------------------
@@ -1067,13 +1067,14 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `name`, `password`, `email`, `phone`, `role_id`, `status`, `otp`, `otp_expired_at`) VALUES
 (1, 'admin', '$2y$10$2GqI1uPXboKEgUDKeBR4Ded1JwDddOKgTHJQ.Ra9Cl6c8/mn4gFES', 'admin@example.com', '0900000000', 2, 1, NULL, NULL),
 (2, 'khach1', '$2y$10$wJJ77ST9bygbyzEpo8vHj.srKA9qvrAnVLm7dhBlrm8jpzJ4JBfS6', 'khach1@example.com', '0900000001', 1, 1, NULL, NULL),
-(3, 'staff1', '$2y$10$POyKL/vLwc1Lj04LgJSFMOgYGASyFKg2Bv1.E6MKDDHh8yXYyzaBa', 'staff1@example.com', '0900000002', 4, 1, NULL, NULL),
+(3, 'Nguyễn Văn Sếp', '$2y$10$ESlOb1eUU2LtktlBpfQLqOPveoNbeS7OvHJSusZf1olspj328eKsS', 'staff1@example.com', '0900000002', 4, 1, NULL, NULL),
 (4, 'Nguyễn Văn A', '$2y$10$MXMCxEikkuouwd4XgZiYmehyMlIzDGfBPomf7gx2atQ6e.cfdv/Aa', 'nguyenvana1@gmail.com', '0354956477', 1, 1, NULL, NULL),
 (5, 'Nguyễn Văn B', '$2y$10$vTZl/mByC2AV1G9h3uPVUuh2nm6/Q0LzDpIcvG7vL6vcIsieqPxR2', 'nguyenvanb1@gmail.com', '0354956475', 1, 1, NULL, NULL),
 (6, 'Nguyễn Văn C', '$2y$10$SXfl3sHD1VW/s2df4XVE7.TfFpxzKqb41boDcXhjf6kDlVEO2VNBW', 'nguyenvanc1@gmail.com', '0354956474', 1, 1, NULL, NULL),
 (7, 'Nguyễn Văn D', '$2y$10$/cuND6Vf8VLDdxovkwgHxeXebcgtqhiPDbyDzNAX2l8wN0FNwhrMm', 'nguyenvand1@gmail.com', '0357879984', 1, 1, NULL, NULL),
 (8, 'Nguyễn Văn E', '$2y$10$Nr4SGX5XoxMgLj5E1Z4GU.YyMAwCi4jrpqbCh3lrRtYX87KBXeV9u', 'nguyenvane1@gmail.com', '0357879986', 1, 1, NULL, NULL),
-(9, 'Nguyễn Văn F', '$2y$10$boaQGtOnxhpmH1JZCmzUEenvP3dWldBdpbyLkPTVF2sPfK1VzsbFS', 'nguyenvanf1@gmail.com', '0354956479', 1, 1, NULL, NULL);
+(9, 'Nguyễn Văn F', '$2y$10$boaQGtOnxhpmH1JZCmzUEenvP3dWldBdpbyLkPTVF2sPfK1VzsbFS', 'nguyenvanf1@gmail.com', '0354956479', 1, 1, NULL, NULL),
+(10, 'Đỗ Nhân Viên', '$2y$10$yZaNk8h3m8qX15uPJ7D2EuWyIbXDVe0K82MwIoWOYjpdBXxiyCM/W', 'staff2@example.com', '0357674485', 4, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1092,6 +1093,14 @@ CREATE TABLE `user_addresses` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_addresses`
+--
+
+INSERT INTO `user_addresses` (`address_id`, `user_id`, `address_detail`, `ward`, `district`, `province`, `is_default`, `created_at`, `updated_at`) VALUES
+(1, 3, '273 An Dương Vương, Phường 2, Quận 5, Hồ Chí Minh', '27307', '774', '79', 1, '2025-05-17 08:22:00', '2025-05-17 08:22:00'),
+(2, 10, '273 An Dương Vương, Phường 2, Quận 5, Hồ Chí Minh', '27307', '774', '79', 1, '2025-05-17 08:24:07', '2025-05-17 08:24:07');
 
 -- --------------------------------------------------------
 
@@ -1405,13 +1414,13 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_addresses`
 --
 ALTER TABLE `user_addresses`
-  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
