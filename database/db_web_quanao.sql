@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 03:17 PM
+-- Generation Time: May 17, 2025 at 02:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -1035,18 +1035,10 @@ CREATE TABLE `vouchers` (
 --
 
 INSERT INTO `vouchers` (`voucher_id`, `code`, `discount`, `start_date`, `end_date`, `status`) VALUES
-(1, 'huydev', 20.00, '2025-05-01', '2025-05-22', 'active'),
-(2, 'huydev1', 20.00, '2025-05-01', '2025-05-16', 'active'),
-(3, 'huydev2', 30.00, '2025-05-01', '2025-05-19', 'active'),
-(4, 'huydev3', 30.00, '2025-05-01', '2025-05-28', 'inactive'),
-(5, 'huydev4', 30.00, '2025-05-01', '2025-05-30', 'active'),
-(6, 'huydev5', 30.00, '2025-05-01', '2025-05-28', 'inactive'),
-(9, 'huydev7', 30.00, '2025-05-01', '2025-05-28', 'inactive'),
-(10, 'huydev8', 30.00, '2025-05-01', '2025-05-29', 'inactive'),
-(11, 'huydev9', 30.00, '2025-05-01', '2025-05-08', 'inactive'),
-(12, 'huydev10', 30.00, '2025-05-01', '2025-05-23', 'inactive'),
-(13, 'huydev11', 30.00, '2025-05-01', '2025-05-31', 'active'),
-(14, 'huydev12', 30.00, '2025-05-01', '2025-05-31', 'active');
+(1, 'sagkuto', 4.00, '2025-05-01', '2025-05-22', 'active'),
+(2, 'skt', 8.00, '2025-05-01', '2025-05-07', 'inactive'),
+(5, 'vietnam', 10.00, '2025-05-01', '2025-05-30', 'active'),
+(12, 'sgu', 5.00, '2025-05-01', '2025-05-23', 'active');
 
 --
 -- Indexes for dumped tables
