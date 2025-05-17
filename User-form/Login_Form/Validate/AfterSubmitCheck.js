@@ -72,7 +72,7 @@ async function submitForm(e) {
         }
 
         if ([2, 3, 4].includes(role)  ) {
-          alert("Tài khoản đã bị cấm vĩnh viễn");
+          alert("Tài khoản không tồn tại");
           return;
         }
         else if (online === 0){

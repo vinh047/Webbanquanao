@@ -8,7 +8,7 @@ require_once 'permission_helper.php';
 
 $db = DBConnect::getInstance();
 
-$limit = 10;
+$limit = 2;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
