@@ -925,7 +925,8 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
             btn.addEventListener("click", function(e) {
                 e.preventDefault();
                 currentPage = parseInt(this.dataset.page);
-                loadOrders(currentPage);
+                console.log('debug')
+                loadOrders(currentPage, currentFilterParams);
             });
         });
         const input = document.getElementById("pageInput");
@@ -1054,11 +1055,11 @@ $current_staff = $db->selectOne('SELECT * FROM users WHERE status = 1 AND user_i
             .then(data => {
                 userWrap.innerHTML = data.userHtml || '';
                 paginationWrap.innerHTML = data.pagination || '';
-                phantrang();
+                phantrangUser();
             })
     }
 
-    function phantrang() {
+    function phantrangUser() {
         document.querySelectorAll(".page-link-custom").forEach(btn => {
             btn.addEventListener("click", function(e) {
                 e.preventDefault();
