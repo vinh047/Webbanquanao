@@ -98,7 +98,7 @@ $nhanvien = $db->select("
     SELECT u.user_id, u.name 
     FROM users u 
     JOIN roles r ON u.role_id = r.role_id 
-    WHERE u.status != 0
+    WHERE u.status != 0 AND r.role_id > 1
 ", []);
     ?>
 </head>
